@@ -118,7 +118,147 @@ async function loadInvite(){
   preview = data;
   if (data.status === 'cancelled') return renderCancelled();
   if (data.status === 'confirmed') return renderConfirmed();
+  try{
+    const { data: { session } } = await sb.auth.getSession();
+    if (session){
+      const { data: meRow } = await sb.from('actors').select('id').eq('auth_user_id', session.user.id).maybeSingle();
+      const { data: planRow } = await sb.from('plans').select('id, organizer_id').eq('id', data.plan_id).maybeSingle();
+      if (meRow && planRow && planRow.organizer_id === meRow.id) return renderOrg();
+    }
+  }catch(_){}
   renderBallot();
+}
+
+/* ---------------- organizzatore: risultati e conferma ---------------- */
+const chosen = { when: null, where: null };
+
+async function loadOrgData(){
+  const id = preview.plan_id;
+  const [parts, ballots, results] = await Promise.all([
+    sb.from('participants').select('actor_id, role, actors(display_name)').eq('plan_id', id),
+    sb.from('ballots').select('actor_id, field, none_ok, note, actors(display_name)').eq('plan_id', id),
+    sb.from('v_candidate_results').select('candidate_id, field, approvals').eq('plan_id', id)
+  ]);
+  const candIds = preview.candidates.map(c => c.id);
+  const appr = candIds.length
+    ? await sb.from('approvals').select('candidate_id, actor_id').in('candidate_id', candIds)
+    : { data: [] };
+  return { parts: parts.data || [], ballots: ballots.data || [], results: results.data || [], appr: appr.data || [] };
+}
+
+function orgCandRow(c, D){
+  const nameOf = a => { const p = D.parts.find(x => x.actor_id === a); return p && p.actors ? p.actors.display_name : '?'; };
+  const r = D.results.find(x => x.candidate_id === c.id);
+  const n = r ? r.approvals : 0;
+  const who = D.appr.filter(a => a.candidate_id === c.id).map(a => nameOf(a.actor_id));
+  const tot = Math.max(1, D.parts.length);
+  const on = chosen[c.field] === c.id;
+  const label = c.field === 'when' ? fmtWhen(c) : c.place_name;
+  return `<button class="opt ${on ? 'on' : ''}" data-of="${c.field}" data-oid="${c.id}">
+    <span class="chk">${on ? '✓' : ''}</span>
+    <span class="grow"><div class="t">${esc(label)} · <span style="color:var(--green)">${n} ok</span></div>
+      ${who.length ? `<div class="s">${esc(who.join(', '))}</div>` : '<div class="s">nessuno ancora</div>'}
+      <div style="height:5px;border-radius:3px;background:var(--fill);margin-top:6px"><div style="height:5px;border-radius:3px;background:var(--green);width:${Math.round(n / tot * 100)}%"></div></div>
+    </span></button>`;
+}
+
+async function renderOrg(){
+  $('#app').innerHTML = '<div class="card"><p class="sub">Carico i risultati…</p></div>';
+  let D;
+  try{ D = await loadOrgData(); }
+  catch(e){ $('#app').innerHTML = '<div class="card"><p class="sub">Errore nel caricare i risultati. Ricarica la pagina.</p></div>'; return; }
+
+  const cw = preview.candidates.filter(c => c.field === 'when');
+  const cd = preview.candidates.filter(c => c.field === 'where');
+  const askWhen = preview.when_mode === 'deciding';
+  const askWhere = preview.where_mode === 'deciding';
+  const votedIds = [...new Set(D.ballots.map(b => b.actor_id))];
+  const missing = D.parts.filter(p => p.role !== 'organizer' && !votedIds.includes(p.actor_id))
+                         .map(p => p.actors ? p.actors.display_name : '?');
+  const noneOk = f => D.ballots.filter(b => b.field === f && b.none_ok)
+                               .map(b => b.actors ? b.actors.display_name : '?');
+  const notes = D.ballots.filter(b => b.note).map(b => `${b.actors ? b.actors.display_name : '?'}: ${b.note}`);
+  const link = location.origin + location.pathname + '?t=' + token;
+
+  $('#app').innerHTML = `
+  <div class="card">
+    <span class="mplate"><img src="${PENSA}" width="86" alt=""></span>
+    <h1>${esc(preview.title)}</h1>
+    <p class="sub">Sei l'organizzatore · ${votedIds.length} su ${D.parts.length} hanno votato</p>
+    <span class="badge dec">Ai voti</span>
+  </div>
+
+  ${askWhen ? `<div class="stitle">Quando — tocca l'opzione da confermare</div>
+  <div class="group">${cw.map(c => orgCandRow(c, D)).join('')}</div>
+  ${noneOk('when').length ? `<p class="foot" style="text-align:left">A ${esc(noneOk('when').join(', '))} non va bene nessuna data.</p>` : ''}
+  <div class="group" style="margin-top:8px"><div class="row" style="display:flex;gap:8px">
+    <input type="datetime-local" id="add-when"><button class="chip" id="btn-add-when" style="flex:none">Aggiungi</button>
+  </div></div>` : ''}
+
+  ${askWhere ? `<div class="stitle">Dove — tocca l'opzione da confermare</div>
+  <div class="group">${cd.map(c => orgCandRow(c, D)).join('')}</div>
+  ${noneOk('where').length ? `<p class="foot" style="text-align:left">A ${esc(noneOk('where').join(', '))} non va bene nessun posto.</p>` : ''}
+  <div class="group" style="margin-top:8px"><div class="row" style="display:flex;gap:8px">
+    <input type="text" id="add-where" placeholder="Nuovo posto" maxlength="60"><button class="chip" id="btn-add-where" style="flex:none">Aggiungi</button>
+  </div></div>` : ''}
+
+  ${missing.length ? `<div class="stitle">Non hanno ancora votato</div>
+  <div class="group"><div class="row">${esc(missing.join(', '))}</div></div>` : ''}
+  ${notes.length ? `<div class="stitle">Note del gruppo</div>
+  <div class="group">${notes.map(n => `<div class="row" style="font-size:14px">${esc(n)}</div>`).join('')}</div>` : ''}
+
+  <div class="err" id="err"></div>
+  <button class="btn" id="confirm">Conferma il piano</button>
+  <button class="btn sec" id="share">Rimanda il link al gruppo</button>
+  <p class="foot">Conferma quando ti basta: chi non ha votato si adegua. Il link resta lo stesso e diventerà la pagina dell'evento.</p>
+  ${brand}`;
+
+  document.querySelectorAll('[data-oid]').forEach(b => b.addEventListener('click', () => {
+    const f = b.dataset.of;
+    chosen[f] = chosen[f] === b.dataset.oid ? null : b.dataset.oid;
+    renderOrg();
+  }));
+  const addFn = async (field, item) => {
+    try{
+      const { error } = await sb.rpc('add_candidates', { p_plan: preview.plan_id, p_field: field, p_items: [item] });
+      if (error) throw error;
+      const { data } = await sb.rpc('preview_invite', { p_token: token });
+      preview = data; renderOrg();
+    }catch(e){
+      const m = String(e && e.message || '');
+      if (m.includes('add_candidates')) err("Manca la funzione add_candidates: esegui nel SQL Editor il blocco che ti ho dato.");
+      else if (m.includes('max 5')) err('Massimo 5 opzioni per campo.');
+      else err('Non riesco ad aggiungere: ' + m);
+    }
+  };
+  const bw = $('#btn-add-when');
+  if (bw) bw.addEventListener('click', () => {
+    const v = $('#add-when').value; if (!v) return;
+    addFn('when', { starts_at: new Date(v).toISOString(), timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+  });
+  const bd = $('#btn-add-where');
+  if (bd) bd.addEventListener('click', () => {
+    const v = $('#add-where').value.trim(); if (!v) return;
+    addFn('where', { place_name: v });
+  });
+  $('#share').addEventListener('click', () => {
+    location.href = 'https://wa.me/?text=' + encodeURIComponent(`${preview.title} — vota qui: ${link}`);
+  });
+  $('#confirm').addEventListener('click', async () => {
+    if (askWhen && !chosen.when) return err('Tocca la data da confermare.');
+    if (askWhere && !chosen.where) return err('Tocca il posto da confermare (o aggiungilo).');
+    const b = $('#confirm'); b.disabled = true; b.textContent = 'Confermo…';
+    try{
+      const { error } = await sb.rpc('confirm_plan', { p_plan: preview.plan_id, p_when: chosen.when, p_where: chosen.where });
+      if (error) throw error;
+      try{ await sb.rpc('log_event', { p_name:'plan_confirmed', p_plan: preview.plan_id, p_props:{} }); }catch(_){}
+      const { data } = await sb.rpc('preview_invite', { p_token: token });
+      preview = data; renderConfirmed();
+    }catch(e){
+      b.disabled = false; b.textContent = 'Conferma il piano';
+      err('Errore in conferma: ' + ((e && e.message) || ''));
+    }
+  });
 }
 
 function renderInvalid(){
