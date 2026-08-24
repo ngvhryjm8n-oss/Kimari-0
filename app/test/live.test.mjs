@@ -34,8 +34,11 @@ register('data:text/javascript,' + encodeURIComponent(`
       source: 'const f = globalThis.__fakeData; export default f;' +
               ${JSON.stringify(
                 ['init','ensureSession','loadState','createGroup','updateGroup','createSection',
-                 'setGroupSection','leaveGroup','removeGroupMember','addComment','deletePlace',
-                 'addExpense'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'setGroupSection','leaveGroup','removeGroupMember','setGroupAdmin',
+                 'revokeGroupInvites','addComment','deletePlace','savePlace','setMyEmail',
+                 'addExpense','voidExpense','addSettlement','submitBallot','submitExtraBallot',
+                 'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal',
+                 'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
@@ -139,15 +142,97 @@ await test('comment vuoto non scrive niente', async () => {
 });
 
 /* ------------------------------------------------------------------ */
-await test('addExpense passa i centesimi interi e chi divide', async () => {
-  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1' } },
-                       xdraft: { amount: 1000, text: 'Pizza', among: new Set(['u1', 'u2']) } } };
-  await live.HANDLERS.addExpense(null, K);
+await test('saveExpense legge edraft e converte gli euro in centesimi', async () => {
+  // Attenzione: le spese stanno in edraft, non in xdraft (che è delle domande),
+  // e l'azione è saveExpense — addExpense apre solo lo sheet.
+  const K = { state: { currentPlan: 'p1',
+                       plans: { p1: { id: 'p1', participants: [{ id: 'u1' }, { id: 'u2' }] } },
+                       edraft: { amount: '12,50', desc: ' Pizza ', payer: 'u1', among: 'all' } } };
+  await live.HANDLERS.saveExpense(null, K);
   const a = calls[0].args;
-  assert.equal(a[0], 'p1');
-  assert.equal(a[1], 1000);
+  assert.equal(calls[0].name, 'addExpense');
+  assert.equal(a[1], 1250, '12,50 € devono diventare 1250 centesimi');
   assert.equal(Number.isInteger(a[1]), true, 'mai virgola mobile sui soldi');
-  assert.deepEqual(a[3].sort(), ['u1', 'u2'], 'il Set va convertito in lista');
+  assert.equal(a[2], 'Pizza');
+  assert.deepEqual(a[3].sort(), ['u1', 'u2']);
+});
+
+await test('saveExpense con importo scritto male non scrive niente', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', participants: [] } },
+                       edraft: { amount: 'boh', desc: 'Pizza', payer: 'u1', among: 'all' } } };
+  const res = await live.HANDLERS.saveExpense(null, K);
+  assert.equal(calls.length, 0);
+  assert.match(res.toast, /Importo/);
+});
+
+await test('vote manda un ballot per ogni campo in votazione', async () => {
+  const K = { state: {
+    currentPlan: 'p1',
+    plans: { p1: { id: 'p1',
+      when:  { mode: 'deciding' }, where: { mode: 'fixed' },
+      extras: [{ id: 'e1', mode: 'deciding' }, { id: 'e2', mode: 'fixed' }] } },
+    ballotDraft: {
+      when: { approved: new Set(['c1', 'c2']), noneOk: false, note: 'non tardi' },
+      e1:   { approved: new Set(['x1']), noneOk: false, note: '' }
+    }
+  } };
+  const res = await live.HANDLERS.vote(null, K);
+
+  // when → submit_ballot; la domanda extra → submit_extra_ballot; where e la
+  // domanda già decisa non si toccano.
+  assert.deepEqual(calls.map(c => c.name), ['submitBallot', 'submitExtraBallot']);
+  assert.deepEqual([...calls[0].args[2]].sort(), ['c1', 'c2']);
+  assert.equal(calls[0].args[3], 'non tardi');
+  assert.equal(calls[1].args[0], 'e1');
+  assert.equal(K.state.ballotDraft, null, 'la bozza va buttata: si ricarica dai dati veri');
+  assert.equal(res.toast, 'Voto inviato');
+});
+
+await test('vote si ferma se un campo è rimasto in bianco', async () => {
+  const K = { state: { currentPlan: 'p1',
+    plans: { p1: { id: 'p1', when: { mode: 'deciding' }, where: { mode: 'deciding' }, extras: [] } },
+    ballotDraft: { when: { approved: new Set(['c1']), noneOk: false },
+                   where: { approved: new Set(), noneOk: false } } } };
+  const res = await live.HANDLERS.vote(null, K);
+  assert.equal(calls.length, 0, 'non deve mandare un voto a metà');
+  assert.equal(res.skipReload, true);
+});
+
+await test('ynVote salva solo sui piani "decisione", altrimenti lascia fare', async () => {
+  const decisione = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', kind: 'decision' } } } };
+  const normale   = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', kind: 'plan' } } } };
+  assert.equal(live.HANDLERS.ynVote.when(null, decisione), true);
+  assert.equal(live.HANDLERS.ynVote.when(null, normale), false,
+    'su un piano normale toccare un\'opzione è solo una selezione');
+});
+
+await test('campiInVoto elenca solo quello che si sta ancora decidendo', () => {
+  const p = { when: { mode: 'fixed' }, where: { mode: 'deciding' },
+              extras: [{ id: 'e1', mode: 'deciding' }, { id: 'e2', mode: 'fixed' }] };
+  assert.deepEqual(live.campiInVoto(p), ['where', 'e1']);
+});
+
+await test('confirm conferma le domande extra a parte da quando/dove', async () => {
+  const K = { state: { currentPlan: 'p1',
+    plans: { p1: { id: 'p1', when: { mode: 'deciding' }, where: { mode: 'fixed' } } },
+    picks: { when: 'c1', e1: 'x2' } } };
+  await live.HANDLERS.confirm(null, K);
+  assert.deepEqual(calls.map(c => c.name), ['confirmExtra', 'confirmPlan']);
+  assert.deepEqual(calls[0].args, ['e1', 'x2']);
+  assert.deepEqual(calls[1].args, ['p1', 'c1', null]);
+});
+
+await test('saveExtra su un piano avviato scrive, in creazione no', async () => {
+  const inCreazione = { state: { draft: { extras: [] }, currentPlan: null, plans: {} } };
+  assert.equal(live.HANDLERS.saveExtra.when(null, inCreazione), false,
+    'in creazione il piano non esiste ancora: deve restare al prototipo');
+
+  const suPiano = { state: { draft: null, currentPlan: 'p1', plans: { p1: { id: 'p1' } },
+                             xdraft: { question: ' Invitiamo Matteo? ', binary: true, options: [] } } };
+  assert.equal(live.HANDLERS.saveExtra.when(null, suPiano), true);
+  await live.HANDLERS.saveExtra.run(null, suPiano);
+  assert.deepEqual(calls[0], { name: 'addPlanExtra',
+                               args: ['p1', 'Invitiamo Matteo?', null, true] });
 });
 
 await test('leaveGroup esce e torna alla home', async () => {
@@ -157,13 +242,19 @@ await test('leaveGroup esce e torna alla home', async () => {
 });
 
 /* ------------------------------------------------------------------ */
-await test('ogni azione intercettata ha un gestore vero', () => {
-  for (const [name, fn] of Object.entries(live.HANDLERS)) {
-    assert.equal(typeof fn, 'function', name + ' non è una funzione');
+await test('ogni azione intercettata sa davvero scrivere', () => {
+  // Se un'azione finisce nella tabella ma non ha un gestore valido, il
+  // prototipo non la gestisce più e il bottone smette di funzionare in
+  // silenzio: peggio di non averla intercettata affatto.
+  for (const [name, h] of Object.entries(live.HANDLERS)) {
+    const run = typeof h === 'function' ? h : h.run;
+    assert.equal(typeof run, 'function', name + ' non ha un gestore eseguibile');
+    if (typeof h !== 'function') {
+      assert.equal(typeof h.when, 'function',
+        name + ' ha la forma {when, run} ma when non è una funzione');
+    }
   }
-  // Se un'azione finisce qui dentro ma non sa scrivere, il prototipo non la
-  // gestisce più e il bottone smette di funzionare in silenzio.
-  assert.ok(Object.keys(live.HANDLERS).length > 0);
+  assert.ok(Object.keys(live.HANDLERS).length >= 20);
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);

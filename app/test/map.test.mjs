@@ -3,7 +3,8 @@
 //   node app/test/map.test.mjs
 import assert from 'node:assert/strict';
 import {
-  mapPlan, mapBallots, mapExtra, mapExpense, mapProposal, mapGroup, mapPlace
+  mapPlan, mapBallots, mapExtra, mapExpense, mapProposal, mapGroup, mapPlace,
+  toDbWhen, toDbWhere, toDbCandidate, mapWhenValue
 } from '../map.js';
 
 let passed = 0, failed = 0;
@@ -188,6 +189,36 @@ test('un piano completo ha tutti i campi che le viste leggono', () => {
   }
   assert.equal(p.when.value, null, 'when_mode deciding non deve avere un valore fisso');
   assert.equal(p.where.value.name, 'Club');
+});
+
+/* ---------------------------- verso il database ------------------- */
+test('datetime-local diventa ISO completo', () => {
+  const d = toDbWhen({ start: '2026-09-01T19:00', end: '', allDay: false, timezone: 'Europe/Rome' });
+  // update_plan_field fa (p_value->>'starts_at')::timestamptz: senza ISO
+  // completo Postgres interpreta con un fuso che non è quello dell'utente.
+  assert.ok(d.starts_at.endsWith('Z'), 'manca il fuso: ' + d.starts_at);
+  assert.equal(new Date(d.starts_at).getTime(), new Date('2026-09-01T19:00').getTime());
+  assert.equal(d.ends_at, null, 'fine vuota deve essere null, non stringa vuota');
+  assert.equal(d.timezone, 'Europe/Rome');
+});
+
+test('name/address tornano place_name/place_address', () => {
+  assert.deepEqual(toDbWhere({ name: 'Da Gino', address: '' }),
+                   { place_name: 'Da Gino', place_address: null });
+  assert.equal(toDbWhere({ name: '' }), null, 'senza nome non si propone niente');
+});
+
+test('andata e ritorno: quello che mando torna uguale', () => {
+  const originale = { start: '2026-09-01T19:00', end: '2026-09-01T22:00', allDay: false };
+  const tornato = mapWhenValue({ id: null, ...toDbWhen(originale) });
+  assert.equal(new Date(tornato.start).getTime(), new Date(originale.start).getTime());
+  assert.equal(new Date(tornato.end).getTime(), new Date(originale.end).getTime());
+  assert.equal(tornato.allDay, false);
+});
+
+test('toDbCandidate sceglie la forma dal campo', () => {
+  assert.ok('place_name' in toDbCandidate('where', { name: 'X' }));
+  assert.ok('starts_at' in toDbCandidate('when', { start: '2026-09-01T19:00' }));
 });
 
 /* ------------------------------------------------------------------ */

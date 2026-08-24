@@ -247,3 +247,29 @@ export function mapPlan(plan, parts = {}) {
     booked: false, seriesId: null, occurrence: null, of: null, recurrence: null
   };
 }
+
+/* ------------------------------------------------------------------ */
+/* verso il database: l'inverso delle funzioni qui sopra.              */
+/* Serve quando il client PROPONE un valore (proposte, modifiche).     */
+/* Le date arrivano da <input type="datetime-local">, quindi senza     */
+/* fuso: vanno convertite in ISO come fa già il sito V0.               */
+
+export function toDbWhen(v) {
+  if (!v || !v.start) return null;
+  return {
+    starts_at: new Date(v.start).toISOString(),
+    ends_at: v.end ? new Date(v.end).toISOString() : null,
+    all_day: !!v.allDay,
+    timezone: v.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
+  };
+}
+
+export function toDbWhere(v) {
+  if (!v || !v.name) return null;
+  return { place_name: v.name, place_address: v.address || null };
+}
+
+// Un'opzione da aggiungere a un piano: stessa forma che vuole add_candidates.
+export function toDbCandidate(field, c) {
+  return field === 'when' ? toDbWhen(c) : toDbWhere(c);
+}
