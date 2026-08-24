@@ -23,9 +23,14 @@ budget ~0, prodotto in italiano.
     voting, none_ok), add_candidates, confirm_plan, update_plan_field,
     cancel_plan, set_rsvp, remove_participant, revoke_invite_links,
     create_invite_link, log_event. Viste: v_candidate_results, v_missing_voters.
-  - ⚠️ Il SORGENTE di tutto questo non è ancora nel repo: vedi
-    [supabase/README.md](supabase/README.md). Cosa il client usa davvero:
-    [supabase/CONTRATTO.md](supabase/CONTRATTO.md).
+  - Le FUNZIONI sono nel repo, estratte il 24/8/2026:
+    [supabase/schema/](supabase/schema/). Se le cambi dalla dashboard,
+    riesporta con [supabase/tools/dump_schema.sql](supabase/tools/dump_schema.sql),
+    altrimenti divergono e `npm run test:rpc` mente.
+    Mancano ancora tabelle, policy, vincoli e indici (query 2-5 dello stesso file).
+    Cosa il client usa davvero: [supabase/CONTRATTO.md](supabase/CONTRATTO.md).
+  - Vincolo che sta SOLO nel database: massimo 5 opzioni per campo
+    (trigger `enforce_max_candidates`). `plan_field` è un enum, non text.
 - Ospiti = utenti Supabase ANONIMI (signInAnonymously) → upgrade con
   auth.linkIdentity Google senza perdere dati. Google OAuth: codice pronto nel
   client; provider da attivare su Supabase (potrebbe non esserlo ancora).
@@ -63,10 +68,15 @@ Prima di ogni commit:
 npm test
 ```
 
-Fa `node --check` sullo script estratto da `index.html` + smoke test jsdom con
-client Supabase mockato (`window.supabase.createClient` mockato, fixture per
-tabella, verifiche sulle chiamate rpc e sul DOM). `npm install` una volta sola
-per avere jsdom.
+Quattro gruppi: `test:site` (node --check sullo script estratto da index.html
++ smoke jsdom con client Supabase mockato), `test:map` (traduzione database →
+forme del prototipo, funzioni pure), `test:rpc` (i nomi dei parametri che il
+client passa, confrontati con le firme vere in supabase/), `test:live`
+(l'aggancio del prototipo, con data.js sostituito da un finto).
+`npm install` una volta sola per avere jsdom.
+
+Sul database ci sono anche `supabase/tests/*.sql`, da incollare nel SQL Editor:
+provano i corpi plpgsql, che nessun parser può vedere.
 
 Chiedi a Vincenzo il via prima di push su main (main = produzione).
 
