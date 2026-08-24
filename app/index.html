@@ -1008,7 +1008,8 @@ function closeSheet(){ $('#sheet-root').innerHTML = ''; }
 function sheetWelcome(){
   return `<div class="center" style="padding:8px 16px 0">${A.icon ? `<img src="${A.icon}" alt="" style="width:92px;height:92px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.18)">` : '<div style="font-size:56px">🐧</div>'}<h2 style="margin:6px 0 2px;font-size:26px;font-family:var(--rounded)">Kimari</h2><p class="sub" style="margin:0 0 14px">Tutti hanno un'opinione. Kimari la trasforma in un piano.</p></div>
   <div class="group"><div class="row"><div class="grow"><div class="t">Ho almeno 16 anni</div><div class="s">e accetto Termini e Privacy. Kimari non è per i minori di 16 anni.</div></div><button class="sw ${state.ageOk ? 'on' : ''}" data-action="ageOk" aria-label="Ho almeno 16 anni"></button></div></div>
-  <div class="actions stack"><button class="btn primary" style="background:#000" data-action="login"> Continua con Apple</button><button class="btn tint" data-action="login">Continua con Google</button></div>
+  <div class="group"><div class="row"><input class="input" id="welcomeName" placeholder="Come ti chiami?" maxlength="40" autocomplete="given-name"></div></div>
+  <div class="actions stack"><button class="btn primary" data-action="loginName">Entra</button><button class="btn tint" data-action="login">Continua con Google</button><button class="btn sec" style="background:#000;color:#fff" data-action="login" data-p="apple"> Continua con Apple</button></div>
   <p class="foot center" style="margin-top:14px">Niente password, niente rubrica. L'email serve solo a ritrovare i tuoi piani.</p>`;
 }
 function sheetTerms(){ return `<h2>Termini, privacy ed età</h2><p class="sub">In breve, il testo vero lo scrive un avvocato.</p><div class="group"><div class="row col"><div class="t" style="font-size:15px">Età minima 16 anni.</div><div class="s">Chi ha meno di 16 anni non può creare un account. Nei gruppi famiglia i nomi dei minori restano solo come nomi, senza altri dati.</div></div><div class="row col"><div class="t" style="font-size:15px">Cosa raccogliamo</div><div class="s">Nome, email se la dai, voti, risposte, commenti, allegati e foto che carichi. Niente rubrica, niente posizione in background.</div></div><div class="row col"><div class="t" style="font-size:15px">Gruppi privati</div><div class="s">Si entra solo su invito. Chi non è in un piano non ne vede nulla.</div></div><div class="row col"><div class="t" style="font-size:15px">Contenuti</div><div class="s">Gli admin possono rimuovere commenti, allegati e persone. Puoi segnalare un contenuto o bloccare una persona.</div></div><div class="row col"><div class="t" style="font-size:15px">Cancellazione</div><div class="s">Dall'app o dal web. Lo storico condiviso resta come «Membro eliminato».</div></div></div><div class="actions"><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`; }
@@ -1419,7 +1420,7 @@ $('#fileInput').addEventListener('change', e => {
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target && e.target.id === 'commentInput'){ e.preventDefault(); const b = $('[data-action="comment"]'); if(b) b.click(); } });
 window.addEventListener('hashchange', render);
 reset();
-window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet };
+window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome };
 render();
 })();
 </script>

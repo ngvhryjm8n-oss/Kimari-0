@@ -37,7 +37,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'setGroupSection','leaveGroup','removeGroupMember','setGroupAdmin',
                  'revokeGroupInvites','addComment','deletePlace','savePlace','setMyEmail',
                  'addExpense','voidExpense','addSettlement','submitBallot','submitExtraBallot',
-                 'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal',
+                 'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal','ensureActor',
+                 'signInWithGoogle','createPlan','finalizePlan',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
@@ -242,6 +243,29 @@ await test('leaveGroup esce e torna alla home', async () => {
 });
 
 /* ------------------------------------------------------------------ */
+await test('loginName crea il profilo sulla sessione anonima', async () => {
+  const K = { state: { ageOk: true },
+              $: () => ({ value: '  Vincenzo  ' }) };
+  const res = await live.HANDLERS.loginName(null, K);
+  assert.deepEqual(calls[0], { name: 'ensureActor', args: ['Vincenzo'] });
+  assert.equal(K.state.consented, true);
+  assert.equal(res.closeSheet, true);
+});
+
+await test('loginName senza spunta sui 16 anni non scrive niente', async () => {
+  const K = { state: { ageOk: false }, $: () => ({ value: 'Vincenzo' }) };
+  const res = await live.HANDLERS.loginName(null, K);
+  assert.equal(calls.length, 0);
+  assert.match(res.toast, /16 anni/);
+});
+
+await test('loginName senza nome non scrive niente', async () => {
+  const K = { state: { ageOk: true }, $: () => ({ value: '   ' }) };
+  const res = await live.HANDLERS.loginName(null, K);
+  assert.equal(calls.length, 0);
+  assert.equal(res.skipReload, true);
+});
+
 await test('ogni azione intercettata sa davvero scrivere', () => {
   // Se un'azione finisce nella tabella ma non ha un gestore valido, il
   // prototipo non la gestisce più e il bottone smette di funzionare in

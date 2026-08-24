@@ -57,6 +57,42 @@ const on  = (K, sel) => { const e = K.$(sel); return !!e && e.classList.contains
 
 export const HANDLERS = {
 
+  /* ------------------------------------------------------ ingresso */
+
+  // Senza un profilo `loadState` torna me='guest' e il prototipo mostra la
+  // vista web: l'app resta inaccessibile. Qui si crea il profilo sulla
+  // sessione anonima già aperta, come fa V0 quando un ospite scrive il nome.
+  async loginName(el, K) {
+    if (!K.state.ageOk) return { toast: 'Conferma di avere almeno 16 anni', skipReload: true };
+    const nome = val(K, '#welcomeName');
+    if (!nome) return { toast: 'Scrivi come ti chiami', skipReload: true };
+    await data.ensureActor(nome);
+    K.state.consented = true;
+    return { toast: 'Benvenuto, ' + nome, closeSheet: true };
+  },
+
+  login: {
+    when: (el, K) => true,
+    async run(el, K) {
+      if (!K.state.ageOk) return { toast: 'Conferma di avere almeno 16 anni', skipReload: true };
+      if (el.dataset.p === 'apple') {
+        return { toast: 'Apple arriva quando l\'account sviluppatore è attivo', skipReload: true };
+      }
+      try {
+        await data.signInWithGoogle(location.origin + location.pathname);
+      } catch (e) {
+        // Regola 5: dire cosa manca davvero, non "riprova".
+        const m = String((e && e.message) || e).toLowerCase();
+        if (m.includes('not enabled') || m.includes('provider')) {
+          return { toast: 'Google non è ancora attivo su Supabase: entra col nome',
+                   skipReload: true };
+        }
+        throw e;
+      }
+      return { skipReload: true };   // la pagina se ne va sul redirect
+    }
+  },
+
   /* -------------------------------------------------- creazione */
 
   // I passi 1-3 sono navigazione dentro la bozza: passano al prototipo.
@@ -403,6 +439,14 @@ export async function boot() {
     await reload(K);
     wire(K);
     document.body.dataset.kimari = 'live';
+
+    // Sessione aperta ma nessun profilo: senza questo il prototipo mostrerebbe
+    // la vista web (isWeb() è vero quando me === 'guest') e nell'app non si
+    // entrerebbe mai. La porta d'ingresso va aperta a mano.
+    if (K.state.me === 'guest' && K.openSheet && K.sheetWelcome) {
+      K.state.welcomeShown = true;
+      K.openSheet(K.sheetWelcome());
+    }
   } catch (e) {
     // Non si azzera lo schermo: i dati finti del prototipo restano, e l'utente
     // legge perché non è collegato invece di trovare una pagina vuota.
