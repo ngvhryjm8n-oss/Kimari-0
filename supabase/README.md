@@ -48,3 +48,33 @@ in chat.** Passala inline nel comando ed esporta subito dopo.
    `security definer` senza `search_path` è una scalata di privilegi.
 4. Committa. Da lì in poi ogni cambio allo schema diventa un file `0002_`, `0003_`…
    invece di una modifica invisibile fatta dalla dashboard.
+
+---
+
+## Applicare le migrazioni nuove
+
+`0003`, `0004` e `0005` sono scritte ma **mai eseguite**: qui non c'è nessun
+Postgres. Sono validate solo col parser (il DDL esterno), non nei corpi plpgsql.
+
+**Fallo prima su un progetto Supabase di prova**, non su `fnafzokgkbhhjircrogy`.
+
+Ordine, una alla volta, dal SQL Editor:
+
+| | File | Cosa fa |
+|---|---|---|
+| 1 | `0003_groups.sql` | gruppi, membri, sezioni private, inviti di gruppo |
+| 2 | `0004_account_deletion.sql` | `delete_my_account()` — richiesta da Apple |
+| 3 | `0005_extras_comments_proposals.sql` | domande extra, commenti, proposte |
+
+Ognuna gira in una transazione e comincia con un blocco di preflight: se
+un'assunzione sullo schema non regge, **fallisce senza lasciare niente a metà**
+e ti dice esattamente cosa non torna. Un errore lì non è un guasto: è la
+migrazione che fa il suo lavoro. Copiami il messaggio e correggo.
+
+Le cose che più probabilmente si lamenteranno per prime:
+
+- `participants ha colonne obbligatorie che join_group non valorizza: …`
+- `queste tabelle puntano ad actors e delete_my_account non le gestisce: …`
+- `actors.auth_user_id è NOT NULL` oppure `ha ON DELETE CASCADE verso auth.users`
+
+Dopo `0004`, il giro di prova da fare a mano è in fondo a quel file.
