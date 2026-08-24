@@ -1,22 +1,25 @@
 # Informativa privacy — Kimari
 
-> **BOZZA. Da far rivedere a un avvocato prima di pubblicarla.**
+> **Da far rivedere a un avvocato prima della submission.**
 > Non è un parere legale. È un inventario onesto e verificato di cosa l'app fa
 > davvero coi dati, scritto leggendo il codice e lo schema — che è la parte che
 > un avvocato non può ricostruire da solo, e la parte che gli store controllano.
 >
-> Prima della submission deve stare a un **URL pubblico e stabile** (serve sia a
-> Google Play sia ad App Store Connect), e dentro l'app ci deve essere un link.
+> La versione pubblicata è [privacy.html](privacy.html), servita da GitHub
+> Pages: se cambi qui, rigenera anche quella.
 >
-> Da completare dove è segnato `[DA COMPLETARE]`.
+> Resta da riempire solo `[SOLO VINCENZO]`: chi è il titolare del trattamento e
+> a quale indirizzo si scrive. Sono fatti su una persona reale, non scelte di
+> prodotto, e inventarli renderebbe il documento falso proprio nel punto in cui
+> serve a qualcosa.
 
-Ultimo aggiornamento: 24 agosto 2026
+Ultimo aggiornamento: 25 agosto 2026
 
 ## Chi tratta i tuoi dati
 
-Titolare del trattamento: `[DA COMPLETARE: nome e cognome o ragione sociale,
+Titolare del trattamento: `[SOLO VINCENZO: nome e cognome o ragione sociale,
 indirizzo, partita IVA se c'è]`
-Contatto: `[DA COMPLETARE: indirizzo email per le richieste privacy]`
+Contatto: `[SOLO VINCENZO: un indirizzo email che funziona davvero]`
 
 ## Cosa raccogliamo
 
@@ -47,9 +50,15 @@ Kimari raccoglie il minimo per far funzionare una votazione di gruppo.
   voto è stato inviato, che un piano è stato confermato. Servono a capire se il
   prodotto funziona. Non contengono il tuo nome né cosa hai votato.
 
-`[DA AGGIORNARE quando arrivano commenti, foto, spese e notifiche:
-commenti scritti, foto e file caricati, importi e chi deve cosa a chi, token del
-dispositivo per le notifiche push.]`
+**Se il piano va avanti**
+- I **commenti** che scrivi, visibili a chi partecipa.
+- Le **foto e i file** che carichi, visibili a chi partecipa.
+- Le **spese** che registri: importo, descrizione e fra chi è divisa. Kimari
+  non tocca soldi veri, tiene solo il conto.
+- Se dici che **arrivi in ritardo** o che **non vieni più**, e la nota che
+  eventualmente aggiungi.
+- I **posti che salvi** e le **persone che aggiungi ai tuoi**: sono privati,
+  non li vede nessun altro.
 
 **Non raccogliamo** la tua posizione, la rubrica, identificatori pubblicitari,
 e non c'è nessun tracciamento per la pubblicità. Non vendiamo dati a nessuno.
@@ -70,7 +79,9 @@ I dati sono su **Supabase**, in un data center nella **regione di Francoforte
 (Germania), dentro l'Unione Europea**. Il sito è servito da **GitHub Pages**.
 Entrambi trattano i dati per nostro conto come responsabili del trattamento.
 
-`[DA COMPLETARE: link ai rispettivi accordi sul trattamento dei dati.]`
+I rispettivi accordi sul trattamento dei dati sono pubblici:
+[Supabase](https://supabase.com/legal/dpa) e
+[GitHub](https://github.com/customer-terms/github-data-protection-agreement).
 
 ## Per quanto tempo
 
@@ -78,8 +89,10 @@ Entrambi trattano i dati per nostro conto come responsabili del trattamento.
 - Se cancelli il tuo account, vedi sotto.
 - Gli eventi d'uso, che non ti identificano, restano in forma aggregata.
 
-`[DA COMPLETARE: un tempo massimo di conservazione per i piani inattivi.
-Ad esempio: cancellati automaticamente dopo 24 mesi senza attività.]`
+**Oggi non cancelliamo niente automaticamente**: un piano resta finché lo
+cancelli tu o finché cancelli l'account. Lo diciamo com'è invece di promettere
+una pulizia che ancora non facciamo. Quando ci sarà, sarà scritto qui prima di
+entrare in funzione.
 
 ## Cancellare il tuo account
 
@@ -98,7 +111,8 @@ romperebbe i piani di persone che non hanno chiesto niente.
 
 Puoi chiedere di accedere ai tuoi dati, correggerli, cancellarli, limitarne il
 trattamento, opporti, e riceverli in un formato leggibile da una macchina.
-Scrivi a `[DA COMPLETARE: email]`. Rispondiamo entro un mese.
+Scrivi all'indirizzo in cima a questa pagina. Rispondiamo entro un mese, come
+prevede il GDPR.
 
 Se pensi che i tuoi dati siano trattati male puoi rivolgerti al **Garante per la
 protezione dei dati personali** (garanteprivacy.it).
@@ -114,10 +128,17 @@ protezione dei dati personali** (garanteprivacy.it).
 
 ## Età minima
 
-`[DA DECIDERE, e ha conseguenze concrete: sotto i 14 anni in Italia serve il
-consenso di chi esercita la responsabilità genitoriale, e la classificazione per
-età cambia su entrambi gli store. Il prototipo ha già una schermata dedicata:
-va deciso il numero prima di pubblicare.]`
+Per usare Kimari servono almeno **16 anni**.
+
+Il GDPR fissa 16 anni come soglia predefinita e lascia agli Stati la facoltà di
+abbassarla; l'Italia l'ha portata a 14. Abbiamo tenuto 16 perché è la soglia più
+alta e quindi la più prudente: sotto quella età non serve gestire il consenso di
+chi esercita la responsabilità genitoriale, che è un meccanismo che oggi Kimari
+non ha. È anche il numero che compare già nella schermata di benvenuto.
+
+Nei gruppi familiari può comparire il **nome** di un minore, scritto da un
+adulto per sapere chi c'è. Resta solo un nome: nessun account, nessuna email,
+nessun altro dato.
 
 ## Modifiche
 

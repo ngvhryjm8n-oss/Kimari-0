@@ -1,14 +1,15 @@
 # Termini di servizio — Kimari
 
-> **BOZZA. Da far rivedere a un avvocato prima di pubblicarla.**
+> **Da far rivedere a un avvocato prima della submission.**
 > Non è un parere legale. È la descrizione onesta di cosa il servizio fa e non
 > fa, scritta guardando il codice — che è la parte che un avvocato non può
 > ricostruire da solo, ed è quella su cui poi si litiga.
 >
-> Serve a un **URL pubblico e stabile** per la submission su entrambi gli store,
-> e dentro l'app ci deve essere un link. Va insieme a [PRIVACY.md](PRIVACY.md).
+> La versione pubblicata è [termini.html](termini.html). Va insieme a
+> [PRIVACY.md](PRIVACY.md).
 >
-> Da completare dove è segnato `[DA COMPLETARE]`.
+> Resta da riempire solo `[SOLO VINCENZO]`: chi è il titolare e a quale
+> indirizzo si scrive.
 
 Ultimo aggiornamento: 25 agosto 2026
 
@@ -18,13 +19,13 @@ Kimari è un servizio per mettersi d'accordo in gruppo su quando e dove vedersi.
 Chi organizza propone delle opzioni, il gruppo vota da un link, chi organizza
 conferma.
 
-Titolare: `[DA COMPLETARE: nome o ragione sociale, indirizzo, P.IVA]`
-Contatto: `[DA COMPLETARE: email]`
+Titolare: `[SOLO VINCENZO: nome o ragione sociale, indirizzo, P.IVA]`
+Contatto: `[SOLO VINCENZO: un indirizzo email che funziona davvero]`
 
 ## 2. Chi può usarlo
 
-Serve avere almeno `[DA DECIDERE: 16?]` anni. Sotto quell'età non si può creare
-un account.
+Serve avere almeno **16 anni**. Sotto quell'età non si può creare un account.
+Il perché di quel numero è spiegato in [PRIVACY.md](PRIVACY.md).
 
 Nei gruppi familiari può capitare che compaia il nome di un minore, messo da un
 adulto: resta **solo un nome**, senza account, senza email e senza altri dati.
@@ -66,8 +67,9 @@ Se un conto non torna, il posto giusto per risolverlo è il gruppo, non noi.
 
 - **Che il servizio sia sempre raggiungibile.** È fatto da una persona sola con
   un budget minimo. Ci sarà qualche interruzione.
-- **Che i piani durino per sempre.** `[DA COMPLETARE: dopo quanti mesi di
-  inattività un piano viene cancellato.]`
+- **Che i piani durino per sempre.** Oggi non cancelliamo niente
+  automaticamente, ma non lo promettiamo per il futuro: se introdurremo una
+  pulizia dei piani vecchi lo diremo prima.
 - **Che il gruppo si presenti.** Kimari serve a decidere, non garantisce che
   poi qualcuno venga davvero.
 
@@ -87,10 +89,12 @@ diciamo prima, salvo i casi in cui non sia possibile.
 
 ## 8. Quanto costa
 
-Oggi Kimari è gratuito. `[DA COMPLETARE quando esisteranno i piani a pagamento:
-cosa resta gratis, cosa no, come si disdice, e cosa succede ai dati quando un
-abbonamento finisce. Su App Store e Play Store gli abbonamenti si gestiscono
-dalle impostazioni dello store, non da noi.]`
+Oggi Kimari è **gratuito**, in tutte le sue funzioni.
+
+Ci sono dei limiti tecnici, non commerciali, per non far esplodere i costi di
+archiviazione: 20 foto e 25 MB di allegati per piano, 10 posti salvati. Se un
+domani ci saranno piani a pagamento, questa pagina dirà prima cosa resta
+gratuito, come si disdice e cosa succede ai dati alla fine di un abbonamento.
 
 ## 9. Se qualcosa cambia
 
@@ -99,6 +103,9 @@ effetto. Se non ti sta bene, puoi cancellare l'account.
 
 ## 10. Legge e foro
 
-Si applica la legge italiana. `[DA COMPLETARE con l'avvocato: per i
-consumatori il foro competente è quello di residenza del consumatore, e non si
-può derogare.]`
+Si applica la legge italiana.
+
+Se usi Kimari come consumatore, per qualsiasi controversia è competente il
+giudice del luogo in cui risiedi o hai il domicilio: è una tutela che la legge
+ti riconosce e a cui non puoi rinunciare per contratto, quindi non proviamo
+nemmeno a scriverlo diversamente.
