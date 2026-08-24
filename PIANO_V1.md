@@ -80,10 +80,11 @@ In V0 i token sono generati lato server e salvati hashati sha256. **Resta così.
 Ogni fase è utilizzabile da sola. L'ordine è pensato perché il lavoro bloccato
 non blocchi il resto.
 
-**Fase 0 — sbloccare** *(nulla può partire senza)*
-- Export dello schema Supabase → [supabase/README.md](supabase/README.md). Serve la password del DB.
-- `delete_my_account` — obbligatoria per Apple (5.1.1 v). **Non scrivibile senza lo schema.**
-- Privacy policy e termini, con URL pubblico. Obbligatori su entrambi gli store.
+**Fase 0 — sbloccare**
+- Export dello schema Supabase → [supabase/README.md](supabase/README.md). Serve la password del DB. **Ancora da fare.**
+- `delete_my_account` — obbligatoria per Apple (5.1.1 v). **SQL scritto**: [0004_account_deletion.sql](supabase/migrations/0004_account_deletion.sql).
+- Privacy policy — **bozza scritta**: [PRIVACY.md](PRIVACY.md). Da far rivedere a un avvocato, completare dove segnato, e pubblicare a un URL stabile.
+- Termini di servizio — ancora da scrivere.
 
 **Fase 1 — gruppi** *(sblocca la home del prototipo)* — **SQL scritto**
 [0003_groups.sql](supabase/migrations/0003_groups.sql): `groups`,
@@ -91,9 +92,10 @@ non blocchi il resto.
 I piani esistenti restano validi: `plans.group_id` è nullable, i link `?t=`
 non cambiano. Da applicare dopo l'export (Fase 0) o su un progetto di prova.
 
-**Fase 2 — il piano diventa ricco**
-Domande extra e decisioni generiche, commenti, proposte di cambio con voto.
-È il grosso del valore percepito del prototipo.
+**Fase 2 — il piano diventa ricco** — **SQL scritto**
+[0005_extras_comments_proposals.sql](supabase/migrations/0005_extras_comments_proposals.sql):
+domande extra e decisioni generiche, commenti, proposte di cambio votate dal
+gruppo. Non tocca `candidates`, quindi il client V0 continua a funzionare.
 
 **Fase 3 — media e spese** *(prima voce di costo vera)*
 Supabase Storage. Il free tier è 1 GB: con 20 foto per piano si consuma in fretta.
