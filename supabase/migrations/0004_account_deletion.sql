@@ -30,6 +30,12 @@ declare
   v_nullable text;
   v_action   char;
 begin
+  if exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = 'delete_my_account'
+  ) then
+    raise exception '0004 è già applicata: delete_my_account esiste.';
+  end if;
   if to_regclass('public.actors') is null then
     raise exception 'manca public.actors: schema inatteso, non applicare';
   end if;

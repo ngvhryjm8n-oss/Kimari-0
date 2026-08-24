@@ -27,6 +27,13 @@ begin
   if to_regclass('public.plan_extras') is null then
     raise exception 'applica prima 0005_extras_comments_proposals.sql';
   end if;
+  if exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'plan_extras'
+       and column_name = 'created_by'
+  ) then
+    raise exception '0008 è già applicata: plan_extras.created_by esiste.';
+  end if;
 end $$;
 
 -- Chi ha aperto la domanda. Resta anche se cancella l'account: la domanda è

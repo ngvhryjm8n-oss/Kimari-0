@@ -13,6 +13,12 @@ begin;
 
 do $$
 begin
+  if exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = 'finalize_plan'
+  ) then
+    raise exception '0009 è già applicata: finalize_plan esiste. Passa alla 0010.';
+  end if;
   if to_regclass('public.groups') is null then
     raise exception 'applica prima 0003_groups.sql';
   end if;

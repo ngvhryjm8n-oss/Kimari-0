@@ -167,3 +167,18 @@ E l'editor **non tiene lo stato di sessione fra le istruzioni** come ci si
 aspetterebbe: una `create temp table` seguita da altre istruzioni fallisce con
 `relation "..." does not exist`. Le migrazioni con `BEGIN`/`COMMIT` invece
 funzionano. Nel dubbio, scrivi istruzioni che stanno in piedi da sole.
+
+## Non sai a che punto sei?
+
+```
+tools/stato.sql
+```
+
+Dice quali migrazioni sono applicate e se ci sono ancora dati di prova in giro.
+Non modifica niente.
+
+Rilanciare una migrazione già applicata ora dà un messaggio chiaro
+(`0009 è già applicata: finalize_plan esiste`) invece dell'errore di Postgres
+`42723: function already exists with same argument types`, che sembra un guasto
+e non lo è. L'unica idempotente per costruzione è la 0007, che usa
+`create or replace`.

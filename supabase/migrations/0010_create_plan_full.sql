@@ -19,6 +19,12 @@ begin;
 
 do $$
 begin
+  if exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = 'create_plan_full'
+  ) then
+    raise exception '0010 è già applicata: create_plan_full esiste.';
+  end if;
   if not exists (
     select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public' and p.proname = 'finalize_plan'
