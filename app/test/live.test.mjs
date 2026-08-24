@@ -14,9 +14,10 @@ const fake = new Proxy({}, {
     if (name === 'then') return undefined;         // non è una promise
     return async (...args) => {
       calls.push({ name, args });
-      if (name === 'createGroup')   return 'g-nuovo';
-      if (name === 'createSection') return 's-nuova';
-      if (name === 'loadState')     return { me: 'u1', people: {}, groups: {}, plans: {} };
+      if (name === 'createGroup')    return 'g-nuovo';
+      if (name === 'createSection')  return 's-nuova';
+      if (name === 'createPlanFull') return { plan_id: 'p-nuovo', token: 'tok-nuovo' };
+      if (name === 'loadState')      return { me: 'u1', people: {}, groups: {}, plans: {} };
       return null;
     };
   }
@@ -38,7 +39,7 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'revokeGroupInvites','addComment','deletePlace','savePlace','setMyEmail',
                  'addExpense','voidExpense','addSettlement','submitBallot','submitExtraBallot',
                  'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal','ensureActor',
-                 'signInWithGoogle','createPlan','finalizePlan',
+                 'signInWithGoogle','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
@@ -264,6 +265,68 @@ await test('loginName senza nome non scrive niente', async () => {
   const res = await live.HANDLERS.loginName(null, K);
   assert.equal(calls.length, 0);
   assert.equal(res.skipReload, true);
+});
+
+await test('la creazione passa da una sola chiamata, non da tre', async () => {
+  const K = { state: { draft: {
+    step: 4, title: ' Pizza ', emoji: '🍕', groupId: 'g1', allowProposals: true,
+    whenMode: 'deciding', whenCands: [{ start: '2026-09-10T20:00', end: '', allDay: false }],
+    whereMode: 'fixed', whereFixed: { name: 'Da Gino', address: '' }, whereCands: [],
+    deadline: '', extras: [{ question: 'Invitiamo Matteo?', binary: true, options: [] }]
+  } } };
+  await live.HANDLERS.next.run(null, K);
+
+  // Tre chiamate sarebbero tre transazioni: se la seconda fallisce resta un
+  // piano a metà. È successo davvero in produzione il 25/8/2026.
+  assert.deepEqual(calls.map(c => c.name), ['createPlanFull']);
+  const [payload, opts] = calls[0].args;
+  assert.equal(payload.title, 'Pizza');
+  assert.equal(payload.when_mode, 'deciding');
+  assert.equal(payload.when_candidates.length, 1);
+  assert.equal(payload.place_name, 'Da Gino');
+  assert.equal(opts.emoji, '🍕');
+  assert.equal(opts.group, 'g1');
+  assert.equal(opts.extras[0].binary, true);
+  assert.equal(K.state.draft, null, 'la bozza va buttata dopo la creazione');
+});
+
+await test('next ai passi 1-3 non crea niente: è navigazione', () => {
+  for (const step of [1, 2, 3]) {
+    assert.equal(live.HANDLERS.next.when(null, { state: { draft: { step } } }), false,
+      'il passo ' + step + ' non deve creare il piano');
+  }
+  assert.equal(live.HANDLERS.next.when(null, { state: { draft: { step: 4 } } }), true);
+});
+
+await test('il token si legge dalla rotta di un invito', () => {
+  assert.equal(live.tokenDaRotta('#/i/AbC-123_x'), 'AbC-123_x');
+  assert.equal(live.tokenDaRotta('#i/AbC-123_x'), 'AbC-123_x');
+  assert.equal(live.tokenDaRotta('#/p/qualcosa'), null, 'un piano proprio non è un invito');
+  assert.equal(live.tokenDaRotta('#/home'), null);
+  assert.equal(live.tokenDaRotta(''), null);
+});
+
+await test('join entra col nome e si tiene il token', async () => {
+  const K = { $: () => ({ value: '  Luca  ' }),
+              state: { currentPlan: 'p1', plans: { p1: { id: 'p1', token: 'tok' } } } };
+  const res = await live.HANDLERS.join(null, K);
+  assert.deepEqual(calls[0], { name: 'joinPlan', args: ['tok', 'Luca', null] });
+  assert.deepEqual(calls[1], { name: 'saveToken', args: ['p1', 'tok'] },
+    'senza salvare il token il piano non si riapre più');
+  assert.equal(res.go, 'p/p1');
+});
+
+await test('join senza nome non entra', async () => {
+  const K = { $: () => ({ value: '  ' }), state: { currentPlan: 'p1', plans: { p1: {} } } };
+  const res = await live.HANDLERS.join(null, K);
+  assert.equal(calls.length, 0);
+  assert.equal(res.skipReload, true);
+});
+
+await test('claim rivendica un nome già nel piano invece di duplicarlo', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', token: 'tok' } } } };
+  await live.HANDLERS.claim({ dataset: { id: 'a-9' } }, K);
+  assert.deepEqual(calls[0], { name: 'joinPlan', args: ['tok', null, 'a-9'] });
 });
 
 await test('ogni azione intercettata sa davvero scrivere', () => {

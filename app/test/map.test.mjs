@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 import {
   mapPlan, mapBallots, mapExtra, mapExpense, mapProposal, mapGroup, mapPlace,
-  toDbWhen, toDbWhere, toDbCandidate, mapWhenValue
+  toDbWhen, toDbWhere, toDbCandidate, mapWhenValue, mapPreview
 } from '../map.js';
 
 let passed = 0, failed = 0;
@@ -219,6 +219,37 @@ test('andata e ritorno: quello che mando torna uguale', () => {
 test('toDbCandidate sceglie la forma dal campo', () => {
   assert.ok('place_name' in toDbCandidate('where', { name: 'X' }));
   assert.ok('starts_at' in toDbCandidate('when', { start: '2026-09-01T19:00' }));
+});
+
+/* ------------------------------ invito ---------------------------- */
+test('invito: l\'organizzatore arriva come nome e va ricollegato al suo id', () => {
+  const { plan, people } = mapPreview({
+    ok: true, plan_id: 'p1', title: 'Cena', status: 'deciding', version: 0,
+    organizer: 'Anna', voters: 2, when_mode: 'deciding', where_mode: 'fixed',
+    place_name: 'Da Gino', deadline_at: null,
+    candidates: [{ id: 'c1', field: 'when', starts_at: '2026-09-01T19:00:00Z' },
+                 { id: 'c2', field: 'when', starts_at: '2026-09-02T19:00:00Z' }],
+    people: [{ actor_id: 'a-1', name: 'Anna' }, { actor_id: 'a-2', name: 'Bruno' }]
+  }, 'tok-123');
+
+  // p.organizer nelle viste è un id, non un nome: nameOf() stamperebbe vuoto.
+  assert.equal(plan.organizer, 'a-1');
+  assert.equal(people['a-1'].name, 'Anna');
+  assert.equal(plan.token, 'tok-123');
+  assert.equal(plan.when.candidates.length, 2);
+  assert.equal(plan.where.value.name, 'Da Gino');
+  assert.equal(plan.participants.find(x => x.id === 'a-1').role, 'organizer');
+  assert.deepEqual(plan.ballots, {}, 'dall\'invito non si vede cosa ha votato chi');
+  assert.equal(plan.voters, 2);
+});
+
+test('invito: organizzatore che non è fra i partecipanti prende un id di comodo', () => {
+  const { plan, people } = mapPreview({
+    ok: true, plan_id: 'p1', title: 'X', status: 'deciding', organizer: 'Zoe',
+    when_mode: 'later', where_mode: 'later', candidates: [], people: []
+  }, 'tok');
+  assert.equal(plan.organizer, 'org:p1');
+  assert.equal(people['org:p1'].name, 'Zoe');
 });
 
 /* ------------------------------------------------------------------ */

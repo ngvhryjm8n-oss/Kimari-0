@@ -294,3 +294,66 @@ export function draftToCreatePlan(d) {
   if (d.deadline) p.deadline_at = new Date(d.deadline).toISOString();
   return p;
 }
+
+/* ------------------------------------------------------------------ */
+/* invito: quello che vede chi apre un link ?t= senza avere l'app.     */
+/* preview_invite torna una forma tutta sua — e in particolare dà      */
+/* l'organizzatore come NOME, mentre le viste si aspettano un id.      */
+
+export function mapPreview(prev, token) {
+  const people = {};
+  for (const p of (prev.people || [])) {
+    people[p.actor_id] = mapPerson({ id: p.actor_id, display_name: p.name });
+  }
+
+  // L'organizzatore arriva come nome: si ritrova fra i partecipanti, e se non
+  // c'è gli si dà un id di comodo, altrimenti nameOf() stamperebbe vuoto.
+  let orgId = (prev.people || []).find(p => p.name === prev.organizer)?.actor_id;
+  if (!orgId) {
+    orgId = 'org:' + prev.plan_id;
+    people[orgId] = mapPerson({ id: orgId, display_name: prev.organizer || '' });
+  }
+
+  const cands = prev.candidates || [];
+  const plan = {
+    id: prev.plan_id,
+    token,
+    kind: 'plan',
+    title: prev.title,
+    emoji: '📌',
+    organizer: orgId,
+    groupId: null,
+    status: prev.status,
+    version: prev.version,
+    deadline: prev.deadline_at || null,
+    createdAt: Date.now(),
+    allowProposals: false,
+
+    when: {
+      mode: prev.when_mode,
+      value: prev.when_mode === 'fixed' ? mapWhenValue(prev) : null,
+      candidates: cands.filter(c => c.field === 'when').map(mapWhenCandidate)
+    },
+    where: {
+      mode: prev.where_mode,
+      value: prev.where_mode === 'fixed' ? mapWhereValue(prev) : null,
+      candidates: cands.filter(c => c.field === 'where').map(mapWhereCandidate)
+    },
+    extras: [],
+
+    // Dall'invito si sa CHI partecipa ma non COSA ha votato: il voto è segreto
+    // finché non si entra. `voters` serve solo a dire "3 hanno già votato".
+    participants: (prev.people || []).map(p => ({
+      id: p.actor_id, role: p.actor_id === orgId ? 'organizer' : 'member',
+      rsvp: null, rsvpAt: null, late: null, joinedAt: null
+    })),
+    ballots: {},
+    voters: prev.voters || 0,
+
+    changes: [], comments: [], proposals: [], expenses: [], settlements: [],
+    photos: [], files: [],
+    booked: false, seriesId: null, occurrence: null, of: null, recurrence: null
+  };
+
+  return { plan, people };
+}

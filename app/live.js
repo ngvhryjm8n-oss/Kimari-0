@@ -11,7 +11,7 @@
 // vera. Senza `when` si romperebbe la creazione.
 
 import * as data from './data.js';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan } from './map.js';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -55,7 +55,34 @@ const on  = (K, sel) => { const e = K.$(sel); return !!e && e.classList.contains
 /* le azioni che sanno arrivare al database                            */
 /* ------------------------------------------------------------------ */
 
+// Il token del link: #/i/<token>. Il prototipo cerca il piano fra quelli già
+// in `state`, ma chi apre un invito non ne ha nessuno — va caricato prima.
+export const tokenDaRotta = hash => {
+  const m = String(hash || '').match(/^#\/?i\/([^/?#]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+};
+
 export const HANDLERS = {
+
+  /* -------------------------------------------------------- ospite */
+
+  // "Sei uno di questi?": si rivendica un nome che l'organizzatore ha già
+  // messo nel piano, invece di comparire come un doppione.
+  async claim(el, K) {
+    const p = curPlan(K) || Object.values(K.state.plans)[0];
+    await data.joinPlan(p.token, null, el.dataset.id);
+    data.saveToken(p.id, p.token);
+    return { toast: 'Bentornato', closeSheet: true, go: 'p/' + p.id };
+  },
+
+  async join(el, K) {
+    const nome = val(K, '#nameInput');
+    if (!nome) return { toast: 'Scrivi il tuo nome', skipReload: true };
+    const p = curPlan(K) || Object.values(K.state.plans)[0];
+    await data.joinPlan(p.token, nome, null);
+    data.saveToken(p.id, p.token);
+    return { toast: 'Ci sei', closeSheet: true, go: 'p/' + p.id };
+  },
 
   /* ------------------------------------------------------ ingresso */
 
@@ -102,17 +129,23 @@ export const HANDLERS = {
     async run(el, K) {
       const d = K.state.draft;
 
-      // create_plan (0001) non conosce emoji, gruppo, tipo e domande: sono
-      // colonne e tabelle arrivate dopo. Si completa in tre passi.
-      const res = await data.createPlan(draftToCreatePlan(d));
+      // Una chiamata sola, quindi una transazione sola. Prima erano tre e il
+      // 25/8/2026 se n'è visto il perché: la seconda è fallita e in produzione
+      // è rimasto un piano senza emoji, senza gruppo e senza domande, che chi
+      // l'aveva creato non vedeva nemmeno.
+      const res = await data.createPlanFull(draftToCreatePlan(d), {
+        emoji: d.emoji,
+        group: d.groupId || null,
+        kind: 'plan',
+        allowProposals: d.allowProposals !== false,
+        extras: (d.extras || []).map(x => ({
+          question: x.question,
+          binary: !!x.binary,
+          options: x.binary ? [] : (x.options || [])
+        }))
+      });
       const id = res && res.plan_id;
       if (!id) throw new Error('create_plan non ha reso un piano');
-
-      await data.finalizePlan(id, d.emoji, d.groupId || null, 'plan', d.allowProposals !== false);
-
-      for (const x of (d.extras || [])) {
-        await data.addPlanExtra(id, x.question, x.binary ? null : x.options, !!x.binary);
-      }
 
       K.state.draft = null; K.state.justVoted = false;
       K.state.ballotDraft = null; K.state.bdKey = null;
@@ -389,7 +422,31 @@ export const HANDLERS = {
 
 export async function reload(K) {
   applyState(K.state, await data.loadState());
+  await caricaInvito(K);
   K.render();
+}
+
+// Se la rotta è un invito e quel piano non è fra i propri, lo si chiede al
+// server con preview_invite — che risponde anche a chi non è ancora entrato.
+// Senza questo il prototipo mostrerebbe "questo link non porta a niente".
+export async function caricaInvito(K) {
+  const token = tokenDaRotta(location.hash);
+  if (!token) return false;
+  if (Object.values(K.state.plans).some(p => p.token === token)) return false;
+
+  try {
+    const prev = await data.previewInvite(token);
+    if (!prev || !prev.ok) return false;
+    const { plan, people } = mapPreview(prev, token);
+    for (const [id, p] of Object.entries(people)) {
+      if (!K.state.people[id]) K.state.people[id] = p;
+    }
+    K.state.plans[plan.id] = plan;
+    return true;
+  } catch (e) {
+    console.error('invito', e);
+    return false;
+  }
 }
 
 function wire(K) {
@@ -421,6 +478,12 @@ function wire(K) {
         console.error(el.dataset.action, err);
       });
   }, true);                                           // ← cattura: prima del prototipo
+
+  // Il prototipo renderizza a ogni hashchange. Se si apre un invito il piano
+  // non c'è ancora: si carica e si renderizza di nuovo.
+  window.addEventListener('hashchange', () => {
+    caricaInvito(K).then(caricato => { if (caricato) K.render(); });
+  });
 }
 
 export async function boot() {

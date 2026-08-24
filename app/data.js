@@ -218,6 +218,21 @@ export async function createPlan(payload) {
   if (data && data.plan_id && data.token) saveToken(data.plan_id, data.token);
   return data;
 }
+// Creazione atomica: una sola RPC, quindi una sola transazione. Se qualcosa
+// va storto non resta un piano a metà.
+export async function createPlanFull(payload, o = {}) {
+  const data = await rpc('create_plan_full', {
+    p: payload,
+    p_emoji: o.emoji || null,
+    p_group: o.group || null,
+    p_kind: o.kind || null,
+    p_allow_proposals: o.allowProposals !== false,
+    p_extras: o.extras || []
+  });
+  if (data && data.plan_id && data.token) saveToken(data.plan_id, data.token);
+  return data;
+}
+
 export const finalizePlan = (plan, emoji, group, kind, allowProposals) =>
   rpc('finalize_plan', { p_plan: plan, p_emoji: emoji || null, p_group: group || null,
                          p_kind: kind || null, p_allow_proposals: allowProposals });
