@@ -57,15 +57,43 @@ export async function ensureSession() {
   return data.session;
 }
 
+// Segno lasciato prima del salto verso Google: al ritorno dice che l'actor
+// esistente porta ancora il nome buttato lì per votare da ospite.
+const PENDING_LINK = 'kimari_link_google';
+
 export async function signInWithGoogle(redirectTo) {
   const s = await currentSession();
   const opts = { provider: 'google', options: { redirectTo } };
   // Chi è entrato come ospite collega Google all'account che ha già, così non
   // perde i piani a cui ha partecipato.
-  const { error } = s && s.user.is_anonymous
-    ? await sb.auth.linkIdentity(opts)
-    : await sb.auth.signInWithOAuth(opts);
-  if (error) throw error;
+  if (s && s.user.is_anonymous) {
+    try { localStorage.setItem(PENDING_LINK, '1'); } catch { /* niente */ }
+    const { error } = await sb.auth.linkIdentity(opts);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.auth.signInWithOAuth(opts);
+    if (error) throw error;
+  }
+}
+
+// Da chiamare all'avvio. Se si torna da un collegamento, l'actor c'è già ma si
+// chiama ancora "Ospite": adesso che sappiamo il nome vero si adotta quello,
+// insieme all'email. Torna true se ha cambiato qualcosa, così chi chiama sa
+// che deve ricaricare.
+export async function adottaIdentitaGoogle() {
+  let inCorso = false;
+  try { inCorso = localStorage.getItem(PENDING_LINK) === '1'; } catch { /* niente */ }
+  if (!inCorso) return false;
+  try { localStorage.removeItem(PENDING_LINK); } catch { /* niente */ }
+
+  const s = await currentSession();
+  if (!s || s.user.is_anonymous) return false;
+
+  const md = s.user.user_metadata || {};
+  const nome = md.full_name || md.name || (s.user.email || '').split('@')[0];
+  if (nome) await ensureActor(nome);
+  if (s.user.email) await setMyEmail(s.user.email);
+  return true;
 }
 
 export async function signOut() { await sb.auth.signOut(); }

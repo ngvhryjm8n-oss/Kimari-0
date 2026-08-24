@@ -130,6 +130,51 @@ await test('un errore in avvio viene mostrato, non ingoiato', async () => {
   assert.equal(e.style.display, 'block');
 });
 
+// Chi vota da ospite scrive un nome buttato lì. Se poi collega Google e resta
+// "Ospite prova" per sempre, il collegamento sembra non aver funzionato anche
+// quando ha funzionato: i dati ci sono ma la persona non si riconosce.
+await test('dopo aver collegato Google si adotta il nome vero', async () => {
+  const dom = new JSDOM(HTML, { url: 'https://example.test/', runScripts: 'outside-only' });
+  dom.window.localStorage.setItem('kimari_link_google', '1');   // segno lasciato prima del salto
+
+  const sb = makeSupabase({
+    session: { data: { session: { user: {
+      id: 'u1', is_anonymous: false, email: 'vincenzo@example.com',
+      user_metadata: { full_name: 'Vincenzo Bottari' }
+    } } }, error: null },
+    tables: { actors: [{ id: 'a1', display_name: 'Ospite prova' }] }
+  });
+  dom.window.supabase = { createClient: () => sb };
+  dom.window.eval(SCRIPT);
+  await new Promise(r => setTimeout(r, 0));
+  await new Promise(r => setTimeout(r, 0));
+
+  const nomi = sb.calls.rpc.filter(c => c.name === 'ensure_actor');
+  assert.equal(nomi.length, 1, 'il nome da Google non è stato adottato');
+  assert.equal(nomi[0].args.p_display_name, 'Vincenzo Bottari');
+
+  const mail = sb.calls.rpc.filter(c => c.name === 'set_my_email');
+  assert.equal(mail.length, 1, 'l\'email da Google serve ad avvisare alla conferma');
+  assert.equal(mail[0].args.p_email, 'vincenzo@example.com');
+
+  assert.equal(dom.window.localStorage.getItem('kimari_link_google'), null,
+    'il segno va tolto, altrimenti riscrive il nome a ogni avvio');
+});
+
+await test('senza collegamento in corso il nome scelto non viene toccato', async () => {
+  // Chi ha già il suo account e si è messo un soprannome nel profilo non deve
+  // vederselo riscrivere da Google a ogni apertura.
+  const { sb } = await boot({
+    session: { data: { session: { user: {
+      id: 'u1', is_anonymous: false, email: 'v@example.com',
+      user_metadata: { full_name: 'Vincenzo Bottari' }
+    } } }, error: null },
+    tables: { actors: [{ id: 'a1', display_name: 'Vince' }] }
+  });
+  assert.equal(sb.calls.rpc.filter(c => c.name === 'ensure_actor').length, 0);
+  assert.equal(sb.calls.rpc.filter(c => c.name === 'set_my_email').length, 0);
+});
+
 await test('il titolo del piano non può iniettare HTML', async () => {
   const preview = {
     ok: true, plan_id: 'p1', title: '<img src=x onerror=alert(1)>', status: 'deciding',

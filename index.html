@@ -156,6 +156,27 @@ async function boot(){
       const { data: meRow, error: ae } = await sb.from('actors').select('id, display_name').eq('auth_user_id', session.user.id).maybeSingle();
       if (ae) throw ae;
       ME = meRow || null;
+
+      // Ritorno da un collegamento con Google: l'actor c'è già, ma porta il
+      // nome che la persona aveva scritto per votare da ospite. Ora che sappiamo
+      // come si chiama davvero, si adotta quello — insieme all'email, che serve
+      // ad avvisarla quando il piano viene confermato.
+      let daCollegare = false;
+      try{ daCollegare = localStorage.getItem(PENDING_LINK) === '1'; }catch(_){}
+      if (ME && daCollegare && !session.user.is_anonymous){
+        try{ localStorage.removeItem(PENDING_LINK); }catch(_){}
+        const md = session.user.user_metadata || {};
+        const nm = md.full_name || md.name || (session.user.email || '').split('@')[0];
+        try{
+          if (nm) await sb.rpc('ensure_actor', { p_display_name: nm });
+          if (session.user.email) await sb.rpc('set_my_email', { p_email: session.user.email });
+          const { data: agg } = await sb.from('actors').select('id, display_name')
+            .eq('auth_user_id', session.user.id).maybeSingle();
+          if (agg) ME = agg;
+        }catch(e){ console.error('boot/adozione nome', e);
+                   bootErr = 'Sei entrato con Google ma non sono riuscito ad aggiornare il tuo nome. Dettaglio: «' + ((e && e.message) || e) + '»'; }
+      }
+
       if (!ME && !session.user.is_anonymous){
         const md = session.user.user_metadata || {};
         const nm = md.full_name || md.name || (session.user.email || 'Kimari').split('@')[0];
@@ -181,9 +202,15 @@ async function boot(){
   if (bootErr) err(bootErr);
 }
 
+// Chi collega Google a una sessione da ospite torna qui con l'actor che aveva
+// già: si chiama ancora col nome buttato lì per votare. Il segno lasciato prima
+// del salto dice al boot di adottare il nome vero al ritorno.
+const PENDING_LINK = 'kimari_link_google';
+
 async function googleAuth(){
   try{
     if (SESSION && SESSION.user.is_anonymous){
+      try{ localStorage.setItem(PENDING_LINK, '1'); }catch(_){}
       const { error } = await sb.auth.linkIdentity({ provider:'google', options:{ redirectTo: location.origin + location.pathname } });
       if (error) throw error;
     } else {

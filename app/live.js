@@ -647,6 +647,10 @@ export async function boot() {
 
   try {
     await data.ensureSession();
+    // Prima di leggere: se si torna da un collegamento con Google, l'actor
+    // porta ancora il nome da ospite. Si adotta quello vero e poi si legge,
+    // altrimenti il primo schermo mostrerebbe ancora "Ospite".
+    await data.adottaIdentitaGoogle();
     await reload(K);
     wire(K);
     document.body.dataset.kimari = 'live';
