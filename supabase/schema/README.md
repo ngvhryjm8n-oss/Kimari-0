@@ -6,7 +6,7 @@ solo dentro Supabase.
 
 | File | Contenuto |
 |---|---|
-| `0001_0002_funzioni.sql` | tutte le funzioni di V0, verbatim |
+| `funzioni_v0_ESTRATTE_non_applicare.sql` | tutte le funzioni di V0, verbatim |
 
 Serve a due cose concrete: poter **rileggere e rivedere** il codice che regge la
 sicurezza, e far verificare a `npm run test:rpc` anche le RPC di V0 — che prima

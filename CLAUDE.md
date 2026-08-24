@@ -23,8 +23,8 @@ budget ~0, prodotto in italiano.
     voting, none_ok), add_candidates, confirm_plan, update_plan_field,
     cancel_plan, set_rsvp, remove_participant, revoke_invite_links,
     create_invite_link, log_event. Viste: v_candidate_results, v_missing_voters.
-  - Le FUNZIONI sono nel repo, estratte il 24/8/2026:
-    [supabase/schema/](supabase/schema/). Se le cambi dalla dashboard,
+  - Le FUNZIONI sono nel repo, ESTRATTE dal database il 24/8/2026 e da NON
+    riapplicare: [supabase/schema/](supabase/schema/). Se le cambi dalla dashboard,
     riesporta con [supabase/tools/dump_schema.sql](supabase/tools/dump_schema.sql),
     altrimenti divergono e `npm run test:rpc` mente.
     Mancano ancora tabelle, policy, vincoli e indici (query 2-5 dello stesso file).
