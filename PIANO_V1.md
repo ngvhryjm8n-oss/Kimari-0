@@ -84,7 +84,7 @@ non blocchi il resto.
 - Export dello schema Supabase → [supabase/README.md](supabase/README.md). Serve la password del DB. **Ancora da fare.**
 - `delete_my_account` — obbligatoria per Apple (5.1.1 v). **SQL scritto**: [0004_account_deletion.sql](supabase/migrations/0004_account_deletion.sql).
 - Privacy policy — **bozza scritta**: [PRIVACY.md](PRIVACY.md). Da far rivedere a un avvocato, completare dove segnato, e pubblicare a un URL stabile.
-- Termini di servizio — ancora da scrivere.
+- Termini di servizio — **bozza scritta**: [TERMINI.md](TERMINI.md). Stessa sorte della privacy: avvocato, poi URL pubblico.
 
 **Fase 1 — gruppi** *(sblocca la home del prototipo)* — **SQL scritto**
 [0003_groups.sql](supabase/migrations/0003_groups.sql): `groups`,

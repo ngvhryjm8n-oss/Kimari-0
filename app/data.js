@@ -92,13 +92,17 @@ export async function loadState() {
   if (!actor) return { me: 'guest', people: {}, groups: {}, plans: {} };
 
   const [groupRows, memberRows, sectionRows, groupSectionRows,
-         placeRows, entRows, planRows] = await Promise.all([
+         placeRows, entRows, friendRows, muteRows, placeMediaRows,
+         planRows] = await Promise.all([
     rows(sb.from('groups').select('*'), 'i gruppi'),
     rows(sb.from('group_members').select('group_id, actor_id, role, joined_at'), 'i membri dei gruppi'),
     rows(sb.from('sections').select('*').order('position'), 'le tue sezioni'),
     rows(sb.from('group_sections').select('*'), 'le tue sezioni'),
     rows(sb.from('places').select('*').order('used_count', { ascending: false }), 'i posti salvati'),
     rows(sb.from('entitlements').select('*'), 'il tuo piano'),
+    rows(sb.from('friendships').select('friend_id'), 'i tuoi amici'),
+    rows(sb.from('mutes').select('group_id'), 'i gruppi silenziati'),
+    rows(sb.from('place_media').select('*'), 'le foto dei posti'),
     rows(sb.from('plans').select('*'), 'i piani')
   ]);
 
@@ -146,7 +150,9 @@ export async function loadState() {
   people[actor.id] = mapPerson(actor, {
     sections: sectionRows.map(mapSection),
     groupSections: Object.fromEntries(groupSectionRows.map(r => [r.group_id, r.section_id])),
-    places: placeRows.map(mapPlace),
+    places: placeRows.map(p => mapPlace(p, placeMediaRows)),
+    friends: friendRows.map(f => f.friend_id),
+    muted: muteRows.map(m => m.group_id),
     unlimited: !!(entRows[0] && entRows[0].unlimited)
   });
 
@@ -288,7 +294,48 @@ export const addSettlement = (plan, to, cents) =>
   rpc('add_settlement', { p_plan: plan, p_to: to, p_amount_cents: cents });
 export const planBalances  = plan => rpc('plan_balances', { p_plan: plan });
 
+/* ==================== ritardi, assenze, prenotato ==================== */
+export const setMyLate   = (plan, minutes, note) =>
+  rpc('set_my_late', { p_plan: plan, p_minutes: minutes, p_note: note || null });
+export const clearMyLate = plan => rpc('clear_my_late', { p_plan: plan });
+export const setMyAbsence = (plan, note) =>
+  rpc('set_my_absence', { p_plan: plan, p_note: note || null });
+export const setPlanBooked = (plan, booked) =>
+  rpc('set_plan_booked', { p_plan: plan, p_booked: !!booked });
+
+/* ====================== amici e gruppi silenziati ==================== */
+export const addFriend       = actor => rpc('add_friend', { p_actor: actor });
+export const removeFriend    = actor => rpc('remove_friend', { p_actor: actor });
+export const toggleGroupMute = group => rpc('toggle_group_mute', { p_group: group });
+
+/* =================== commenti, gruppi, moderazione =================== */
+export const deleteComment = id => rpc('delete_comment', { p_comment: id });
+export const deleteGroup   = id => rpc('delete_group', { p_group: id });
+export const transferGroupOwner = (group, actor) =>
+  rpc('transfer_group_owner', { p_group: group, p_actor: actor });
+
 /* =============================== posti =============================== */
+export const addPlaceLink = (place, name, url) =>
+  rpc('add_place_media', { p_place: place, p_kind: 'link', p_name: name, p_url: url });
+export const deletePlaceMedia = id => rpc('delete_place_media', { p_media: id });
+export const setPlaceCover    = id => rpc('set_place_cover', { p_media: id });
+
+// Foto di un posto: prima nello Storage, poi la riga. Come per i piani, se la
+// riga viene rifiutata il file caricato va tolto.
+export async function uploadPlacePhoto(placeId, file) {
+  const path = `places/${placeId}/${crypto.randomUUID()}`;
+  const up = await sb.storage.from(BUCKET).upload(path, file);
+  if (up.error) throw new Error('Non riesco a caricare la foto: ' + up.error.message);
+  try {
+    return await rpc('add_place_media', {
+      p_place: placeId, p_kind: 'photo', p_name: file.name, p_path: path, p_size: file.size
+    });
+  } catch (e) {
+    await sb.storage.from(BUCKET).remove([path]);
+    throw e;
+  }
+}
+
 export const savePlace = (name, address, note) =>
   rpc('save_place', { p_name: name, p_address: address || null, p_note: note || null });
 export const deletePlace = id => rpc('delete_place', { p_place: id });

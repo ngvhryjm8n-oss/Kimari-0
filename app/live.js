@@ -153,6 +153,53 @@ export const HANDLERS = {
     }
   },
 
+  // Una "decisione" è un piano il cui unico scopo è una domanda: stessa
+  // creazione atomica, con kind='decision' e la domanda già dentro.
+  async saveDecision(el, K) {
+    const dd = K.state.ddraft || {};
+    if (!String(dd.question || '').trim()) {
+      return { toast: 'Scrivi la domanda', skipReload: true };
+    }
+    if (!dd.binary && (dd.options || []).length < 2) {
+      return { toast: 'Servono almeno 2 opzioni', skipReload: true };
+    }
+    const res = await data.createPlanFull(
+      { title: dd.question.trim(), when_mode: 'later', where_mode: 'later' },
+      { emoji: '❓', group: dd.groupId || null, kind: 'decision', allowProposals: false,
+        extras: [{ question: dd.question.trim(), binary: !!dd.binary,
+                   options: dd.binary ? [] : (dd.options || []) }] });
+    K.state.ddraft = null;
+    return { closeSheet: true, go: 'p/' + res.plan_id };
+  },
+
+  // Modifica di un piano già confermato: passa da update_plan_field, che tiene
+  // aggiornati versione e storia. Un campo per volta, come vuole quella RPC.
+  async saveEdit(el, K) {
+    const p = curPlan(K);
+    const start = val(K, '#editStart');
+    const nome  = val(K, '#editPlace');
+    let cambiato = 0;
+
+    if (start) {
+      const nuovo = toDbWhen({ start, end: val(K, '#editEnd'), allDay: on(K, '#editAllDay') });
+      const vecchio = p.when.value;
+      if (!vecchio || new Date(vecchio.start).getTime() !== new Date(nuovo.starts_at).getTime()) {
+        await data.updatePlanField(p.id, 'when', nuovo, null);
+        cambiato++;
+      }
+    }
+    if (nome) {
+      const vecchio = p.where.value;
+      if (!vecchio || vecchio.name !== nome || (vecchio.address || '') !== val(K, '#editAddr')) {
+        await data.updatePlanField(p.id, 'where',
+          toDbWhere({ name: nome, address: val(K, '#editAddr') }), null);
+        cambiato++;
+      }
+    }
+    if (!cambiato) return { toast: 'Nessuna modifica', closeSheet: true, skipReload: true };
+    return { toast: 'Piano aggiornato', closeSheet: true };
+  },
+
   /* ------------------------------------------------------ voto */
 
   // Il commit vero. tog/none/ynVote lavorano su una bozza locale e restano
@@ -413,6 +460,107 @@ export const HANDLERS = {
     await data.addComment(curPlan(K).id, v);
     if (input) input.value = '';
     return {};
+  },
+
+  async delComment(el, K) {
+    await data.deleteComment(el.dataset.id);
+    return { toast: 'Commento tolto' };
+  },
+
+  /* ------------------------------------------- ritardi e assenze */
+
+  async saveLate(el, K) {
+    const minuti = K.state.lateMin;
+    if (!minuti) return { toast: 'Di quanto sei in ritardo?', skipReload: true };
+    await data.setMyLate(curPlan(K).id, minuti, val(K, '#lateNote'));
+    return { toast: 'Il gruppo lo sa', closeSheet: true };
+  },
+
+  async clearLate(el, K) {
+    await data.clearMyLate(curPlan(K).id);
+    return { toast: 'Ritardo annullato' };
+  },
+
+  async saveAbsent(el, K) {
+    await data.setMyAbsence(curPlan(K).id, val(K, '#absentNote'));
+    return { toast: 'Il gruppo lo sa', closeSheet: true };
+  },
+
+  async toggleBooked(el, K) {
+    const p = curPlan(K);
+    await data.setPlanBooked(p.id, !p.booked);
+    return { toast: p.booked ? 'Non risulta più prenotato' : 'Prenotato' };
+  },
+
+  /* ----------------------------------------- amici e silenziati */
+
+  async addFriend(el, K) {
+    await data.addFriend(el.dataset.id);
+    return { toast: 'Aggiunto ai tuoi', closeSheet: true };
+  },
+
+  async rmFriend(el, K) {
+    await data.removeFriend(el.dataset.id);
+    return { toast: 'Tolto', closeSheet: true };
+  },
+
+  async muteGroup(el, K) {
+    const ora = await data.toggleGroupMute(el.dataset.g);
+    return { toast: ora ? 'Gruppo silenziato' : 'Notifiche riattivate', closeSheet: true };
+  },
+
+  /* ----------------------------------------------------- gruppo */
+
+  async deleteGroup(el, K) {
+    const g = K.state.groups[el.dataset.g];
+    if (!confirm('Sciogliere "' + (g ? g.name : 'il gruppo') +
+                 '"?\n\nI piani NON vengono cancellati: quelli ancora ai voti ' +
+                 'vengono annullati, gli altri restano leggibili.')) {
+      return { skipReload: true };
+    }
+    await data.deleteGroup(el.dataset.g);
+    return { toast: 'Gruppo sciolto', closeSheet: true, go: 'home' };
+  },
+
+  async transferOwner(el, K) {
+    await data.transferGroupOwner(el.dataset.g, el.dataset.id);
+    return { toast: 'Chiavi passate', closeSheet: true };
+  },
+
+  /* ------------------------------------------------------ posti */
+
+  async savePlaceFromPlan(el, K) {
+    const p = curPlan(K);
+    const w = p && p.where && p.where.value;
+    if (!w || !w.name) return { skipReload: true };
+    await data.savePlace(w.name, w.address, null);
+    return { toast: 'Salvato tra i tuoi posti ★' };
+  },
+
+  async plCover(el) {
+    await data.setPlaceCover(el.dataset.id);
+    return { toast: 'Copertina cambiata' };
+  },
+
+  async plDelPhoto(el) {
+    await data.deletePlaceMedia(el.dataset.id);
+    return { toast: 'Foto tolta' };
+  },
+
+  async plDelFile(el) {
+    await data.deletePlaceMedia(el.dataset.id);
+    return { toast: 'Tolto' };
+  },
+
+  /* ---------------------------------------------------- profilo */
+
+  async saveProfile(el, K) {
+    const nome = val(K, '#pname');
+    if (!nome) return { toast: 'Il nome serve', skipReload: true };
+    await data.ensureActor(nome);                  // ensure_actor aggiorna anche il nome
+    const mail = val(K, '#pemail');
+    if (mail) await data.setMyEmail(mail.toLowerCase());
+    return { toast: 'Profilo aggiornato', closeSheet: true };
   }
 };
 

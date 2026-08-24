@@ -39,7 +39,10 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'revokeGroupInvites','addComment','deletePlace','savePlace','setMyEmail',
                  'addExpense','voidExpense','addSettlement','submitBallot','submitExtraBallot',
                  'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal','ensureActor',
-                 'signInWithGoogle','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull',
+                 'signInWithGoogle','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull','deleteComment',
+                 'setMyLate','clearMyLate','setMyAbsence','setPlanBooked','addFriend',
+                 'removeFriend','toggleGroupMute','deleteGroup','transferGroupOwner',
+                 'setPlaceCover','deletePlaceMedia',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
@@ -327,6 +330,43 @@ await test('claim rivendica un nome già nel piano invece di duplicarlo', async 
   const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', token: 'tok' } } } };
   await live.HANDLERS.claim({ dataset: { id: 'a-9' } }, K);
   assert.deepEqual(calls[0], { name: 'joinPlan', args: ['tok', null, 'a-9'] });
+});
+
+await test('il ritardo si manda in minuti, non come orario', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1' } }, lateMin: 20 },
+              $: () => ({ value: '  sono in tangenziale  ' }) };
+  await live.HANDLERS.saveLate(null, K);
+  assert.deepEqual(calls[0], { name: 'setMyLate', args: ['p1', 20, 'sono in tangenziale'] });
+});
+
+await test('senza minuti il ritardo non parte', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: {} }, lateMin: 0 }, $: () => ({ value: '' }) };
+  const res = await live.HANDLERS.saveLate(null, K);
+  assert.equal(calls.length, 0);
+  assert.equal(res.skipReload, true);
+});
+
+await test('toggleBooked manda il valore opposto a quello attuale', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1', booked: false } } } };
+  await live.HANDLERS.toggleBooked(null, K);
+  assert.deepEqual(calls[0], { name: 'setPlanBooked', args: ['p1', true] });
+});
+
+await test('muteGroup usa lo stato che torna il server, non quello locale', async () => {
+  // toggle_group_mute torna il nuovo stato: fidarsi di quello evita che il
+  // messaggio dica il contrario di quello che è successo.
+  globalThis.__fakeData.__next = true;
+  const res = await live.HANDLERS.muteGroup({ dataset: { g: 'g1' } }, { state: {} });
+  assert.deepEqual(calls[0], { name: 'toggleGroupMute', args: ['g1'] });
+  assert.ok(/silenziato|riattivate/.test(res.toast));
+});
+
+await test('saveProfile aggiorna nome ed email', async () => {
+  const K = { state: {}, $: sel => ({ value: sel === '#pname' ? ' Vincenzo ' : 'V@Example.IT ' }) };
+  await live.HANDLERS.saveProfile(null, K);
+  assert.deepEqual(calls.map(c => c.name), ['ensureActor', 'setMyEmail']);
+  assert.deepEqual(calls[0].args, ['Vincenzo']);
+  assert.deepEqual(calls[1].args, ['v@example.it'], 'email normalizzata minuscola');
 });
 
 await test('ogni azione intercettata sa davvero scrivere', () => {

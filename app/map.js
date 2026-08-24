@@ -52,11 +52,21 @@ export function mapSection(row) {
   return { id: row.id, name: row.name, position: row.position };
 }
 
-export function mapPlace(row) {
+export function mapPlace(row, mediaRows = [], urlFor = null) {
+  const mie = mediaRows.filter(m => m.place_id === row.id);
   return {
     id: row.id, name: row.name, address: row.address || '',
     note: row.note || '', used: row.used_count || 0,
-    photos: [], files: [], createdAt: ms(row.created_at)
+    photos: mie.filter(m => m.kind === 'photo').map(m => ({
+      id: m.id, name: m.name, path: m.path, cover: !!m.is_cover,
+      dataUrl: urlFor ? urlFor(m.path) : null
+    })),
+    // Il prototipo chiama "files" anche i link: per un posto salvato un menu
+    // online e un PDF servono alla stessa cosa.
+    files: mie.filter(m => m.kind === 'link').map(m => ({
+      id: m.id, name: m.name, url: m.url, at: ms(m.created_at)
+    })),
+    createdAt: ms(row.created_at)
   };
 }
 
@@ -227,7 +237,13 @@ export function mapPlan(plan, parts = {}) {
 
     participants: participants.map(p => ({
       id: p.actor_id, role: p.role, rsvp: p.rsvp || null,
-      rsvpAt: null, late: null, joinedAt: ms(p.joined_at)
+      rsvpAt: ms(p.rsvp_at),
+      // Minuti e non un orario: "20 minuti di ritardo" resta vero anche se il
+      // piano viene spostato.
+      late: p.late_minutes
+        ? { minutes: p.late_minutes, note: p.late_note || '', at: ms(p.late_at) }
+        : null,
+      joinedAt: ms(p.joined_at)
     })),
     ballots: mapBallots({ ballots, approvals, candidates: mine, extraApprovals }),
 
@@ -243,8 +259,9 @@ export function mapPlan(plan, parts = {}) {
     photos,
     files,
 
-    // campi che il prototipo si aspetta ma che il database non ha ancora
-    booked: false, seriesId: null, occurrence: null, of: null, recurrence: null
+    booked: !!plan.booked,
+    // ricorrenze: il prototipo le mostra, il database non le ha ancora
+    seriesId: null, occurrence: null, of: null, recurrence: null
   };
 }
 

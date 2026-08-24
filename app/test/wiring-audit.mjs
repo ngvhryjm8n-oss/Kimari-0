@@ -72,7 +72,15 @@ try {
 }
 
 // 2. Il quadro.
-const scriventi = [...casi.keys()].filter(n => SCRIVE.test(casi.get(n) || ''));
+// Falsi positivi dell'euristica: modificano state.draft, cioè un piano che
+// nel database non esiste ancora. Diventano scrittura solo alla creazione,
+// dentro create_plan_full.
+const SOLO_BOZZA = ['addDOpt', 'rmDOpt', 'addXOpt', 'rmXOpt',
+                    'quickWhen', 'addWhen', 'quickWhere', 'addWhere'];
+
+const scriventi = [...casi.keys()]
+  .filter(n => SCRIVE.test(casi.get(n) || ''))
+  .filter(n => !SOLO_BOZZA.includes(n));
 const fatte     = scriventi.filter(n => convertite.has(n));
 const restano   = scriventi.filter(n => !convertite.has(n));
 const soloUI    = [...casi.keys()].filter(n => !SCRIVE.test(casi.get(n) || ''));
