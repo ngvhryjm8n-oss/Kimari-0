@@ -53,3 +53,28 @@ npm test
 parametri passati da `data.js` con le funzioni definite nelle migrazioni: oggi
 29 combaciano e 12 non sono verificabili perché definite in 0001/0002, che nel
 repo non ci sono ancora.
+
+## Cosa è stato verificato contro la produzione
+
+25 agosto 2026, browser vero, database vero. Non con dei finti.
+
+| Percorso | Esito |
+|---|---|
+| avvio, `loadState()` e le sue ~20 query | ok |
+| primo accesso col nome (`ensure_actor`) | ok |
+| creazione piano con `create_plan_full` | ok — emoji, opzioni, posto e domanda binaria in una transazione sola |
+| voto su quando **e** su una domanda extra | ok — `submit_ballot` + `submit_extra_ballot`, riletti dal database |
+| conferma del piano e della domanda | ok — stato `confirmed`, domanda risolta con "Sì" |
+| apertura di un link d'invito da estraneo | ok — titolo, organizzatore, opzioni, "entra col nome" |
+
+Non ancora provati contro la produzione: spese e saldi, proposte di cambio,
+gruppi, foto.
+
+### Il fuso di questo PC è Asia/Shanghai
+
+Non è un difetto del codice — anzi, il giro d'andata e ritorno è corretto:
+si scrive `20:00`, il database salva `12:00Z`, lo schermo rimostra `20:00`.
+Ma per un prodotto italiano vale la pena saperlo: provando da qui i piani
+nascono con `timezone: Asia/Shanghai`, e sullo stesso piano aperto da un
+telefono italiano comparirebbe l'ora corrispondente, non quella scritta.
+L'istante assoluto è giusto; l'ora "a mente" no.
