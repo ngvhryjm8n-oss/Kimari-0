@@ -95,8 +95,12 @@ begin
     if abs(v_b) not in (333, 334) or abs(v_c) not in (333, 334) then
       raise exception '2) quote sbagliate: Bruno % Carla % (attese 333 o 334)', v_b, v_c;
     end if;
-    if abs(v_b) + abs(v_c) + (1000 - v_a) <> 2000 then
-      raise exception '2) le quote non ricostruiscono i 1000 centesimi';
+    -- Le tre quote (quella di Anna è 1000 meno quanto le devono) devono
+    -- ricostruire esattamente la spesa: è qui che si vede se un centesimo
+    -- del resto è stato perso o contato due volte.
+    if (1000 - v_a) + abs(v_b) + abs(v_c) <> 1000 then
+      raise exception '2) le tre quote sommano % invece di 1000 (Anna % Bruno % Carla %)',
+        (1000 - v_a) + abs(v_b) + abs(v_c), 1000 - v_a, abs(v_b), abs(v_c);
     end if;
     ok := ok + 1; rep := rep || E'\nok   2) 10,00 € in tre = 3,34 + 3,33 + 3,33, niente centesimi persi';
 

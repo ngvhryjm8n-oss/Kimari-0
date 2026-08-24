@@ -184,6 +184,23 @@ as $$
   ricevuto as (
     select to_actor as actor_id, sum(amount_cents) as cents
       from public.settlements where plan_id = p_plan group by to_actor
+  ),
+  -- NON solo i partecipanti di adesso: chi ha lasciato il piano o ha
+  -- cancellato l'account resta nei conti finché il suo saldo non è zero.
+  -- Altrimenti i soldi che deve sparirebbero dal riepilogo e la somma dei
+  -- saldi non farebbe più zero.
+  attori as (
+    select actor_id from public.participants where plan_id = p_plan
+    union
+    select paid_by from public.expenses where plan_id = p_plan and voided_at is null
+    union
+    select es.actor_id from public.expense_shares es
+      join public.expenses e on e.id = es.expense_id
+     where e.plan_id = p_plan and e.voided_at is null
+    union
+    select from_actor from public.settlements where plan_id = p_plan
+    union
+    select to_actor   from public.settlements where plan_id = p_plan
   )
   select p.actor_id,
          ( coalesce((select cents from pagato   where actor_id = p.actor_id), 0)
@@ -191,9 +208,8 @@ as $$
          + coalesce((select cents from reso     where actor_id = p.actor_id), 0)
          - coalesce((select cents from ricevuto where actor_id = p.actor_id), 0)
          )::bigint
-    from public.participants p
-   where p.plan_id = p_plan
-     and public.kimari_is_participant(p_plan);
+    from attori p
+   where public.kimari_is_participant(p_plan);
 $$;
 
 -- ---------------------------------------------------------------- posti

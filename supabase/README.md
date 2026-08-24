@@ -65,6 +65,8 @@ Ordine, una alla volta, dal SQL Editor:
 | 1 | `0003_groups.sql` | gruppi, membri, sezioni private, inviti di gruppo |
 | 2 | `0004_account_deletion.sql` | `delete_my_account()` — richiesta da Apple |
 | 3 | `0005_extras_comments_proposals.sql` | domande extra, commenti, proposte |
+| 4 | `0006_media_expenses_places.sql` | media su Storage, spese e saldi, posti salvati |
+| 5 | `0007_fix_plan_balances.sql` | correzione a `plan_balances()` di 0006 |
 
 Ognuna gira in una transazione e comincia con un blocco di preflight: se
 un'assunzione sullo schema non regge, **fallisce senza lasciare niente a metà**
