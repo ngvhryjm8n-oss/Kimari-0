@@ -154,3 +154,16 @@ verificare le 12 RPC di V0 che il client chiama.
 Se preferisci il dump vero, l'alternativa senza Docker è installare solo i
 client tool di Postgres (`winget install PostgreSQL.PostgreSQL`) e usare
 `pg_dump --schema-only`, come scritto sopra.
+
+## Una trappola dell'editor SQL
+
+`npx supabase db dump` **crea il file di destinazione prima di fallire**. Se
+fallisce (per Docker o altro) resta un file vuoto che sembra uno schema
+esportato: è successo, ed era finito nel repo come `migrations/0001_schema.sql`
+lungo zero byte. Se rilanci quel comando, controlla la dimensione di quello che
+produce prima di fidarti.
+
+E l'editor **non tiene lo stato di sessione fra le istruzioni** come ci si
+aspetterebbe: una `create temp table` seguita da altre istruzioni fallisce con
+`relation "..." does not exist`. Le migrazioni con `BEGIN`/`COMMIT` invece
+funzionano. Nel dubbio, scrivi istruzioni che stanno in piedi da sole.

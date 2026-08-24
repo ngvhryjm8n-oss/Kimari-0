@@ -8,39 +8,65 @@
 --              → per verificare creazione e flusso ospite
 --   3 utenti anonimi (uno per ogni sessione aperta e chiusa)
 --
--- Serviva: erano i due percorsi che nessuno aveva mai eseguito davvero.
--- Il piano è rimasto senza emoji e senza domande perché finalize_plan non
--- esisteva ancora — ed è così che è saltata fuori la creazione non atomica,
--- corretta poi in 0010.
+-- Servivano: erano i due percorsi che nessuno aveva mai eseguito davvero. Il
+-- piano è rimasto senza emoji e senza domande perché finalize_plan non esisteva
+-- ancora — ed è così che è saltata fuori la creazione non atomica, corretta
+-- poi in 0010.
 --
--- Lancia tutto nel SQL Editor. Non tocca niente che non abbia quel nome.
-
-begin;
-
-create temp table _prove on commit drop as
-  select id from public.plans where title like 'PROVA-CLAUDE%';
+-- NIENTE tabelle temporanee. La prima versione ne usava una e l'editor SQL di
+-- Supabase ha risposto 'relation "_prove" does not exist': non tiene lo stato
+-- di sessione come ci si aspetterebbe. Il perché esatto non l'ho verificato —
+-- le migrazioni con BEGIN/COMMIT invece funzionano — ma evitare del tutto lo
+-- stato di sessione rende la domanda inutile.
+-- Ogni riga qui sotto sta in piedi da sola ed è ripetibile: rilanciarla due
+-- volte non fa danni.
+--
+-- Si lancia tutto insieme, DALL'ALTO IN BASSO. L'ordine conta: gli utenti auth
+-- vanno tolti prima dei profili, dopo non si saprebbe più quali erano.
 
 delete from public.approvals
- where candidate_id in (select id from public.candidates
-                         where plan_id in (select id from _prove));
-delete from public.ballots      where plan_id in (select id from _prove);
-delete from public.candidates   where plan_id in (select id from _prove);
-delete from public.participants where plan_id in (select id from _prove);
-delete from public.invite_uses
- where invite_link_id in (select id from public.invite_links
-                           where plan_id in (select id from _prove));
-delete from public.invite_links  where plan_id in (select id from _prove);
-delete from public.plan_changes  where plan_id in (select id from _prove);
-delete from public.funnel_events where plan_id in (select id from _prove);
-delete from public.plans         where id in (select id from _prove);
+ where candidate_id in (
+   select c.id from public.candidates c
+     join public.plans p on p.id = c.plan_id
+    where p.title like 'PROVA-CLAUDE%');
 
--- Prima gli utenti auth, poi i profili: dopo non si saprebbe più quali erano.
+delete from public.ballots
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.candidates
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.participants
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.invite_uses
+ where invite_link_id in (
+   select l.id from public.invite_links l
+     join public.plans p on p.id = l.plan_id
+    where p.title like 'PROVA-CLAUDE%');
+
+delete from public.invite_links
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.plan_changes
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.funnel_events
+ where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
+
+delete from public.plans where title like 'PROVA-CLAUDE%';
+
+-- Prima gli utenti auth…
 delete from auth.users
  where id in (select auth_user_id from public.actors
                where display_name like 'PROVA%CLAUDE%' and auth_user_id is not null);
+
+-- …e solo dopo i profili.
 delete from public.actors where display_name like 'PROVA%CLAUDE%';
 
-commit;
+-- Controllo finale: deve tornare 0 e 0.
+select (select count(*) from public.plans  where title like 'PROVA-CLAUDE%')  as piani_rimasti,
+       (select count(*) from public.actors where display_name like 'PROVA%CLAUDE%') as profili_rimasti;
 
 -- Resta un utente anonimo senza profilo, dell'ultima sessione da ospite.
 -- È indistinguibile da un visitatore vero che non ha ancora scritto il nome,
