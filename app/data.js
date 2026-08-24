@@ -243,6 +243,7 @@ export const submitExtraBallot = (extra, cands) =>
   rpc('submit_extra_ballot', { p_extra: extra, p_candidates: cands });
 export const confirmExtra = (extra, cand) =>
   rpc('confirm_extra', { p_extra: extra, p_candidate: cand });
+export const removePlanExtra = extra => rpc('remove_plan_extra', { p_extra: extra });
 
 /* ------------------------- commenti e proposte ------------------------ */
 export const addComment = (plan, body) => rpc('add_comment', { p_plan: plan, p_body: body });
