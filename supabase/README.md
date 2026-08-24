@@ -78,3 +78,35 @@ Le cose che più probabilmente si lamenteranno per prime:
 - `actors.auth_user_id è NOT NULL` oppure `ha ON DELETE CASCADE verso auth.users`
 
 Dopo `0004`, il giro di prova da fare a mano è in fondo a quel file.
+
+### Se il preflight di 0004 si lamenta di una tabella
+
+Vuol dire che punta ad `actors` e `delete_my_account()` non la conosce. Invece
+di scoprirle una alla volta, tirale fuori tutte:
+
+```sql
+select cl.relname as tabella, a.attname as colonna,
+       case c.confdeltype when 'a' then 'no action' when 'r' then 'restrict'
+                          when 'c' then 'cascade'   when 'n' then 'set null'
+                          when 'd' then 'set default' end as on_delete
+  from pg_constraint c
+  join pg_class cl     on cl.oid = c.conrelid
+  join pg_namespace n  on n.oid = cl.relnamespace
+  join unnest(c.conkey) as k(attnum) on true
+  join pg_attribute a  on a.attrelid = c.conrelid and a.attnum = k.attnum
+ where c.contype = 'f'
+   and c.confrelid = 'public.actors'::regclass
+   and n.nspname = 'public'
+ order by 1, 2;
+```
+
+Per ognuna la domanda è una sola: **è un dato personale di quella persona, o è
+roba condivisa di cui lei è solo l'autore?**
+
+- *Personale* (voti, preferenze, appartenenze, sue impostazioni) → si cancella.
+- *Condivisa* (ha creato il piano, ha proposto un'opzione, ha creato il gruppo)
+  → si tiene: l'anonimizzazione dell'actor la copre già, e cancellarla
+  romperebbe i piani di chi resta.
+
+**Ogni migrazione futura che aggiunge una tabella con una FK verso `actors` deve
+aggiornare `delete_my_account()`.** 0005 lo fa in fondo al file: usalo da modello.

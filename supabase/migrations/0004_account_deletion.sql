@@ -45,11 +45,16 @@ begin
      and c.confrelid = 'public.actors'::regclass
      and n.nspname = 'public'
      and cl.relname not in (
-       -- gestite da delete_my_account()
-       'participants', 'ballots', 'approvals', 'plans', 'plan_changes',
-       'invite_links', 'invite_uses', 'funnel_events',
-       'groups', 'group_members', 'sections', 'group_sections',
-       'group_invite_links'
+       -- Cancellate: sono dati personali di chi se ne va.
+       'participants', 'ballots', 'approvals',
+       'group_members', 'sections', 'group_sections',
+       -- Tenute: puntano all'actor come AUTORE di roba condivisa (chi ha
+       -- creato il piano, chi ha proposto un'opzione, chi ha creato il
+       -- gruppo). Non c'è niente da cancellare: l'anonimizzazione dell'actor
+       -- le copre già, e il nome diventa 'Account eliminato' ovunque compaia.
+       -- Cancellarle romperebbe i piani di chi resta.
+       'plans', 'candidates', 'plan_changes', 'groups',
+       'invite_links', 'invite_uses', 'funnel_events', 'group_invite_links'
      );
 
   if v_unknown is not null then

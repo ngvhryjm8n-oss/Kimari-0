@@ -494,4 +494,83 @@ grant select on public.plan_extras, public.extra_candidates, public.extra_approv
                 public.proposals, public.proposal_votes
 to anon, authenticated;
 
+-- --------------------------------------------------- cancellazione account
+-- delete_my_account() nasce in 0004 e non può conoscere le tabelle create qui:
+-- senza questo blocco, cancellare un account lascerebbe dietro voti sulle
+-- domande extra, commenti e voti sulle proposte. Cioè dati personali orfani.
+-- Ogni migrazione che aggiunge una tabella con una FK verso actors deve fare
+-- la stessa cosa.
+do $$
+begin
+  if not exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = 'delete_my_account'
+  ) then
+    raise notice 'delete_my_account() non trovata: applica 0004 e poi ri-applica questo blocco.';
+    return;
+  end if;
+
+  execute $fn$
+    create or replace function public.delete_my_account()
+    returns void
+    language plpgsql
+    security definer
+    set search_path = public, pg_temp
+    as $body$
+    declare
+      v_uid   uuid := auth.uid();
+      v_actor uuid;
+    begin
+      if v_uid is null then
+        raise exception 'non sei autenticato';
+      end if;
+
+      select a.id into v_actor from public.actors a where a.auth_user_id = v_uid;
+
+      if v_actor is not null then
+        update public.plans
+           set status = 'cancelled'
+         where organizer_id = v_actor and status = 'deciding';
+
+        -- come in 0004
+        delete from public.group_sections   where actor_id = v_actor;
+        delete from public.sections         where actor_id = v_actor;
+        delete from public.group_members    where actor_id = v_actor;
+        delete from public.approvals        where actor_id = v_actor;
+        delete from public.ballots          where actor_id = v_actor;
+        delete from public.participants     where actor_id = v_actor;
+
+        -- aggiunte da 0005
+        delete from public.extra_approvals  where actor_id = v_actor;
+        delete from public.proposal_votes   where actor_id = v_actor;
+        -- I commenti sono testo scritto dalla persona: è dato personale suo,
+        -- e su richiesta va cancellato. I messaggi di sistema restano: non li
+        -- ha scritti lei, raccontano la storia del piano.
+        delete from public.comments where actor_id = v_actor and not is_system;
+        -- Le proposte no: sono decisioni del gruppo, e created_by punta
+        -- all'actor ormai anonimizzato.
+
+        update public.actors
+           set display_name = 'Account eliminato',
+               auth_user_id = null
+         where id = v_actor;
+
+        if exists (
+          select 1 from information_schema.columns
+           where table_schema = 'public' and table_name = 'actors'
+             and column_name = 'email'
+        ) then
+          execute 'update public.actors set email = null where id = $1' using v_actor;
+        end if;
+      end if;
+
+      delete from auth.users where id = v_uid;
+    end;
+    $body$;
+  $fn$;
+
+  revoke execute on function public.delete_my_account() from public;
+  grant  execute on function public.delete_my_account() to authenticated;
+end $$;
+
 commit;
