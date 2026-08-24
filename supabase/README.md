@@ -110,3 +110,22 @@ roba condivisa di cui lei è solo l'autore?**
 
 **Ogni migrazione futura che aggiunge una tabella con una FK verso `actors` deve
 aggiornare `delete_my_account()`.** 0005 lo fa in fondo al file: usalo da modello.
+
+## Provare che funzionino
+
+Le migrazioni si applicano senza errori anche se le funzioni dentro sbagliano:
+il DDL è una cosa, i corpi plpgsql un'altra. Per quelli ci sono i test in
+`supabase/tests/`, da incollare interi nel SQL Editor.
+
+| File | Cosa prova |
+|---|---|
+| `smoke_0003_0005.sql` | gruppi, inviti, RLS, domande extra, commenti, cancellazione account — 13 controlli |
+| `smoke_0006.sql` | media, spese, saldi, rimborsi, limiti, posti — 9 controlli |
+
+**Finiscono di proposito con un errore rosso: quello è il resoconto.** L'editor
+di Supabase non mostra i `RAISE NOTICE`, quindi il riepilogo arriva come
+messaggio d'eccezione — che serve anche ad annullare la prova. Non lasciano
+righe, si possono rilanciare quante volte si vuole.
+
+Leggi il messaggio: ogni riga `ok` è un controllo passato, una riga `FALLITO`
+dice cosa non va.
