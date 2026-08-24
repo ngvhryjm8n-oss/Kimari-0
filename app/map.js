@@ -273,3 +273,24 @@ export function toDbWhere(v) {
 export function toDbCandidate(field, c) {
   return field === 'when' ? toDbWhen(c) : toDbWhere(c);
 }
+
+// Dalla bozza di creazione del prototipo al payload di create_plan.
+// La bozza usa whenMode/whenCands/whereFixed…, create_plan vuole
+// when_mode/when_candidates/place_name… — due vocabolari diversi per la
+// stessa cosa, ed è esattamente dove si sbaglia.
+export function draftToCreatePlan(d) {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const p = { title: String(d.title || '').trim(),
+              when_mode: d.whenMode, where_mode: d.whereMode };
+
+  if (d.whenMode === 'fixed') Object.assign(p, toDbWhen({ ...d.whenFixed, timezone: tz }));
+  else if (d.whenMode === 'deciding')
+    p.when_candidates = (d.whenCands || []).map(c => toDbWhen({ ...c, timezone: tz }));
+
+  if (d.whereMode === 'fixed') Object.assign(p, toDbWhere(d.whereFixed) || {});
+  else if (d.whereMode === 'deciding')
+    p.where_candidates = (d.whereCands || []).map(toDbWhere).filter(Boolean);
+
+  if (d.deadline) p.deadline_at = new Date(d.deadline).toISOString();
+  return p;
+}

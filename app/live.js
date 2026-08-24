@@ -11,7 +11,7 @@
 // vera. Senza `when` si romperebbe la creazione.
 
 import * as data from './data.js';
-import { toDbWhen, toDbWhere, toDbCandidate } from './map.js';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan } from './map.js';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -56,6 +56,33 @@ const on  = (K, sel) => { const e = K.$(sel); return !!e && e.classList.contains
 /* ------------------------------------------------------------------ */
 
 export const HANDLERS = {
+
+  /* -------------------------------------------------- creazione */
+
+  // I passi 1-3 sono navigazione dentro la bozza: passano al prototipo.
+  // Solo l'ultimo crea davvero il piano.
+  next: {
+    when: (el, K) => !!K.state.draft && K.state.draft.step >= 4,
+    async run(el, K) {
+      const d = K.state.draft;
+
+      // create_plan (0001) non conosce emoji, gruppo, tipo e domande: sono
+      // colonne e tabelle arrivate dopo. Si completa in tre passi.
+      const res = await data.createPlan(draftToCreatePlan(d));
+      const id = res && res.plan_id;
+      if (!id) throw new Error('create_plan non ha reso un piano');
+
+      await data.finalizePlan(id, d.emoji, d.groupId || null, 'plan', d.allowProposals !== false);
+
+      for (const x of (d.extras || [])) {
+        await data.addPlanExtra(id, x.question, x.binary ? null : x.options, !!x.binary);
+      }
+
+      K.state.draft = null; K.state.justVoted = false;
+      K.state.ballotDraft = null; K.state.bdKey = null;
+      return { go: 'share/' + id };
+    }
+  },
 
   /* ------------------------------------------------------ voto */
 

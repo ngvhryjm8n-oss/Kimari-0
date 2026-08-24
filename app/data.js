@@ -218,6 +218,9 @@ export async function createPlan(payload) {
   if (data && data.plan_id && data.token) saveToken(data.plan_id, data.token);
   return data;
 }
+export const finalizePlan = (plan, emoji, group, kind, allowProposals) =>
+  rpc('finalize_plan', { p_plan: plan, p_emoji: emoji || null, p_group: group || null,
+                         p_kind: kind || null, p_allow_proposals: allowProposals });
 export const previewInvite = t => rpc('preview_invite', { p_token: t });
 export const joinPlan = (t, name, claim) =>
   rpc('join_plan', { p_token: t, p_display_name: name || null, p_claim_actor: claim || null });
