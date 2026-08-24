@@ -1,0 +1,12 @@
+{
+  "name": "kimari-v0-tests",
+  "private": true,
+  "type": "module",
+  "description": "Solo test. Il sito resta il singolo file index.html: qui non si builda niente.",
+  "scripts": {
+    "test": "node test/smoke.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^27.0.0"
+  }
+}
