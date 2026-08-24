@@ -131,3 +131,25 @@ righe, si possono rilanciare quante volte si vuole.
 
 Leggi il messaggio: ogni riga `ok` è un controllo passato, una riga `FALLITO`
 dice cosa non va.
+
+## Se `supabase db dump` chiede Docker
+
+Lo chiede: la CLI gira il dump dentro un container. Ma per quello che serve qui
+Docker non è necessario — `tools/dump_schema.sql` ricostruisce lo schema con una
+query normale, usando `pg_get_functiondef`, `pg_get_viewdef` e il catalogo.
+
+1. incolla `tools/dump_schema.sql` nel SQL Editor e lancia;
+2. clicca **Download CSV** sul risultato;
+3. salva il file in `supabase/`.
+
+Non modifica niente: sono solo select sul catalogo, e non serve la password del
+database perché il SQL Editor è già autenticato.
+
+Restituisce, in quest'ordine: tabelle (con vincoli e stato della RLS), indici,
+policy, viste, **funzioni complete** e permessi. Le funzioni sono il pezzo che
+serve di più: senza le loro firme il controllo `npm run test:rpc` non può
+verificare le 12 RPC di V0 che il client chiama.
+
+Se preferisci il dump vero, l'alternativa senza Docker è installare solo i
+client tool di Postgres (`winget install PostgreSQL.PostgreSQL`) e usare
+`pg_dump --schema-only`, come scritto sopra.

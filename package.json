@@ -4,10 +4,11 @@
   "type": "module",
   "description": "Solo test. Il sito resta il singolo file index.html: qui non si builda niente.",
   "scripts": {
-    "test": "npm run test:site && npm run test:map && npm run test:rpc",
+    "test": "npm run test:site && npm run test:map && npm run test:rpc && npm run test:live",
     "test:site": "node test/smoke.mjs",
     "test:map": "node app/test/map.test.mjs",
-    "test:rpc": "node app/test/rpc-contract.test.mjs"
+    "test:rpc": "node app/test/rpc-contract.test.mjs",
+    "test:live": "node app/test/live.test.mjs"
   },
   "devDependencies": {
     "jsdom": "^27.0.0"
