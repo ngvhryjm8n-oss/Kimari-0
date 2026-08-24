@@ -13,8 +13,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 /* ---------- le funzioni definite nelle migrazioni ---------- */
 function sqlFunctions() {
-  const dir = join(root, 'supabase', 'migrations');
+  // migrations/ = quello che ho scritto io; schema/ = V0, estratto dal
+  // database di produzione. Servono entrambi per coprire tutte le RPC.
+  const dirs = [join(root, 'supabase', 'migrations'), join(root, 'supabase', 'schema')];
   const out = new Map();
+  for (const dir of dirs)
   for (const f of readdirSync(dir).filter(n => n.endsWith('.sql'))) {
     const sql = readFileSync(join(dir, f), 'utf8');
     const re = /create\s+(?:or\s+replace\s+)?function\s+public\.(\w+)\s*\(([\s\S]*?)\)\s*\r?\n\s*returns/gi;
@@ -61,8 +64,7 @@ let passed = 0, failed = 0, skipped = [];
 for (const call of calls) {
   const def = defined.get(call.name);
   if (!def) {
-    // ensure_actor, create_plan, submit_ballot… vivono in 0001/0002, che non
-    // sono nel repo: non si possono confrontare finché non c'è l'export.
+    // Non dovrebbe più capitare: dopo l'export del 24/8/2026 ci sono tutte.
     if (!skipped.includes(call.name)) skipped.push(call.name);
     continue;
   }
