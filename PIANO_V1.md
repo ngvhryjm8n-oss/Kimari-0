@@ -18,8 +18,8 @@ ma perché:
 
 Il sito web resta un file solo — quello è ciò che rende i link `?t=` apribili da
 chiunque senza installare niente, ed è il cuore del prodotto. **L'app diventa un
-progetto separato che condivide lo stesso backend.** Da aggiornare in CLAUDE.md
-quando la cosa è confermata.
+progetto separato che condivide lo stesso backend.** Confermato da Vincenzo e
+già riflesso nella regola 1 di CLAUDE.md.
 
 ## Il salto, misurato
 
@@ -85,9 +85,11 @@ non blocchi il resto.
 - `delete_my_account` — obbligatoria per Apple (5.1.1 v). **Non scrivibile senza lo schema.**
 - Privacy policy e termini, con URL pubblico. Obbligatori su entrambi gli store.
 
-**Fase 1 — gruppi** *(sblocca la home del prototipo)*
-`groups`, `group_members`, sezioni private. I piani esistenti restano validi:
-`plans.group_id` nullable. Da qui l'invito smette di essere usa-e-getta per piano.
+**Fase 1 — gruppi** *(sblocca la home del prototipo)* — **SQL scritto**
+[0003_groups.sql](supabase/migrations/0003_groups.sql): `groups`,
+`group_members`, sezioni private, inviti di gruppo con token hashato.
+I piani esistenti restano validi: `plans.group_id` è nullable, i link `?t=`
+non cambiano. Da applicare dopo l'export (Fase 0) o su un progetto di prova.
 
 **Fase 2 — il piano diventa ricco**
 Domande extra e decisioni generiche, commenti, proposte di cambio con voto.

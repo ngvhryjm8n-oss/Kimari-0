@@ -34,9 +34,13 @@ budget ~0, prodotto in italiano.
   Token salvati in localStorage (chiave kimari_tokens) per riaprire i propri piani.
 
 ## Regole non negoziabili
-1. UN SOLO FILE index.html: niente build step, niente framework, vanilla JS +
-   supabase-js via CDN. Deve restare trascinabile su qualsiasi hosting statico.
+1. IL SITO resta UN SOLO FILE index.html: niente build step, niente framework,
+   vanilla JS + supabase-js via CDN, trascinabile su qualsiasi hosting statico.
+   È ciò che rende i link `?t=` apribili da chiunque senza installare niente,
+   ed è il cuore del prodotto: non si tocca.
    (`package.json` e `test/` esistono solo per i test: non entrano nel sito.)
+   L'APP nativa (Capacitor, push, login Google nativo, deep link) è un progetto
+   separato sullo stesso backend, e lì il build step c'è. Vedi PIANO_V1.md.
 2. I link esistenti (?t=...) NON devono mai rompersi.
 3. UI in italiano, stile iOS (palette e componenti già nel CSS del file),
    mascotte pinguino nei momenti emotivi (attesa/festa/vuoto), non sulle azioni.
