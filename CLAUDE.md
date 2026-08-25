@@ -32,8 +32,17 @@ budget ~0, prodotto in italiano.
   - Vincolo che sta SOLO nel database: massimo 5 opzioni per campo
     (trigger `enforce_max_candidates`). `plan_field` è un enum, non text.
 - Ospiti = utenti Supabase ANONIMI (signInAnonymously) → upgrade con
-  auth.linkIdentity Google senza perdere dati. Google OAuth: codice pronto nel
-  client; provider da attivare su Supabase (potrebbe non esserlo ancora).
+  auth.linkIdentity senza perdere dati. Serve "Manual linking" attivo su
+  Supabase, altrimenti chi vota da ospite e poi entra con Google perde i piani.
+- Accesso: Google e Apple ATTIVI (25/8/2026), più gli utenti anonimi.
+  ⚠️ Il client secret di Apple SCADE OGNI 6 MESI: si rigenera con
+  `node tools/apple-secret.mjs ..\segreti\AuthKey_*.p8 TEAM_ID KEY_ID it.kimari.web`
+  e si reincolla in Supabase. Quando scade l'accesso con Apple smette senza
+  dire perché. Chiave e identificativi stanno in D:\Kimari\segreti (fuori dal
+  repo).
+  Identificativi Apple: App ID it.kimari.app · Services ID it.kimari.web.
+  Nella lista "Client IDs" di Supabase il Services ID va PRIMA del Bundle ID,
+  altrimenti Apple rifiuta il login dal browser.
 - Routing client: ?t=<token> pagina piano via invito · ?p=<id> via RLS ·
   ?new creazione · nessun parametro = home/benvenuto.
   Token salvati in localStorage (chiave kimari_tokens) per riaprire i propri piani.
@@ -47,8 +56,14 @@ budget ~0, prodotto in italiano.
    L'APP nativa (Capacitor, push, login Google nativo, deep link) è un progetto
    separato sullo stesso backend, e lì il build step c'è. Vedi PIANO_V1.md.
 2. I link esistenti (?t=...) NON devono mai rompersi.
-3. UI in italiano, stile iOS (palette e componenti già nel CSS del file),
-   mascotte pinguino nei momenti emotivi (attesa/festa/vuoto), non sulle azioni.
+3. UI in CINQUE LINGUE — italiano, inglese, spagnolo, tedesco, giapponese —
+   scelte da navigator.language, senza selettore: dentro Capacitor è la lingua
+   del telefono. Le stringhe stanno in i18n/dizionario.js, con l'ITALIANO come
+   chiave: t('Crea un piano'). Se una traduzione manca esce l'italiano, mai una
+   chiave a video. Il sito è un file solo, quindi il dizionario ci viene
+   iniettato da `node tools/genera-i18n.mjs` — si modifica il .js, non l'HTML.
+   Stile iOS (palette e componenti già nel CSS), mascotte pinguino nei momenti
+   emotivi (attesa/festa/vuoto), non sulle azioni.
 4. Date formattate con toLocaleString del dispositivo (mai stringhe a mano).
 5. Errori sempre "parlanti": mostrare il dettaglio vero di Supabase, mai
    messaggi generici.
