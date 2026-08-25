@@ -1,3 +1,4 @@
 node_modules/
 test/.script.js
 .claude/
+*.p8
