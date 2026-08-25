@@ -98,26 +98,30 @@ export const HANDLERS = {
     return { toast: 'Benvenuto, ' + nome, closeSheet: true };
   },
 
-  login: {
-    when: (el, K) => true,
-    async run(el, K) {
-      if (!K.state.ageOk) return { toast: 'Conferma di avere almeno 16 anni', skipReload: true };
-      if (el.dataset.p === 'apple') {
-        return { toast: 'Apple arriva quando l\'account sviluppatore è attivo', skipReload: true };
-      }
-      try {
-        await data.signInWithGoogle(location.origin + location.pathname);
-      } catch (e) {
-        // Regola 5: dire cosa manca davvero, non "riprova".
-        const m = String((e && e.message) || e).toLowerCase();
-        if (m.includes('not enabled') || m.includes('provider')) {
-          return { toast: 'Google non è ancora attivo su Supabase: entra col nome',
-                   skipReload: true };
-        }
-        throw e;
-      }
-      return { skipReload: true };   // la pagina se ne va sul redirect
+  // Un gestore solo per tutti e due: il provider arriva dal bottone. Prima
+  // Apple era cablata a rifiutare — scritta quando l'account non c'era e mai
+  // tolta dopo averlo attivato.
+  async login(el, K) {
+    const chi = el.dataset.p === 'apple' ? 'apple' : 'google';
+    if (!K.state.ageOk) {
+      return { toast: 'Prima conferma di avere almeno 16 anni', skipReload: true };
     }
+    try {
+      await data.signInWithProvider(chi, location.origin + location.pathname);
+    } catch (e) {
+      // Regola 5: dire cosa manca davvero, non "riprova".
+      const m = String((e && e.message) || e).toLowerCase();
+      const nome = chi === 'apple' ? 'Apple' : 'Google';
+      if (m.includes('not enabled') || m.includes('provider is not')) {
+        return { toast: nome + ' non è attivo su Supabase', skipReload: true };
+      }
+      if (m.includes('redirect') || m.includes('not allowed')) {
+        return { toast: 'Questo indirizzo non è fra i Redirect URLs di Supabase: ' +
+                        location.origin + location.pathname, skipReload: true };
+      }
+      throw e;
+    }
+    return { skipReload: true };   // la pagina se ne va sul redirect
   },
 
   /* -------------------------------------------------- creazione */
