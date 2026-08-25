@@ -91,6 +91,18 @@ await test("l'import di live.js porta la versione giusta", () => {
   assert.ok(imp, "l'import di live.js non porta ?v=");
   assert.equal(decodeURIComponent(imp[1]), v,
     "versione scaduta nell'import: gira `npm run timbra`");
+
+  // Non basta l'ingresso: il browser mette in cache ogni modulo per conto
+  // suo, quindi puo' abbinare un live.js nuovo a un map.js vecchio. Deve
+  // portare la versione TUTTA la catena.
+  for (const f of ['live.js', 'data.js']) {
+    const src = readFileSync(join(root, 'app', f), 'utf8');
+    for (const m of src.matchAll(/from '\.\/([a-z]+\.js)(\?v=([^']*))?'/g)) {
+      assert.ok(m[2], `${f} importa ./${m[1]} senza versione: gira \`npm run timbra\``);
+      assert.equal(decodeURIComponent(m[3]), v,
+        `${f} importa ./${m[1]} con una versione scaduta`);
+    }
+  }
 });
 
 // Nota su cosa questo file NON può provare: in jsdom i moduli non vengono

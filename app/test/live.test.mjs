@@ -34,7 +34,10 @@ const fake = new Proxy({}, {
 
 register('data:text/javascript,' + encodeURIComponent(`
   export async function resolve(spec, ctx, next) {
-    if (spec.endsWith('/data.js') || spec === './data.js')
+    // Il ?v= del timbro fa parte del percorso: senza toglierlo il finto
+    // non veniva piu' riconosciuto e tutte le prove sui gestori cadevano.
+    const nudo = spec.split('?')[0];
+    if (nudo.endsWith('/data.js') || nudo === './data.js')
       return { url: 'fake:data', shortCircuit: true };
     return next(spec, ctx);
   }
