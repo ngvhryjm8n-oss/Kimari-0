@@ -219,6 +219,7 @@ export function mapPlan(plan, parts = {}) {
     deadline: plan.deadline_at || null,
     createdAt: ms(plan.created_at),
     allowProposals: plan.allow_proposals !== false,
+    joinPolicy: plan.join_policy || 'open',
 
     when: {
       mode: plan.when_mode,

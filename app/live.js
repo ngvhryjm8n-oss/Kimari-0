@@ -200,6 +200,42 @@ export const HANDLERS = {
     return { toast: 'Piano aggiornato', closeSheet: true };
   },
 
+  /* -------------------------------------------- chi può votare */
+
+  async setPolicy(el, K) {
+    await data.setJoinPolicy(curPlan(K).id, el.dataset.v);
+    // Lo sheet resta aperto: cambiando in 'roster' compare l'elenco da
+    // riempire, e chiuderlo costringerebbe a riaprirlo subito.
+    return { toast: 'Aggiornato', riapriSheet: 'joinPolicy' };
+  },
+
+  async addRoster(el, K) {
+    const nome = val(K, '#rosterName');
+    if (!nome) return { toast: 'Scrivi un nome', skipReload: true };
+    await data.addPlanPlaceholder(curPlan(K).id, nome);
+    return { riapriSheet: 'joinPolicy' };
+  },
+
+  async rmRoster(el, K) {
+    // Se quella persona è già entrata il server rifiuta con un messaggio
+    // chiaro: il client non può distinguerla da un segnaposto, perché non
+    // vede auth_user_id.
+    await data.removePlanPlaceholder(el.dataset.id, curPlan(K).id);
+    return { riapriSheet: 'joinPolicy' };
+  },
+
+  async saveLimits(el, K) {
+    const v = K.$('#maxUses');
+    const n = v && v.value ? parseInt(v.value, 10) : null;
+    await data.setInviteLimits(curPlan(K).id, n, null);
+    return { toast: n ? 'Massimo ' + n + ' persone' : 'Nessun limite' };
+  },
+
+  async revokePlanLink(el, K) {
+    await data.revokeInviteLinks(curPlan(K).id);
+    return { toast: 'Link revocato: chi è già entrato resta', closeSheet: true };
+  },
+
   /* ------------------------------------------------------ voto */
 
   // Il commit vero. tog/none/ynVote lavorano su una bozza locale e restano
@@ -629,6 +665,12 @@ function wire(K) {
         res = res || {};
         if (res.closeSheet && K.closeSheet) K.closeSheet();
         if (!res.skipReload) await reload(K);
+        // Alcune schermate si modificano mentre le si usa: scegliere "elenco
+        // chiuso" fa comparire l'elenco da riempire lì sotto. Chiuderle
+        // costringerebbe a riaprirle subito.
+        if (res.riapriSheet === 'joinPolicy' && K.openSheet && K.sheetJoinPolicy) {
+          K.openSheet(K.sheetJoinPolicy(curPlan(K)));
+        }
         if (res.toast && K.toast) K.toast(res.toast);
         if (res.go && K.go) K.go(res.go);
       })

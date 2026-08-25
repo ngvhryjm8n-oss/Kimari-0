@@ -903,7 +903,50 @@ function vExpenses(p){
     ${hint(`<div class="group-foot">Solo registrazione: i soldi passano fuori da Kimari (PayPal, Satispay, contanti). Le voci non si modificano, si annullano.</div>`)}` : '<div class="group-foot">Parti uguali, una valuta. I soldi passano fuori da Kimari.</div>'}`;
 }
 const optionsBlock = (p, isOrg) => `<div class="group-title">Opzioni del piano</div><div class="group"><div class="row"><div class="grow"><div class="t">Gli altri possono proporre</div><div class="s">Altre date o luoghi ai voti, e cambi dopo la conferma</div></div><button class="sw ${p.allowProposals ? 'on' : ''}" data-action="toggleAllow" aria-label="Gli altri possono proporre"></button></div>
-  ${p.status === 'confirmed' && p.kind === 'plan' ? `<div class="row"><div class="grow"><div class="t">Ho prenotato</div><div class="s">Le proposte del gruppo non cambiano il piano da sole: decidi tu</div></div><button class="sw ${p.booked ? 'on' : ''}" data-action="toggleBooked" aria-label="Ho prenotato"></button></div>` : ''}</div>`;
+  ${p.status === 'confirmed' && p.kind === 'plan' ? `<div class="row"><div class="grow"><div class="t">Ho prenotato</div><div class="s">Le proposte del gruppo non cambiano il piano da sole: decidi tu</div></div><button class="sw ${p.booked ? 'on' : ''}" data-action="toggleBooked" aria-label="Ho prenotato"></button></div>` : ''}
+  ${isOrg && p.status === 'deciding' ? `<button class="row link" data-action="joinPolicy"><div class="grow"><div class="t">Chi può votare</div><div class="s">${POLICY_LABEL[p.joinPolicy || 'open']}</div></div><span class="chev">›</span></button>` : ''}</div>`;
+
+const POLICY_LABEL = {
+  open:    'Chiunque abbia il link',
+  roster:  "Solo chi è nell'elenco",
+  account: 'Solo con un account'
+};
+
+// Quanto è chiuso il piano. Aperto va bene per la pizza del sabato; l'elenco
+// serve quando conta chi vota, e non chiede il login a nessuno.
+function sheetJoinPolicy(p){
+  const pol = p.joinPolicy || 'open';
+  const segnaposto = p.participants.filter(x => x.id !== p.organizer);
+  const scelta = (v, tit, sub) => `<button class="row" data-action="setPolicy" data-v="${v}">
+    <span class="chk ${pol === v ? 'on' : ''}">${pol === v ? '✓' : ''}</span>
+    <div class="grow"><div class="t">${tit}</div><div class="s">${sub}</div></div></button>`;
+
+  return `<h2>Chi può votare</h2>
+  <p class="sub">Con un link aperto la stessa persona può votare più volte da finestre diverse. Se conta, stringi.</p>
+  <div class="group">
+    ${scelta('open', 'Chiunque abbia il link', 'Scrive il suo nome ed entra. Vedi sempre chi ha votato')}
+    ${scelta('roster', "Solo chi è nell'elenco", 'Scrivi tu i nomi: chi apre il link sceglie il suo, e quel nome è preso')}
+    ${scelta('account', 'Solo con un account', 'Serve entrare con Google o Apple. Il più chiuso, ma qualcuno non voterà')}
+  </div>
+  ${pol === 'roster' ? `
+    <div class="group-title">L'elenco · ${segnaposto.length} ${segnaposto.length === 1 ? 'nome' : 'nomi'}</div>
+    <div class="group">
+      ${segnaposto.map(x => `<div class="row">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div>
+        <button class="x" data-action="rmRoster" data-id="${x.id}" aria-label="Togli">×</button></div>`).join('')}
+      <div class="row"><input class="input" id="rosterName" placeholder="Aggiungi un nome" maxlength="40">
+        <button class="btn sec" style="width:auto;padding:8px 14px" data-action="addRoster">Aggiungi</button></div>
+    </div>
+    <p class="foot">Chi apre il link vedrà questi nomi e sceglierà il suo.</p>` : ''}
+  <div class="group-title">Il link</div>
+  <div class="group">
+    <div class="row"><div class="grow t">Massimo di persone</div>
+      <input class="input" id="maxUses" type="number" min="1" max="50" style="width:80px;text-align:right"
+             value="${p.maxUses || ''}" placeholder="—"></div>
+    <button class="row link" data-action="saveLimits"><div class="grow t" style="color:var(--blue)">Salva il limite</div></button>
+    <button class="row link" data-action="revokePlanLink"><div class="grow t" style="color:var(--red)">Revoca il link</div><div class="s">Chi è già entrato resta</div></button>
+  </div>
+  <p class="foot">Revocare non rompe niente per chi ha già votato: serve quando il link finisce dove non doveva.</p>`;
+}
 function vPlan(p){
   expireProposals(p);
   const mine = state.me; const isP = p.participants.some(x => x.id === mine); const isOrg = p.organizer === mine; const orgName = nameOf(p.organizer); const web = isWeb(); const g = groupOf(p);
@@ -1301,6 +1344,7 @@ document.addEventListener('click', e => {
       sysComment(p, 'candidate', `${nameOf(state.me)} ha proposto ${candText(f, c)}`); closeSheet(); toast('Opzione aggiunta: invia il voto per confermarla'); render(); break;
     }
     case 'toggleAllow': p.allowProposals = !p.allowProposals; render(); break;
+    case 'joinPolicy': openSheet(sheetJoinPolicy(p)); break;
     case 'toggleBooked': p.booked = !p.booked; sysComment(p, 'proposal', p.booked ? `${nameOf(state.me)} ha prenotato: le proposte le applica lui` : `${nameOf(state.me)} ha tolto "ho prenotato": le proposte passano da sole con la maggioranza`); render(); break;
 
     /* imprevisti */
@@ -1420,7 +1464,7 @@ $('#fileInput').addEventListener('change', e => {
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target && e.target.id === 'commentInput'){ e.preventDefault(); const b = $('[data-action="comment"]'); if(b) b.click(); } });
 window.addEventListener('hashchange', render);
 reset();
-window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome };
+window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy };
 render();
 })();
 </script>
