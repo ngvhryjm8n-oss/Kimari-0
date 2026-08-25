@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:55';
+export const VERSIONE = '26/08 04:52';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -729,8 +729,37 @@ export async function mostraDiagnostica(K) {
 export async function reload(K) {
   applyState(K.state, await data.loadState());
   await caricaInvito(K);
-  K.render();
+  disegna(K);
   await mostraInvitoGruppo(K);
+}
+
+// render() che muore lascia lo schermo fermo su dati vecchi mentre lo stato è
+// già cambiato. È successo il 26/8/2026: un piano confermato continuava a dire
+// "IN DECISIONE", e l'unico segnale era un toast con un TypeError. Uno schermo
+// che mente è peggio di uno che si scusa — chi legge può confermare due volte.
+//
+// Quindi: si dice cosa è successo, e si ricarica la pagina una volta sola, che
+// ridisegna tutto da zero dai dati veri. Il segno in sessionStorage evita il
+// giro infinito se a rompersi è qualcosa che c'è anche dopo il ricaricamento.
+const SEGNO = 'kimari_render_rotto';
+
+function disegna(K) {
+  try {
+    K.render();
+    try { sessionStorage.removeItem(SEGNO); } catch { /* niente */ }
+  } catch (err) {
+    console.error('render', err);
+    let giaProvato = false;
+    try { giaProvato = sessionStorage.getItem(SEGNO) === '1'; } catch { /* niente */ }
+    if (giaProvato) {
+      // Ricaricare non è servito: meglio dirlo che riprovare all'infinito.
+      K.toast && K.toast('La schermata non si aggiorna: ' + (err.message || err));
+      return;
+    }
+    try { sessionStorage.setItem(SEGNO, '1'); } catch { /* niente */ }
+    K.toast && K.toast('Salvato. Ricarico la schermata…');
+    setTimeout(() => location.reload(), 600);
+  }
 }
 
 // Chi apre #/gi/<token> vede chi c'è nel gruppo e decide se entrare.

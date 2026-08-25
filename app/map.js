@@ -191,6 +191,73 @@ export function mapMedia(row, urlFor) {
   };
 }
 
+/* ------------------------------------------------------------- cambiamenti */
+// Il prototipo legge `by` e `text` da ogni voce di storia; il database scrive
+// changed_by e un new_value in JSON. Senza tradurli succedeva questo:
+//   - alla PRIMA conferma di un piano render() moriva su c.text.replace di
+//     undefined, e la pagina restava ferma su "IN DECISIONE" pur avendo lo
+//     stato già aggiornato: sembrava che la conferma non fosse partita;
+//   - lo "Storico" mostrava "undefined" a ogni riga;
+//   - la scheda novità restava vuota, perché filtra su state.people[i.by].
+// Le specie non coincidono: il database scrive `when_changed`/`where_changed`,
+// il prototipo si aspetta `changed`.
+
+const dataUmana = (iso, allDay) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return allDay
+    ? d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })
+    : d.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short',
+                                    hour: '2-digit', minute: '2-digit' });
+};
+
+// Il testo di un valore, qualunque campo sia: quando o dove.
+export function testoValore(v) {
+  if (!v) return '';
+  if (v.place_name) return [v.place_name, v.place_address].filter(Boolean).join(' · ');
+  if (v.starts_at) return dataUmana(v.starts_at, v.all_day);
+  if (v.title) return v.title;
+  return '';
+}
+
+export function mapChange(c) {
+  const kindDb = c.kind || '';
+  const kind = /_changed$/.test(kindDb) ? 'changed' : kindDb;
+  const campo = /_changed$/.test(kindDb) ? kindDb.replace(/_changed$/, '') : null;
+  const nuovo = c.new_value || null;
+  const vecchio = c.old_value || null;
+
+  let text;
+  if (kind === 'confirmed') {
+    // Il prototipo toglie il prefisso "Confermato: " quando lo mostra nel
+    // feed, e lo tiene nello Storico: va scritto in questa forma esatta.
+    const parti = [];
+    if (nuovo && nuovo.starts_at) parti.push(dataUmana(nuovo.starts_at, nuovo.all_day));
+    if (nuovo && nuovo.place_name) parti.push(nuovo.place_name);
+    text = 'Confermato: ' + (parti.join(' · ') || 'il piano');
+  } else if (kind === 'created') {
+    text = 'Creato: ' + ((nuovo && nuovo.title) || 'il piano');
+  } else if (kind === 'cancelled') {
+    text = 'Annullato' + (c.note ? ': ' + c.note : '');
+  } else if (kind === 'changed') {
+    const etichetta = campo === 'when' ? 'Quando' : campo === 'where' ? 'Dove' : (campo || 'Piano');
+    const a = testoValore(nuovo), da = testoValore(vecchio);
+    text = etichetta + ': ' + (a || '—') + (da ? ' (era ' + da + ')' : '');
+    if (c.note) text += ' · ' + c.note;
+  } else {
+    text = c.note || kindDb;
+  }
+
+  return {
+    version: c.version, kind, at: ms(c.created_at),
+    by: c.changed_by || null,
+    text,
+    field: campo,
+    note: c.note || null,
+    newValue: nuovo
+  };
+}
+
 /* ------------------------------------------------------------------ piano */
 export function mapPlan(plan, parts = {}) {
   const {
@@ -248,10 +315,7 @@ export function mapPlan(plan, parts = {}) {
     })),
     ballots: mapBallots({ ballots, approvals, candidates: mine, extraApprovals }),
 
-    changes: changes.map(c => ({
-      version: c.version, kind: c.kind, at: ms(c.created_at),
-      note: c.note || null, newValue: c.new_value || null
-    })),
+    changes: changes.map(mapChange),
 
     comments: comments.map(mapComment),
     proposals: proposals.map(p => mapProposal(p, proposalVotes, participantIds)),

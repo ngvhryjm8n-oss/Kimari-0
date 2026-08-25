@@ -1211,7 +1211,7 @@ function vPlan(p){
     const noteField = `<div class="group-title">Nota per il gruppo · facoltativa</div><div class="group"><div class="row"><textarea class="input" rows="2" placeholder="Es. per me va bene tutto ma non troppo tardi" data-bind-note="1" maxlength="200">${esc(Object.values(bd)[0] ? Object.values(bd)[0].note : '')}</textarea></div></div>`;
     return `${nav(isOrg ? (decision ? 'La tua decisione' : 'Il tuo piano') : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">Condividi</button>` : '')}
     <div class="view">${head}
-      ${state.justVoted ? `<div class="notice">Hai votato ✓ ${decision ? 'Il risultato' : 'Il piano'} si aggiorna qui: quando ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}, lo vedi in questa pagina.</div>` : ''}
+      ${state.justVoted ? `<div class="notice">Hai votato ✓ ${p.organizer === state.me ? `Ora tocca a te: ${decision ? 'chiudi' : 'conferma'} quando vuoi, anche prima che abbiano votato tutti.` : `${decision ? 'Il risultato' : 'Il piano'} si aggiorna qui: quando ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}, lo vedi in questa pagina.`}</div>` : ''}
       ${isOrg ? '' : `<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? `Tocca Sì o No. Vince la maggioranza di chi risponde; ${esc(orgName)} chiude.` : `Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone; ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}.`}</div></div>`}
       ${vBallot(p, true)}${decision && p.extras[0].binary ? '' : noteField}
       ${decision && p.extras[0].binary ? '' : (hasVoted || isOrg ? `<div class="pad" style="margin-top:12px"><button class="btn ${isOrg ? 'tint' : 'primary'}" data-action="vote">${hasVoted ? 'Aggiorna il mio voto' : 'Invia il mio voto'}</button></div>` : '')}
@@ -1730,6 +1730,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2003%3A55"></script>
+<script type="module" src="./live.js?v=26%2F08%2004%3A52"></script>
 </body>
 </html>
