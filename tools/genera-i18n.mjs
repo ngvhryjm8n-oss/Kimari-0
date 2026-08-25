@@ -37,25 +37,36 @@ const blocco = [
   FINE
 ].join('\n');
 
-const file = join(root, 'index.html');
-let html = readFileSync(file, 'utf8');
+// Due file, stessa iniezione: il sito e l'app. Tutti e due hanno uno <script>
+// classico, che non può importare moduli — da qui l'iniezione invece
+// dell'import.
+const FILE = [
+  { path: 'index.html',     dopo: "'use strict';" },
+  // Nell'app il blocco va PRIMA dello script degli asset: t() serve già alle
+  // prime funzioni definite più sotto.
+  { path: 'app/index.html', prima: 'window.KIMARI_ASSETS = {' }
+];
 
-const i = html.indexOf(INIZIO);
-const j = html.indexOf(FINE);
+for (const f of FILE) {
+  const file = join(root, f.path);
+  let html = readFileSync(file, 'utf8');
 
-if (i !== -1 && j !== -1) {
-  html = html.slice(0, i) + blocco + html.slice(j + FINE.length);
-} else {
-  // Prima volta: si mette in cima allo script inline, prima di tutto il resto,
-  // perché t() serve già alle prime funzioni.
-  const ancora = "'use strict';";
-  const k = html.indexOf(ancora);
-  if (k === -1) throw new Error("non trovo 'use strict' nello script inline");
-  html = html.slice(0, k + ancora.length) + '\n\n' + blocco + '\n' + html.slice(k + ancora.length);
+  const i = html.indexOf(INIZIO);
+  const j = html.indexOf(FINE);
+
+  if (i !== -1 && j !== -1) {
+    html = html.slice(0, i) + blocco + html.slice(j + FINE.length);
+  } else if (f.dopo) {
+    const k = html.indexOf(f.dopo);
+    if (k === -1) throw new Error(`non trovo l'ancora in ${f.path}`);
+    html = html.slice(0, k + f.dopo.length) + '\n\n' + blocco + '\n' + html.slice(k + f.dopo.length);
+  } else {
+    const k = html.indexOf(f.prima);
+    if (k === -1) throw new Error(`non trovo l'ancora in ${f.path}`);
+    html = html.slice(0, k) + blocco + '\n\n' + html.slice(k);
+  }
+
+  writeFileSync(file, html);
+  console.log(`  ${f.path.padEnd(16)} ${(readFileSync(file, 'utf8').length / 1024).toFixed(1)} kB`);
 }
-
-writeFileSync(file, html);
-
-const lingue = (dizionario.match(/^\s{2}[a-z]{2}: '/gm) || []).length;
-console.log(`  index.html · dizionario iniettato (${(blocco.length / 1024).toFixed(1)} kB di testo)`);
-console.log(`  ${(readFileSync(file, 'utf8').length / 1024).toFixed(1)} kB in totale`);
+console.log(`  dizionario: ${(blocco.length / 1024).toFixed(1)} kB di testo, che in rete si comprime`);

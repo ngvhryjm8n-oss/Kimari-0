@@ -57,9 +57,35 @@ function rpcCalls() {
 /* ------------------------------------------------------------------ */
 console.log('\ndata.js ↔ migrazioni — i nomi dei parametri combaciano?\n');
 
+let passed = 0, failed = 0, skipped = [];
+
+// Prima di tutto: live.js chiama solo funzioni che data.js esporta davvero.
+// Il 25/8/2026 ho rinominato signInWithGoogle in signInWithProvider dentro
+// data.js e la modifica corrispondente in live.js non è andata a segno.
+// Risultato: l'app chiamava una funzione inesistente, e l'accesso con Google
+// smetteva di funzionare in produzione. Né il controllo di sintassi né le
+// prove dei gestori se ne sono accorti, perché nessuno dei due guarda oltre
+// il proprio file.
+{
+  const live = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  const dataJs = readFileSync(join(root, 'app', 'data.js'), 'utf8');
+  const usate = [...new Set([...live.matchAll(/\bdata\.(\w+)\(/g)].map(m => m[1]))];
+  const esportate = new Set(
+    [...dataJs.matchAll(/export (?:async )?(?:function|const) (\w+)/g)].map(m => m[1]));
+  const mancanti = usate.filter(u => !esportate.has(u));
+  try {
+    assert.deepEqual(mancanti, [],
+      'live.js chiama funzioni che data.js non esporta: ' + mancanti.join(', '));
+    console.log(`  ok   le ${usate.length} funzioni che live.js chiama esistono in data.js`);
+    passed++;
+  } catch (e) {
+    console.log('  FAIL ' + e.message);
+    failed++;
+  }
+}
+
 const defined = sqlFunctions();
 const calls = rpcCalls();
-let passed = 0, failed = 0, skipped = [];
 
 for (const call of calls) {
   const def = defined.get(call.name);
