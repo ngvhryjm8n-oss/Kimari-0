@@ -9,11 +9,20 @@ import { pathToFileURL } from 'node:url';
 
 /* Sostituisce ./data.js con un finto, prima che live.js lo importi. */
 const calls = [];
+// Per provare i percorsi d'errore: guasti[nome] = { alla: n, messaggio: '...' }
+// fa fallire l'n-esima chiamata a quella funzione. Serve un interruttore qui
+// dentro perché il modulo finto cattura il proxy una volta sola al
+// caricamento: sostituirlo dopo non avrebbe effetto.
+const guasti = {};
 const fake = new Proxy({}, {
   get: (_, name) => {
     if (name === 'then') return undefined;         // non è una promise
     return async (...args) => {
       calls.push({ name, args });
+      const g = guasti[name];
+      if (g && calls.filter(c => c.name === name).length === g.alla) {
+        throw new Error(g.messaggio);
+      }
       if (name === 'createGroup')    return 'g-nuovo';
       if (name === 'createSection')  return 's-nuova';
       if (name === 'createPlanFull') return { plan_id: 'p-nuovo', token: 'tok-nuovo' };
@@ -42,7 +51,9 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'signInWithGoogle','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull','deleteComment',
                  'setMyLate','clearMyLate','setMyAbsence','setPlanBooked','addFriend',
                  'removeFriend','toggleGroupMute','deleteGroup','transferGroupOwner',
-                 'setPlaceCover','deletePlaceMedia',
+                 'setPlaceCover','deletePlaceMedia','uploadMedia','uploadPlacePhoto','deleteMedia',
+                 'setJoinPolicy','addPlanPlaceholder','removePlanPlaceholder','setInviteLimits',
+                 'revokeInviteLinks','removeParticipant',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
@@ -367,6 +378,36 @@ await test('saveProfile aggiorna nome ed email', async () => {
   assert.deepEqual(calls.map(c => c.name), ['ensureActor', 'setMyEmail']);
   assert.deepEqual(calls[0].args, ['Vincenzo']);
   assert.deepEqual(calls[1].args, ['v@example.it'], 'email normalizzata minuscola');
+});
+
+await test('i file si caricano uno alla volta, non tutti insieme', async () => {
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1' } } }, toast: () => {} };
+  await live.caricaFile(K, [{ name: 'a.jpg' }, { name: 'b.jpg' }], 'photo', null);
+  assert.deepEqual(calls.map(c => c.name), ['uploadMedia', 'uploadMedia']);
+  assert.equal(calls[0].args[2], 'photo');
+});
+
+await test('se un file sfora, dice quanti erano gia passati', async () => {
+  guasti.uploadMedia = { alla: 3, messaggio: 'massimo 20 foto per piano' };
+  const K = { state: { currentPlan: 'p1', plans: { p1: { id: 'p1' } } }, toast: () => {} };
+  const file = { name: 'x.jpg' };
+  await assert.rejects(
+    () => live.caricaFile(K, [file, file, file, file], 'photo', null),
+    // "2 di 4 caricate, la terza e troppo grande" e utile; "errore" no.
+    e => /2 di 4 caricate/.test(e.message) && /massimo 20 foto/.test(e.message));
+  delete guasti.uploadMedia;
+});
+
+await test('le foto di un posto salvato prendono un altra strada', async () => {
+  const K = { state: {}, toast: () => {} };
+  await live.caricaFile(K, [{ name: 'menu.jpg' }], 'photo', { kind: 'place', id: 'pl1' });
+  assert.deepEqual(calls[0], { name: 'uploadPlacePhoto', args: ['pl1', { name: 'menu.jpg' }] });
+});
+
+await test('caricare senza un piano aperto non tenta nemmeno', async () => {
+  await assert.rejects(() => live.caricaFile({ state: { plans: {} } }, [{}], 'photo', null),
+                       /Nessun piano aperto/);
+  assert.equal(calls.length, 0);
 });
 
 await test('ogni azione intercettata sa davvero scrivere', () => {

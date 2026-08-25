@@ -453,6 +453,18 @@ export const HANDLERS = {
     return { toast: 'Posto tolto', closeSheet: true };
   },
 
+  // Togliere un allegato è in due tempi: prima la riga, che dice se ne hai il
+  // diritto e restituisce il percorso, poi il file. Se saltasse il secondo
+  // resterebbe spazio occupato da un file che nessuna schermata mostra.
+  async delFile(el) {
+    await data.deleteMedia(el.dataset.id);
+    return { toast: 'Tolto' };
+  },
+
+  // Nota: nel prototipo le foto del piano NON si cancellano — non c'è nessun
+  // bottone. Ci sono solo quelle dei posti salvati (plDelPhoto, più sotto).
+  // Se un giorno si aggiunge, il gestore è identico a delFile.
+
   async comment(el, K) {
     const input = K.$('#commentInput');
     const v = input ? input.value.trim() : '';
@@ -632,6 +644,55 @@ function wire(K) {
   window.addEventListener('hashchange', () => {
     caricaInvito(K).then(caricato => { if (caricato) K.render(); });
   });
+
+  // Le foto non passano da un data-action: il bottone apre un <input file>
+  // nascosto, e il lavoro vero sta nel suo evento change. Stessa intercettazione
+  // in fase di cattura, altrimenti il prototipo se le tiene in memoria come
+  // base64 e sparirebbero alla ricarica.
+  document.addEventListener('change', e => {
+    const el = e.target;
+    if (!el || (el.id !== 'photoInput' && el.id !== 'fileInput')) return;
+    const files = [...(el.files || [])];
+    if (!files.length) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+    const tipo = el.id === 'photoInput' ? 'photo' : 'file';
+    const target = K.state.mediaTarget;
+    K.state.mediaTarget = null;
+    el.value = '';                       // così riselezionare lo stesso file rifà partire l'evento
+
+    caricaFile(K, files, tipo, target)
+      .then(() => reload(K))
+      .catch(err => {
+        if (K.toast) K.toast(err.message || String(err));
+        console.error('caricamento', err);
+      });
+  }, true);
+}
+
+// Un file alla volta e non tutti insieme: se il quinto sfora il limite, i
+// primi quattro sono già salvati e l'errore riguarda solo quello. Caricandoli
+// in parallelo il server ne rifiuterebbe alcuni a caso.
+export async function caricaFile(K, files, tipo, target) {
+  const perPosto = target && target.kind === 'place';
+  const plan = perPosto ? null : (curPlan(K) || {}).id;
+  if (!perPosto && !plan) throw new Error('Nessun piano aperto');
+
+  let fatti = 0;
+  try {
+    for (const f of files) {
+      if (perPosto) await data.uploadPlacePhoto(target.id, f);
+      else await data.uploadMedia(plan, f, tipo);
+      fatti++;
+    }
+  } catch (e) {
+    // Dire quanti ne sono passati: "3 di 5 caricate, la quarta è troppo
+    // grande" è utile, "errore" no.
+    if (fatti) e.message = fatti + ' di ' + files.length + ' caricate. ' + e.message;
+    throw e;
+  }
+  if (K.toast) K.toast(fatti === 1 ? 'Caricata' : fatti + ' caricate');
 }
 
 export async function boot() {
