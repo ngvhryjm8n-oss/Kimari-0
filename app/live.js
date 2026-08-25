@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:46';
+export const VERSIONE = '26/08 03:51';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -36,6 +36,18 @@ export function applyState(state, loaded) {
   Object.assign(state.groups, loaded.groups);
   Object.assign(state.plans, loaded.plans);
   state.me = loaded.me;
+
+  // QUI stava il bug che sembrava un login rotto. Il prototipo riapre la
+  // schermata di benvenuto finché state.consented è falso — e consented vive
+  // in memoria. Nella demo l'app non si ricaricava mai; nel mondo vero ogni
+  // ricarica lo azzerava, e a chi era già dentro ricompariva "Continua con
+  // Google" come se non fosse mai entrato.
+  // Chi ha un profilo per la porta ci è già passato: non gliela si chiede più.
+  if (loaded.me && loaded.me !== 'guest') {
+    state.consented = true;
+    state.ageOk = true;
+    state.welcomeShown = true;
+  }
   return state;
 }
 
