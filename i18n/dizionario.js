@@ -73,14 +73,21 @@ export const DIZIONARIO = {
     ja: 'お名前を選ぶか入力してください。'
   },
   'Ai voti': { en: 'Voting', es: 'En votación', de: 'Abstimmung läuft', ja: '投票中' },
-  'chiede al gruppo': {
-    en: 'is asking the group', es: 'pregunta al grupo',
-    de: 'fragt die Gruppe', ja: 'がみんなに聞いています'
+  // Frasi INTERE con segnaposto, non frammenti da incollare accanto a un nome:
+  // in giapponese il verbo va in fondo e in tedesco pure, quindi comporre
+  // "Anna" + "chiede al gruppo" produrrebbe frasi sgrammaticate.
+  '{nome} chiede al gruppo': {
+    en: '{nome} is asking the group', es: '{nome} pregunta al grupo',
+    de: '{nome} fragt die Gruppe', ja: '{nome}さんがみんなに聞いています'
   },
-  'ha già votato': { en: 'has already voted', es: 'ya ha votado',
-                     de: 'hat schon abgestimmt', ja: '人が投票済み' },
-  'hanno già votato': { en: 'have already voted', es: 'ya han votado',
-                        de: 'haben schon abgestimmt', ja: '人が投票済み' },
+  '{n} ha già votato': {
+    en: '{n} person has already voted', es: '{n} persona ya ha votado',
+    de: '{n} Person hat schon abgestimmt', ja: '{n}人が投票済み'
+  },
+  '{n} hanno già votato': {
+    en: '{n} people have already voted', es: '{n} personas ya han votado',
+    de: '{n} Personen haben schon abgestimmt', ja: '{n}人が投票済み'
+  },
   'Si chiude': { en: 'Closes', es: 'Se cierra', de: 'Endet', ja: '締切' },
 
   /* ------------------------------------------------------ ospite: dopo il voto */
@@ -174,10 +181,15 @@ export function scegliLingua(preferite, forzata) {
 // Torna una funzione t() legata a una lingua. Se la voce manca, o manca quella
 // lingua, esce l'italiano: mai una chiave a video, mai una stringa vuota.
 export function traduttore(lingua) {
-  return function t(testo) {
-    if (lingua === 'it') return testo;
-    const voce = INDICE.get(NORM(testo));
-    return (voce && voce[lingua]) || testo;
+  return function t(testo, valori) {
+    const voce = lingua === 'it' ? null : INDICE.get(NORM(testo));
+    let out = (voce && voce[lingua]) || testo;
+    // I segnaposto si sostituiscono DOPO aver scelto la lingua, così ogni
+    // lingua può metterli dove le servono.
+    if (valori) {
+      for (const k of Object.keys(valori)) out = out.split('{' + k + '}').join(String(valori[k]));
+    }
+    return out;
   };
 }
 

@@ -52,6 +52,30 @@ test('gli a capo dei template non fanno perdere la voce', () => {
                /^Tick every option/);
 });
 
+test('i segnaposto si riempiono, e ogni lingua li mette dove vuole', () => {
+  const ja = traduttore('ja');
+  assert.equal(ja('{nome} chiede al gruppo', { nome: 'Anna' }), 'Annaさんがみんなに聞いています');
+  assert.equal(traduttore('de')('{n} hanno già votato', { n: 3 }),
+               '3 Personen haben schon abgestimmt');
+  // In italiano il segnaposto va riempito lo stesso, altrimenti a schermo
+  // comparirebbe "{n} hanno già votato".
+  assert.equal(traduttore('it')('{n} hanno già votato', { n: 3 }), '3 hanno già votato');
+});
+
+test('nessuna voce lascia un segnaposto senza corrispondenza', () => {
+  // Se l'italiano dice {nome} e il tedesco no, in tedesco il nome sparisce.
+  const rotte = [];
+  for (const [it, v] of Object.entries(DIZIONARIO)) {
+    const attesi = [...it.matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
+    if (!attesi.length) continue;
+    for (const l of ['en', 'es', 'de', 'ja']) {
+      const dati = [...String(v[l] || '').matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
+      if (dati.join() !== attesi.join()) rotte.push(`${l}: ${it}`);
+    }
+  }
+  assert.deepEqual(rotte, []);
+});
+
 test('ogni voce ha tutte e quattro le lingue', () => {
   const buchi = [];
   for (const [it, v] of Object.entries(DIZIONARIO)) {
