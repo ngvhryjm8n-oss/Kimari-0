@@ -61,9 +61,9 @@ export async function ensureSession() {
 // esistente porta ancora il nome buttato lì per votare da ospite.
 const PENDING_LINK = 'kimari_link_google';
 
-export async function signInWithGoogle(redirectTo) {
+export async function signInWithProvider(provider, redirectTo) {
   const s = await currentSession();
-  const opts = { provider: 'google', options: { redirectTo } };
+  const opts = { provider, options: { redirectTo } };
   // Chi è entrato come ospite collega Google all'account che ha già, così non
   // perde i piani a cui ha partecipato.
   if (s && s.user.is_anonymous) {
