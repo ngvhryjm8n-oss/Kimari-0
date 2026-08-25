@@ -167,7 +167,11 @@ export function mapExpense(row, shareRows = []) {
     id: row.id,
     by: row.paid_by,
     amount: Number(row.amount_cents),
-    text: row.description,
+    // `desc`, non `text`: il prototipo legge e.desc quando elenca le spese e
+    // quando ne annulla una. Con `text` la descrizione usciva vuota — un
+    // difetto muto, perche' una stringa vuota non rompe niente: si vedeva solo
+    // "ha pagato Vincenzo · 12,00 €" senza mai dire di cosa.
+    desc: row.description || '',
     among: shareRows.filter(s => s.expense_id === row.id).map(s => s.actor_id),
     voided: !!row.voided_at,
     at: ms(row.created_at)

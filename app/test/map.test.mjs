@@ -123,6 +123,8 @@ test('spesa: centesimi interi e lista di chi divide', () => {
      { expense_id: 'ALTRA', actor_id: 'u3' }]);
 
   assert.equal(e.amount, 1000);
+  // Il prototipo legge e.desc: con e.text la descrizione spariva in silenzio.
+  assert.equal(e.desc, 'Pizza', 'il prototipo elenca le spese leggendo desc');
   assert.equal(Number.isInteger(e.amount), true, 'gli importi devono restare interi');
   assert.deepEqual(e.among.sort(), ['u1', 'u2']);
   assert.equal(e.voided, false);
