@@ -55,7 +55,7 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'setJoinPolicy','addPlanPlaceholder','removePlanPlaceholder','setInviteLimits',
                  'revokeInviteLinks','removeParticipant','createGroupInvite',
                  'previewGroupInvite','joinGroup','currentSession','haIdentitaVera',
-                 'adottaIdentitaGoogle','pulisciUrlDopoLogin',
+                 'adottaIdentitaGoogle','pulisciUrlDopoLogin','signOut','myActor',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
