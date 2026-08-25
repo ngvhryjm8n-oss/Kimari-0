@@ -600,6 +600,19 @@ function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add
 async function copy(text){ try{ await navigator.clipboard.writeText(text); }catch{ const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch{} ta.remove(); } toast('Copiato'); }
 const waHref = text => `https://wa.me/?text=${encodeURIComponent(text)}`;
 
+// Sul telefono il modo giusto di condividere è il pannello di sistema: porta
+// il messaggio INTERO in qualunque app, e wa.me dentro un'app installata a
+// volte apre solo il link. Se navigator.share non c'è (desktop), si ricade su
+// wa.me come prima.
+async function condividi(text){
+  if (navigator.share) {
+    try { await navigator.share({ text }); return true; }
+    catch (e) { if (e && e.name === 'AbortError') return true; }   // annullato: non è un errore
+  }
+  window.open(waHref(text), '_blank', 'noopener');
+  return false;
+}
+
 const A = window.KIMARI_ASSETS || {};
 const hueOf = k => { let x = 0; for(const c of k) x = (x * 31 + c.charCodeAt(0)) % 360; return x; };
 const planHue = p => hueOf(p.groupId || p.id);
@@ -727,7 +740,14 @@ function seed(){
 const isWeb = () => state.me === 'guest' || !!(state.people[state.me] && state.people[state.me].web);
 const me = () => state.people[state.me];
 const nameOf = id => state.people[id] ? state.people[id].name : '';
-const linkOf = p => `https://kimari.it/i/${p.token}`;
+// Dove vive il sito che apre chi riceve il link. Il prototipo scriveva
+// kimari.it, che è un dominio inventato e non porta da nessuna parte: ogni
+// link condiviso era rotto. Quando ci sarà un dominio vero si cambia QUI, in
+// una riga, e non serve toccare altro.
+const SITO = 'https://ngvhryjm8n-oss.github.io/Kimari-0/';
+// Il formato è ?t=<token>, quello che il sito sa già leggere da mesi: i link
+// già in giro non devono mai rompersi (regola 2).
+const linkOf = p => `${SITO}?t=${p.token}`;
 const fieldObj = (p, f) => f === 'when' ? p.when : f === 'where' ? p.where : (p.extras || []).find(x => x.id === f);
 const fieldLabel = (p, f) => f === 'when' ? 'Quando' : f === 'where' ? 'Dove' : ((fieldObj(p, f) || {}).question || 'Decisione');
 const candText = (f, c) => f === 'when' ? fmtWhen(c) : c.name;
@@ -760,8 +780,12 @@ const msgs = {
   confirm: p => `✅ Kimari! ${p.title}: ${resultText(p)} 👉 ${linkOf(p)}`,
   change: (p, ch) => `⚠️ Cambiato: ${ch.map(c => `${c.label} ora ${c.newText} (era ${c.oldText})`).join(' · ')} 👉 ${linkOf(p)}`,
   invite: p => `${p.emoji} ${p.title}: ${resultText(p)}. Dimmi se ci sei 👉 ${linkOf(p)}`,
-  group: g => `👋 Entra nel gruppo ${g.emoji} ${g.name} su Kimari: piani e decisioni in un posto solo 👉 https://kimari.it/g/${g.id}${uid()}`,
-  friend: () => `👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 https://kimari.it/u/${uid()}`,
+  // Il link d'invito a un gruppo NON si compone da un id: serve un token che
+  // lo dà create_group_invite. live.js intercetta 'inviteGroup', chiede il
+  // token e rimpiazza {link} qui sotto. Se restasse {link} a schermo vuol
+  // dire che quel pezzo non è collegato.
+  group: g => `👋 Entra nel gruppo ${g.emoji} ${g.name} su Kimari: piani e decisioni in un posto solo 👉 {link}`,
+  friend: () => `👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 ${SITO}`,
 };
 function newDraft(groupId){ const p = me(); return { step:1, title:'', emoji:'📌', name: p ? p.name : '', groupId:groupId || '', whenMode:'deciding', whenFixed:{ start:'', end:'', allDay:false }, whenCands:[], whereMode:'deciding', whereFixed:{ name:'', address:'' }, whereCands:[], deadline:'', allowProposals:true, extras:[], recur:{ on:false, freq:'weekly', count:6 } }; }
 function quickWhen(){
@@ -856,7 +880,7 @@ function icsFor(p){
   const w = p.when.value; const s = new Date(w.start); const e = w.end ? new Date(w.end) : new Date(s.getTime() + 2*3600e3);
   const z = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); const day = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
   const dtEnd = w.allDay ? addDays(w.end ? new Date(w.end) : s, 1) : e; const loc = p.where.value ? [p.where.value.name, p.where.value.address].filter(Boolean).join(', ') : '';
-  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kimari//Prototipo//IT','BEGIN:VEVENT',`UID:${p.id}@kimari.it`,`DTSTAMP:${z(new Date())}`, w.allDay ? `DTSTART;VALUE=DATE:${day(s)}` : `DTSTART:${z(s)}`, w.allDay ? `DTEND;VALUE=DATE:${day(dtEnd)}` : `DTEND:${z(dtEnd)}`, `SUMMARY:${p.title}`, loc ? `LOCATION:${loc}` : null, `URL:${linkOf(p)}`, 'END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kimari//Prototipo//IT','BEGIN:VEVENT',`UID:${p.id}@kimari`,`DTSTAMP:${z(new Date())}`, w.allDay ? `DTSTART;VALUE=DATE:${day(s)}` : `DTSTART:${z(s)}`, w.allDay ? `DTEND;VALUE=DATE:${day(dtEnd)}` : `DTEND:${z(dtEnd)}`, `SUMMARY:${p.title}`, loc ? `LOCATION:${loc}` : null, `URL:${linkOf(p)}`, 'END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
 }
 function downloadIcs(p){ const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([icsFor(p)], { type:'text/calendar' })); a.download = `${p.title.replace(/[^\w\- ]+/g,'').trim() || 'kimari'}.ics`; document.body.appendChild(a); a.click(); a.remove(); toast('Evento scaricato'); }
 /* account web → app: fusione */
@@ -1044,14 +1068,14 @@ function vNew(){
   <div class="view">${body}</div>
   <div class="cta">${d.step > 1 ? `<button class="btn tint" style="flex:0 0 120px" data-action="prev">Indietro</button>` : ''}<button class="btn primary" data-action="next">${d.step === 4 ? 'Crea il piano' : 'Continua'}</button></div>`;
 }
-function waBlock(text, p, sub){ return `<div class="wa-bg"><div class="wa-bubble">${esc(text)}<div class="wa-preview"><div class="pt">${p.emoji} ${esc(p.title)}</div><div class="ps">${esc(sub)}</div><div class="ph">kimari.it</div></div><div class="wa-time">${fTime.format(new Date())} ✓✓</div></div></div>`; }
+function waBlock(text, p, sub){ return `<div class="wa-bg"><div class="wa-bubble">${esc(text)}<div class="wa-preview"><div class="pt">${p.emoji} ${esc(p.title)}</div><div class="ps">${esc(sub)}</div><div class="ph">${SITO.replace(/^https?:\/\//,"").replace(/\/$/,"")}</div></div><div class="wa-time">${fTime.format(new Date())} ✓✓</div></div></div>`; }
 function vShare(p){
   const confirmed = p.status === 'confirmed'; const text = confirmed ? msgs.invite(p) : msgs.open(p); const g = groupOf(p);
   return `${nav('Condividi', 'p/' + p.id)}
   <div class="view">
     <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : 'Il piano è pronto'}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? 'gli altri rispondono dal link.' : 'chi non ha l\'app vota dal link, senza installare niente.'}</p></div>
     ${waBlock(text, p, confirmed ? 'Dimmi se ci sei' : 'Vota qui · non serve installare niente')}
-    <div class="pad stack" style="margin-top:16px"><a class="btn wa" href="${waHref(text)}" target="_blank" rel="noopener">Condividi su WhatsApp</a><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">Copia solo il link</button></div>
+    <div class="pad stack" style="margin-top:16px"><button class="btn wa" data-action="share" data-text="${esc(text)}">Condividi</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">Copia solo il link</button></div>
     <div class="pad" style="margin-top:6px"><button class="btn plain" data-action="go" data-to="p/${p.id}">Vai al piano</button></div>
     <div class="proto"><div class="lab">Prototipo</div><button class="btn tint sm" data-action="asGuest" data-plan="${p.id}">Apri il link come nuovo ospite (web)</button></div>
   </div>`;
@@ -1292,7 +1316,7 @@ function sheetConfirm(p, fresh){
 }
 function sheetMessage(title, sub, text, p, previewSub){
   return `<h2>${esc(title)}</h2><p class="sub">${esc(sub)}</p>${waBlock(text, p, previewSub)}
-  <div class="actions stack"><a class="btn wa" href="${waHref(text)}" target="_blank" rel="noopener">Condividi su WhatsApp</a><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
+  <div class="actions stack"><button class="btn wa" data-action="share" data-text="${esc(text)}">Condividi</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
 }
 function sheetEdit(p){
   const w = p.when.value, pl = p.where.value || { name:'', address:'' };
@@ -1534,6 +1558,7 @@ document.addEventListener('click', e => {
 
     /* condivisione / ospite */
     case 'copy': copy(el.dataset.text); break;
+    case 'share': condividi(el.dataset.text); break;
     case 'asGuest': state.me = 'guest'; state.justVoted = false; state.ballotDraft = null; state.bdKey = null; go(`i/${state.plans[el.dataset.plan].token}`); break;
     case 'guestTap': state.pendingTap = el.dataset.field === 'rsvp' ? { rsvp:['Ci sono','Forse','Non vengo'].indexOf(el.textContent.trim()) } : { field:el.dataset.field, id:el.dataset.id }; openSheet(sheetName(p)); break;
     case 'claim': joinPlan(p, '', el.dataset.id); closeSheet(); afterJoin(p); break;
