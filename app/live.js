@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:31';
+export const VERSIONE = '26/08 03:36';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -482,6 +482,15 @@ export const HANDLERS = {
     return { toast: 'Gruppo salvato', closeSheet: true };
   },
 
+  // Ultima spiaggia quando la sessione e' in uno stato strano: si butta via
+  // tutto e si ricomincia da ospite.
+  async esci(el, K) {
+    try { await data.signOut(); } catch { /* niente */ }
+    try { localStorage.clear(); } catch { /* niente */ }
+    location.replace(location.origin + location.pathname);
+    return { skipReload: true };
+  },
+
   async joinGroup(el, K) {
     const g = await data.joinGroup(el.dataset.tok, null);
     K.state._invitoGruppo = null;
@@ -659,6 +668,46 @@ export const HANDLERS = {
 /* aggancio al DOM                                                     */
 /* ------------------------------------------------------------------ */
 
+// Schermata di diagnostica: si apre con #/diag e mostra lo stato vero della
+// sessione. Serve quando "non va" e non c'è modo di guardare la console di un
+// telefono: si legge questa e si sa dove si è rotto invece di indovinare.
+export async function mostraDiagnostica(K) {
+  if (!/^#\/?diag/.test(location.hash)) return false;
+
+  const r = { versione: VERSIONE, indirizzo: location.origin + location.pathname };
+  try {
+    const s = await data.currentSession();
+    r.sessione = s ? 'sì' : 'NESSUNA';
+    if (s) {
+      r.utente = s.user.id;
+      r.is_anonymous = String(s.user.is_anonymous);
+      r.identita = (s.user.identities || []).map(i => i.provider).join(', ') || 'nessuna';
+      r.email = s.user.email || '—';
+      r.nomeDaProvider = (s.user.user_metadata || {}).full_name
+                      || (s.user.user_metadata || {}).name || '—';
+      r.riconosciutoComeEntrato = data.haIdentitaVera(s.user) ? 'SÌ' : 'NO';
+    }
+    const a = await data.myActor();
+    r.profilo = a ? (a.display_name + ' (' + a.id.slice(0, 8) + ')') : 'NESSUNO';
+    r.me = K.state.me;
+  } catch (e) {
+    r.errore = e.message || String(e);
+  }
+
+  const righe = Object.entries(r)
+    .map(([k, v]) => `<div class="row"><div class="grow s">${k}</div><div class="t" style="font-size:13px;text-align:right;word-break:break-all">${String(v)}</div></div>`)
+    .join('');
+  K.openSheet(`<h2>Diagnostica</h2>
+    <p class="sub">Mandane una foto: dice dove si è rotto.</p>
+    <div class="group">${righe}</div>
+    <div class="actions stack">
+      <button class="btn tint" data-action="copy" data-text="${encodeURIComponent(JSON.stringify(r))}">Copia</button>
+      <button class="btn danger" data-action="esci">Esci e ricomincia</button>
+      <button class="btn plain" data-action="closeSheet">Chiudi</button>
+    </div>`);
+  return true;
+}
+
 export async function reload(K) {
   applyState(K.state, await data.loadState());
   await caricaInvito(K);
@@ -762,6 +811,7 @@ function wire(K) {
   // Il prototipo renderizza a ogni hashchange. Se si apre un invito il piano
   // non c'è ancora: si carica e si renderizza di nuovo.
   window.addEventListener('hashchange', () => {
+    mostraDiagnostica(K);
     caricaInvito(K).then(caricato => { if (caricato) K.render(); });
   });
 
@@ -836,6 +886,7 @@ export async function boot() {
     // se resta, prova a interpretare "access_token=..." come una schermata.
     data.pulisciUrlDopoLogin();
     await reload(K);
+    await mostraDiagnostica(K);
     wire(K);
     document.body.dataset.kimari = 'live';
     document.body.dataset.versione = VERSIONE;
