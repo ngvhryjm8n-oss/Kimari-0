@@ -48,7 +48,7 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'revokeGroupInvites','addComment','deletePlace','savePlace','setMyEmail',
                  'addExpense','voidExpense','addSettlement','submitBallot','submitExtraBallot',
                  'setRsvp','addCandidates','confirmPlan','confirmExtra','openProposal','ensureActor',
-                 'signInWithGoogle','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull','deleteComment',
+                 'signInWithProvider','createPlan','finalizePlan','joinPlan','saveToken','previewInvite','createPlanFull','deleteComment',
                  'setMyLate','clearMyLate','setMyAbsence','setPlanBooked','addFriend',
                  'removeFriend','toggleGroupMute','deleteGroup','transferGroupOwner',
                  'setPlaceCover','deletePlaceMedia','uploadMedia','uploadPlacePhoto','deleteMedia',
