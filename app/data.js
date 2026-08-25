@@ -271,6 +271,22 @@ export const finalizePlan = (plan, emoji, group, kind, allowProposals) =>
   rpc('finalize_plan', { p_plan: plan, p_emoji: emoji || null, p_group: group || null,
                          p_kind: kind || null, p_allow_proposals: allowProposals });
 export const previewInvite = t => rpc('preview_invite', { p_token: t });
+/* --------------- quanto è chiuso un piano (0012) --------------- */
+export const setJoinPolicy = (plan, policy) =>
+  rpc('set_join_policy', { p_plan: plan, p_policy: policy });
+export const addPlanPlaceholder = (plan, name) =>
+  rpc('add_plan_placeholder', { p_plan: plan, p_name: name });
+export const removePlanPlaceholder = (actor, plan) =>
+  rpc('remove_plan_placeholder', { p_actor: actor, p_plan: plan });
+// Aggiorna il link GIÀ condiviso invece di crearne uno nuovo: quello mandato
+// nel gruppo deve continuare a funzionare.
+export const setInviteLimits = (plan, maxUses, expiresAt) =>
+  rpc('set_invite_limits', { p_plan: plan, p_max_uses: maxUses || null,
+                             p_expires_at: expiresAt || null });
+export const revokeInviteLinks = plan => rpc('revoke_invite_links', { p_plan: plan });
+export const removeParticipant = (plan, actor) =>
+  rpc('remove_participant', { p_plan: plan, p_actor: actor });
+
 export const joinPlan = (t, name, claim) =>
   rpc('join_plan', { p_token: t, p_display_name: name || null, p_claim_actor: claim || null });
 export const submitBallot = (plan, field, cands, note) =>
