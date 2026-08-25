@@ -13,6 +13,11 @@
 import * as data from './data.js';
 import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js';
 
+// Marcatura della versione: le app installate tengono la cache a lungo, e
+// senza un numero visibile non c'e' modo di sapere se quello che si sta
+// guardando e' l'ultima correzione o una copia di tre ore fa.
+export const VERSIONE = '26/08 03:26';
+
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
 
@@ -833,6 +838,11 @@ export async function boot() {
     await reload(K);
     wire(K);
     document.body.dataset.kimari = 'live';
+    document.body.dataset.versione = VERSIONE;
+    console.log('Kimari · versione ' + VERSIONE + ' · utente ' + K.state.me);
+    // Visibile senza aprire la console: serve a farsi dire da chi prova
+    // l'app quale copia sta usando davvero.
+    if (K.state) K.state.versione = VERSIONE;
 
     // Sessione aperta ma nessun profilo: senza questo il prototipo mostrerebbe
     // la vista web (isWeb() è vero quando me === 'guest') e nell'app non si
