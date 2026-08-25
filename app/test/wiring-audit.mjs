@@ -19,9 +19,13 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const html = readFileSync(join(root, 'app', 'index.html'), 'utf8');
 const liveSrc = readFileSync(join(root, 'app', 'live.js'), 'utf8');
 
-/* ---------- le azioni che esistono nel prototipo ---------- */
-const azioniNelMarkup = new Set(
-  [...html.matchAll(/data-action="([a-zA-Z]+)"/g)].map(m => m[1]));
+/* ---------- le azioni che esistono ---------- */
+// Nel prototipo, ma anche quelle che live.js si crea da sé: alcune schermate
+// (l'invito a un gruppo) non esistono nel prototipo e le genera lui.
+const azioniNelMarkup = new Set([
+  ...[...html.matchAll(/data-action="([a-zA-Z]+)"/g)].map(m => m[1]),
+  ...[...liveSrc.matchAll(/data-action="([a-zA-Z]+)"/g)].map(m => m[1])
+]);
 
 /* ---------- il corpo di ogni case del dispatcher ---------- */
 const start = html.indexOf("document.addEventListener('click'");

@@ -62,6 +62,13 @@ export const tokenDaRotta = hash => {
   return m ? decodeURIComponent(m[1]) : null;
 };
 
+// Invito a un GRUPPO: #/gi/<token>. Rotta diversa da quella dei piani perché
+// porta a un posto diverso — si entra in un gruppo, non si vota un piano.
+export const tokenGruppoDaRotta = hash => {
+  const m = String(hash || '').match(/^#\/?gi\/([^/?#]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+};
+
 export const HANDLERS = {
 
   /* -------------------------------------------------------- ospite */
@@ -82,6 +89,27 @@ export const HANDLERS = {
     await data.joinPlan(p.token, nome, null);
     data.saveToken(p.id, p.token);
     return { toast: 'Ci sei', closeSheet: true, go: 'p/' + p.id };
+  },
+
+  /* ------------------------------------------- invitare in un gruppo */
+
+  // Il link a un gruppo NON si compone da un id: serve un token, e lo dà il
+  // server. Per questo nel messaggio del prototipo c'era {link} — un
+  // segnaposto visibile, invece di un indirizzo che sembra buono e non porta
+  // da nessuna parte.
+  async inviteGroup(el, K) {
+    const g = K.state.groups[el.dataset.g];
+    if (!g) return { toast: 'Gruppo non trovato', skipReload: true };
+
+    const token = await data.createGroupInvite(g.id);
+    const link = location.origin + location.pathname + '#/gi/' + token;
+    const testo = K.msgs.group(g).replace('{link}', link);
+
+    // msgSheet apre già lo sheet da sé: non va avvolta in openSheet.
+    K.msgSheet('Invita nel gruppo',
+               'Chi apre il link entra nel gruppo. Puoi revocarlo quando vuoi.',
+               testo, { emoji: g.emoji, title: g.name });
+    return { skipReload: true };
   },
 
   /* ------------------------------------------------------ ingresso */
@@ -449,6 +477,12 @@ export const HANDLERS = {
     return { toast: 'Gruppo salvato', closeSheet: true };
   },
 
+  async joinGroup(el, K) {
+    const g = await data.joinGroup(el.dataset.tok, null);
+    K.state._invitoGruppo = null;
+    return { toast: 'Sei dentro', closeSheet: true, go: 'g/' + g };
+  },
+
   async leaveGroup(el) {
     await data.leaveGroup(el.dataset.g);
     return { toast: 'Sei uscito dal gruppo', closeSheet: true, go: 'home' };
@@ -624,6 +658,41 @@ export async function reload(K) {
   applyState(K.state, await data.loadState());
   await caricaInvito(K);
   K.render();
+  await mostraInvitoGruppo(K);
+}
+
+// Chi apre #/gi/<token> vede chi c'è nel gruppo e decide se entrare.
+// preview_group_invite risponde anche a chi non è ancora dentro, quindi si può
+// mostrare il nome del gruppo prima di chiedere qualsiasi cosa.
+export async function mostraInvitoGruppo(K) {
+  const token = tokenGruppoDaRotta(location.hash);
+  if (!token) return false;
+  if (K.state._invitoGruppo === token) return false;   // già mostrato
+
+  try {
+    const prev = await data.previewGroupInvite(token);
+    if (!prev || !prev.ok) {
+      K.toast && K.toast('Questo invito non è più valido');
+      return false;
+    }
+    // Già dentro: non si chiede niente, si va e basta.
+    if (K.state.groups[prev.group_id]) {
+      location.hash = '#/g/' + prev.group_id;
+      return true;
+    }
+    K.state._invitoGruppo = token;
+    K.openSheet(`<h2>${prev.emoji || '👥'} ${K.$ ? '' : ''}${prev.name}</h2>
+      <p class="sub">${(prev.members || []).length} ${(prev.members || []).length === 1 ? 'persona' : 'persone'} nel gruppo</p>
+      <div class="actions stack">
+        <button class="btn primary" data-action="joinGroup" data-tok="${token}">Entra nel gruppo</button>
+        <button class="btn plain" data-action="closeSheet">Non adesso</button>
+      </div>`);
+    return true;
+  } catch (e) {
+    console.error('invito gruppo', e);
+    K.toast && K.toast(e.message || String(e));
+    return false;
+  }
 }
 
 // Se la rotta è un invito e quel piano non è fra i propri, lo si chiede al

@@ -53,7 +53,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'removeFriend','toggleGroupMute','deleteGroup','transferGroupOwner',
                  'setPlaceCover','deletePlaceMedia','uploadMedia','uploadPlacePhoto','deleteMedia',
                  'setJoinPolicy','addPlanPlaceholder','removePlanPlaceholder','setInviteLimits',
-                 'revokeInviteLinks','removeParticipant',
+                 'revokeInviteLinks','removeParticipant','createGroupInvite',
+                 'previewGroupInvite','joinGroup',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
@@ -62,6 +63,16 @@ register('data:text/javascript,' + encodeURIComponent(`
 `), pathToFileURL('./'));
 
 globalThis.__fakeData = fake;
+
+// live.js compone i link dall'indirizzo su cui gira. In Node non c'è, quindi
+// se ne mette uno finto: senza, i gestori che costruiscono un link fallirebbero
+// con "location is not defined" invece di dire qualcosa di utile.
+globalThis.location = {
+  origin: 'https://esempio.test',
+  pathname: '/Kimari-0/app/',
+  hash: ''
+};
+
 const live = await import('../live.js');
 
 let passed = 0, failed = 0;
@@ -408,6 +419,28 @@ await test('caricare senza un piano aperto non tenta nemmeno', async () => {
   await assert.rejects(() => live.caricaFile({ state: { plans: {} } }, [{}], 'photo', null),
                        /Nessun piano aperto/);
   assert.equal(calls.length, 0);
+});
+
+await test('invitare in un gruppo chiede il token al server', async () => {
+  // Il link a un gruppo non si compone da un id: senza token non esiste, ed è
+  // il motivo per cui nel messaggio del prototipo c'è {link} come segnaposto.
+  const K = {
+    state: { groups: { g1: { id: 'g1', name: 'Padel', emoji: 'X' } } },
+    msgs: { group: g => 'Entra in ' + g.name + ' -> {link}' },
+    msgSheet: (titolo, sub, testo) => { K.__mostrato = testo; }
+  };
+  await live.HANDLERS.inviteGroup({ dataset: { g: 'g1' } }, K);
+
+  assert.deepEqual(calls[0], { name: 'createGroupInvite', args: ['g1'] });
+  assert.ok(!K.__mostrato.includes('{link}'), 'il segnaposto è rimasto a schermo');
+  assert.ok(K.__mostrato.includes('#/gi/'), 'il link deve portare alla rotta degli inviti di gruppo');
+});
+
+await test('la rotta di un invito a un gruppo si riconosce', () => {
+  assert.equal(live.tokenGruppoDaRotta('#/gi/abc123'), 'abc123');
+  assert.equal(live.tokenGruppoDaRotta('#gi/abc123'), 'abc123');
+  assert.equal(live.tokenGruppoDaRotta('#/i/abc123'), null, 'un piano non è un gruppo');
+  assert.equal(live.tokenGruppoDaRotta('#/g/abc123'), null, 'aprire un gruppo non è un invito');
 });
 
 await test('ogni azione intercettata sa davvero scrivere', () => {

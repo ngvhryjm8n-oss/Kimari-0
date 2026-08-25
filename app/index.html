@@ -1713,7 +1713,7 @@ $('#fileInput').addEventListener('change', e => {
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target && e.target.id === 'commentInput'){ e.preventDefault(); const b = $('[data-action="comment"]'); if(b) b.click(); } });
 window.addEventListener('hashchange', render);
 reset();
-window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy };
+window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy, msgSheet, sheetName };
 render();
 })();
 </script>
