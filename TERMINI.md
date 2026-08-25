@@ -8,8 +8,7 @@
 > La versione pubblicata è [termini.html](termini.html). Va insieme a
 > [PRIVACY.md](PRIVACY.md).
 >
-> Resta da riempire solo `[SOLO VINCENZO]`: chi è il titolare e a quale
-> indirizzo si scrive.
+> Titolare e contatto sono compilati.
 
 Ultimo aggiornamento: 25 agosto 2026
 
@@ -19,8 +18,8 @@ Kimari è un servizio per mettersi d'accordo in gruppo su quando e dove vedersi.
 Chi organizza propone delle opzioni, il gruppo vota da un link, chi organizza
 conferma.
 
-Titolare: `[SOLO VINCENZO: nome o ragione sociale, indirizzo, P.IVA]`
-Contatto: `[SOLO VINCENZO: un indirizzo email che funziona davvero]`
+Titolare: Vincenzo
+Contatto: kimariapp@gmail.com
 
 ## 2. Chi può usarlo
 

@@ -8,18 +8,15 @@
 > La versione pubblicata è [privacy.html](privacy.html), servita da GitHub
 > Pages: se cambi qui, rigenera anche quella.
 >
-> Resta da riempire solo `[SOLO VINCENZO]`: chi è il titolare del trattamento e
-> a quale indirizzo si scrive. Sono fatti su una persona reale, non scelte di
-> prodotto, e inventarli renderebbe il documento falso proprio nel punto in cui
-> serve a qualcosa.
+> Titolare e contatto sono compilati. Nessun indirizzo postale: il GDPR chiede
+> identità e un recapito, e un'email che funziona lo è.
 
 Ultimo aggiornamento: 25 agosto 2026
 
 ## Chi tratta i tuoi dati
 
-Titolare del trattamento: `[SOLO VINCENZO: nome e cognome o ragione sociale,
-indirizzo, partita IVA se c'è]`
-Contatto: `[SOLO VINCENZO: un indirizzo email che funziona davvero]`
+Titolare del trattamento: Vincenzo
+Contatto: kimariapp@gmail.com
 
 ## Cosa raccogliamo
 
