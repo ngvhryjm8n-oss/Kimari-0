@@ -175,6 +175,41 @@ await test('senza collegamento in corso il nome scelto non viene toccato', async
   assert.equal(sb.calls.rpc.filter(c => c.name === 'set_my_email').length, 0);
 });
 
+// Il pezzo che si rompe in silenzio: se una chiave non combacia esce
+// l'italiano, senza errori. Quindi non basta che il codice giri — bisogna
+// leggere quello che finisce a schermo.
+for (const [lingua, atteso] of [['en', 'Everyone has an opinion.'],
+                                ['de', 'Jeder hat eine Meinung.'],
+                                ['ja', 'みんな意見があります。'],
+                                ['es', 'Todo el mundo tiene una opinión.']]) {
+  await test(`il sito parla la lingua del dispositivo (${lingua})`, async () => {
+    const dom = new JSDOM(HTML, { url: 'https://example.test/', runScripts: 'outside-only' });
+    Object.defineProperty(dom.window.navigator, 'languages', { value: [lingua + '-XX', lingua] });
+    dom.window.supabase = { createClient: () => makeSupabase() };
+    dom.window.eval(SCRIPT);
+    await new Promise(r => setTimeout(r, 0));
+    await new Promise(r => setTimeout(r, 0));
+
+    // #app, non body: body.textContent include anche il sorgente dello
+    // <script>, e li dentro c'e il dizionario con tutte le chiavi italiane.
+    // Cercando in body la prova passerebbe sempre, per il motivo sbagliato.
+    const testo = dom.window.document.getElementById('app').textContent;
+    assert.ok(testo.includes(atteso), `manca "${atteso}" · a schermo c'è: ${testo.slice(0, 90)}`);
+    assert.ok(!testo.includes("Tutti hanno un'opinione"), 'è rimasto l\'italiano');
+    assert.equal(dom.window.document.documentElement.lang, lingua);
+  });
+}
+
+await test('lingua sconosciuta: si resta in italiano, non si rompe niente', async () => {
+  const dom = new JSDOM(HTML, { url: 'https://example.test/', runScripts: 'outside-only' });
+  Object.defineProperty(dom.window.navigator, 'languages', { value: ['sw-KE'] });
+  dom.window.supabase = { createClient: () => makeSupabase() };
+  dom.window.eval(SCRIPT);
+  await new Promise(r => setTimeout(r, 0));
+  await new Promise(r => setTimeout(r, 0));
+  assert.match(dom.window.document.getElementById('app').textContent, /Tutti hanno un'opinione/);
+});
+
 await test('il titolo del piano non può iniettare HTML', async () => {
   const preview = {
     ok: true, plan_id: 'p1', title: '<img src=x onerror=alert(1)>', status: 'deciding',

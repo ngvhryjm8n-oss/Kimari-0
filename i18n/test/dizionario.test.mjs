@@ -76,6 +76,18 @@ test('nessuna voce lascia un segnaposto senza corrispondenza', () => {
   assert.deepEqual(rotte, []);
 });
 
+test('apostrofo dritto e tipografico trovano la stessa voce', () => {
+  // Nel codice si scrive un'opinione con l'apostrofo della tastiera; in un
+  // testo curato viene naturale scrivere un’opinione. Sono due caratteri
+  // diversi: senza normalizzarli la voce non si trova mai, e non se ne accorge
+  // nessuno perché esce l'italiano e sembra solo "non ancora tradotto".
+  const en = traduttore('en');
+  assert.equal(en("Tutti hanno un'opinione."), 'Everyone has an opinion.');
+  assert.equal(en('Tutti hanno un’opinione.'), 'Everyone has an opinion.');
+  assert.equal(en("Serve il link d'invito"), 'You need the invite link');
+  assert.equal(en('Serve il link d’invito'), 'You need the invite link');
+});
+
 test('ogni voce ha tutte e quattro le lingue', () => {
   const buchi = [];
   for (const [it, v] of Object.entries(DIZIONARIO)) {

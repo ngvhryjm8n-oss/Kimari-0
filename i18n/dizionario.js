@@ -162,7 +162,16 @@ export const DIZIONARIO = {
 
 /* ------------------------------------------------------------------ */
 
-const NORM = s => String(s).replace(/\s+/g, ' ').trim();
+// Normalizza anche gli apostrofi e le virgolette tipografiche: nel codice si
+// scrive "un'opinione" con l'apostrofo dritto, nei testi curati viene naturale
+// scrivere "un’opinione". Sono due caratteri diversi, e senza questo la voce
+// non verrebbe mai trovata — senza errori, senza avvisi: uscirebbe l'italiano
+// e nessuno capirebbe perché.
+const NORM = s => String(s)
+  .replace(/[‘’ʼ]/g, "'")
+  .replace(/[“”]/g, '"')
+  .replace(/\s+/g, ' ')
+  .trim();
 
 // Indice normalizzato: nel codice le stringhe vanno a capo dentro i template,
 // e "Segna tutte\n  le opzioni" deve trovare la stessa voce di "Segna tutte le
