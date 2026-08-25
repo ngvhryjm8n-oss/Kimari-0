@@ -202,13 +202,20 @@ export function mapMedia(row, urlFor) {
 // Le specie non coincidono: il database scrive `when_changed`/`where_changed`,
 // il prototipo si aspetta `changed`.
 
+// La stessa lingua che il prototipo usa nei suoi formattatori (index.html,
+// riga ~581). Se qui si mette la lingua del dispositivo e li' no, nella stessa
+// schermata compaiono due formati diversi: "Ven 28 ago" nel piano e
+// "Fri, Aug 28" nello storico. Quando l'app avra' le cinque lingue va cambiata
+// qui E li', insieme.
+export const LINGUA_DATE = 'it-IT';
+
 const dataUmana = (iso, allDay) => {
   if (!iso) return '';
   const d = new Date(iso);
   return allDay
-    ? d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })
-    : d.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short',
-                                    hour: '2-digit', minute: '2-digit' });
+    ? d.toLocaleDateString(LINGUA_DATE, { weekday: 'short', day: 'numeric', month: 'short' })
+    : d.toLocaleString(LINGUA_DATE, { weekday: 'short', day: 'numeric', month: 'short',
+                                      hour: '2-digit', minute: '2-digit' });
 };
 
 // Il testo di un valore, qualunque campo sia: quando o dove.

@@ -275,6 +275,9 @@ test('una conferma diventa una voce leggibile, non una che rompe il render', () 
   assert.equal(typeof c.text, 'string', 'senza text il prototipo lancia su .replace');
   assert.match(c.text, /^Confermato: /, 'il prototipo toglie questo prefisso nel feed');
   assert.match(c.text, /Pizzeria da Gino/);
+  // Stessa lingua del resto della schermata: "ven 28 ago", non "Fri, Aug 28".
+  // Con toLocaleString(undefined) usciva l'inglese sotto un piano in italiano.
+  assert.match(c.text, /ago/, 'la data va scritta come la scrive il prototipo');
   assert.equal(c.by, 'a1', 'senza by la voce sparisce dalle novità e lo Storico dice undefined');
 
   // La riga esatta che moriva.
