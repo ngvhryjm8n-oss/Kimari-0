@@ -744,7 +744,10 @@ const nameOf = id => state.people[id] ? state.people[id].name : '';
 // kimari.it, che è un dominio inventato e non porta da nessuna parte: ogni
 // link condiviso era rotto. Quando ci sarà un dominio vero si cambia QUI, in
 // una riga, e non serve toccare altro.
-const SITO = 'https://ngvhryjm8n-oss.github.io/Kimari-0/';
+// Ricavato da dove gira l'app, non scritto a mano: l'app sta in <base>/app/ e
+// il sito in <base>/. Così il giorno in cui si compra un dominio vero non c'è
+// niente da cambiare qui — i link condivisi puntano da soli al posto giusto.
+const SITO = location.origin + location.pathname.replace(/app\/?(index\.html)?$/, '');
 // Il formato è ?t=<token>, quello che il sito sa già leggere da mesi: i link
 // già in giro non devono mai rompersi (regola 2).
 const linkOf = p => `${SITO}?t=${p.token}`;
