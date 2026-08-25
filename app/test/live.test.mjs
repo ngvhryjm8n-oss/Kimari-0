@@ -54,7 +54,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'setPlaceCover','deletePlaceMedia','uploadMedia','uploadPlacePhoto','deleteMedia',
                  'setJoinPolicy','addPlanPlaceholder','removePlanPlaceholder','setInviteLimits',
                  'revokeInviteLinks','removeParticipant','createGroupInvite',
-                 'previewGroupInvite','joinGroup',
+                 'previewGroupInvite','joinGroup','currentSession','haIdentitaVera',
+                 'adottaIdentitaGoogle','pulisciUrlDopoLogin',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };

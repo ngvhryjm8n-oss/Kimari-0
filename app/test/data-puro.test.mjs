@@ -10,7 +10,7 @@ globalThis.location = { origin: 'https://esempio.test', pathname: '/Kimari-0/app
                         hash: '', search: '' };
 globalThis.history = { replaceState() { globalThis.history.__chiamata = true; } };
 
-const { tornandoDaLogin, pulisciUrlDopoLogin } = await import('../data.js');
+const { tornandoDaLogin, pulisciUrlDopoLogin, haIdentitaVera } = await import('../data.js');
 
 let passed = 0, failed = 0;
 const test = (nome, fn) => {
@@ -59,6 +59,32 @@ test('ripulisce l\'URL solo quando serve', () => {
   location.hash = '#/p/123'; location.search = '';
   assert.equal(pulisciUrlDopoLogin(), false);
   assert.equal(history.__chiamata, false, 'una rotta normale non va toccata');
+});
+
+test('riconosce chi ha collegato un account senza fidarsi di is_anonymous', () => {
+  // È IL BUG del 26/8/2026. Dopo linkIdentity l'utente non è più anonimo, ma
+  // il token che si ha in mano continua a dire is_anonymous: true finché non
+  // viene rinnovato. Chi si fida di quel campo non si accorge mai che
+  // l'accesso è avvenuto: il profilo non viene creato, l'utente resta
+  // 'ospite' e si vede ricomparire la schermata d'ingresso dopo essere
+  // entrato — che è esattamente quello che succedeva.
+  assert.equal(haIdentitaVera({
+    is_anonymous: true,                                    // ← token vecchio
+    identities: [{ provider: 'anonymous' }, { provider: 'google' }]
+  }), true, 'ha collegato Google: va riconosciuto anche col token vecchio');
+
+  assert.equal(haIdentitaVera({
+    is_anonymous: true, identities: [{ provider: 'apple' }]
+  }), true, 'vale anche per Apple');
+
+  assert.equal(haIdentitaVera({
+    is_anonymous: true, identities: [{ provider: 'anonymous' }]
+  }), false, 'un ospite vero resta un ospite');
+
+  // Ricaduta quando identities non arriva: un anonimo non ha email.
+  assert.equal(haIdentitaVera({ email: 'v@example.com' }), true);
+  assert.equal(haIdentitaVera({}), false);
+  assert.equal(haIdentitaVera(null), false);
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);

@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:26';
+export const VERSIONE = '26/08 03:31';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -847,9 +847,19 @@ export async function boot() {
     // Sessione aperta ma nessun profilo: senza questo il prototipo mostrerebbe
     // la vista web (isWeb() è vero quando me === 'guest') e nell'app non si
     // entrerebbe mai. La porta d'ingresso va aperta a mano.
-    if (K.state.me === 'guest' && K.openSheet && K.sheetWelcome) {
-      K.state.welcomeShown = true;
-      K.openSheet(K.sheetWelcome());
+    //
+    // Ma se l'utente ha GIÀ un account collegato e resta 'ospite', non è una
+    // porta da aprire: è un errore, e riproporre l'ingresso a chi è appena
+    // entrato lo manda in tondo. Meglio dirlo.
+    if (K.state.me === 'guest') {
+      const s = await data.currentSession();
+      if (s && data.haIdentitaVera(s.user)) {
+        K.toast && K.toast('Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.');
+        console.error('sessione con identità vera ma nessun actor', s.user.id);
+      } else if (K.openSheet && K.sheetWelcome) {
+        K.state.welcomeShown = true;
+        K.openSheet(K.sheetWelcome());
+      }
     }
   } catch (e) {
     // Non si azzera lo schermo: i dati finti del prototipo restano, e l'utente
