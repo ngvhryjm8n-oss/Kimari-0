@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:51';
+export const VERSIONE = '26/08 03:55';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -47,6 +47,12 @@ export function applyState(state, loaded) {
     state.consented = true;
     state.ageOk = true;
     state.welcomeShown = true;
+    // La marcatura la legge il prototipo al PROSSIMO avvio, prima che questo
+    // file esista: e' l'unico modo di impedirgli di programmare il benvenuto,
+    // invece di rincorrerlo chiudendolo dopo.
+    try { localStorage.setItem('kimari_profilo', '1'); } catch { /* niente */ }
+  } else {
+    try { localStorage.removeItem('kimari_profilo'); } catch { /* niente */ }
   }
   return state;
 }
@@ -923,6 +929,12 @@ export async function boot() {
         K.state.welcomeShown = true;
         K.openSheet(K.sheetWelcome());
       }
+    } else if (K.closeSheet) {
+      // Al primo avvio dopo il login la marcatura non c'era ancora, quindi il
+      // prototipo il benvenuto l'ha gia' aperto: si chiude. Dal secondo avvio
+      // non verra' nemmeno programmato.
+      K.closeSheet();
+      setTimeout(() => K.closeSheet(), 120);   // il suo setTimeout e' a 60 ms
     }
   } catch (e) {
     // Non si azzera lo schermo: i dati finti del prototipo restano, e l'utente

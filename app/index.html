@@ -563,6 +563,9 @@ window.KIMARI_ASSETS = {
 
 /* =============================== utilità =============================== */
 const $ = (s, r = document) => r.querySelector(s);
+// Marcatura scritta da live.js quando esiste un profilo: dice a questo file,
+// che parte per primo, di non riproporre l'ingresso a chi e' gia' dentro.
+const giaEntrato = () => { try { return localStorage.getItem('kimari_profilo') === '1'; } catch(_) { return false; } };
 const uid = () => Math.random().toString(36).slice(2, 8);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
@@ -1438,7 +1441,11 @@ function render(){
   if(r.name === 'news' && !isWeb()) state.lastSeenNews = Date.now();
   $('#app').innerHTML = `<div class="screen" id="screen">${html}</div>${showTab ? tabbar(tab) : ''}`;
   $('#screen').scrollTop = keep; state.lastRoute = location.hash; renderDevbar();
-  if(!isWeb() && !state.consented && !state.welcomeShown){ state.welcomeShown = true; setTimeout(() => openSheet(sheetWelcome()), 60); }
+  // giaEntrato() legge una marcatura lasciata da live.js: senza, questo render
+  // — che parte col caricamento, prima che live.js esista — programmerebbe il
+  // benvenuto anche a chi ha gia' un profilo, e chiuderlo dopo sarebbe una
+  // corsa contro questo setTimeout.
+  if(!isWeb() && !state.consented && !state.welcomeShown && !giaEntrato()){ state.welcomeShown = true; setTimeout(() => openSheet(sheetWelcome()), 60); }
 }
 
 /* =============================== azioni =============================== */
