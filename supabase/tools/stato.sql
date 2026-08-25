@@ -23,8 +23,22 @@ select 'migrazione ' || m.nome as cosa,
     ('0007 correzione saldi',      'plan_balances'),
     ('0008 domande a piano avviato', 'remove_plan_extra'),
     ('0009 finalize_plan',         'finalize_plan'),
-    ('0010 creazione atomica',     'create_plan_full')
+    ('0010 creazione atomica',     'create_plan_full'),
+    ('0011 ritardi/amici/resto',   'friendships'),
+    ('0012 politica ingresso',     'set_join_policy')
   ) as m(nome, prova)
+
+union all
+
+-- 0013 non crea niente di nuovo: riscrive join_plan. Si riconosce da come
+-- decide se un nome è rivendicabile.
+select 'migrazione 0013 falla del claim' as cosa,
+       case when exists (
+         select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+          where n.nspname = 'public' and p.proname = 'join_plan'
+            and pg_get_functiondef(p.oid) like '%auth_user_id is null) into v_libero%'
+       ) then 'APPLICATA' else 'DA APPLICARE — falla aperta' end,
+       'join_plan controlla v_libero'
 
 union all
 
