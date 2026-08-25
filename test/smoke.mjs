@@ -211,6 +211,7 @@ await test('lingua sconosciuta: si resta in italiano, non si rompe niente', asyn
 });
 
 await test('il titolo del piano non può iniettare HTML', async () => {
+  // (prova del sito; quella dell'app sta in app/test/benvenuto.test.mjs)
   const preview = {
     ok: true, plan_id: 'p1', title: '<img src=x onerror=alert(1)>', status: 'deciding',
     organizer: 'Vince', voters: 0, when_mode: 'fixed', where_mode: 'fixed',
