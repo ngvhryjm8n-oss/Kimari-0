@@ -80,6 +80,19 @@ await test('la marcatura si legge prima che parta il render', async () => {
     'la marcatura deve venire da localStorage: è l\'unica cosa disponibile così presto');
 });
 
+await test("l'import di live.js porta la versione giusta", () => {
+  // Senza, dopo ogni pubblicazione il browser tiene il live.js vecchio per
+  // dieci minuti e lo abbina all'HTML nuovo: uno stato ibrido che non esiste
+  // in nessun commit, e che guardando il codice non si riesce a spiegare.
+  // Si sistema con: npm run timbra
+  const live = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  const v = live.match(/VERSIONE = '([^']*)'/)[1];
+  const imp = HTML.match(/src="\.\/live\.js\?v=([^"]*)"/);
+  assert.ok(imp, "l'import di live.js non porta ?v=");
+  assert.equal(decodeURIComponent(imp[1]), v,
+    "versione scaduta nell'import: gira `npm run timbra`");
+});
+
 // Nota su cosa questo file NON può provare: in jsdom i moduli non vengono
 // eseguiti, quindi live.js non parte e l'app resta coi dati finti. Che senza
 // profilo l'app sia inutilizzabile — niente barra, nessuna azione — è stato

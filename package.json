@@ -12,7 +12,8 @@
     "test:wiring": "node app/test/wiring-audit.mjs",
     "test:i18n": "node i18n/test/dizionario.test.mjs",
     "test:data": "node app/test/data-puro.test.mjs",
-    "test:benvenuto": "node app/test/benvenuto.test.mjs"
+    "test:benvenuto": "node app/test/benvenuto.test.mjs",
+    "timbra": "node tools/timbra-versione.mjs"
   },
   "devDependencies": {
     "jsdom": "^27.0.0"
