@@ -1,0 +1,16 @@
+{
+  "name": "Kimari",
+  "short_name": "Kimari",
+  "description": "Il gruppo vota, tu confermi. Kimari!",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2F2F7",
+  "theme_color": "#F2F2F7",
+  "lang": "it",
+  "icons": [
+    { "src": "./icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+  ]
+}
