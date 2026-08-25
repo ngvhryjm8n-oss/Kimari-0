@@ -49,12 +49,57 @@ export async function currentSession() {
   return data.session;
 }
 
+// Si sta tornando da Google o da Apple? Il token arriva nell'URL: nel frammento
+// (flusso implicito) o come ?code= (flusso PKCE).
+export const tornandoDaLogin = () =>
+  /[#&](access_token|error_description)=/.test(location.hash) ||
+  /[?&]code=/.test(location.search);
+
+// La libreria consuma l'URL da sola, ma in modo asincrono. Qui si aspetta che
+// abbia finito, invece di chiedere la sessione un attimo troppo presto.
+function aspettaSessione(ms = 8000) {
+  return new Promise(resolve => {
+    let finito = false;
+    const chiudi = s => { if (!finito) { finito = true; clearTimeout(orologio); resolve(s); } };
+    const { data } = sb.auth.onAuthStateChange((_evento, sessione) => {
+      if (sessione) { try { data.subscription.unsubscribe(); } catch { /* niente */ } chiudi(sessione); }
+    });
+    const orologio = setTimeout(() => {
+      try { data.subscription.unsubscribe(); } catch { /* niente */ }
+      chiudi(null);
+    }, ms);
+  });
+}
+
 export async function ensureSession() {
   const s = await currentSession();
   if (s) return s;
+
+  // IL PUNTO. Tornando da un login il token è ancora nell'URL e la libreria
+  // non l'ha ancora letto: entrare come anonimi adesso significherebbe
+  // sovrascrivere l'accesso appena fatto con una sessione vuota, e all'utente
+  // ricomparirebbe la schermata d'ingresso come se non fosse successo niente.
+  if (tornandoDaLogin()) {
+    const arrivata = await aspettaSessione();
+    if (arrivata) return arrivata;
+    // Scaduta l'attesa senza sessione: c'è stato un errore vero, e va detto.
+    const motivo = new URLSearchParams(location.hash.replace(/^#/, '')).get('error_description')
+                || new URLSearchParams(location.search).get('error_description');
+    if (motivo) throw new Error('Accesso rifiutato: ' + motivo);
+  }
+
   const { data, error } = await sb.auth.signInAnonymously();
   if (error) throw new Error('Accesso rifiutato da Supabase: ' + error.message);
   return data.session;
+}
+
+// Dopo il login l'URL resta pieno di token, e il prototipo usa il frammento
+// per sapere che schermata mostrare: va ripulito, o si ritrova a interpretare
+// "access_token=..." come una rotta.
+export function pulisciUrlDopoLogin() {
+  if (!tornandoDaLogin()) return false;
+  history.replaceState(null, '', location.origin + location.pathname);
+  return true;
 }
 
 // Segno lasciato prima del salto verso Google: al ritorno dice che l'actor
