@@ -16,7 +16,7 @@ import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } fro
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 03:36';
+export const VERSIONE = '26/08 03:46';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -123,9 +123,9 @@ export const HANDLERS = {
   // vista web: l'app resta inaccessibile. Qui si crea il profilo sulla
   // sessione anonima già aperta, come fa V0 quando un ospite scrive il nome.
   async loginName(el, K) {
-    if (!K.state.ageOk) return { toast: 'Conferma di avere almeno 16 anni', skipReload: true };
     const nome = val(K, '#welcomeName');
     if (!nome) return { toast: 'Scrivi come ti chiami', skipReload: true };
+    if (!K.state.ageOk) return { toast: 'Conferma prima di avere almeno 16 anni', skipReload: true };
     await data.ensureActor(nome);
     K.state.consented = true;
     return { toast: 'Benvenuto, ' + nome, closeSheet: true };
