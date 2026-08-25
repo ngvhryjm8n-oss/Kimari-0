@@ -111,21 +111,32 @@ begin
     ok := ok + 1; rep := rep || E'\nok   5) chi si riconosce nell''elenco entra e prende quel nome';
 
     ------------------------------------------------- 6) un nome, una volta
+    -- È il controllo che ha trovato la falla presente dalla 0001: il nome di
+    -- Carla è tenuto da una sessione ANONIMA, e il vecchio join_plan lo
+    -- considerava ancora libero. Chiunque avesse il link poteva prendersi i
+    -- voti di chi non aveva collegato Google. Corretto in 0013.
     perform set_config('request.jwt.claims', json_build_object('sub', d_uid)::text, true);
     perform set_config('role', 'authenticated', true);
     begin
       perform public.join_plan(v_token, null, v_seg1);   -- lo stesso nome di Carla
-      raise exception '6) FALSIFICABILE: due persone si sono prese lo stesso nome';
+      raise exception '6) FALSIFICABILE: due persone si sono prese lo stesso nome. Applica 0013.';
     exception when others then
       if sqlerrm not like '%claim not allowed%' then raise; end if;
     end;
-    ok := ok + 1; rep := rep || E'\nok   6) un nome dell''elenco si prende una volta sola';
+
+    -- E un nome ancora libero deve restare prendibile: la correzione non deve
+    -- aver chiuso anche la porta giusta.
+    perform public.join_plan(v_token, null, v_seg2);
+    perform set_config('role', 'postgres', true);
+    select count(*) into n from public.actors where id = v_seg2 and auth_user_id = d_uid;
+    if n <> 1 then raise exception '6b) un nome ancora libero non si riesce più a prendere'; end if;
+    ok := ok + 1; rep := rep || E'\nok   6) un nome si prende una volta sola, e i liberi restano liberi';
 
     ------------------------------------------------- 7) serve un account
     perform set_config('request.jwt.claims', json_build_object('sub', a_uid)::text, true);
     perform public.set_join_policy(v_plan, 'account');
 
-    -- Dario ha un account vero: entra.
+    -- Dario ha un account vero ed è già dentro dal controllo 6: rientra.
     perform set_config('request.jwt.claims', json_build_object('sub', d_uid)::text, true);
     perform public.join_plan(v_token, 'Dario', null);
     perform set_config('role', 'postgres', true);
@@ -137,7 +148,6 @@ begin
 
     ------------------------------------------------- 8) niente ospiti
     perform set_config('role', 'postgres', true);
-    delete from public.participants where plan_id = v_plan and actor_id = v_seg2;
     declare e_uid uuid := gen_random_uuid();
     begin
       insert into auth.users (id, email, is_anonymous) values (e_uid, null, true);
