@@ -125,19 +125,42 @@ export async function signInWithProvider(provider, redirectTo) {
 // chiama ancora "Ospite": adesso che sappiamo il nome vero si adotta quello,
 // insieme all'email. Torna true se ha cambiato qualcosa, così chi chiama sa
 // che deve ricaricare.
+// Dopo linkIdentity l'utente NON è più anonimo, ma il token che si ha in mano
+// continua a dire is_anonymous: true finché non viene rinnovato. Fidarsi di
+// quel campo significa non accorgersi mai che l'accesso è avvenuto.
+// Si guardano invece le identità collegate, che sono aggiornate.
+export function haIdentitaVera(user) {
+  if (!user) return false;
+  const provider = (user.identities || []).map(i => i.provider);
+  if (provider.some(p => p && p !== 'anonymous')) return true;
+  // Ricaduta per i casi in cui identities non arriva: un'email c'è solo se
+  // qualcuno l'ha fornita, e un utente anonimo non ne ha.
+  return !!user.email;
+}
+
 export async function adottaIdentitaGoogle() {
   let inCorso = false;
   try { inCorso = localStorage.getItem(PENDING_LINK) === '1'; } catch { /* niente */ }
-  if (!inCorso) return false;
-  try { localStorage.removeItem(PENDING_LINK); } catch { /* niente */ }
+
+  // Il token appena tornato può essere ancora quello vecchio: rinnovarlo porta
+  // le informazioni aggiornate sull'utente.
+  if (inCorso) { try { await sb.auth.refreshSession(); } catch { /* pazienza */ } }
 
   const s = await currentSession();
-  if (!s || s.user.is_anonymous) return false;
+  if (!s || !haIdentitaVera(s.user)) return false;
+
+  // Il profilo va creato COMUNQUE, anche senza il segno lasciato prima del
+  // salto: chi ha un'identità vera e nessun profilo resterebbe 'ospite' e si
+  // vedrebbe ricomparire la schermata d'ingresso dopo essere entrato.
+  const attuale = await myActor();
+  if (!inCorso && attuale) return false;
+  try { localStorage.removeItem(PENDING_LINK); } catch { /* niente */ }
 
   const md = s.user.user_metadata || {};
-  const nome = md.full_name || md.name || (s.user.email || '').split('@')[0];
-  if (nome) await ensureActor(nome);
-  if (s.user.email) await setMyEmail(s.user.email);
+  const nome = md.full_name || md.name || md.preferred_username
+            || (s.user.email || '').split('@')[0] || 'Io';
+  await ensureActor(nome);
+  if (s.user.email) { try { await setMyEmail(s.user.email); } catch { /* non blocca */ } }
   return true;
 }
 
