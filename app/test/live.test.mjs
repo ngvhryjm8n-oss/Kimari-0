@@ -103,6 +103,27 @@ await test('applyState svuota i dati vecchi invece di sovrapporsi', () => {
   assert.deepEqual(state.cal, { y: 2026 });
 });
 
+await test('chi ha un profilo non si rivede la schermata di benvenuto', () => {
+  // IL BUG che sembrava un login rotto. Il prototipo riapre il benvenuto
+  // finché state.consented è falso, e consented vive in memoria: ogni
+  // ricarica lo azzerava e a chi era già dentro ricompariva "Continua con
+  // Google", come se il login non fosse mai avvenuto.
+  const state = { people: {}, groups: {}, plans: {}, me: 'guest',
+                  consented: false, ageOk: false, welcomeShown: false };
+  live.applyState(state, { me: 'a-1', people: { 'a-1': { name: 'Vincenzo' } },
+                           groups: {}, plans: {} });
+  assert.equal(state.consented, true, 'chi ha un profilo è già passato dalla porta');
+  assert.equal(state.welcomeShown, true);
+  assert.equal(state.ageOk, true);
+});
+
+await test('un ospite vero il benvenuto lo deve vedere', () => {
+  const state = { people: {}, groups: {}, plans: {}, me: 'x',
+                  consented: false, ageOk: false, welcomeShown: false };
+  live.applyState(state, { me: 'guest', people: {}, groups: {}, plans: {} });
+  assert.equal(state.consented, false, 'senza profilo la porta va mostrata');
+});
+
 await test('applyState muta l\'oggetto invece di riassegnarlo', () => {
   const state = { people: {}, groups: {}, plans: {} };
   const ref = state.groups;
