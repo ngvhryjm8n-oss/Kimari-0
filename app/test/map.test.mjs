@@ -253,5 +253,65 @@ test('invito: organizzatore che non è fra i partecipanti prende un id di comodo
 });
 
 /* ------------------------------------------------------------------ */
+/* storia del piano                                                    */
+/*                                                                     */
+/* Il 26/8/2026 la prima conferma di un piano vero faceva morire        */
+/* render(): il prototipo fa c.text.replace(...) su ogni voce di specie  */
+/* 'confirmed', e qui text non veniva prodotto. Lo stato passava a       */
+/* confirmed, il ridisegno si fermava a metà, e la pagina restava su     */
+/* "IN DECISIONE" — cioè sembrava che la conferma non fosse partita,     */
+/* mentre nel database era andata benissimo.                            */
+
+test('una conferma diventa una voce leggibile, non una che rompe il render', () => {
+  const p = mapPlan(
+    { id: 'p1', title: 'Pizza', status: 'confirmed', version: 1 },
+    { changes: [{
+        version: 1, kind: 'confirmed', changed_by: 'a1',
+        created_at: '2026-08-26T10:00:00Z',
+        new_value: { starts_at: '2026-08-28T11:30:00+00:00', all_day: false,
+                     place_name: 'Pizzeria da Gino', place_address: 'Via Roma 12' }
+      }] });
+  const c = p.changes[0];
+  assert.equal(typeof c.text, 'string', 'senza text il prototipo lancia su .replace');
+  assert.match(c.text, /^Confermato: /, 'il prototipo toglie questo prefisso nel feed');
+  assert.match(c.text, /Pizzeria da Gino/);
+  assert.equal(c.by, 'a1', 'senza by la voce sparisce dalle novità e lo Storico dice undefined');
+
+  // La riga esatta che moriva.
+  assert.doesNotThrow(() => c.text.replace(/^(Confermato|Deciso): /, ''));
+});
+
+test('nessuna voce di storia lascia text o by vuoti', () => {
+  // Vale per ogni specie che il database sa scrivere: se una sfugge, si
+  // ripresenta lo stesso crash su un percorso diverso.
+  const righe = [
+    { version: 0, kind: 'created',       changed_by: 'a1', created_at: '2026-08-26T09:00:00Z', new_value: { title: 'Pizza' } },
+    { version: 1, kind: 'confirmed',     changed_by: 'a1', created_at: '2026-08-26T10:00:00Z', new_value: { place_name: 'Da Gino' } },
+    { version: 2, kind: 'when_changed',  changed_by: 'a2', created_at: '2026-08-26T11:00:00Z',
+      old_value: { starts_at: '2026-08-28T11:30:00Z' }, new_value: { starts_at: '2026-08-29T12:00:00Z' }, note: 'chiuso' },
+    { version: 3, kind: 'where_changed', changed_by: 'a2', created_at: '2026-08-26T12:00:00Z', new_value: { place_name: 'Sushi Zen' } },
+    { version: 4, kind: 'cancelled',     changed_by: 'a1', created_at: '2026-08-26T13:00:00Z', note: 'piove' }
+  ];
+  const p = mapPlan({ id: 'p1', title: 'Pizza', status: 'cancelled' }, { changes: righe });
+  for (const c of p.changes) {
+    assert.ok(c.text && typeof c.text === 'string', `specie senza testo: ${c.kind}`);
+    assert.ok(c.by, `specie senza autore: ${c.kind}`);
+    assert.doesNotThrow(() => c.text.replace(/^(Confermato|Deciso): /, ''));
+  }
+});
+
+test('le modifiche prendono la specie che il prototipo conosce', () => {
+  // Il database scrive when_changed / where_changed; il prototipo confronta
+  // con 'changed'. Senza la traduzione quelle voci non compaiono mai.
+  const p = mapPlan({ id: 'p1', title: 'Pizza', status: 'deciding' }, { changes: [
+    { version: 2, kind: 'when_changed', changed_by: 'a2', created_at: '2026-08-26T11:00:00Z',
+      old_value: { starts_at: '2026-08-28T11:30:00Z' }, new_value: { starts_at: '2026-08-29T12:00:00Z' } }
+  ] });
+  assert.equal(p.changes[0].kind, 'changed');
+  assert.equal(p.changes[0].field, 'when', 'il campo va tenuto: serve per l\'etichetta');
+  assert.match(p.changes[0].text, /era /, 'una modifica dice anche da cosa si veniva');
+});
+
+/* ------------------------------------------------------------------ */
 console.log(`\n${passed} passati, ${failed} falliti\n`);
 process.exit(failed ? 1 : 0);
