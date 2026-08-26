@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2014%3A23';
+} from './map.js?v=26%2F08%2015%3A05';
 
 let sb = null;
 
@@ -184,12 +184,28 @@ export const deleteMyAccount = () => rpc('delete_my_account');
 // Costruisce l'intero `state` del prototipo. Le query non filtrano per utente:
 // ci pensa la RLS, che è l'unica di cui ci si può fidare.
 export async function loadState() {
-  const actor = await myActor();
-  if (!actor) return { me: 'guest', people: {}, groups: {}, plans: {} };
-
-  const [groupRows, memberRows, sectionRows, groupSectionRows,
+  // TUTTO in un giro solo. Prima erano quattro ondate in fila — l'attore, poi
+  // i piani, poi le righe filtrate per plan_id, poi quelle filtrate per
+  // candidate_id — e ogni ondata è un viaggio fino a Francoforte. Misurato su
+  // un tocco: 719 ms, quasi tutti d'attesa, per cambiare una parola a schermo.
+  //
+  // Le ondate esistevano solo per passare gli id al filtro `.in('plan_id', …)`.
+  // Ma quel filtro non serve: la RLS è già participant-scoped, quindi la stessa
+  // domanda senza filtro rende esattamente le stesse righe. Verificato contro
+  // la produzione il 26/8/2026 con due account: quello estraneo, interrogando
+  // `candidates` senza filtro, ha visto le sue 2 righe e zero delle 4 altrui.
+  //
+  // Il filtro nel client non era una difesa — la difesa è la RLS, e il filtro
+  // le camminava dietro ripetendo quello che aveva già fatto.
+  const [actor,
+         groupRows, memberRows, sectionRows, groupSectionRows,
          placeRows, entRows, friendRows, muteRows, placeMediaRows,
-         planRows] = await Promise.all([
+         planRows,
+         cands, parts, ballots, changes, extras, comments,
+         proposals, expenses, settlements, media,
+         approvals, extraCands, extraApprovals, propVotes, expShares,
+         actorRows] = await Promise.all([
+    myActor(),
     rows(sb.from('groups').select('*'), 'i gruppi'),
     rows(sb.from('group_members').select('group_id, actor_id, role, joined_at'), 'i membri dei gruppi'),
     rows(sb.from('sections').select('*').order('position'), 'le tue sezioni'),
@@ -199,46 +215,31 @@ export async function loadState() {
     rows(sb.from('friendships').select('friend_id'), 'i tuoi amici'),
     rows(sb.from('mutes').select('group_id'), 'i gruppi silenziati'),
     rows(sb.from('place_media').select('*'), 'le foto dei posti'),
-    rows(sb.from('plans').select('*'), 'i piani')
+    rows(sb.from('plans').select('*'), 'i piani'),
+
+    rows(sb.from('candidates').select('*'), 'le opzioni'),
+    rows(sb.from('participants').select('*'), 'i partecipanti'),
+    rows(sb.from('ballots').select('*'), 'i voti'),
+    rows(sb.from('plan_changes').select('*'), 'la storia dei piani'),
+    rows(sb.from('plan_extras').select('*'), 'le domande'),
+    rows(sb.from('comments').select('*').order('created_at'), 'i commenti'),
+    rows(sb.from('proposals').select('*'), 'le proposte'),
+    rows(sb.from('expenses').select('*'), 'le spese'),
+    rows(sb.from('settlements').select('*'), 'i rimborsi'),
+    rows(sb.from('media').select('*'), 'le foto'),
+
+    rows(sb.from('approvals').select('*'), 'le preferenze'),
+    rows(sb.from('extra_candidates').select('*'), 'le opzioni delle domande'),
+    rows(sb.from('extra_approvals').select('*'), 'le preferenze sulle domande'),
+    rows(sb.from('proposal_votes').select('*'), 'i voti sulle proposte'),
+    rows(sb.from('expense_shares').select('*'), 'le quote delle spese'),
+    rows(sb.from('actors').select('id, display_name'), 'i nomi')
   ]);
 
-  const planIds = planRows.map(p => p.id);
-  const inPlans = q => planIds.length ? q : Promise.resolve({ data: [], error: null });
-
-  const [cands, parts, ballots, changes, extras, comments,
-         proposals, expenses, settlements, media] = await Promise.all([
-    rows(inPlans(sb.from('candidates').select('*').in('plan_id', planIds)), 'le opzioni'),
-    rows(inPlans(sb.from('participants').select('*').in('plan_id', planIds)), 'i partecipanti'),
-    rows(inPlans(sb.from('ballots').select('*').in('plan_id', planIds)), 'i voti'),
-    rows(inPlans(sb.from('plan_changes').select('*').in('plan_id', planIds)), 'la storia dei piani'),
-    rows(inPlans(sb.from('plan_extras').select('*').in('plan_id', planIds)), 'le domande'),
-    rows(inPlans(sb.from('comments').select('*').in('plan_id', planIds).order('created_at')), 'i commenti'),
-    rows(inPlans(sb.from('proposals').select('*').in('plan_id', planIds)), 'le proposte'),
-    rows(inPlans(sb.from('expenses').select('*').in('plan_id', planIds)), 'le spese'),
-    rows(inPlans(sb.from('settlements').select('*').in('plan_id', planIds)), 'i rimborsi'),
-    rows(inPlans(sb.from('media').select('*').in('plan_id', planIds)), 'le foto')
-  ]);
-
-  // Le approvazioni si filtrano per candidato, non per piano: la RLS nasconde
-  // comunque quelle degli altri piani.
-  const candIds  = cands.map(c => c.id);
-  const extraIds = extras.map(e => e.id);
-  const [approvals, extraCands, extraApprovals, propVotes, expShares, actorRows] =
-    await Promise.all([
-      rows(candIds.length ? sb.from('approvals').select('*').in('candidate_id', candIds)
-                          : Promise.resolve({ data: [] }), 'le preferenze'),
-      rows(extraIds.length ? sb.from('extra_candidates').select('*').in('extra_id', extraIds)
-                           : Promise.resolve({ data: [] }), 'le opzioni delle domande'),
-      rows(extraIds.length ? sb.from('extra_approvals').select('*').in('extra_id', extraIds)
-                           : Promise.resolve({ data: [] }), 'le preferenze sulle domande'),
-      rows(proposals.length ? sb.from('proposal_votes').select('*')
-                                .in('proposal_id', proposals.map(p => p.id))
-                            : Promise.resolve({ data: [] }), 'i voti sulle proposte'),
-      rows(expenses.length ? sb.from('expense_shares').select('*')
-                               .in('expense_id', expenses.map(e => e.id))
-                           : Promise.resolve({ data: [] }), 'le quote delle spese'),
-      rows(sb.from('actors').select('id, display_name'), 'i nomi')
-    ]);
+  // Il controllo va DOPO: senza profilo non c'è niente da mostrare, ma le
+  // domande partono comunque tutte insieme e la RLS non rende nulla a chi non
+  // ha un attore. Aspettare qui costerebbe un viaggio in più a ogni azione.
+  if (!actor) return { me: 'guest', people: {}, groups: {}, plans: {} };
 
   /* --------------------------------------------------- persone */
   const people = {};
