@@ -654,6 +654,22 @@ export const DIZIONARIO = {
   'Oppure entra con un nome': { en: 'Or just come in with a name',
     es: 'O entra solo con un nombre', de: 'Oder komm einfach mit einem Namen rein',
     ja: 'または名前だけで始める' },
+
+  /* Una persona vera ha guardato la porta d'ingresso e ha detto "non ho Google
+     o Apple", concludendo di non poter entrare. La strada c'era, scritta come
+     un titoletto grigio. Ora la sua domanda è scritta a schermo e la risposta
+     le sta sotto — perché è quella la domanda che uno si fa davanti a quella
+     schermata. */
+  'Non hai Google o Apple?': {
+    en: 'No Google or Apple account?', es: '¿No tienes Google ni Apple?',
+    de: 'Kein Google oder Apple?', ja: 'Google や Apple のアカウントがない場合は'
+  },
+  'Entra col tuo nome: funziona tutto uguale.': {
+    en: 'Come in with your name — everything works just the same.',
+    es: 'Entra con tu nombre: funciona todo igual.',
+    de: 'Komm mit deinem Namen rein — es funktioniert genauso.',
+    ja: '名前だけで参加できます。できることは変わりません。'
+  },
   'Entra': { en: 'Come in', es: 'Entrar', de: 'Rein', ja: 'はじめる' },
   'Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.': {
     en: 'You stay on this phone: change device and your plans don’t follow. You can link an account whenever you like.',

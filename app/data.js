@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=27%2F08%2001%3A08';
+} from './map.js?v=27%2F08%2001%3A20';
 
 let sb = null;
 

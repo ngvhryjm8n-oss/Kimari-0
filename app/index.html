@@ -1034,6 +1034,22 @@ const DIZIONARIO = {
   'Oppure entra con un nome': { en: 'Or just come in with a name',
     es: 'O entra solo con un nombre', de: 'Oder komm einfach mit einem Namen rein',
     ja: 'または名前だけで始める' },
+
+  /* Una persona vera ha guardato la porta d'ingresso e ha detto "non ho Google
+     o Apple", concludendo di non poter entrare. La strada c'era, scritta come
+     un titoletto grigio. Ora la sua domanda è scritta a schermo e la risposta
+     le sta sotto — perché è quella la domanda che uno si fa davanti a quella
+     schermata. */
+  'Non hai Google o Apple?': {
+    en: 'No Google or Apple account?', es: '¿No tienes Google ni Apple?',
+    de: 'Kein Google oder Apple?', ja: 'Google や Apple のアカウントがない場合は'
+  },
+  'Entra col tuo nome: funziona tutto uguale.': {
+    en: 'Come in with your name — everything works just the same.',
+    es: 'Entra con tu nombre: funciona todo igual.',
+    de: 'Komm mit deinem Namen rein — es funktioniert genauso.',
+    ja: '名前だけで参加できます。できることは変わりません。'
+  },
   'Entra': { en: 'Come in', es: 'Entrar', de: 'Rein', ja: 'はじめる' },
   'Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.': {
     en: 'You stay on this phone: change device and your plans don’t follow. You can link an account whenever you like.',
@@ -3242,7 +3258,17 @@ function sheetWelcome(){
   <div class="group"><div class="row"><div class="grow"><div class="t">${t('Ho almeno 16 anni')}</div><div class="s">${t('e accetto Termini e Privacy. Kimari non è per i minori di 16 anni.')}</div></div><button class="sw ${state.ageOk ? 'on' : ''}" data-action="ageOk" aria-label="${t('Ho almeno 16 anni')}"></button></div></div>
   <div class="actions stack"><button class="btn sec" style="background:#000;color:#fff" data-action="login" data-p="apple"> ${t('Continua con Apple')}</button><button class="btn tint" data-action="login">${t('Continua con Google')}</button></div>
   <div class="group-foot" style="text-align:center;margin:14px 0 8px">${t('Con un account ritrovi i tuoi piani da qualsiasi telefono.')}</div>
-  <div class="group-title">${t('Oppure entra con un nome')}</div>
+  <!-- Una persona vera ha guardato questa schermata e ha detto "non ho Google
+       o Apple", concludendo di non poter entrare. L'ingresso col nome c'era
+       gia', ma scritto come un titoletto grigio: si leggeva come
+       un'intestazione, non come una strada percorribile.
+       Ora la domanda che quella persona si e' fatta e' scritta a schermo, e la
+       risposta le sta sotto. -->
+  <div class="center" style="margin:18px 0 8px">
+    <div style="height:1px;background:var(--sep);margin:0 16px 16px"></div>
+    <div style="font-weight:600;font-size:17px">${t('Non hai Google o Apple?')}</div>
+    <div class="sub" style="margin:2px 16px 0">${t('Entra col tuo nome: funziona tutto uguale.')}</div>
+  </div>
   <div class="group"><div class="row"><input class="input" id="welcomeName" placeholder="${t('Come ti chiami?')}" maxlength="40" autocomplete="given-name"></div></div>
   <div class="actions"><button class="btn primary" data-action="loginName">${t('Entra')}</button></div>
   <p class="foot">${t('Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.')}</p>
@@ -3769,6 +3795,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2001%3A08"></script>
+<script type="module" src="./live.js?v=27%2F08%2001%3A20"></script>
 </body>
 </html>
