@@ -430,6 +430,21 @@ await test('il riscontro arriva prima della ricarica, non dopo', () => {
   assert.ok(iReload < iGo, 'go deve restare dopo la ricarica, o mostra un piano che non c\'è');
 });
 
+await test('reset non riporta i dati finti della demo', async () => {
+  // Trovato da Vincenzo: premi "Reset" e ti ritrovi i piani di un Marco che
+  // non esiste. reset() del prototipo azzera lo stato e lo riempie di dati
+  // inventati — giusto per una demo, disastroso in un'app collegata, perche'
+  // da li' si puo' votare e condividere roba che non c'e'.
+  //
+  // La barra che lo contiene ora e' nascosta quando l'app e' collegata, ma
+  // nascondere un pulsante non e' impedirgli di partire.
+  const K = { state: { plans: {}, people: {}, groups: {}, me: 'a-1' } };
+  const res = await live.HANDLERS.reset(null, K);
+  assert.ok(!res.skipReload, 'deve ricaricare dal server: e' + "'" + ' quello che ci si aspetta da un "ricomincia"');
+  assert.equal(K.state.me, 'a-1', 'non deve toccare l identita');
+  assert.equal(Object.keys(K.state.plans).length, 0, 'non deve inventare piani');
+});
+
 await test("se l'avvio fallisce non restano a schermo i piani finti", () => {
   // Scoperto provando: un 401 su UNA delle 27 letture e l'app restava sui dati
   // della demo — l'utente "org" coi suoi piani inventati — con un toast che

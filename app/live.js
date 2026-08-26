@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2015%3A23';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A23';
+import * as data from './data.js?v=26%2F08%2015%3A32';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A32';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 15:23';
+export const VERSIONE = '26/08 15:32';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -663,6 +663,18 @@ export const HANDLERS = {
     if (!p) return { toast: 'Piano non trovato', skipReload: true };
     await data.addPlanLink(p.id, nome, url);
     return { toast: 'Link aggiunto', closeSheet: true };
+  },
+
+  // "↺ Reset" della barra prototipo chiama reset(), che azzera lo stato e lo
+  // riempie di dati inventati: l'utente "org", i piani di un Marco che non
+  // esiste. Vincenzo ci si è ritrovato dentro premendolo.
+  //
+  // La barra ora è nascosta quando l'app è collegata, ma nascondere un
+  // pulsante non è impedirgli di partire: qui l'azione viene intercettata e
+  // fatta diventare quello che uno si aspetta da un "ricomincia" in un'app
+  // vera — rileggere dal server, non inventare.
+  async reset(el, K) {
+    return { toast: 'Ricaricato dal server' };
   },
 
   /* ------------------------------------------------------ account */
