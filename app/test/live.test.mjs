@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { register } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
+import { JSDOM } from 'jsdom';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -427,6 +428,27 @@ await test('il riscontro arriva prima della ricarica, non dopo', () => {
   assert.ok(iToast > 0 && iReload > 0 && iGo > 0, 'il dispatcher è cambiato di forma');
   assert.ok(iToast < iReload, 'il toast è tornato dopo la ricarica: mezzo secondo senza riscontro');
   assert.ok(iReload < iGo, 'go deve restare dopo la ricarica, o mostra un piano che non c\'è');
+});
+
+await test("se l'avvio fallisce non restano a schermo i piani finti", () => {
+  // Scoperto provando: un 401 su UNA delle 27 letture e l'app restava sui dati
+  // della demo — l'utente "org" coi suoi piani inventati — con un toast che
+  // spariva dopo tre secondi. Da li' si puo' votare, condividere e confermare
+  // cose che non esistono.
+  //
+  // Era una scelta scritta apposta ("non si azzera lo schermo"), e sbagliata:
+  // uno schermo che mente e' peggio di uno che si scusa.
+  const D = new JSDOM('<body><div id="app"><div class="finto">Piano finto</div></div></body>');
+  const vecchio = globalThis.document;
+  globalThis.document = D.window.document;
+  try {
+    live.schermoNonCollegato({}, new Error('JWT issued at future'));
+    const testo = D.window.document.getElementById('app').textContent;
+    assert.ok(!testo.includes('Piano finto'), 'i dati finti sono rimasti a schermo');
+    assert.match(testo, /orologio/i, "un orologio sfasato va detto: non c'è niente da riprovare");
+    assert.ok(testo.includes('JWT issued at future'), 'regola 5: il dettaglio vero, non un messaggio generico');
+    assert.ok(D.window.document.querySelector('button'), 'senza un modo di riprovare si resta bloccati');
+  } finally { globalThis.document = vecchio; }
 });
 
 await test('logEvent ingoia i suoi errori: è lei a doverlo fare', () => {

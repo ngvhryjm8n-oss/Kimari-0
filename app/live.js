@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2015%3A18';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A18';
+import * as data from './data.js?v=26%2F08%2015%3A23';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A23';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 15:18';
+export const VERSIONE = '26/08 15:23';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -1123,12 +1123,59 @@ export async function boot() {
       setTimeout(() => chiudiSoloIlBenvenuto(K), 120);   // il suo setTimeout e' a 60 ms
     }
   } catch (e) {
-    // Non si azzera lo schermo: i dati finti del prototipo restano, e l'utente
-    // legge perché non è collegato invece di trovare una pagina vuota.
-    K.toast && K.toast('Non collegato: ' + (e.message || e));
     console.error('boot', e);
-    document.body.dataset.kimari = 'demo';
+    document.body.dataset.kimari = 'errore';
+    schermoNonCollegato(K, e);
   }
+}
+
+// Se l'avvio fallisce, lo schermo NON deve restare sui dati finti del
+// prototipo. Prima ci restava di proposito — l'idea era di non lasciare una
+// pagina vuota — e l'ho scoperto sbagliato provando: bastava un 401 su una
+// delle 27 letture e l'app mostrava "org" con i suoi piani inventati, con un
+// toast che spariva dopo tre secondi. Da lì uno può votare, condividere,
+// confermare cose che non esistono.
+//
+// Uno schermo che mente è peggio di uno che si scusa: la stessa ragione per
+// cui disegna() non lascia mai a schermo dati vecchi.
+export function schermoNonCollegato(K, e) {
+  const msg = String((e && e.message) || e);
+
+  // Un telefono con l'orologio sbagliato riceve "JWT issued at future" e non
+  // c'è niente da riprovare finché non lo sistema. Vale la pena dirglielo:
+  // altrimenti è un errore incomprensibile che sembra colpa dell'app.
+  const orologio = /issued at future|token used before issued|jwt.*expired/i.test(msg);
+
+  const app = document.getElementById('app');
+  if (!app) return;
+  app.textContent = '';
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.cssText = 'margin:40px 16px; text-align:center';
+
+  const h = document.createElement('h1');
+  h.textContent = orologio ? 'L’orologio del telefono è sbagliato' : 'Non riesco a collegarmi';
+  const p = document.createElement('p');
+  p.className = 'sub';
+  p.textContent = orologio
+    ? 'Kimari non riesce ad autenticarsi finché la data e l’ora non sono giuste. Attiva l’orario automatico nelle impostazioni.'
+    : 'I tuoi piani sono al sicuro sul server: non si vedono perché non riesco a leggerli adesso.';
+
+  // Regola 5: il dettaglio vero di Supabase, non un messaggio generico.
+  const d = document.createElement('p');
+  d.className = 'foot';
+  d.style.cssText = 'margin-top:14px; word-break:break-word';
+  d.textContent = msg;
+
+  const b = document.createElement('button');
+  b.className = 'btn';
+  b.style.marginTop = '14px';
+  b.textContent = 'Riprova';
+  b.addEventListener('click', () => location.reload());
+
+  card.append(h, p, b, d);
+  app.appendChild(card);
 }
 
 if (typeof window !== 'undefined' && window.document) {
