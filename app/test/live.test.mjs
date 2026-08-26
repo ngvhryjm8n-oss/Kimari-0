@@ -65,7 +65,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'previewGroupInvite','joinGroup','currentSession','haIdentitaVera',
                  'adottaIdentitaGoogle','pulisciUrlDopoLogin','signOut','myActor',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra',
-                 'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount',
+                 'renameSection','deleteSection','planBalances'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
@@ -464,6 +465,35 @@ await test("se l'avvio fallisce non restano a schermo i piani finti", () => {
     assert.ok(testo.includes('JWT issued at future'), 'regola 5: il dettaglio vero, non un messaggio generico');
     assert.ok(D.window.document.querySelector('button'), 'senza un modo di riprovare si resta bloccati');
   } finally { globalThis.document = vecchio; }
+});
+
+await test('le sezioni si rinominano e si cancellano', async () => {
+  // rename_section e delete_section erano pronte nel database da settimane
+  // senza un bottone sopra: chi sbagliava a scrivere "Roma" se la teneva
+  // sbagliata per sempre.
+  const K = { state: {}, $: sel => sel === '#secName' ? { value: '  Milano  ' } : null };
+  const res = await live.HANDLERS.saveSection({ dataset: { s: 's1' } }, K);
+  assert.equal(calls.at(-1).name, 'renameSection');
+  assert.deepEqual(calls.at(-1).args, ['s1', 'Milano'], 'il nome va ripulito dagli spazi');
+  assert.ok(res.closeSheet);
+
+  // Senza nome non si scrive niente: rinominare a vuoto farebbe sparire
+  // l'etichetta e i gruppi finirebbero in un limbo senza nome.
+  const prima = calls.length;
+  const vuoto = await live.HANDLERS.saveSection({ dataset: { s: 's1' } },
+    { state: {}, $: () => ({ value: '   ' }) });
+  assert.equal(calls.length, prima, 'con il nome vuoto non deve partire niente');
+  assert.ok(vuoto.skipReload);
+
+  await live.HANDLERS.delSection({ dataset: { s: 's1' } }, K);
+  assert.equal(calls.at(-1).name, 'deleteSection');
+});
+
+await test('togliere qualcuno da un piano passa dal server', async () => {
+  const K = { state: { plans: { p1: { id: 'p1' } }, currentPlan: 'p1' } };
+  await live.HANDLERS.rmFromPlan({ dataset: { id: 'a-2' } }, K);
+  assert.equal(calls.at(-1).name, 'removeParticipant');
+  assert.deepEqual(calls.at(-1).args, ['p1', 'a-2']);
 });
 
 await test('logEvent ingoia i suoi errori: è lei a doverlo fare', () => {

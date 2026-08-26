@@ -674,6 +674,20 @@ export const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* ------------------------------------------------- sezioni: rinomina e via */
+  'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
+                          de: 'Bereich umbenannt', ja: 'セクション名を変えました' },
+  'Sezione eliminata': { en: 'Section deleted', es: 'Sección eliminada',
+                         de: 'Bereich gelöscht', ja: 'セクションを削除しました' },
+  'I gruppi non si cancellano: tornano fuori dalle sezioni.': {
+    en: 'The groups aren’t deleted: they just move out of the sections.',
+    es: 'Los grupos no se borran: simplemente salen de las secciones.',
+    de: 'Die Gruppen werden nicht gelöscht: Sie rutschen nur aus den Bereichen heraus.',
+    ja: 'グループは消えません。セクションの外に出るだけです。'
+  },
+  'Tolto dal piano': { en: 'Removed from the plan', es: 'Quitado del plan',
+                       de: 'Aus dem Plan entfernt', ja: '予定から外しました' },
+
   'Piano': { en: 'Plan', es: 'Plan', de: 'Plan', ja: '予定' },
   // Singolare e plurale come voci separate: in giapponese il plurale non
   // esiste, e una regola automatica costringerebbe a inventarne uno.

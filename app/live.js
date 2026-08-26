@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2017%3A56';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2017%3A56';
+import * as data from './data.js?v=26%2F08%2018%3A01';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2018%3A01';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 17:56';
+export const VERSIONE = '26/08 18:01';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -677,6 +677,36 @@ export const HANDLERS = {
   // vera — rileggere dal server, non inventare.
   async reset(el, K) {
     return { toast: 'Ricaricato dal server' };
+  },
+
+  /* ------------------------------------------------------ sezioni */
+
+  // Le sezioni si creavano e basta. rename_section e delete_section erano
+  // pronte nel database da settimane senza un bottone sopra: chi sbagliava a
+  // scrivere "Roma" se la teneva sbagliata per sempre.
+  async saveSection(el, K) {
+    const nome = val(K, '#secName');
+    if (!nome) return { toast: 'Scrivi il nome della sezione', skipReload: true };
+    await data.renameSection(el.dataset.s, nome);
+    return { toast: 'Sezione rinominata', closeSheet: true };
+  },
+
+  // I gruppi NON si toccano: tornano fuori dalle sezioni, e restano dove
+  // sono. Una sezione è solo il modo in cui tu ordini le tue cerchie —
+  // cancellarla non deve poter far sparire niente a nessuno.
+  async delSection(el, K) {
+    await data.deleteSection(el.dataset.s);
+    return { toast: 'Sezione eliminata', closeSheet: true };
+  },
+
+  // Togliere qualcuno da un PIANO (dal gruppo si poteva già). Serve a chi
+  // organizza quando ha aggiunto la persona sbagliata, o quando qualcuno
+  // chiede di essere tolto.
+  async rmFromPlan(el, K) {
+    const p = curPlan(K);
+    if (!p) return { toast: 'Piano non trovato', skipReload: true };
+    await data.removeParticipant(p.id, el.dataset.id);
+    return { toast: 'Tolto dal piano', closeSheet: true };
   },
 
   /* ------------------------------------------------------ account */
