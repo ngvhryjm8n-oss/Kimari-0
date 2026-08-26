@@ -1077,6 +1077,18 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  // "Oggi" nel calendario: due lettere sfuggite a tutti i controlli, perche'
+  // sono troppo corte per contenere una parola-spia. Trovata guardando lo
+  // schermo, non misurandolo.
+  // La barra delle schede: la parte piu' visibile dell'app, e la piu'
+  // guardata, ed era in italiano in tutte le lingue. Trovata dal confronto fra
+  // la resa italiana e quella inglese — la ricerca per parole-spia non poteva
+  // vederla, sono tutte parole corte senza indizi.
+  'Gruppi': { en: 'Groups', es: 'Grupos', de: 'Gruppen', ja: 'グループ' },
+  'Crea': { en: 'Create', es: 'Crear', de: 'Neu', ja: 'つくる' },
+  'Novità': { en: 'News', es: 'Novedades', de: 'Neues', ja: '新着' },
+  'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
+  'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
 
@@ -2822,7 +2834,7 @@ function calItems(){
 function vCalendar(){
   const { y, m } = state.cal; const weeks = monthGrid(y, m); const items = calItems(); const todayKey = dkey(new Date());
   return `<section class="cal" aria-label="${t('Calendario')}">
-    <div class="cal-head"><div class="cal-title">${cap(fMonth.format(new Date(y, m, 1)))}</div><button class="cal-today" data-action="calToday">Oggi</button><button class="cal-nav" data-action="calPrev" aria-label="${t('Mese precedente')}">${ICON.chevL}</button><button class="cal-nav" data-action="calNext" aria-label="${t('Mese successivo')}">${ICON.chevR}</button></div>
+    <div class="cal-head"><div class="cal-title">${cap(fMonth.format(new Date(y, m, 1)))}</div><button class="cal-today" data-action="calToday">${t('Oggi')}</button><button class="cal-nav" data-action="calPrev" aria-label="${t('Mese precedente')}">${ICON.chevL}</button><button class="cal-nav" data-action="calNext" aria-label="${t('Mese successivo')}">${ICON.chevR}</button></div>
     <div class="cal-dow">${INIZIALI_GIORNI.map(d => `<span>${d}</span>`).join('')}</div>
     ${weeks.map(w => {
       const col6 = addDays(w.col0, 6);
@@ -2836,7 +2848,7 @@ function vCalendar(){
 function vAgenda(){
   const items = calItems(); const k = state.selDay; const sel = new Date(k + 'T00:00');
   const list = [...(items.byDay[k] || []), ...items.bars.filter(b => dkey(b.from) <= k && dkey(b.to) >= k).map(b => ({ p:b.p, kind:'bar', color:b.color, time:b.time }))];
-  const label = k === dkey(new Date()) ? 'Oggi' : cap(fDay.format(sel));
+  const label = k === dkey(new Date()) ? t('Oggi') : cap(fDay.format(sel));
   return `<div class="agenda"><div class="group-title" style="margin:14px 16px 6px">${label}</div>
     ${list.length ? `<div class="group" style="margin:0">${list.map(it => `<button class="row link" data-action="go" data-to="p/${it.p.id}"><span class="time">${esc(it.time)}</span><span class="cdot ${it.kind === 'ring' ? 'ring' : ''}" style="${it.kind === 'ring' ? '' : 'background:' + it.color}"></span><div class="grow"><div class="t">${it.p.emoji} ${esc(it.p.title)}${it.kind === 'ring' ? '<span class="tag amber">ai voti</span>' : ''}${it.p.seriesId ? ` <span class="s">· ${it.p.occurrence} di ${it.p.of}</span>` : ''}</div><div class="s">${groupOf(it.p) ? esc(groupOf(it.p).name) : t('Con link')}${it.p.status === 'confirmed' && it.p.where.value ? ' · ' + esc(fmtWhere(it.p.where.value)) : ''}</div></div><span class="chev"></span></button>`).join('')}</div>` : `<div class="group" style="margin:0"><div class="row">${mi('shrug', 40)}<div class="grow s">${t('Niente in programma')}</div></div></div>`}</div>`;
 }
@@ -2845,7 +2857,7 @@ function vAgenda(){
 const nav = (title, back, right = '', backLabel = t('Indietro')) => `<header class="nav">${back ? `<button class="back" data-action="go" data-to="${back}">${backLabel === 'Annulla' ? '' : ICON.chevL}${backLabel}</button>` : '<span></span>'}<h1>${esc(title)}</h1><div class="right">${right}</div></header>`;
 function tabbar(active){
   const n = newsCount();
-  return `<nav class="tabbar">${[['home','Gruppi',ICON.groups],['new','Crea',ICON.plus],['news','Novità',ICON.news],['profile','Profilo',ICON.profile]].map(([r,l,i]) => `<button class="tab ${active === r ? 'on' : ''}" data-action="tab" data-to="${r}">${r === 'new' ? `<span class="plusb">${i}</span>` : i}<span>${l}</span>${r === 'news' && n ? `<span class="badge-n">${n}</span>` : ''}</button>`).join('')}</nav>`;
+  return `<nav class="tabbar">${[['home',t('Gruppi'),ICON.groups],['new',t('Crea'),ICON.plus],['news',t('Novità'),ICON.news],['profile',t('Profilo'),ICON.profile]].map(([r,l,i]) => `<button class="tab ${active === r ? 'on' : ''}" data-action="tab" data-to="${r}">${r === 'new' ? `<span class="plusb">${i}</span>` : i}<span>${l}</span>${r === 'news' && n ? `<span class="badge-n">${n}</span>` : ''}</button>`).join('')}</nav>`;
 }
 function groupRow(g){
   const next = nextPlanOf(g);
@@ -3747,6 +3759,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2000%3A27"></script>
+<script type="module" src="./live.js?v=27%2F08%2000%3A46"></script>
 </body>
 </html>
