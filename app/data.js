@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2021%3A43';
+} from './map.js?v=26%2F08%2022%3A35';
 
 let sb = null;
 
@@ -370,6 +370,40 @@ export async function loadState() {
   }
 
   return { me: actor.id, people, groups, plans };
+}
+
+/* ====================== portare via i propri dati ====================== */
+
+// PRIVACY.md promette di poterli "ricevere in un formato leggibile da una
+// macchina". Nel Profilo c'era il bottone, e diceva "Esportazione in arrivo":
+// una promessa scritta in una policy e disattesa da un pulsante.
+//
+// Si riusa loadState: quello che si esporta è esattamente quello che si vede,
+// perché è la stessa lettura. Nessuna interpretazione, nessun sottoinsieme
+// scelto da noi.
+export async function esportaMieiDati() {
+  const s = await loadState();
+
+  // Ci sono anche i nomi degli altri: in un piano condiviso è inevitabile, e
+  // sono gli stessi che si vedono a schermo. Non si esportano invece le loro
+  // email, che non compaiono da nessuna parte nell'app.
+  const persone = {};
+  for (const [id, p] of Object.entries(s.people || {})) {
+    persone[id] = id === s.me
+      ? { nome: p.name, email: p.email || null, io: true }
+      : { nome: p.name };
+  }
+
+  return {
+    esportato_il: new Date().toISOString(),
+    da: 'Kimari · kimariapp.com',
+    nota: 'I nomi delle altre persone ci sono perché compaiono nei piani che '
+        + 'condividi. Le loro email no: nell\'app non si vedono mai.',
+    io: s.me,
+    persone,
+    gruppi: s.groups,
+    piani: s.plans
+  };
 }
 
 /* ========================== notifiche push ========================== */

@@ -1068,6 +1068,15 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
+                      de: 'Daten exportiert', ja: 'データを書き出しました' },
+  'Non ancora acquistabile: arriva con la versione negli store.': {
+    en: 'Not on sale yet — it arrives with the version in the stores.',
+    es: 'Todavía no está a la venta: llega con la versión de las tiendas.',
+    de: 'Noch nicht käuflich — kommt mit der Version in den Stores.',
+    ja: 'まだ購入できません。ストア版と一緒に登場します。'
+  },
+
   /* --------------------------------------------- immagine del profilo */
   'Aggiungi la tua immagine': { en: 'Add your picture', es: 'Añade tu imagen',
                                 de: 'Dein Bild hinzufügen', ja: '写真を追加' },
@@ -3145,14 +3154,14 @@ function vProfile(){
     <div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
     ${hint(`<div class="group-foot">${t('Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.')}</div>`)}` : `<div class="group"><button class="row link" data-action="secOpen" data-k="profNotif">${mi('campana', 28, '🔔')}<div class="grow t">${t('Notifiche push')}</div><span class="s">${PUSH.filter(([k]) => state.settings.push[k]).length} attive</span><span class="chev"></span></button></div>`}
     <div class="group-title">${t('Kimari Unlimited')}</div><div class="group"><div class="row">${mi('corona', 34, '✨')}<div class="grow"><div class="t">${u.unlimited ? 'Unlimited attivo ✓' : 'Passa a Unlimited'}</div><div class="s">19,99 €/anno o 2,99 €/mese · foto per piano ${LIMITS.free.photos}→${LIMITS.unlimited.photos}, allegati ${Math.round(LIMITS.free.attach / 1e6)}→${Math.round(LIMITS.unlimited.attach / 1e6)} MB, posti salvati senza limite, foto per sempre</div></div><button class="add" data-action="toggleUnlimited">${u.unlimited ? 'Disattiva' : 'Prova'}</button></div>
-      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="${t('Nel prototipo non si paga 🙂')}">Info</button></div></div>
+      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="${t('Non ancora acquistabile: arriva con la versione negli store.')}">Info</button></div></div>
     <div class="group-foot">${t('I limiti valgono per piano e li sblocca l\'Unlimited di chi organizza: paga uno, respira tutto il gruppo.')}</div>
     <div class="group-title">${t('Account')}</div><div class="group">
       <button class="row link" data-action="mergeSheet">${mi('link', 30, '🔗')}<div class="grow"><div class="t">${t('Hai partecipato dal web?')}</div><div class="s">Collega con l'email i piani votati senza app${webLeft.length ? ` · ${webLeft.length} da collegare` : ''}</div></div><span class="chev"></span></button>
       <button class="row link" data-action="toast" data-msg="${t('Kimari segue la lingua del telefono: per cambiarla si cambia quella nelle impostazioni.')}"><div class="grow t">${t('Lingua')}</div><div class="s">${esc(LINGUE[LINGUA] || LINGUA)}</div><span class="chev"></span></button>
       <button class="row link" data-action="toast" data-msg="${t('Ogni piano confermato si aggiunge al calendario dalla sua pagina.')}"><div class="grow t">${t('Calendario di sistema')}</div><div class="s">${t('Da ogni piano')}</div><span class="chev"></span></button>
       <button class="row link" data-action="termsSheet"><div class="grow t">${t('Termini, privacy ed età minima')}</div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Esportazione in arrivo"><div class="grow t">${t('Esporta i miei dati')}</div><span class="chev"></span></button>
+      <button class="row link" data-action="esporta"><div class="grow t">${t('Esporta i miei dati')}</div><span class="chev"></span></button>
       <button class="row link" data-action="signOut"><div class="grow t" style="color:var(--blue)">Esci</div></button>
       <button class="row link" data-action="deleteAccount"><div class="grow t" style="color:var(--red)">${t('Elimina account')}</div></button></div>
     <div class="group-foot">${t('Eliminare l\'account cancella profilo, voti e risposte. Nei piani a cui hai partecipato resti come «Membro eliminato», così agli altri non spariscono i conti e i messaggi.')}</div>
@@ -3685,6 +3694,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2021%3A43"></script>
+<script type="module" src="./live.js?v=26%2F08%2022%3A35"></script>
 </body>
 </html>
