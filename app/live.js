@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2015%3A17';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A17';
+import * as data from './data.js?v=26%2F08%2015%3A18';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A18';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 15:17';
+export const VERSIONE = '26/08 15:18';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -863,6 +863,34 @@ function disegna(K) {
   }
 }
 
+// Scrive in cima alla porta d'ingresso il gruppo per cui si è cliccato.
+// Il riconoscimento è sul pulsante d'ingresso col nome, come in
+// chiudiSoloIlBenvenuto: più solido di un testo, che cambia con la lingua.
+function scriviDoveStaEntrando(prev) {
+  const sr = document.getElementById('sheet-root');
+  if (!sr || !sr.querySelector('[data-action="loginName"]')) return false;
+  if (sr.querySelector('#dove-entri')) return false;              // già scritto
+
+  const quanti = (prev.members || []).length;
+  const d = document.createElement('div');
+  d.id = 'dove-entri';
+  d.className = 'card';
+  d.style.cssText = 'margin:0 14px 10px; text-align:center';
+  // textContent e non innerHTML: il nome del gruppo lo scrive una persona.
+  const t = document.createElement('div');
+  t.style.cssText = 'font-weight:600; font-size:17px';
+  t.textContent = (prev.emoji || '👥') + ' ' + prev.name;
+  const s = document.createElement('div');
+  s.className = 'sub';
+  s.textContent = 'Ti hanno invitato · ' + quanti + (quanti === 1 ? ' persona' : ' persone');
+  d.append(t, s);
+
+  const primo = sr.querySelector('.sheet > *') || sr.firstElementChild;
+  if (primo && primo.parentNode) primo.parentNode.insertBefore(d, primo);
+  else sr.insertBefore(d, sr.firstChild);
+  return true;
+}
+
 // Chi apre #/gi/<token> vede chi c'è nel gruppo e decide se entrare.
 // preview_group_invite risponde anche a chi non è ancora dentro, quindi si può
 // mostrare il nome del gruppo prima di chiedere qualsiasi cosa.
@@ -882,6 +910,18 @@ export async function mostraInvitoGruppo(K) {
       location.hash = '#/g/' + prev.group_id;
       return true;
     }
+
+    // Senza profilo la porta d'ingresso è obbligatoria e finirebbe sopra a
+    // questa schermata. Invece di aprirne una destinata a sparire, si scrive
+    // dentro la porta DOVE si sta entrando: chi ha cliccato "entra nel gruppo
+    // Cena" si vedeva la presentazione generica di Kimari, senza un motivo
+    // visibile per dare il proprio nome.
+    // La guardia NON si alza: dopo il login questa schermata deve arrivare.
+    if (!K.state.me || K.state.me === 'guest') {
+      scriviDoveStaEntrando(prev);
+      return false;
+    }
+
     K.state._invitoGruppo = token;
     K.openSheet(`<h2>${prev.emoji || '👥'} ${K.$ ? '' : ''}${prev.name}</h2>
       <p class="sub">${(prev.members || []).length} ${(prev.members || []).length === 1 ? 'persona' : 'persone'} nel gruppo</p>
