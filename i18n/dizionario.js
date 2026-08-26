@@ -755,6 +755,21 @@ export const DIZIONARIO = {
   /* ------------------------------------------------- il piano, giorno per giorno */
   'In decisione': { en: 'Being decided', es: 'En decisión',
                     de: 'Wird entschieden', ja: '決定中' },
+  'Il tuo piano': { en: 'Your plan', es: 'Tu plan', de: 'Dein Plan', ja: 'あなたの予定' },
+  'La tua decisione': { en: 'Your decision', es: 'Tu decisión',
+                        de: 'Deine Entscheidung', ja: 'あなたの決めごと' },
+  // Due numeri: vanno da segnaposto, così ogni lingua li mette dove le servono
+  // — in giapponese il conteggio precede il verbo e la frase si ribalta.
+  '{n} su {tot} hanno votato': {
+    en: '{n} of {tot} have voted', es: '{n} de {tot} han votado',
+    de: '{n} von {tot} haben abgestimmt', ja: '{tot} 人中 {n} 人が投票済み'
+  },
+  'In decisione · {n} su {tot} hanno votato': {
+    en: 'Being decided · {n} of {tot} have voted',
+    es: 'En decisión · {n} de {tot} han votado',
+    de: 'Wird entschieden · {n} von {tot} haben abgestimmt',
+    ja: '決定中 · {tot} 人中 {n} 人が投票済み'
+  },
   'Annullato': { en: 'Called off', es: 'Cancelado', de: 'Abgesagt', ja: '中止' },
   'Kimari!': { en: 'Kimari!', es: '¡Kimari!', de: 'Kimari!', ja: 'Kimari！' },
   'Ci sei?': { en: 'Are you in?', es: '¿Te apuntas?', de: 'Bist du dabei?', ja: '参加しますか？' },
