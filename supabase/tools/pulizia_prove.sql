@@ -14,6 +14,17 @@
 -- un account vero finisse per chiamarsi "PROVA...", questo file non deve
 -- poterlo distruggere: un nome non e' una prova di niente.
 --
+-- AGGIUNTO ANCORA IL 26/8, provando il dominio kimariapp.com e le migrazioni
+-- 0014 e 0015. Una ventina di profili in più, tutti col prefisso PROVA-CLAUDE
+-- e tutti anonimi: Misura, Cronometro, Capo, Membro, Uscite, Amici, Link,
+-- English, Finale, Dominio, Conti, Sparisce, Vittima, Estraneo, Intruso,
+-- Migrazioni, Allegati, Sezioni. Con i loro gruppi, piani, spese e link.
+--
+-- Due di quei profili li ho cancellati durante le prove stesse (servivano a
+-- verificare che delete_my_account non facesse pagare di più agli altri):
+-- di quelli restano le quote nelle spese, intestate a "Membro eliminato".
+-- Spariscono con i piani.
+--
 -- Cosa ho creato, e perché:
 --   2 profili  PROVA-CLAUDE-cancellami e PROVA2-CLAUDE-cancellami
 --              → per verificare che il primo accesso funzioni
@@ -96,10 +107,29 @@ delete from auth.users
 -- …e solo dopo i profili.
 delete from public.actors where display_name like 'PROVA%CLAUDE%';
 
--- Controllo finale: deve tornare 0 e 0.
-select (select count(*) from public.plans  where title like 'PROVA-CLAUDE%')  as piani_rimasti,
+-- Controllo finale: deve tornare tutti zeri.
+--
+-- Contava tre cose su tre tabelle. Ma il 26/8, provando il dominio nuovo, ho
+-- creato righe anche in sections, places, media (i link nei piani) e
+-- friendships: se una restasse indietro il controllo direbbe comunque "a
+-- posto". Un controllo che guarda meno di quello che il file cancella e' un
+-- controllo che rassicura e basta.
+--
+-- Sections, places e friendships non si cancellano da qui: se ne va la riga
+-- del profilo e loro seguono. Il conteggio serve proprio a verificare che sia
+-- vero, invece di darlo per scontato.
+select (select count(*) from public.plans  where title like 'PROVA-CLAUDE%')        as piani_rimasti,
        (select count(*) from public.groups where name like 'PROVA-CLAUDE%')         as gruppi_rimasti,
-       (select count(*) from public.actors where display_name like 'PROVA%CLAUDE%') as profili_rimasti;
+       (select count(*) from public.actors where display_name like 'PROVA%CLAUDE%') as profili_rimasti,
+       (select count(*) from public.sections s
+          join public.actors a on a.id = s.actor_id
+         where a.display_name like 'PROVA%CLAUDE%')                                 as sezioni_rimaste,
+       (select count(*) from public.places p
+          join public.actors a on a.id = p.actor_id
+         where a.display_name like 'PROVA%CLAUDE%')                                 as posti_rimasti,
+       (select count(*) from public.media m
+          join public.plans p on p.id = m.plan_id
+         where p.title like 'PROVA-CLAUDE%')                                        as allegati_rimasti;
 
 -- Resta un utente anonimo senza profilo, dell'ultima sessione da ospite.
 -- È indistinguibile da un visitatore vero che non ha ancora scritto il nome,
