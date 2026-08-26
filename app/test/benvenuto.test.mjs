@@ -231,6 +231,45 @@ await test('con ?demo=1 la barra torna', async () => {
   });
   assert.equal(dom.window.document.body.dataset.demo, '1');
 });
+
+await test('chi cancella l account non fa pagare di piu agli altri', async () => {
+  // Provato contro la produzione: cancellando l'account, la persona sparisce
+  // dai partecipanti ma le sue quote restano nelle spese. Il calcolo la
+  // escludeva e ridistribuiva la sua parte sugli altri.
+  //
+  // Il totale tornava comunque a zero — ed e' proprio questo che rende il
+  // difetto difficile da vedere: l'invariante che si controlla di solito
+  // restava soddisfatta mentre la gente si trovava a pagare di piu'.
+  const dom = await avvia(true);
+  const K = dom.window.__kimari;
+
+  // Anna paga 30 per tre persone. Poi Carlo cancella l'account: non e' piu'
+  // fra i partecipanti, ma la sua quota resta nella spesa.
+  const piano = {
+    participants: [{ id: 'anna' }, { id: 'bea' }],
+    expenses: [{ id: 'e1', by: 'anna', amount: 3000, among: ['anna', 'bea', 'carlo'], voided: false }],
+    settlements: []
+  };
+  const b = K.balances(piano);
+
+  assert.equal(b.bea, -1000,
+    'Bea deve ancora 10, non 15: la quota di chi se n e andato non ricade su di lei');
+  assert.ok('carlo' in b, 'la quota di Carlo deve restare visibile, non sparire');
+  assert.equal(b.carlo, -1000);
+  const somma = Object.values(b).reduce((s, v) => s + v, 0);
+  assert.equal(somma, 0, 'il conto deve comunque chiudere a zero');
+});
+
+await test('chi non c e piu si chiama "Membro eliminato", non stringa vuota', async () => {
+  // L'app lo promette in due punti: "Lo storico condiviso resta come «Membro
+  // eliminato»". Senza, a schermo comparivano crediti e debiti intestati a
+  // nessuno — una riga con un importo e un nome vuoto.
+  const dom = await avvia(true);
+  const K = dom.window.__kimari;
+  const src = readFileSync(join(root, 'app', 'index.html'), 'utf8');
+  assert.match(src, /const nameOf = id => state\.people\[id\] \? state\.people\[id\]\.name : \(id \? t\('Membro eliminato'\) : ''\)/,
+    'nameOf deve dire chi non c e piu, e restare vuota se l id e vuoto');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
