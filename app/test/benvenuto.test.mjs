@@ -366,6 +366,25 @@ await test('l app si puo installare sul telefono', async () => {
   assert.ok(man.icons.some(i => String(i.purpose || '').includes('maskable')),
     'su Android l icona verrebbe ritagliata male');
 });
+
+await test('il titolo e l anteprima sono quelli che vede chi riceve il link', () => {
+  // Il titolo della pagina finisce nell'anteprima di WhatsApp. Diceva
+  // "Kimari — prototipo app v3": una nota per noi, letta da loro.
+  const titolo = (HTML.match(/<title>([^<]*)<\/title>/) || [])[1];
+  assert.equal(titolo, 'Kimari', 'il titolo lo legge chi riceve il link');
+  assert.ok(!/prototip|v\d|test|bozza/i.test(titolo));
+
+  // Senza questi tag l'anteprima e' un indirizzo nudo. Il link a un piano
+  // viene inoltrato a gente che non ha mai sentito nominare Kimari: e' il
+  // primo pezzo di prodotto che vedono.
+  for (const t of ['og:title', 'og:description', 'og:image']) {
+    assert.ok(HTML.includes('property="' + t + '"'), 'manca ' + t);
+  }
+  // L'immagine deve essere un indirizzo ASSOLUTO: WhatsApp non risolve i
+  // percorsi relativi, e un'anteprima senza immagine sembra un link sospetto.
+  const img = (HTML.match(/property="og:image" content="([^"]*)"/) || [])[1];
+  assert.match(img, /^https:\/\//, 'og:image relativa: l anteprima resta senza immagine');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
