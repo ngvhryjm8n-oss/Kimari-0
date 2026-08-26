@@ -34,7 +34,17 @@ npm test >/dev/null
 # leggeva actors.avatar_path prima che la migrazione fosse applicata: l'app è
 # caduta sullo schermo d'errore per tutti.
 echo "Le colonne che il client legge esistono?"
-if ! node tools/controlla-colonne.mjs | tail -4; then
+set +e
+node tools/controlla-colonne.mjs | tail -5
+ESITO=${PIPESTATUS[0]}
+set -e
+if [ "$ESITO" = "2" ]; then
+  # Distinto apposta: il 27/8/2026 un singhiozzo di rete e' stato raccontato
+  # come "manca una colonna", e ho cercato una migrazione che era gia' applicata.
+  echo "FERMO: non ho potuto interrogare il database. Non e' una migrazione." >&2
+  echo "Controlla la rete e riprova fra un minuto." >&2
+  exit 1
+elif [ "$ESITO" != "0" ]; then
   echo "FERMO: il database rifiuterebbe una lettura, e l'avvio cadrebbe." >&2
   echo "O applichi la migrazione, o scrivi una ricaduta nel client." >&2
   exit 1

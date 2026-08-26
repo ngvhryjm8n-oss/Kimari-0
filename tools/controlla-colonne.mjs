@@ -17,6 +17,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const URL_SB = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const CHIAVE = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
 
+const BR = String.fromCharCode(10);
+
 const src = readFileSync(join(root, 'app', 'data.js'), 'utf8');
 
 // .from('tabella').select('a, b, c') — anche quando fra i due c'è dell'altro.
@@ -45,17 +47,36 @@ console.log('\ncolonne che il client legge, contro il database vero\n');
 
 let mancanti = 0;
 let coperte = 0;
+let irraggiungibili = 0;
 for (const [tabella, campi] of [...letture].sort()) {
   // Una riga sola basta a farsi dire se le colonne esistono: se una manca,
   // PostgREST risponde 400 col nome di quella sbagliata.
   const q = [...campi].join(',');
+  // Due tentativi. Un singhiozzo di rete faceva fallire piu' tabelle in una
+  // volta sola, e lo strumento lo raccontava come "manca una colonna". Il
+  // 27/8/2026 ha bloccato una pubblicazione dando la colpa al database, e due
+  // secondi dopo passava tutto. Uno strumento che dice il falso e' peggio di
+  // nessuno strumento, perche' gli si crede lo stesso.
   let stato = 0, messaggio = '';
-  try {
-    const r = await fetch(`${URL_SB}/rest/v1/${tabella}?select=${encodeURIComponent(q)}&limit=1`,
-      { headers: { apikey: CHIAVE }, signal: AbortSignal.timeout(15000) });
-    stato = r.status;
-    if (stato >= 400) messaggio = (await r.text()).slice(0, 120);
-  } catch (e) { messaggio = String(e && e.message); }
+  for (let tentativo = 0; tentativo < 2; tentativo++) {
+    stato = 0; messaggio = '';
+    try {
+      const r = await fetch(`${URL_SB}/rest/v1/${tabella}?select=${encodeURIComponent(q)}&limit=1`,
+        { headers: { apikey: CHIAVE }, signal: AbortSignal.timeout(15000) });
+      stato = r.status;
+      if (stato >= 400) messaggio = (await r.text()).slice(0, 120);
+    } catch (e) { messaggio = String(e && e.message); }
+    if (stato) break;                 // ha risposto: la risposta vale, giusta o storta
+    await new Promise(f => setTimeout(f, 1500));
+  }
+
+  // Nessuna risposta non e' "la colonna non c'e'": e' "non ho potuto guardare".
+  // Ferma comunque la pubblicazione, ma dicendo la cosa vera.
+  if (!stato) {
+    console.log('  ?    ' + tabella + '  non raggiunto: ' + messaggio);
+    irraggiungibili++;
+    continue;
+  }
 
   if (stato === 200 || stato === 401 || stato === 403) {
     console.log('  ok   ' + tabella + ' (' + campi.size + ')');
@@ -83,6 +104,12 @@ if (coperte) {
   console.log('\n' + coperte + ' lettura' + (coperte === 1 ? '' : 'e') +
     ' che il database rifiuta ma che il client gestisce.');
   console.log('Non blocca la pubblicazione. Sparisce quando la migrazione è applicata.');
+}
+
+if (irraggiungibili) {
+  console.log(BR + irraggiungibili + ' tabelle non raggiunte: il database non ha risposto.');
+  console.log('NON vuol dire che manchi una colonna. Riprova fra un minuto.' + BR);
+  process.exit(2);
 }
 
 console.log('\n' + (mancanti
