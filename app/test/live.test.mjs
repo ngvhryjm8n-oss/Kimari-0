@@ -382,6 +382,27 @@ await test('se la misurazione cade, l\'azione riesce lo stesso', async () => {
   }
 });
 
+await test('il riscontro arriva prima della ricarica, non dopo', () => {
+  // Misurato in produzione: fra il tocco e qualunque segno a schermo passavano
+  // ~700 ms — 114 di RPC e il resto ad aspettare le 27 letture. Il toast stava
+  // in fondo, dopo `await reload`, quindi per mezzo secondo non succedeva
+  // niente e sembrava che il tocco non fosse arrivato.
+  //
+  // Quando l'RPC ha risposto la cosa è fatta: il resto è solo rileggere.
+  // `go` invece deve restare dopo — porta a piani che in locale non ci sono
+  // ancora, e anticiparlo mostrerebbe "piano non trovato".
+  //
+  // È una proprietà di ORDINE dentro il dispatcher, che le prove sui gestori
+  // non possono vedere: loro li chiamano direttamente.
+  const src = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  const iToast  = src.indexOf('if (res.toast && K.toast) K.toast(res.toast);');
+  const iReload = src.indexOf('if (!res.skipReload) await reload(K);');
+  const iGo     = src.indexOf('if (res.go && K.go) K.go(res.go);');
+  assert.ok(iToast > 0 && iReload > 0 && iGo > 0, 'il dispatcher è cambiato di forma');
+  assert.ok(iToast < iReload, 'il toast è tornato dopo la ricarica: mezzo secondo senza riscontro');
+  assert.ok(iReload < iGo, 'go deve restare dopo la ricarica, o mostra un piano che non c\'è');
+});
+
 await test('logEvent ingoia i suoi errori: è lei a doverlo fare', () => {
   // La prova qui sopra gira col finto, quindi non può vedere il vero
   // data.logEvent. Ma è lì che sta la protezione: senza .catch la promessa
