@@ -674,6 +674,16 @@ export const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* --------------------------------------------- immagine del profilo */
+  'Aggiungi la tua immagine': { en: 'Add your picture', es: 'Añade tu imagen',
+                                de: 'Dein Bild hinzufügen', ja: '写真を追加' },
+  'Cambia immagine': { en: 'Change picture', es: 'Cambiar imagen',
+                       de: 'Bild ändern', ja: '写真を変える' },
+  'Togli l’immagine': { en: 'Remove the picture', es: 'Quitar la imagen',
+                        de: 'Bild entfernen', ja: '写真を外す' },
+  'Immagine tolta': { en: 'Picture removed', es: 'Imagen eliminada',
+                      de: 'Bild entfernt', ja: '写真を外しました' },
+
   /* ------------------------------------------------ notifiche push */
   'Ricevi notifiche su questo dispositivo': {
     en: 'Get notifications on this device', es: 'Recibir notificaciones en este dispositivo',

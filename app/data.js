@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2020%3A41';
+} from './map.js?v=26%2F08%2020%3A54';
 
 let sb = null;
 
@@ -213,7 +213,7 @@ export async function myActor() {
   const s = await currentSession();
   if (!s) return null;
   const r = await rows(
-    sb.from('actors').select('id, display_name, email').eq('auth_user_id', s.user.id),
+    sb.from('actors').select('id, display_name, email, avatar_path').eq('auth_user_id', s.user.id),
     'il tuo profilo');
   return r[0] || null;
 }
@@ -276,7 +276,7 @@ export async function loadState() {
     rows(sb.from('extra_approvals').select('*'), 'le preferenze sulle domande'),
     rows(sb.from('proposal_votes').select('*'), 'i voti sulle proposte'),
     rows(sb.from('expense_shares').select('*'), 'le quote delle spese'),
-    rows(sb.from('actors').select('id, display_name'), 'i nomi')
+    rows(sb.from('actors').select('id, display_name, avatar_path'), 'i nomi')
   ]);
 
   // Il controllo va DOPO: senza profilo non c'è niente da mostrare, ma le
@@ -285,9 +285,26 @@ export async function loadState() {
   if (!actor) return { me: 'guest', people: {}, groups: {}, plans: {} };
 
   /* --------------------------------------------------- persone */
+  // Le facce si firmano tutte in una volta. Il bucket e' privato, quindi ogni
+  // immagine ha bisogno di un indirizzo a scadenza: chiederne uno per persona
+  // vorrebbe dire una richiesta a testa, e in un gruppo di dodici sono dodici
+  // viaggi in piu' per disegnare la stessa schermata.
+  const percorsi = [...new Set(
+    [...actorRows, actor].map(a => a && a.avatar_path).filter(Boolean))];
+  let firmati = {};
+  if (percorsi.length) {
+    try {
+      const { data: urls } = await sb.storage.from(BUCKET)
+        .createSignedUrls(percorsi, 3600);
+      for (const u of urls || []) if (u.path && u.signedUrl) firmati[u.path] = u.signedUrl;
+    } catch { /* senza foto si vedono le iniziali: non e' un motivo per fermarsi */ }
+  }
+  const urlFor = p => firmati[p] || null;
+
   const people = {};
-  for (const a of actorRows) people[a.id] = mapPerson(a);
+  for (const a of actorRows) people[a.id] = mapPerson(a, { urlFor });
   people[actor.id] = mapPerson(actor, {
+    urlFor,
     sections: sectionRows.map(mapSection),
     groupSections: Object.fromEntries(groupSectionRows.map(r => [r.group_id, r.section_id])),
     places: placeRows.map(p => mapPlace(p, placeMediaRows)),
@@ -598,6 +615,44 @@ export async function uploadPlacePhoto(placeId, file) {
     await sb.storage.from(BUCKET).remove([path]);
     throw e;
   }
+}
+
+// L'immagine del profilo. Sta in avatars/<il tuo id>/<file>: la politica dello
+// Storage (0018) accetta scritture solo nella propria cartella, altrimenti si
+// potrebbe cambiare la faccia di chiunque.
+//
+// Si carica PRIMA il file e poi si aggiorna il profilo: se il secondo passo
+// fallisce resta un file orfano, che è meglio di un profilo che punta a
+// un'immagine che non c'è — quella si vedrebbe, come un riquadro rotto.
+export async function uploadAvatar(file) {
+  const io = await myActor();
+  if (!io) throw new Error('serve un profilo');
+
+  const path = `avatars/${io.id}/${crypto.randomUUID()}`;
+  const up = await sb.storage.from(BUCKET).upload(path, file, { upsert: false });
+  if (up.error) throw new Error('Non riesco a caricare l\'immagine: ' + up.error.message);
+
+  try {
+    await rpc('set_my_avatar', { p_path: path });
+  } catch (e) {
+    await sb.storage.from(BUCKET).remove([path]);   // niente file orfani
+    throw e;
+  }
+
+  // La vecchia si toglie DOPO che la nuova è al suo posto: al contrario, se
+  // qualcosa andasse storto nel mezzo, si resterebbe senza nessuna delle due.
+  if (io.avatar_path && io.avatar_path !== path) {
+    try { await sb.storage.from(BUCKET).remove([io.avatar_path]); } catch { /* pazienza */ }
+  }
+  return path;
+}
+
+export async function togliAvatar() {
+  const io = await myActor();
+  if (!io || !io.avatar_path) return false;
+  await rpc('set_my_avatar', { p_path: null });
+  try { await sb.storage.from(BUCKET).remove([io.avatar_path]); } catch { /* pazienza */ }
+  return true;
 }
 
 export const savePlace = (name, address, note) =>
