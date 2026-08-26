@@ -1,0 +1,25 @@
+{
+  "appId": "it.kimari.app",
+  "appName": "Kimari",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always",
+    "scheme": "Kimari",
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https",
+    "hostname": "kimariapp.com"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "backgroundColor": "#F2F2F7"
+    }
+  }
+}

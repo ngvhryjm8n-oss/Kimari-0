@@ -5,3 +5,7 @@ test/.script.js
 
 # file temporaneo di tools/i18n-verifica-avvolgi.mjs
 _verifica-avvolgi.html
+nativa/www/
+nativa/ios/
+nativa/android/
+nativa/node_modules/
