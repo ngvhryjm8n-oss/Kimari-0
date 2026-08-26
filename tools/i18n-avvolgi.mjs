@@ -103,7 +103,24 @@ function regioniTemplate(s) {
 }
 
 
-const pulito = t => !/[$`{}<>]/.test(t) && t.trim().length >= 5 && SPIE.test(t);
+// Prima si accettava solo il testo che conteneva una parola italiana comune
+// (che, con, dove...). Sembrava prudente ed era il difetto peggiore: lasciava
+// fuori tutte le etichette brevi — "Nuovo gruppo", "ICONA", "Niente in
+// programma" — cioe' meta' dell'interfaccia. L'app risultava tradotta e a
+// schermo era mezza italiana.
+//
+// Ora si prende tutto il testo che una persona puo' leggere, tranne quello che
+// non si traduce: nomi propri, sigle, numeri e simboli.
+const NON_TRADURRE = /^(kimari|whatsapp|google|apple|paypal|satispay|ios|android|url|pdf|png|jpe?g|https?|www)$/i;
+const pulito = t => {
+  if (/[$`{}<>]/.test(t)) return false;          // dentro c'e' un'espressione
+  const x = t.trim();
+  if (x.length < 3) return false;
+  if (!/\p{L}{2}/u.test(x)) return false;        // senza lettere non e' una frase
+  if (NON_TRADURRE.test(x)) return false;
+  if (/^[\d\s.,:;€%+–—·•-]+$/.test(x)) return false;  // solo numeri e segni
+  return true;
+};
 const dentro = t => "t('" + t.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "')";
 const rigaDi = (s, i) => s.slice(0, i).split('\n').length;
 

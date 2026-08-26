@@ -99,9 +99,24 @@ test('ogni voce ha tutte e quattro le lingue', () => {
   assert.deepEqual(buchi, [], 'traduzioni mancanti');
 });
 
+// Nomi propri e cose che non sono parole: restano identiche in ogni lingua, e
+// non è una dimenticanza. L'elenco è esplicito e corto apposta — se si
+// allunga, vuol dire che lo si sta usando per far tacere la prova invece che
+// per dire la verità.
+const NON_SI_TRADUCONO = new Set(['Kimari!', 'Kimari Unlimited', 'Unlimited', 'https://…']);
+
+test('l\'elenco di quelle che non si traducono non cresce di nascosto', () => {
+  assert.ok(NON_SI_TRADUCONO.size <= 6,
+    'troppe eccezioni: probabilmente ne stanno passando di vere');
+  for (const x of NON_SI_TRADUCONO) {
+    assert.ok(DIZIONARIO[x], 'eccezione per una voce che non esiste più: ' + x);
+  }
+});
+
 test('nessuna traduzione è rimasta uguale all\'italiano per sbaglio', () => {
   const sospette = [];
   for (const [it, v] of Object.entries(DIZIONARIO)) {
+    if (NON_SI_TRADUCONO.has(it)) continue;
     for (const l of ['en', 'es', 'de', 'ja']) {
       // Alcune coincidono davvero fra lingue vicine; il giapponese mai.
       if (v[l] === it && l === 'ja') sospette.push(`${l}: ${it}`);
