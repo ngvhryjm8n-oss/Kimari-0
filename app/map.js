@@ -83,6 +83,10 @@ export function mapGroup(row, memberRows = []) {
     emoji: row.emoji,
     color: row.color,
     members: mine.map(m => m.actor_id),
+    // QUANDO sono entrati, non solo chi: senza, le Novita' non possono dire
+    // "Luca e' entrato nel gruppo" — ed e' proprio il momento in cui chi ha
+    // mandato l'invito vuole sapere se e' arrivato.
+    entrati: mine.filter(m => m.joined_at).map(m => ({ id: m.actor_id, il: ms(m.joined_at) })),
     admins: mine.filter(m => m.role === 'admin').map(m => m.actor_id),
     createdBy: row.created_by,
     createdAt: ms(row.created_at)

@@ -708,6 +708,8 @@ export const DIZIONARIO = {
   'Crea': { en: 'Create', es: 'Crear', de: 'Neu', ja: 'つくる' },
   'Novità': { en: 'News', es: 'Novedades', de: 'Neues', ja: '新着' },
   'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
+  'è entrato nel gruppo': { en: 'joined the group', es: 'se ha unido al grupo',
+                              de: 'ist der Gruppe beigetreten', ja: 'がグループに参加しました' },
   'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
