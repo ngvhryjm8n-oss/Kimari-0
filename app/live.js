@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2020%3A41';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2020%3A41';
+import * as data from './data.js?v=26%2F08%2020%3A54';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2020%3A54';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 20:41';
+export const VERSIONE = '26/08 20:54';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -679,6 +679,13 @@ export const HANDLERS = {
     return { toast: 'Ricaricato dal server' };
   },
 
+  // Togliere la propria immagine: si torna alle iniziali, che restano il caso
+  // normale per la maggior parte delle persone.
+  async togliFoto(el, K) {
+    await data.togliAvatar();
+    return { toast: 'Immagine tolta', closeSheet: true };
+  },
+
   /* ---------------------------------------------------- notifiche */
 
   // L'interruttore che chiede il permesso al browser e registra il dispositivo.
@@ -1156,6 +1163,14 @@ function wire(K) {
 // primi quattro sono già salvati e l'errore riguarda solo quello. Caricandoli
 // in parallelo il server ne rifiuterebbe alcuni a caso.
 export async function caricaFile(K, files, tipo, target) {
+  // L'immagine del profilo e' una sola: se ne arrivano piu' di una si prende
+  // la prima invece di caricarle tutte e tenere l'ultima, che vorrebbe dire
+  // pagare il caricamento di file che non si useranno.
+  if (target && target.kind === 'avatar') {
+    await data.uploadAvatar(files[0]);
+    return { fatti: 1 };
+  }
+
   const perPosto = target && target.kind === 'place';
   const plan = perPosto ? null : (curPlan(K) || {}).id;
   if (!perPosto && !plan) throw new Error('Nessun piano aperto');

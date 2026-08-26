@@ -1027,6 +1027,16 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* --------------------------------------------- immagine del profilo */
+  'Aggiungi la tua immagine': { en: 'Add your picture', es: 'Añade tu imagen',
+                                de: 'Dein Bild hinzufügen', ja: '写真を追加' },
+  'Cambia immagine': { en: 'Change picture', es: 'Cambiar imagen',
+                       de: 'Bild ändern', ja: '写真を変える' },
+  'Togli l’immagine': { en: 'Remove the picture', es: 'Quitar la imagen',
+                        de: 'Bild entfernen', ja: '写真を外す' },
+  'Immagine tolta': { en: 'Picture removed', es: 'Imagen eliminada',
+                      de: 'Bild entfernt', ja: '写真を外しました' },
+
   /* ------------------------------------------------ notifiche push */
   'Ricevi notifiche su questo dispositivo': {
     en: 'Get notifications on this device', es: 'Recibir notificaciones en este dispositivo',
@@ -2345,7 +2355,16 @@ function ago(ts){ const m = Math.round((Date.now() - ts) / 60000); if(m < 1) ret
 const initials = n => n.trim().split(/\s+/).slice(0,2).map(x => x[0].toUpperCase()).join('');
 const PALETTE = ['#FF9500','#34C759','#5856D6','#FF2D55','#007AFF','#AF52DE','#FF3B30','#00C7BE'];
 const color = n => PALETTE[[...n].reduce((a,c) => a + c.charCodeAt(0), 0) % PALETTE.length];
-const avatar = (name, cls = '') => `<span class="avatar ${cls}" style="background:${color(name)}">${esc(initials(name))}</span>`;
+// L'avatar mostra la faccia quando c'e', le iniziali quando non c'e'. Le
+// iniziali restano il caso normale: la maggior parte non caricherà mai niente,
+// e un cerchio vuoto sarebbe peggio di due lettere.
+const avatarDi = id => { const p = state.people[id]; return p && p.avatar ? p.avatar : null; };
+const avatar = (name, cls = '', id = null) => {
+  const src = id ? avatarDi(id) : null;
+  return src
+    ? `<span class="avatar ${cls}" style="background:${color(name)}"><img src="${esc(src)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></span>`
+    : `<span class="avatar ${cls}" style="background:${color(name)}">${esc(initials(name))}</span>`;
+};
 let toastT;
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1700); }
 async function copy(text){ try{ await navigator.clipboard.writeText(text); }catch{ const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch{} ta.remove(); } toast('Copiato'); }
@@ -2751,7 +2770,7 @@ function tabbar(active){
 }
 function groupRow(g){
   const next = nextPlanOf(g);
-  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? t('ai voti') : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id))).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
+  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? t('ai voti') : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id), '', id)).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
 }
 function vHome(){
   if(isWeb()) return vWebHome();
@@ -2795,7 +2814,7 @@ function vGroup(g){
       <button class="gicon xl" style="background:${g.color}26" data-action="${admin ? 'editGroup' : 'noop'}" data-g="${g.id}" aria-label="${t('Icona del gruppo')}">${g.emoji}</button>
       <h1 class="title">${esc(g.name)}</h1>
       <div class="s" style="display:flex;align-items:center;justify-content:center;gap:5px">${mi('lucchetto', 17, '🔒')} Privato, solo su invito · ${g.members.length} persone${sec ? ' · ' + esc(sec.name) : ''}</div>
-      <div class="avatars" style="justify-content:center;margin-top:12px">${g.members.slice(0, 8).map(id => avatar(nameOf(id))).join('')}${g.members.length > 8 ? `<span class="count">+${g.members.length - 8}</span>` : ''}</div>
+      <div class="avatars" style="justify-content:center;margin-top:12px">${g.members.slice(0, 8).map(id => avatar(nameOf(id), '', id)).join('')}${g.members.length > 8 ? `<span class="count">+${g.members.length - 8}</span>` : ''}</div>
       <div class="s" style="margin-top:6px">${g.members.map(id => esc(nameOf(id)) + (id === g.createdBy ? ' ★' : g.admins.includes(id) ? ' ✦' : '')).join(', ')}</div>
     </div></div>
     <div class="pad stack" style="margin-top:12px"><button class="btn primary" data-action="newInGroup" data-g="${g.id}">${t('Nuovo piano')}</button><div style="display:flex;gap:10px"><button class="btn tint" data-action="newDecision" data-g="${g.id}">${mi('domanda', 24, '❓')} Decidi qualcosa</button><button class="btn tint" data-action="inviteGroup" data-g="${g.id}">${mi('invito', 24)} Invita con link</button></div></div>
@@ -2903,7 +2922,7 @@ function vProposal(p, pr){
 function vComments(p){
   const list = p.comments.slice(-40); const mod = canModerate(p);
   return `<div class="group-title">${t('Commenti')}</div><div class="group">
-    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by))}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? 'Tu' : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
+    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by), '', c.by)}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? 'Tu' : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
     <div class="row"><input class="input" id="commentInput" placeholder="${t('Scrivi un commento')}" maxlength="300" autocomplete="off"><button class="add" data-action="comment">${t('Invia')}</button></div></div>
   ${hint(`<div class="group-foot">${t('Commenti interni al piano, visibili solo a chi è dentro. Per chiacchierare c\'è WhatsApp.')}</div>`)}`;
 }
@@ -2960,7 +2979,7 @@ function sheetJoinPolicy(p){
   ${pol === 'roster' ? `
     <div class="group-title">L'elenco · ${segnaposto.length} ${segnaposto.length === 1 ? 'nome' : 'nomi'}</div>
     <div class="group">
-      ${segnaposto.map(x => `<div class="row">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div>
+      ${segnaposto.map(x => `<div class="row">${avatar(nameOf(x.id), '', x.id)}<div class="grow t">${esc(nameOf(x.id))}</div>
         <button class="x" data-action="rmRoster" data-id="${x.id}" aria-label="${t('Togli')}">×</button></div>`).join('')}
       <div class="row"><input class="input" id="rosterName" placeholder="${t('Aggiungi un nome')}" maxlength="40">
         <button class="btn sec" style="width:auto;padding:8px 14px" data-action="addRoster">${t('Aggiungi')}</button></div>
@@ -3050,7 +3069,7 @@ function vPlan(p){
     ${isOrg ? optionsBlock(p, isOrg) : ''}` :
     `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">${t('Forse')}</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
     <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no',t('Non vengono')],['none',t('Non hanno risposto')]].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
-      ${isOrg && p.participants.length > 1 ? p.participants.filter(x => x.id !== p.organizer).map(x => `<div class="row">${avatar(nameOf(x.id))}<div class="grow t" style="font-size:15px">${esc(nameOf(x.id))}</div><button class="x" data-action="rmFromPlan" data-id="${x.id}" aria-label="${t('Togli')}">×</button></div>`).join('') : ''}
+      ${isOrg && p.participants.length > 1 ? p.participants.filter(x => x.id !== p.organizer).map(x => `<div class="row">${avatar(nameOf(x.id), '', x.id)}<div class="grow t" style="font-size:15px">${esc(nameOf(x.id))}</div><button class="x" data-action="rmFromPlan" data-id="${x.id}" aria-label="${t('Togli')}">×</button></div>`).join('') : ''}
       ${late.length ? `<div class="row">${mi('ritardo', 30, '⏰')}<div class="grow"><div class="t">${late.map(x => esc(nameOf(x.id)) + (x.late.minutes ? ` +${x.late.minutes} min` : t(' (non sa quanto)'))).join(', ')}</div><div class="s">In ritardo${late.some(x => x.late.note) ? ' · ' + late.filter(x => x.late.note).map(x => '“' + esc(x.late.note) + '”').join(', ') : ''}</div></div></div>` : ''}</div>
     ${siblings.length ? `<div class="group-title">${t('Le altre date')}</div><div class="group">${siblings.map(x => `<button class="row link" data-action="go" data-to="p/${x.id}"><div class="grow"><div class="t" style="font-size:15px">${fmtWhen(x.when.value)} <span class="s">· ${x.occurrence} di ${x.of}</span></div><div class="s">${x.participants.filter(y => y.rsvp === 'yes').length} ci sono</div></div><span class="chev"></span></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.')}</div>`)}` : ''}
     <div class="pad stack" style="margin-top:24px"><button class="btn tint" data-action="ics">${t('Aggiungi al calendario')}</button>${p.where.value && p.where.value.name ? `<a class="btn tint" href="https://maps.apple.com/?q=${mapsQ}" target="_blank" rel="noopener">${t('Apri in Mappe')}</a>` : ''}${isP ? `<a class="btn wa" href="${waHref(msgs.confirm(p))}" target="_blank" rel="noopener">${t('Condividi su WhatsApp')}</a>` : ''}${isP && !web && p.where.value && p.where.value.name ? (savedPlace(p.where.value.name) ? `<button class="btn plain" data-action="openPlace" data-id="${savedPlace(p.where.value.name).id}">${t('★ Posto salvato · apri scheda')}</button>` : `<button class="btn plain" data-action="savePlaceFromPlan">☆ Salva "${esc(p.where.value.name)}" nei miei posti</button>`) : ''}${isP && !web ? `<button class="btn plain" data-action="repeatPlan">${t('Ripeti questo piano')}</button>` : ''}</div>
@@ -3076,7 +3095,7 @@ function vProfile(){
       <button class="row link" data-action="newPlace">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi un posto')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu fotografato). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.')}</div>`)}
     <div class="group-title">${t('Amici')}</div><div class="group">
-      ${u.friends.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow t">${esc(nameOf(id))}</div><button class="x" data-action="rmFriend" data-id="${id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
+      ${u.friends.map(id => `<div class="row">${avatar(nameOf(id), '', id)}<div class="grow t">${esc(nameOf(id))}</div><button class="x" data-action="rmFriend" data-id="${id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
       <button class="row link" data-action="addFriends">${mi('amici', 30, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi amici')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Gli amici servono per invitare in fretta quando crei un gruppo. Non vedono i tuoi piani: la visibilità resta per gruppo.')}</div>`)}
     ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">${t('Notifiche push')}</div>
@@ -3134,7 +3153,7 @@ function sheetName(p){
   const others = p.participants.filter(x => x.id !== p.organizer);
   return `<h2>${t('Come ti chiami?')}</h2><p class="sub">${t('Niente account: il nome serve solo agli amici per sapere chi ha risposto.')}</p>
   <div class="group"><div class="row"><input class="input" id="nameInput" placeholder="${t('Il tuo nome')}" maxlength="40" autocomplete="off" autocapitalize="words"></div></div>
-  ${others.length ? `<div class="group-title">${t('Sei uno di questi?')}</div><div class="group">${others.map(x => `<button class="row link" data-action="claim" data-id="${x.id}">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div><div class="s">${p.ballots[x.id] ? t('ha già votato') : t('è già dentro')}</div></button>`).join('')}</div>` : ''}
+  ${others.length ? `<div class="group-title">${t('Sei uno di questi?')}</div><div class="group">${others.map(x => `<button class="row link" data-action="claim" data-id="${x.id}">${avatar(nameOf(x.id), '', x.id)}<div class="grow t">${esc(nameOf(x.id))}</div><div class="s">${p.ballots[x.id] ? t('ha già votato') : t('è già dentro')}</div></button>`).join('')}</div>` : ''}
   <div class="actions"><button class="btn primary" data-action="join">${t('Entra')}</button></div>`;
 }
 function sheetConfirm(p, fresh){
@@ -3173,13 +3192,21 @@ function sheetManage(g){
   return `<h2>${esc(g.name)}</h2><p class="sub">${t('🔒 Gruppo privato: si entra solo con il link d\'invito.')}</p>
   <div class="group"><div class="row"><div class="grow"><div class="t">${t('Silenzia questo gruppo')}</div><div class="s">${t('Niente push, ma le novità restano')}</div></div><button class="sw ${u.muted.includes(g.id) ? 'on' : ''}" data-action="muteGroup" data-g="${g.id}" aria-label="${t('Silenzia')}"></button></div>
   ${admin ? `<button class="row link" data-action="editGroup" data-g="${g.id}"><div class="grow t">${t('Icona, colore, nome, sezione')}</div><span class="chev"></span></button><button class="row link" data-action="revokeLink" data-g="${g.id}"><div class="grow"><div class="t">${t('Revoca il link d\'invito')}</div><div class="s">${t('Chi l\'ha già usato resta dentro')}</div></div><span class="chev"></span></button>` : ''}</div>
-  <div class="group-title">Persone · ${g.members.length}</div><div class="group">${g.members.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow"><div class="t">${id === state.me ? 'Tu' : esc(nameOf(id))}</div>${id === g.createdBy ? '<div class="s">Creatore</div>' : g.admins.includes(id) ? '<div class="s">Admin</div>' : ''}</div>
+  <div class="group-title">Persone · ${g.members.length}</div><div class="group">${g.members.map(id => `<div class="row">${avatar(nameOf(id), '', id)}<div class="grow"><div class="t">${id === state.me ? 'Tu' : esc(nameOf(id))}</div>${id === g.createdBy ? '<div class="s">Creatore</div>' : g.admins.includes(id) ? '<div class="s">Admin</div>' : ''}</div>
     ${admin && id !== state.me && id !== g.createdBy ? `<button class="add" data-action="toggleAdmin" data-g="${g.id}" data-id="${id}">${g.admins.includes(id) ? 'Togli admin' : 'Admin'}</button><button class="x" data-action="removeMember" data-g="${g.id}" data-id="${id}" aria-label="${t('Rimuovi')}">×</button>` : ''}
     ${creator && id !== state.me ? `<button class="add" data-action="transferOwner" data-g="${g.id}" data-id="${id}">${t('Passa ★')}</button>` : ''}</div>`).join('')}</div>
   <div class="group-foot">${t('Chi entra dopo viene aggiunto solo ai piani ancora ai voti. Chi esce sparisce dai piani futuri e resta in quelli passati.')}</div>
   <div class="actions stack">${creator ? `<button class="btn danger" data-action="deleteGroup" data-g="${g.id}">${t('Elimina gruppo')}</button>` : `<button class="btn danger" data-action="leaveGroup" data-g="${g.id}">${t('Esci dal gruppo')}</button>`}<button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
-function sheetProfile(){ const u = me(); return `<h2>${t('Modifica profilo')}</h2><div class="group"><div class="row"><input class="input" id="pname" placeholder="${t('Nome')}" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
+function sheetProfile(){ const u = me(); return `<h2>${t('Modifica profilo')}</h2>
+  <div class="center" style="padding:4px 0 14px">
+    <span style="display:inline-block;width:88px;height:88px">${avatar(u.name, 'big', u.id)}</span>
+    <div class="actions stack" style="max-width:260px;margin:10px auto 0">
+      <button class="btn sec" data-action="cambiaFoto">${u.avatar ? t('Cambia immagine') : t('Aggiungi la tua immagine')}</button>
+      ${u.avatar ? `<button class="btn plain" data-action="togliFoto">${t("Togli l'immagine")}</button>` : ''}
+    </div>
+  </div>
+  <div class="group"><div class="row"><input class="input" id="pname" placeholder="${t('Nome')}" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
 function sheetFriends(){
   const u = me(); const pool = new Set([...myGroups().flatMap(g => g.members), ...visiblePlans().flatMap(p => p.participants.map(x => x.id))]);
   const sug = [...pool].filter(id => id !== state.me && !u.friends.includes(id) && state.people[id] && !state.people[id].web).map(id => state.people[id]);
@@ -3570,6 +3597,9 @@ document.addEventListener('click', e => {
     case 'toggleUnlimited': me().unlimited = !me().unlimited; toast(me().unlimited ? t('Unlimited attivo (demo, non si paga)') : t('Tornato al piano gratuito')); render(); break;
     case 'secOpen': state.uiOpen = state.uiOpen || {}; state.uiOpen[el.dataset.k] = true; render(); break;
     case 'editName': openSheet(sheetProfile()); break;
+    // L'input file vero e' nascosto nella pagina: il bottone lo apre. Stessa
+    // strada gia' usata per le foto dei piani e dei posti.
+    case 'cambiaFoto': state.mediaTarget = { kind:'avatar' }; $('#photoInput').click(); break;
     case 'saveProfile': { const n = $('#pname').value.trim(); if(!n){ toast('Il nome serve'); break; } me().name = n; me().email = $('#pemail').value.trim().toLowerCase(); closeSheet(); toast('Profilo aggiornato'); render(); break; }
     case 'addFriends': openSheet(sheetFriends()); break;
     case 'addFriend': { const u = me(); if(!u.friends.includes(el.dataset.id)) u.friends.push(el.dataset.id); toast(`${nameOf(el.dataset.id)} aggiunto`); openSheet(sheetFriends()); render(); break; }
@@ -3614,6 +3644,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2020%3A41"></script>
+<script type="module" src="./live.js?v=26%2F08%2020%3A54"></script>
 </body>
 </html>

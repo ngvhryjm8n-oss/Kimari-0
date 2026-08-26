@@ -38,6 +38,10 @@ export function mapPerson(actor, extra = {}) {
     id: actor.id,
     name: actor.display_name,
     email: actor.email || '',
+    // Il percorso della foto e l'indirizzo firmato per mostrarla. Il bucket e'
+    // privato: senza un URL a scadenza l'immagine non si vedrebbe.
+    avatarPath: actor.avatar_path || null,
+    avatar: (actor.avatar_path && extra.urlFor) ? extra.urlFor(actor.avatar_path) : null,
     sections: extra.sections || [],
     groupSections: extra.groupSections || {},
     friends: extra.friends || [],

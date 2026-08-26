@@ -68,7 +68,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra',
                  'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount',
                  'renameSection','deleteSection','planBalances','createInviteLink','tokenFor',
-                 'attivaPush','spegniPush','pushAttive','pushPossibili'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'attivaPush','spegniPush','pushAttive','pushPossibili',
+                 'uploadAvatar','togliAvatar'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
