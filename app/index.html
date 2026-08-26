@@ -995,6 +995,185 @@ const DIZIONARIO = {
 
 
 
+
+  /* ================================== app: l'ultimo giro, e i frammenti
+     Le frasi che restavano, comprese quelle che erano costruite attaccando
+     pezzi ('per ' + elenco). Concatenare è il modo classico di rendere una
+     frase intraducibile: qui diventano segnaposto. */
+
+  'Piano': { en: 'Plan', es: 'Plan', de: 'Plan', ja: '予定' },
+  // Singolare e plurale come voci separate: in giapponese il plurale non
+  // esiste, e una regola automatica costringerebbe a inventarne uno.
+  '{n} gruppo': { en: '{n} group', es: '{n} grupo', de: '{n} Gruppe', ja: 'グループ {n} 件' },
+  '{n} gruppi': { en: '{n} groups', es: '{n} grupos', de: '{n} Gruppen', ja: 'グループ {n} 件' },
+  'vota': { en: 'vote', es: 'vota', de: 'abstimmen', ja: '投票' },
+  'conferma': { en: 'confirm', es: 'confirma', de: 'bestätigen', ja: '確定' },
+  'Nome': { en: 'Name', es: 'Nombre', de: 'Name', ja: '名前' },
+  'ai voti': { en: 'up for a vote', es: 'a votación', de: 'zur Abstimmung', ja: '投票中' },
+  'con link': { en: 'by link', es: 'con enlace', de: 'per Link', ja: 'リンクで' },
+  'non vieni': { en: 'you’re not coming', es: 'no vas', de: 'du kommst nicht', ja: '不参加' },
+  'sé': { en: 'themselves', es: 'sí mismo', de: 'sich selbst', ja: '本人' },
+  'una foto': { en: 'a photo', es: 'una foto', de: 'ein Foto', ja: '写真 1 枚' },
+  '{n} foto': { en: '{n} photos', es: '{n} fotos', de: '{n} Fotos', ja: '写真 {n} 枚' },
+  'per {chi}': { en: 'for {chi}', es: 'para {chi}', de: 'für {chi}', ja: '{chi} の分' },
+  '{chi} applica': { en: '{chi} applies it', es: '{chi} lo aplica',
+                     de: '{chi} setzt es um', ja: '{chi} が反映します' },
+  'il piano si aggiorna da solo': { en: 'the plan updates itself',
+    es: 'el plan se actualiza solo', de: 'der Plan aktualisiert sich von selbst',
+    ja: '予定はひとりでに更新されます' },
+  'ha già votato': { en: 'has already voted', es: 'ya ha votado',
+                     de: 'hat schon abgestimmt', ja: '投票済み' },
+  'è già dentro': { en: 'is already in', es: 'ya está dentro',
+                    de: 'ist schon dabei', ja: 'すでに参加中' },
+  '👍 Sì / 👎 No': { en: '👍 Yes / 👎 No', es: '👍 Sí / 👎 No',
+                     de: '👍 Ja / 👎 Nein', ja: '👍 はい ／ 👎 いいえ' },
+  // I valori dei preset: diventano le opzioni vere del piano, quindi vanno
+  // tradotti o un tedesco si ritrova opzioni chiamate "Mare, Montagna, Città".
+  'Mare|Montagna|Città': { en: 'Seaside|Mountains|City', es: 'Playa|Montaña|Ciudad',
+                           de: 'Meer|Berge|Stadt', ja: '海|山|街' },
+  'per sempre con Unlimited attivo': { en: 'forever, with Unlimited on',
+    es: 'para siempre, con Unlimited activo', de: 'für immer, mit aktivem Unlimited',
+    ja: 'Unlimited が有効なら期限なし' },
+  'Con Unlimited: sincronizzazione continua': { en: 'With Unlimited: continuous sync',
+    es: 'Con Unlimited: sincronización continua', de: 'Mit Unlimited: laufende Synchronisierung',
+    ja: 'Unlimited なら：常時同期' },
+  'Unlimited attivo (demo, non si paga)': { en: 'Unlimited on (demo, nothing to pay)',
+    es: 'Unlimited activo (demo, no se paga)', de: 'Unlimited aktiv (Demo, kostenlos)',
+    ja: 'Unlimited 有効（デモ、課金なし）' },
+  'Tornato al piano gratuito': { en: 'Back to the free plan', es: 'De vuelta al plan gratuito',
+                                 de: 'Zurück zum kostenlosen Tarif', ja: '無料プランに戻りました' },
+  'Nel prototipo non si paga 🙂': { en: 'In the prototype there’s nothing to pay 🙂',
+    es: 'En el prototipo no se paga 🙂', de: 'Im Prototyp zahlt man nichts 🙂',
+    ja: 'プロトタイプでは課金はありません 🙂' },
+
+  /* -------------------------------------- condivisione e messaggi pronti */
+  'gli altri rispondono dal link.': { en: 'the others reply from the link.',
+    es: 'los demás responden desde el enlace.', de: 'die anderen antworten über den Link.',
+    ja: 'ほかの人はリンクから返事します。' },
+  'chi non ha l’app vota dal link, senza installare niente.': {
+    en: 'anyone without the app votes from the link, with nothing to install.',
+    es: 'quien no tenga la app vota desde el enlace, sin instalar nada.',
+    de: 'wer die App nicht hat, stimmt über den Link ab, ohne etwas zu installieren.',
+    ja: 'アプリがない人も、何もインストールせずリンクから投票できます。'
+  },
+  'Se vuoi, mandalo anche su WhatsApp.': { en: 'Send it on WhatsApp too, if you like.',
+    es: 'Si quieres, mándalo también por WhatsApp.',
+    de: 'Wenn du magst, schick es auch über WhatsApp.',
+    ja: 'よければ WhatsApp にも送ってください。' },
+  'Il gruppo la vede nel piano. Se vuoi, mandala anche su WhatsApp.': {
+    en: 'The group sees it in the plan. Send it on WhatsApp too, if you like.',
+    es: 'El grupo la ve en el plan. Si quieres, mándala también por WhatsApp.',
+    de: 'Die Gruppe sieht es im Plan. Wenn du magst, schick es auch über WhatsApp.',
+    ja: 'みんなには予定の中で見えます。よければ WhatsApp にも送ってください。'
+  },
+  'Avvisato in app': { en: 'Told in the app', es: 'Avisado en la app',
+                       de: 'In der App Bescheid gegeben', ja: 'アプリで知らせました' },
+  'Sollecita chi manca': { en: 'Nudge whoever’s missing', es: 'Recuerda a quien falta',
+                           de: 'Die Fehlenden anstupsen', ja: 'まだの人にそっと催促' },
+  'Un messaggio pronto, con i nomi di chi non ha ancora votato.': {
+    en: 'A ready-made message, with the names of whoever hasn’t voted yet.',
+    es: 'Un mensaje listo, con los nombres de quien aún no ha votado.',
+    de: 'Eine fertige Nachricht mit den Namen derer, die noch nicht abgestimmt haben.',
+    ja: 'まだ投票していない人の名前入りの、そのまま送れるメッセージ。'
+  },
+  'Kimari! Piano confermato': { en: 'Kimari! Plan confirmed', es: '¡Kimari! Plan confirmado',
+                                de: 'Kimari! Plan bestätigt', ja: 'Kimari！予定が確定' },
+  'Manda il risultato nel gruppo: il link è lo stesso, ora mostra la versione definitiva.': {
+    en: 'Send the result to the group: it’s the same link, now showing the final version.',
+    es: 'Manda el resultado al grupo: el enlace es el mismo, ahora muestra la versión definitiva.',
+    de: 'Schick das Ergebnis in die Gruppe: derselbe Link, jetzt mit der endgültigen Fassung.',
+    ja: '結果をみんなに送りましょう。リンクは同じで、いまは確定版が表示されます。'
+  },
+  'Avvisa il gruppo: chi apre il link vede già il piano aggiornato.': {
+    en: 'Tell the group: whoever opens the link already sees the updated plan.',
+    es: 'Avisa al grupo: quien abra el enlace ya ve el plan actualizado.',
+    de: 'Sag der Gruppe Bescheid: Wer den Link öffnet, sieht schon den aktualisierten Plan.',
+    ja: 'みんなに知らせましょう。リンクを開けば、もう更新後の予定が見えます。'
+  },
+  'Invita nel gruppo': { en: 'Invite to the group', es: 'Invitar al grupo',
+                         de: 'In die Gruppe einladen', ja: 'グループに招待' },
+  'Il gruppo è privato: si entra solo con questo link, che puoi revocare.': {
+    en: 'The group is private: you only get in with this link, which you can revoke.',
+    es: 'El grupo es privado: solo se entra con este enlace, que puedes revocar.',
+    de: 'Die Gruppe ist privat: Zutritt nur über diesen Link, den du widerrufen kannst.',
+    ja: 'グループは非公開です。このリンクからのみ参加でき、いつでも無効にできます。'
+  },
+
+  /* --------------------------------------------- proposte, voti, spese */
+  'Proposta di modifica': { en: 'Suggested change', es: 'Propuesta de cambio',
+                            de: 'Änderungsvorschlag', ja: '変更の提案' },
+  'Proposta approvata: piano aggiornato': { en: 'Suggestion approved — plan updated',
+    es: 'Propuesta aprobada: plan actualizado', de: 'Vorschlag angenommen — Plan aktualisiert',
+    ja: '提案が通りました：予定を更新しました' },
+  'La proposta è passata: chi apre il link vede già il piano aggiornato.': {
+    en: 'The suggestion carried: whoever opens the link already sees the updated plan.',
+    es: 'La propuesta ha salido: quien abra el enlace ya ve el plan actualizado.',
+    de: 'Der Vorschlag ist durch: Wer den Link öffnet, sieht schon den aktualisierten Plan.',
+    ja: '提案が可決されました。リンクを開けば、もう更新後の予定が見えます。'
+  },
+  'Hai applicato la proposta: avvisa il gruppo.': {
+    en: 'You’ve applied the suggestion — tell the group.',
+    es: 'Has aplicado la propuesta: avisa al grupo.',
+    de: 'Du hast den Vorschlag umgesetzt — sag der Gruppe Bescheid.',
+    ja: '提案を反映しました。みんなに知らせましょう。'
+  },
+  'È lo stesso orario di adesso': { en: 'That’s the same time as now',
+    es: 'Es la misma hora que ahora', de: 'Das ist dieselbe Uhrzeit wie jetzt',
+    ja: 'いまと同じ時刻です' },
+  'Voto cambiato': { en: 'Vote changed', es: 'Voto cambiado',
+                     de: 'Stimme geändert', ja: '投票を変えました' },
+  'Voto aggiornato': { en: 'Vote updated', es: 'Voto actualizado',
+                       de: 'Stimme aktualisiert', ja: '投票を更新しました' },
+  'Hanno votato tutti': { en: 'Everyone has voted', es: 'Han votado todos',
+                          de: 'Alle haben abgestimmt', ja: '全員が投票しました' },
+  'Già tra le opzioni': { en: 'Already among the options', es: 'Ya está entre las opciones',
+                          de: 'Steht schon bei den Optionen', ja: 'すでに候補にあります' },
+  'Spesa registrata': { en: 'Expense recorded', es: 'Gasto registrado',
+                        de: 'Ausgabe erfasst', ja: '費用を記録しました' },
+  'Dal piano': { en: 'From the plan', es: 'Del plan', de: 'Aus dem Plan', ja: '予定から' },
+  'Posto eliminato': { en: 'Place deleted', es: 'Sitio eliminado',
+                       de: 'Ort gelöscht', ja: '場所を削除しました' },
+
+  /* ------------------------------------------------ conferme e rifiuti */
+  'Eliminare il gruppo e i suoi piani? Non si torna indietro.': {
+    en: 'Delete the group and its plans? There’s no going back.',
+    es: '¿Eliminar el grupo y sus planes? No hay vuelta atrás.',
+    de: 'Gruppe und ihre Pläne löschen? Das lässt sich nicht rückgängig machen.',
+    ja: 'グループとその予定を削除しますか？ 元には戻せません。'
+  },
+  'Gruppo eliminato': { en: 'Group deleted', es: 'Grupo eliminado',
+                        de: 'Gruppe gelöscht', ja: 'グループを削除しました' },
+  'Ricominciare da zero? Il prototipo non salva nulla.': {
+    en: 'Start from scratch? The prototype saves nothing.',
+    es: '¿Empezar de cero? El prototipo no guarda nada.',
+    de: 'Bei null anfangen? Der Prototyp speichert nichts.',
+    ja: '最初からやり直しますか？ プロトタイプは何も保存しません。'
+  },
+  'Un piano ricorrente ha bisogno del luogo già deciso (o "dopo")': {
+    en: 'A recurring plan needs the place already settled (or “later”)',
+    es: 'Un plan recurrente necesita el sitio ya decidido (o «después»)',
+    de: 'Ein wiederkehrender Plan braucht einen festen Ort (oder „später“)',
+    ja: '繰り返しの予定には、場所が決まっている必要があります（または「あとで」）'
+  },
+  'Nessuna email: aggiungila per recuperare l’account': {
+    en: 'No email: add one so you can recover the account',
+    es: 'Sin correo: añádelo para poder recuperar la cuenta',
+    de: 'Keine E-Mail: Trag eine ein, um das Konto wiederherstellen zu können',
+    ja: 'メール未登録：アカウントを復旧できるように登録してください'
+  },
+  'Nessuna partecipazione web con questa email': {
+    en: 'No web participation with this email',
+    es: 'Ninguna participación web con este correo',
+    de: 'Keine Web-Teilnahme mit dieser E-Mail',
+    ja: 'このメールでのウェブ参加は見つかりません'
+  },
+  'I video no: metti un link YouTube o Drive': {
+    en: 'No videos: put in a YouTube or Drive link',
+    es: 'Vídeos no: pon un enlace de YouTube o Drive',
+    de: 'Keine Videos: nimm einen YouTube- oder Drive-Link',
+    ja: '動画は不可です。YouTube や Drive のリンクを貼ってください'
+  },
+
   /* ================================ app: quello che passa dagli argomenti
      Testo che viaggia come argomento di funzione invece che come markup.
      Finisce a schermo uguale, ma nessuno strumento poteva vederlo. */
@@ -2413,14 +2592,14 @@ function tabbar(active){
 }
 function groupRow(g){
   const next = nextPlanOf(g);
-  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? 'ai voti' : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id))).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
+  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? t('ai voti') : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id))).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
 }
 function vHome(){
   if(isWeb()) return vWebHome();
   const mine = myGroups(); const u = me(); const secs = u.sections.filter(s => mine.some(g => u.groupSections[g.id] === s.id)); const loose = mine.filter(g => !u.groupSections[g.id] || !u.sections.find(s => s.id === u.groupSections[g.id]));
   const todoC = []; Object.values(state.plans).forEach(p => { if(p.status !== 'deciding' || !p.participants.some(x => x.id === u.id)) return;
-    if(p.organizer === u.id && votedIds(p).length && !missingIds(p).length) todoC.push({ p, act:'conferma' });
-    else if(!p.ballots[u.id]) todoC.push({ p, act:'vota' }); });
+    if(p.organizer === u.id && votedIds(p).length && !missingIds(p).length) todoC.push({ p, act:t('conferma') });
+    else if(!p.ballots[u.id]) todoC.push({ p, act:t('vota') }); });
   todoC.sort((a,b) => (a.act === 'conferma' ? 0 : 1) - (b.act === 'conferma' ? 0 : 1));
   const oggi = new Date().toLocaleDateString(LINGUA, { weekday:'long', day:'numeric', month:'long' });
   return `${nav('', '', `<button class="iconbtn" data-action="newGroup" aria-label="${t('Nuovo gruppo')}">${ICON.plus}</button>`)}
@@ -2431,7 +2610,7 @@ function vHome(){
       ${todoC.slice(0, 4).map(t => `<button class="todo-r" data-action="go" data-to="p/${t.p.id}"><span class="ptile" style="--h:${planHue(t.p)};width:32px;height:32px;font-size:17px;border-radius:9px">${t.p.emoji}</span><span class="grow t" style="text-align:left;font-size:15px">${esc(t.p.title)}</span><span class="tag ${t.act === 'conferma' ? 'okk' : 'amber'}" style="margin:0">${t.act}</span><span class="chev"></span></button>`).join('')}
     </div></div>` : ''}
     ${vCalendar()}${vAgenda()}
-    <div class="list-head"><h2>${t('Gruppi')}</h2><span class="s">${mine.length} ${mine.length === 1 ? 'gruppo' : 'gruppi'}</span></div>
+    <div class="list-head"><h2>${t('Gruppi')}</h2><span class="s">${mine.length === 1 ? t('{n} gruppo', { n: mine.length }) : t('{n} gruppi', { n: mine.length })}</span></div>
     ${secs.map(s => `<div class="group-title">${esc(s.name)}</div><div class="group">${mine.filter(g => u.groupSections[g.id] === s.id).map(groupRow).join('')}</div>`).join('')}
     ${loose.length ? `<div class="group-title">${secs.length ? 'Altri' : t('Tutti')}</div><div class="group">${loose.map(groupRow).join('')}</div>` : ''}
     ${mine.length ? '' : `<div class="intro">${t('Nessun gruppo ancora. Creane uno per la famiglia, gli amici o il prossimo viaggio.')}</div>`}
@@ -2506,9 +2685,9 @@ function vNew(){
     const whenSum = d.whenMode === 'fixed' ? fmtWhen(d.whenFixed) + (d.recur.on ? ` · ${FREQ[d.recur.freq].label.toLowerCase()}, ${d.recur.count} volte` : '') : `${d.whenCands.length} opzioni ai voti`; const whereSum = d.whereMode === 'fixed' ? (d.whereFixed.name || '—') : d.whereMode === 'deciding' ? `${d.whereCands.length} opzioni ai voti` : t('Decidiamo dopo');
     const dl = new Date(); dl.setDate(dl.getDate() + 2); dl.setHours(18,0,0,0); const g = d.groupId ? state.groups[d.groupId] : null; const anyDeciding = d.whenMode === 'deciding' || d.whereMode === 'deciding' || d.extras.length;
     body = `<h2 class="large">${t('Tutto pronto')}</h2>
-    <div class="group"><div class="row"><span class="emoji">${d.emoji}</span><div class="grow t">${esc(d.title)}</div><div class="s">${g ? g.emoji + ' ' + esc(g.name) : 'con link'}</div></div><div class="row"><div class="grow"><div class="s">${t('Quando')}</div><div class="t">${whenSum}</div></div></div><div class="row"><div class="grow"><div class="s">Dove</div><div class="t">${esc(whereSum)}</div></div></div></div>
+    <div class="group"><div class="row"><span class="emoji">${d.emoji}</span><div class="grow t">${esc(d.title)}</div><div class="s">${g ? g.emoji + ' ' + esc(g.name) : t('con link')}</div></div><div class="row"><div class="grow"><div class="s">${t('Quando')}</div><div class="t">${whenSum}</div></div></div><div class="row"><div class="grow"><div class="s">Dove</div><div class="t">${esc(whereSum)}</div></div></div></div>
     <div class="group-title">${t('Altro da decidere insieme?')}</div><div class="group">
-      ${d.extras.map((x, i) => `<div class="row">${mi('domanda', 30, '❓')}<div class="grow"><div class="t">${esc(x.question)}</div><div class="s">${x.binary ? '👍 Sì / 👎 No' : x.options.map(esc).join(' · ')}</div></div><button class="x" data-action="rmExtra" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
+      ${d.extras.map((x, i) => `<div class="row">${mi('domanda', 30, '❓')}<div class="grow"><div class="t">${esc(x.question)}</div><div class="s">${x.binary ? t('👍 Sì / 👎 No') : x.options.map(esc).join(' · ')}</div></div><button class="x" data-action="rmExtra" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
       <button class="row link" data-action="addExtra">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi una domanda')}</div><div class="s">${t('es. "Cosa portiamo?"')}</div></button></div>
     ${anyDeciding ? `<div class="group-title">${t('Scadenza del voto · facoltativa')}</div><div class="group"><div class="row"><div class="grow t">${t('Si chiude')}</div><input type="datetime-local" class="input right" value="${esc(d.deadline)}" data-bind="deadline"></div></div>
     <div class="chips"><button class="chip" data-action="quickDeadline" data-v="${toLocalInput(dl)}">${t('Fra 2 giorni alle 18:00')}</button>${d.deadline ? `<button class="chip" data-action="quickDeadline" data-v="">${t('Nessuna')}</button>` : ''}</div>
@@ -2524,7 +2703,7 @@ function vShare(p){
   const confirmed = p.status === 'confirmed'; const text = confirmed ? msgs.invite(p) : msgs.open(p); const g = groupOf(p);
   return `${nav('Condividi', 'p/' + p.id)}
   <div class="view">
-    <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : t('Il piano è pronto')}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? 'gli altri rispondono dal link.' : 'chi non ha l\'app vota dal link, senza installare niente.'}</p></div>
+    <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : t('Il piano è pronto')}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? t('gli altri rispondono dal link.') : t('chi non ha l\'app vota dal link, senza installare niente.')}</p></div>
     ${waBlock(text, p, confirmed ? 'Dimmi se ci sei' : t('Vota qui · non serve installare niente'))}
     <div class="pad stack" style="margin-top:16px"><button class="btn wa" data-action="share" data-text="${esc(text)}">${t('Condividi')}</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">${t('Copia messaggio')}</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">${t('Copia solo il link')}</button></div>
     <div class="pad" style="margin-top:6px"><button class="btn plain" data-action="go" data-to="p/${p.id}">${t('Vai al piano')}</button></div>
@@ -2558,8 +2737,8 @@ function vProposal(p, pr){
   return `<div class="proposal"><div class="pr-head">🔁 Proposta di ${esc(nameOf(pr.by))} · ${ago(pr.at)}${pr.status === 'ready' ? ' · maggioranza raggiunta' : ''}</div>
     <div class="t"><b>${fieldLabel(p, pr.field)}:</b> ${esc(t.newText)} <span class="s">(era ${esc(t.oldText)})</span></div>${pr.reason ? `<div class="s" style="margin-top:2px">“${esc(pr.reason)}”</div>` : ''}
     <div class="pr-votes"><button class="chip ${mine === 'yes' ? 'on' : ''}" data-action="pvote" data-pr="${pr.id}" data-v="yes">👍 Sì · ${c.yes}</button><button class="chip ${mine === 'no' ? 'on' : ''}" data-action="pvote" data-pr="${pr.id}" data-v="no">👎 No · ${c.no}</button><span class="s">${c.n - c.yes - c.no} senza risposta</span></div>
-    ${c.yes || c.no ? `<div class="s">${c.yes ? 'Sì: ' + Object.entries(pr.votes).filter(([,v]) => v === 'yes').map(([id]) => esc(nameOf(id))).join(', ') : ''}${c.yes && c.no ? ' · ' : ''}${c.no ? 'No: ' + Object.entries(pr.votes).filter(([,v]) => v === 'no').map(([id]) => esc(nameOf(id))).join(', ') : ''}</div>` : ''}
-    <div class="s" style="margin-top:4px">${pr.status === 'ready' ? `Passata ai voti, ma ${esc(nameOf(p.organizer))} ${p.booked ? 'ha prenotato' : 'è a meno di ' + LOCK_HOURS + ' ore dall\'inizio'}: la applica o la rifiuta lui.` : `Passa con ${need} sì su ${c.n}. Resta aperta finché non passa e il voto si può cambiare. ${esc(nameOf(p.organizer))} può applicarla o rifiutarla subito.`}</div>
+    ${c.yes || c.no ? `<div class="s">${c.yes ? t('Sì: {chi}', { chi: Object.entries(pr.votes).filter(([,v]) => v === 'yes').map(([id]) => esc(nameOf(id))).join(', ') }) : ''}${c.yes && c.no ? ' · ' : ''}${c.no ? 'No: ' + Object.entries(pr.votes).filter(([,v]) => v === 'no').map(([id]) => esc(nameOf(id))).join(', ') : ''}</div>` : ''}
+    <div class="s" style="margin-top:4px">${pr.status === 'ready' ? `Passata ai voti, ma ${esc(nameOf(p.organizer))} ${p.booked ? t('ha prenotato') : t('è a meno di {ore} ore dall\'inizio', { ore: LOCK_HOURS })}: la applica o la rifiuta lui.` : `Passa con ${need} sì su ${c.n}. Resta aperta finché non passa e il voto si può cambiare. ${esc(nameOf(p.organizer))} può applicarla o rifiutarla subito.`}</div>
     ${isOrg ? `<div class="pr-actions"><button class="btn tint sm" data-action="papply" data-pr="${pr.id}">${t('Applica ora')}</button><button class="btn danger sm" data-action="preject" data-pr="${pr.id}">${t('Rifiuta')}</button></div>` : pr.by === state.me ? `<button class="btn plain sm" style="margin-top:6px" data-action="pwithdraw" data-pr="${pr.id}">${t('Ritira la proposta')}</button>` : ''}</div>`;
 }
 function vComments(p){
@@ -2578,7 +2757,7 @@ function vMedia(p){
     <div class="group">
       ${p.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div><div class="s">${f.url ? esc(f.url.replace(/^https?:\/\//, '').slice(0, 40)) : fmtSize(f.size)} · ${esc(nameOf(f.by))}</div></div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}${canModerate(p) || f.by === state.me ? `<button class="x" data-action="delFile" data-id="${f.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('')}
       <div class="row" style="gap:18px"><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addFile">${mi('clip', 20, '📎')} Allegato</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addLink">${mi('link', 20, '🔗')} Link</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addPhoto">${mi('foto', 20, '📷')} Foto</button></div></div>
-    ${hint(`<div class="group-foot">Biglietti, prenotazioni, menu: qui restano trovabili invece di sparire in chat. Niente video: per quelli metti un link YouTube o Drive. Le foto restano 12 mesi dopo l'evento${planLim(p) === LIMITS.unlimited ? ', per sempre con Unlimited attivo' : ''}.</div>`)}
+    ${hint(`<div class="group-foot">Biglietti, prenotazioni, menu: qui restano trovabili invece di sparire in chat. Niente video: per quelli metti un link YouTube o Drive. Le foto restano 12 mesi dopo l'evento${planLim(p) === LIMITS.unlimited ? ', ' + t('per sempre con Unlimited attivo') : ''}.</div>`)}
     ${p.photos.length ? `<div class="photos" style="margin-top:12px">${p.photos.map(ph => `<button class="photo" data-action="lightbox" data-id="${ph.id}" aria-label="Foto di ${esc(nameOf(ph.by))}"><img src="${ph.dataUrl}" alt=""></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Le foto restano nel piano, compresse; gli originali restano sul tuo telefono.')}</div>`)}` : ''}`;
 }
 function vExpenses(p){
@@ -2586,7 +2765,7 @@ function vExpenses(p){
   if(!p.expenses.length && !state.uiOpen['e' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="e${p.id}">${mi('euro', 26, '💶')}<div class="grow t">${t('Spese')}</div><span class="s">${t('aggiungi')}</span><span class="chev"></span></button></div>`;
   const b = balances(p); const sug = settleSuggestions(b); const total = p.expenses.filter(e => !e.voided).reduce((a, e) => a + e.amount, 0); const mod = canModerate(p);
   return `<div class="group-title">Spese${total ? ` · ${fmtEur(total)}` : ''}</div><div class="group">
-    ${p.expenses.filter(e => !e.voided).map(e => `<div class="row">${mi('euro', 30, '💶')}<div class="grow"><div class="t" style="font-size:15px">${esc(e.desc)}</div><div class="s">ha pagato ${esc(nameOf(e.by))} · ${e.among.length <= 3 && !(e.among.length === 1 && e.among[0] === e.by) && e.among.length < p.participants.length ? 'per ' + e.among.map(id => id === e.by ? 'sé' : esc(nameOf(id))).join(', ') : 'diviso tra ' + e.among.length}</div></div><span class="amt">${fmtEur(e.amount)}</span>${mod || e.by === state.me ? `<button class="x" data-action="voidExpense" data-id="${e.id}" aria-label="${t('Annulla')}">×</button>` : ''}</div>`).join('')}
+    ${p.expenses.filter(e => !e.voided).map(e => `<div class="row">${mi('euro', 30, '💶')}<div class="grow"><div class="t" style="font-size:15px">${esc(e.desc)}</div><div class="s">ha pagato ${esc(nameOf(e.by))} · ${e.among.length <= 3 && !(e.among.length === 1 && e.among[0] === e.by) && e.among.length < p.participants.length ? t('per {chi}', { chi: e.among.map(id => id === e.by ? t('sé') : esc(nameOf(id))).join(', ') }) : 'diviso tra ' + e.among.length}</div></div><span class="amt">${fmtEur(e.amount)}</span>${mod || e.by === state.me ? `<button class="x" data-action="voidExpense" data-id="${e.id}" aria-label="${t('Annulla')}">×</button>` : ''}</div>`).join('')}
     <button class="row link" data-action="addExpense">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi spesa')}</div></button></div>
     ${total ? `<div class="group-title">${t('Saldi')}</div><div class="group">${p.participants.map(x => `<div class="row"><div class="grow t" style="font-size:15px">${x.id === state.me ? 'Tu' : esc(nameOf(x.id))}</div><span class="amt ${b[x.id] > 0 ? 'pos' : b[x.id] < 0 ? 'neg' : ''}">${b[x.id] > 0 ? '+' : ''}${fmtEur(b[x.id])}</span></div>`).join('')}
       ${sug.map(s => `<div class="row"><div class="grow"><div class="t" style="font-size:15px">${esc(nameOf(s.from))} → ${esc(nameOf(s.to))}</div><div class="s">${fmtEur(s.amount)}</div></div>${s.from === state.me || s.to === state.me || mod ? `<button class="add" data-action="settle" data-from="${s.from}" data-to="${s.to}" data-amount="${s.amount}">${t('Segna pagato')}</button>` : ''}</div>`).join('')}
@@ -2673,7 +2852,7 @@ function vPlan(p){
     if(!isP) return `${nav(webTitle, '')}<div class="view">${head}<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? t('Tocca Sì o No.') : 'Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone.'}</div></div>${vBallot(p, false)}<p class="foot">${t('Tocca per entrare. Ti chiederemo solo il nome.')}</p></div>`;
     const hasVoted = !!p.ballots[mine]; const missing = missingIds(p).map(id => nameOf(id)); const bd = ensureBallotDraft(p);
     const noteField = `<div class="group-title">${t('Nota per il gruppo · facoltativa')}</div><div class="group"><div class="row"><textarea class="input" rows="2" placeholder="${t('Es. per me va bene tutto ma non troppo tardi')}" data-bind-note="1" maxlength="200">${esc(Object.values(bd)[0] ? Object.values(bd)[0].note : '')}</textarea></div></div>`;
-    return `${nav(isOrg ? (decision ? t('La tua decisione') : t('Il tuo piano')) : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
+    return `${nav(isOrg ? (decision ? t('La tua decisione') : t('Il tuo piano')) : (web ? webTitle : (decision ? 'Decisione' : t(t('Piano')))), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
     <div class="view">${head}
       ${state.justVoted ? `<div class="notice">Hai votato ✓ ${p.organizer === state.me ? `Ora tocca a te: ${decision ? 'chiudi' : 'conferma'} quando vuoi, anche prima che abbiano votato tutti.` : `${decision ? 'Il risultato' : 'Il piano'} si aggiorna qui: quando ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}, lo vedi in questa pagina.`}</div>` : ''}
       ${isOrg ? '' : `<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? `Tocca Sì o No. Vince la maggioranza di chi risponde; ${esc(orgName)} chiude.` : `Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone; ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}.`}</div></div>`}
@@ -2700,7 +2879,7 @@ function vPlan(p){
   const late = p.participants.filter(x => x.late && x.rsvp !== 'no'); const openPrs = p.proposals.filter(x => x.status === 'open' || x.status === 'ready'); const locked = isLocked(p); const canPropose = isP && (p.allowProposals || isOrg) && openPrs.length < 2 && !locked && !isPast(p);
   const mapsQ = encodeURIComponent([p.where.value && p.where.value.name, p.where.value && p.where.value.address].filter(Boolean).join(' '));
   const siblings = p.seriesId ? Object.values(state.plans).filter(x => x.seriesId === p.seriesId && x.id !== p.id).sort((a,b) => a.occurrence - b.occurrence) : [];
-  return `${nav(isOrg ? t('Il tuo piano') : (web ? webTitle : 'Piano'), back, isOrg ? `<button class="textbtn" data-action="openEdit">${t('Modifica')}</button>` : '')}
+  return `${nav(isOrg ? t('Il tuo piano') : (web ? webTitle : t('Piano')), back, isOrg ? `<button class="textbtn" data-action="openEdit">${t('Modifica')}</button>` : '')}
   <div class="view">${head}
     ${openPrs.map(pr => vProposal(p, pr)).join('')}
     ${isP ? `<div class="group-title">${t('Ci sei?')}</div><div class="pad"><div class="seg"><button class="${rsvp.rsvp === 'yes' ? 'on' : ''}" data-action="rsvp" data-v="yes">${t('Ci sono')}</button><button class="${rsvp.rsvp === 'maybe' ? 'on' : ''}" data-action="rsvp" data-v="maybe">${t('Forse')}</button><button class="${rsvp.rsvp === 'no' ? 'on' : ''}" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div></div>${!web && !rsvp.rsvp ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="rsvp" data-v="yes">${t('Ci sono ✓')}</button><button class="btn tint" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div>` : ''}
@@ -2708,7 +2887,7 @@ function vPlan(p){
     ${isPast(p) ? '' : `<div class="group-title">${t('Imprevisti dell\'ultimo minuto')}</div><div class="group">
       ${isSoon(p) ? `<button class="row link" data-action="lateSheet">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">${t('Arrivo in ritardo')}</div><div class="s">${t('Tutti lo vedono qui, senza cercarlo in chat')}</div></div><span class="chev"></span></button>` : `<div class="row lock">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">${t('Arrivo in ritardo')}</div><div class="s">${t('Disponibile nelle 24 ore prima dell\'inizio')}</div></div></div>`}
       ${rsvp.rsvp !== 'no' ? `<button class="row link" data-action="absentSheet">${mi('addio', 32, '🙁')}<div class="grow"><div class="t">${t('Non posso più venire')}</div></div><span class="chev"></span></button>` : ''}
-      ${canPropose ? `<button class="row link" data-action="proposeChange">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Orario o luogo: il gruppo vota${p.booked ? ', ' + esc(orgName) + ' applica' : ', il piano si aggiorna da solo'}</div></div><span class="chev"></span></button>` : locked && isP && !isOrg ? `<div class="row lock">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Mancano meno di ${LOCK_HOURS} ore: ora può cambiare solo ${esc(orgName)}</div></div></div>` : ''}</div>`}
+      ${canPropose ? `<button class="row link" data-action="proposeChange">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Orario o luogo: il gruppo vota${p.booked ? ', ' + t('{chi} applica', { chi: esc(orgName) }) : ', ' + t('il piano si aggiorna da solo')}</div></div><span class="chev"></span></button>` : locked && isP && !isOrg ? `<div class="row lock">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Mancano meno di ${LOCK_HOURS} ore: ora può cambiare solo ${esc(orgName)}</div></div></div>` : ''}</div>`}
     ${isOrg ? optionsBlock(p, isOrg) : ''}` :
     `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">${t('Forse')}</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
     <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no',t('Non vengono')],['none',t('Non hanno risposto')]].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
@@ -2723,13 +2902,13 @@ function vPlan(p){
 function vNews(){
   const items = feedItems(); const unreadFrom = state.lastSeenNews;
   return `${nav('Novità', '')}<div class="view"><h2 class="large">${t('Novità')}</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
-  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="p/${it.p.id}">${avatar(n)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, 'non vieni') : esc(it.text)}`}</div><div class="s">${it.p.emoji} ${esc(it.p.title)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
+  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="p/${it.p.id}">${avatar(n)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, t('non vieni')) : esc(it.text)}`}</div><div class="s">${it.p.emoji} ${esc(it.p.title)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
 }
 function toggleRow(label, on, action, key){ return `<div class="row"><div class="grow t">${label}</div><button class="sw ${on ? 'on' : ''}" data-action="${action}" data-k="${key}" aria-label="${label}"></button></div>`; }
 function vProfile(){
   const u = me(); const myG = myGroups(); const organized = visiblePlans().filter(p => p.organizer === state.me).length; const webLeft = Object.values(state.people).filter(x => x.web && x.email);
   return `${nav('Profilo', '')}<div class="view">
-    <div class="pad" style="padding-top:12px"><div class="card">${avatar(u.name, 'xl')}<h1 class="title">${esc(u.name)}</h1><div class="s">${u.email ? esc(u.email) : 'Nessuna email: aggiungila per recuperare l\'account'}</div>
+    <div class="pad" style="padding-top:12px"><div class="card">${avatar(u.name, 'xl')}<h1 class="title">${esc(u.name)}</h1><div class="s">${u.email ? esc(u.email) : t('Nessuna email: aggiungila per recuperare l\'account')}</div>
       <div class="stats"><div><b>${myG.length}</b><span>${t('gruppi')}</span></div><div><b>${organized}</b><span>${t('organizzati')}</span></div><div><b>${visiblePlans().length}</b><span>${t('piani')}</span></div><div><b>${u.friends.length}</b><span>${t('amici')}</span></div></div>
       <button class="btn plain sm" data-action="editName">${t('Modifica profilo')}</button></div></div>
     <div class="group-title">${t('I miei posti')}</div><div class="group">
@@ -2743,12 +2922,12 @@ function vProfile(){
     ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">${t('Notifiche push')}</div><div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
     ${hint(`<div class="group-foot">${t('Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.')}</div>`)}` : `<div class="group"><button class="row link" data-action="secOpen" data-k="profNotif">${mi('campana', 28, '🔔')}<div class="grow t">${t('Notifiche push')}</div><span class="s">${PUSH.filter(([k]) => state.settings.push[k]).length} attive</span><span class="chev"></span></button></div>`}
     <div class="group-title">${t('Kimari Unlimited')}</div><div class="group"><div class="row">${mi('corona', 34, '✨')}<div class="grow"><div class="t">${u.unlimited ? 'Unlimited attivo ✓' : 'Passa a Unlimited'}</div><div class="s">19,99 €/anno o 2,99 €/mese · foto per piano ${LIMITS.free.photos}→${LIMITS.unlimited.photos}, allegati ${Math.round(LIMITS.free.attach / 1e6)}→${Math.round(LIMITS.unlimited.attach / 1e6)} MB, posti salvati senza limite, foto per sempre</div></div><button class="add" data-action="toggleUnlimited">${u.unlimited ? 'Disattiva' : 'Prova'}</button></div>
-      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="Nel prototipo non si paga 🙂">Info</button></div></div>
+      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="${t('Nel prototipo non si paga 🙂')}">Info</button></div></div>
     <div class="group-foot">${t('I limiti valgono per piano e li sblocca l\'Unlimited di chi organizza: paga uno, respira tutto il gruppo.')}</div>
     <div class="group-title">${t('Account')}</div><div class="group">
       <button class="row link" data-action="mergeSheet">${mi('link', 30, '🔗')}<div class="grow"><div class="t">${t('Hai partecipato dal web?')}</div><div class="s">Collega con l'email i piani votati senza app${webLeft.length ? ` · ${webLeft.length} da collegare` : ''}</div></div><span class="chev"></span></button>
       <button class="row link" data-action="toast" data-msg="Italiano · English · 日本語 (presto)"><div class="grow t">${t('Lingua')}</div><div class="s">${t('Italiano')}</div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Con Unlimited: sincronizzazione continua"><div class="grow t">${t('Calendario di sistema')}</div><div class="s">${t('Unlimited')}</div><span class="chev"></span></button>
+      <button class="row link" data-action="toast" data-msg="${t('Con Unlimited: sincronizzazione continua')}"><div class="grow t">${t('Calendario di sistema')}</div><div class="s">${t('Unlimited')}</div><span class="chev"></span></button>
       <button class="row link" data-action="termsSheet"><div class="grow t">${t('Termini, privacy ed età minima')}</div><span class="chev"></span></button>
       <button class="row link" data-action="toast" data-msg="Esportazione in arrivo"><div class="grow t">${t('Esporta i miei dati')}</div><span class="chev"></span></button>
       <button class="row link" data-action="signOut"><div class="grow t" style="color:var(--blue)">Esci</div></button>
@@ -2777,7 +2956,7 @@ function sheetName(p){
   const others = p.participants.filter(x => x.id !== p.organizer);
   return `<h2>${t('Come ti chiami?')}</h2><p class="sub">${t('Niente account: il nome serve solo agli amici per sapere chi ha risposto.')}</p>
   <div class="group"><div class="row"><input class="input" id="nameInput" placeholder="${t('Il tuo nome')}" maxlength="40" autocomplete="off" autocapitalize="words"></div></div>
-  ${others.length ? `<div class="group-title">${t('Sei uno di questi?')}</div><div class="group">${others.map(x => `<button class="row link" data-action="claim" data-id="${x.id}">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div><div class="s">${p.ballots[x.id] ? 'ha già votato' : 'è già dentro'}</div></button>`).join('')}</div>` : ''}
+  ${others.length ? `<div class="group-title">${t('Sei uno di questi?')}</div><div class="group">${others.map(x => `<button class="row link" data-action="claim" data-id="${x.id}">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div><div class="s">${p.ballots[x.id] ? t('ha già votato') : t('è già dentro')}</div></button>`).join('')}</div>` : ''}
   <div class="actions"><button class="btn primary" data-action="join">${t('Entra')}</button></div>`;
 }
 function sheetConfirm(p, fresh){
@@ -2822,7 +3001,7 @@ function sheetManage(g){
   <div class="group-foot">${t('Chi entra dopo viene aggiunto solo ai piani ancora ai voti. Chi esce sparisce dai piani futuri e resta in quelli passati.')}</div>
   <div class="actions stack">${creator ? `<button class="btn danger" data-action="deleteGroup" data-g="${g.id}">${t('Elimina gruppo')}</button>` : `<button class="btn danger" data-action="leaveGroup" data-g="${g.id}">${t('Esci dal gruppo')}</button>`}<button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
-function sheetProfile(){ const u = me(); return `<h2>${t('Modifica profilo')}</h2><div class="group"><div class="row"><input class="input" id="pname" placeholder="Nome" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
+function sheetProfile(){ const u = me(); return `<h2>${t('Modifica profilo')}</h2><div class="group"><div class="row"><input class="input" id="pname" placeholder="${t('Nome')}" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
 function sheetFriends(){
   const u = me(); const pool = new Set([...myGroups().flatMap(g => g.members), ...visiblePlans().flatMap(p => p.participants.map(x => x.id))]);
   const sug = [...pool].filter(id => id !== state.me && !u.friends.includes(id) && state.people[id] && !state.people[id].web).map(id => state.people[id]);
@@ -2872,7 +3051,7 @@ function sheetDecision(g){
   <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="dBinary" data-v="1">${t('Sì o No')}</button><button class="${d.binary ? '' : 'on'}" data-action="dBinary" data-v="0">${t('Scelta tra opzioni')}</button></div></div>
   <div class="group"><div class="row"><input class="input" id="dq" placeholder="${d.binary ? 'Es. Invitiamo anche Paolo?' : 'Es. Cosa regaliamo a papà?'}" value="${esc(d.question)}" data-dbind="question" maxlength="80"></div></div>
   ${d.binary ? `<div class="group-foot">${t('Due bottoni, 👍 Sì e 👎 No. Il voto vale subito, vince la maggioranza di chi risponde.')}</div>` : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmDOpt" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="dopt" placeholder="${t('Un\'opzione')}" maxlength="40"><button class="add" data-action="addDOpt">${t('Aggiungi')}</button></div>` : ''}</div>
-  <div class="chips"><button class="chip" data-action="dPreset" data-v="Pizza|Sushi|Carne">${t('Pizza / Sushi / Carne')}</button><button class="chip" data-action="dPreset" data-v="Mare|Montagna|Città">${t('Mare / Montagna / Città')}</button></div>`}
+  <div class="chips"><button class="chip" data-action="dPreset" data-v="Pizza|Sushi|Carne">${t('Pizza / Sushi / Carne')}</button><button class="chip" data-action="dPreset" data-v="${t('Mare|Montagna|Città')}">${t('Mare / Montagna / Città')}</button></div>`}
   <div class="actions"><button class="btn primary" data-action="saveDecision" data-g="${g.id}">${t('Apri la decisione')}</button></div>`;
 }
 function sheetExtra(){
@@ -3007,7 +3186,7 @@ document.addEventListener('click', e => {
     case 'tab': if(el.dataset.to === 'new'){ state.newFrom = location.hash || '#home'; state.draft = newDraft(); } go(el.dataset.to); break;
     case 'closeSheet': closeSheet(); break;
     case 'toast': toast(el.dataset.msg); break;
-    case 'reset': if(confirm('Ricominciare da zero? Il prototipo non salva nulla.')){ reset(); go('home'); } break;
+    case 'reset': if(confirm(t('Ricominciare da zero? Il prototipo non salva nulla.'))){ reset(); go('home'); } break;
 
     /* benvenuto / termini */
     case 'ageOk': state.ageOk = !state.ageOk; openSheet(sheetWelcome()); break;
@@ -3041,16 +3220,16 @@ document.addEventListener('click', e => {
     case 'removeMember': { const g = state.groups[el.dataset.g]; removeMemberFromGroup(g, el.dataset.id); toast(`${nameOf(el.dataset.id)} rimosso dal gruppo`); openSheet(sheetManage(g)); render(); break; }
     case 'transferOwner': { const g = state.groups[el.dataset.g]; g.createdBy = el.dataset.id; if(!g.admins.includes(el.dataset.id)) g.admins.push(el.dataset.id); toast(`${nameOf(el.dataset.id)} è il nuovo creatore`); openSheet(sheetManage(g)); render(); break; }
     case 'leaveGroup': { const g = state.groups[el.dataset.g]; removeMemberFromGroup(g, state.me); closeSheet(); toast(`Sei uscito da ${g.name}`); go('home'); break; }
-    case 'deleteGroup': { if(!confirm('Eliminare il gruppo e i suoi piani? Non si torna indietro.')) break; const gid = el.dataset.g; Object.values(state.plans).filter(x => x.groupId === gid).forEach(x => delete state.plans[x.id]); delete state.groups[gid]; closeSheet(); toast('Gruppo eliminato'); go('home'); break; }
+    case 'deleteGroup': { if(!confirm(t('Eliminare il gruppo e i suoi piani? Non si torna indietro.'))) break; const gid = el.dataset.g; Object.values(state.plans).filter(x => x.groupId === gid).forEach(x => delete state.plans[x.id]); delete state.groups[gid]; closeSheet(); toast(t('Gruppo eliminato')); go('home'); break; }
     case 'newInGroup': state.newFrom = location.hash; state.draft = newDraft(el.dataset.g); go('new'); break;
-    case 'inviteGroup': { const g = state.groups[el.dataset.g]; msgSheet('Invita nel gruppo', 'Il gruppo è privato: si entra solo con questo link, che puoi revocare.', msgs.group(g), { emoji:g.emoji, title:g.name }, `${g.members.length} persone · Kimari`); break; }
+    case 'inviteGroup': { const g = state.groups[el.dataset.g]; msgSheet(t('Invita nel gruppo'), t('Il gruppo è privato: si entra solo con questo link, che puoi revocare.'), msgs.group(g), { emoji:g.emoji, title:g.name }, `${g.members.length} persone · Kimari`); break; }
     case 'setGroup': d.groupId = el.dataset.g; render(); break;
 
     /* decisione secca */
     case 'newDecision': state.ddraft = { groupId:el.dataset.g, question:'', options:[], binary:true }; openSheet(sheetDecision(state.groups[el.dataset.g])); break;
     case 'dBinary': state.ddraft.binary = el.dataset.v === '1'; openSheet(sheetDecision(state.groups[state.ddraft.groupId])); break;
     case 'xBinary': state.xdraft.binary = el.dataset.v === '1'; openSheet(sheetExtra()); break;
-    case 'addDOpt': { const v = $('#dopt').value.trim(); if(!v){ toast("Scrivi un'opzione"); break; } if(state.ddraft.options.some(o => o.toLowerCase() === v.toLowerCase())){ toast('Già tra le opzioni'); break; } state.ddraft.options.push(v); openSheet(sheetDecision(state.groups[state.ddraft.groupId])); break; }
+    case 'addDOpt': { const v = $('#dopt').value.trim(); if(!v){ toast("Scrivi un'opzione"); break; } if(state.ddraft.options.some(o => o.toLowerCase() === v.toLowerCase())){ toast(t('Già tra le opzioni')); break; } state.ddraft.options.push(v); openSheet(sheetDecision(state.groups[state.ddraft.groupId])); break; }
     case 'rmDOpt': state.ddraft.options.splice(+el.dataset.i, 1); openSheet(sheetDecision(state.groups[state.ddraft.groupId])); break;
     case 'dPreset': state.ddraft.options = el.dataset.v.split('|'); openSheet(sheetDecision(state.groups[state.ddraft.groupId])); break;
     case 'saveDecision': { const dd = state.ddraft; if(!dd.question.trim()){ toast('Scrivi la domanda'); break; } if(!dd.binary && dd.options.length < 2){ toast('Servono almeno 2 opzioni'); break; } const np = createDecision(state.groups[dd.groupId], dd.question.trim(), dd.options, dd.binary); closeSheet(); state.ddraft = null; go(`p/${np.id}`); break; }
@@ -3070,12 +3249,12 @@ document.addEventListener('click', e => {
     case 'mode': d[el.dataset.k] = el.dataset.v; render(); break;
     case 'toggle': { const ks = el.dataset.path.split('.'); let o = d; ks.slice(0,-1).forEach(k => { o = o[k]; }); o[ks[ks.length-1]] = !o[ks[ks.length-1]]; render(); break; }
     case 'quickFixedWhen': d.whenFixed = { start:el.dataset.start, end:el.dataset.end, allDay:el.dataset.allday === '1' }; render(); break;
-    case 'quickWhen': { if(d.whenCands.length >= 5) break; const c = parseWhen(el.dataset.start, el.dataset.end, el.dataset.allday === '1'); if(d.whenCands.some(x => x.start === c.start)){ toast('Già tra le opzioni'); break; } d.whenCands.push(c); render(); break; }
-    case 'addWhen': { const v = $('#whenAdd').value; if(!v){ toast('Scegli una data'); break; } if(d.whenCands.some(x => x.start === v)){ toast('Già tra le opzioni'); break; } d.whenCands.push(parseWhen(v, '', false)); render(); break; }
+    case 'quickWhen': { if(d.whenCands.length >= 5) break; const c = parseWhen(el.dataset.start, el.dataset.end, el.dataset.allday === '1'); if(d.whenCands.some(x => x.start === c.start)){ toast(t('Già tra le opzioni')); break; } d.whenCands.push(c); render(); break; }
+    case 'addWhen': { const v = $('#whenAdd').value; if(!v){ toast('Scegli una data'); break; } if(d.whenCands.some(x => x.start === v)){ toast(t('Già tra le opzioni')); break; } d.whenCands.push(parseWhen(v, '', false)); render(); break; }
     case 'rmWhen': d.whenCands = d.whenCands.filter(x => x.id !== el.dataset.id); render(); break;
     case 'quickFixedWhere': { const pl = savedPlace(el.dataset.name); d.whereFixed = { name:el.dataset.name, address:el.dataset.address, photo: pl && pl.photos.length ? pl.photos[0].dataUrl : '' }; if(pl) pl.used += 1; render(); break; }
-    case 'quickWhere': { if(d.whereCands.length >= 5) break; if(d.whereCands.some(x => x.name === el.dataset.name)){ toast('Già tra le opzioni'); break; } d.whereCands.push({ id:uid(), name:el.dataset.name, address:el.dataset.address }); render(); break; }
-    case 'addWhere': { const v = $('#whereAdd').value.trim(); if(!v){ toast('Scrivi il nome del posto'); break; } if(d.whereCands.some(x => x.name.toLowerCase() === v.toLowerCase())){ toast('Già tra le opzioni'); break; } d.whereCands.push({ id:uid(), name:v, address:'' }); render(); break; }
+    case 'quickWhere': { if(d.whereCands.length >= 5) break; if(d.whereCands.some(x => x.name === el.dataset.name)){ toast(t('Già tra le opzioni')); break; } d.whereCands.push({ id:uid(), name:el.dataset.name, address:el.dataset.address }); render(); break; }
+    case 'addWhere': { const v = $('#whereAdd').value.trim(); if(!v){ toast('Scrivi il nome del posto'); break; } if(d.whereCands.some(x => x.name.toLowerCase() === v.toLowerCase())){ toast(t('Già tra le opzioni')); break; } d.whereCands.push({ id:uid(), name:v, address:'' }); render(); break; }
     case 'rmWhere': d.whereCands = d.whereCands.filter(x => x.id !== el.dataset.id); render(); break;
     case 'quickDeadline': d.deadline = el.dataset.v; render(); break;
     case 'allowDraft': d.allowProposals = !d.allowProposals; render(); break;
@@ -3083,7 +3262,7 @@ document.addEventListener('click', e => {
     case 'next': {
       if(d.step === 1){ if(!d.title.trim()){ toast('Scrivi cosa organizzi'); break; } if(isWeb() && !d.name.trim()){ toast('Scrivi il tuo nome'); break; } }
       if(d.step === 2){ if(d.whenMode === 'fixed' && !d.whenFixed.start){ toast('Scegli data e ora'); break; } if(d.whenMode === 'deciding' && d.whenCands.length < 2){ toast('Servono almeno 2 opzioni'); break; } }
-      if(d.step === 3){ if(d.whereMode === 'fixed' && !d.whereFixed.name.trim()){ toast('Scrivi il nome del posto'); break; } if(d.whereMode === 'deciding' && d.whereCands.length < 2){ toast('Servono almeno 2 opzioni'); break; } if(d.recur.on && d.whereMode === 'deciding'){ toast('Un piano ricorrente ha bisogno del luogo già deciso (o "dopo")'); break; } }
+      if(d.step === 3){ if(d.whereMode === 'fixed' && !d.whereFixed.name.trim()){ toast('Scrivi il nome del posto'); break; } if(d.whereMode === 'deciding' && d.whereCands.length < 2){ toast('Servono almeno 2 opzioni'); break; } if(d.recur.on && d.whereMode === 'deciding'){ toast(t('Un piano ricorrente ha bisogno del luogo già deciso (o "dopo")')); break; } }
       if(d.step < 4){ d.step++; render(); break; }
       const np = createPlan(d); state.draft = null; state.justVoted = false; state.ballotDraft = null; state.bdKey = null; go(`share/${np.id}`); break;
     }
@@ -3101,7 +3280,7 @@ document.addEventListener('click', e => {
     case 'tog': { const bd = ensureBallotDraft(p); const f = el.dataset.field; const s = bd[f].approved; s.has(el.dataset.id) ? s.delete(el.dataset.id) : s.add(el.dataset.id); bd[f].noneOk = false; render(); break; }
     case 'ynVote': {
       const bd = ensureBallotDraft(p); const f = el.dataset.field; bd[f].approved = new Set([el.dataset.id]); bd[f].noneOk = false;
-      if(p.kind === 'decision'){ const first = !p.ballots[state.me]; p.ballots[state.me] = { at:Date.now(), [f]:{ approved:[el.dataset.id], noneOk:false, note:'' } }; state.justVoted = true; toast(first ? 'Voto registrato' : 'Voto cambiato'); }
+      if(p.kind === 'decision'){ const first = !p.ballots[state.me]; p.ballots[state.me] = { at:Date.now(), [f]:{ approved:[el.dataset.id], noneOk:false, note:'' } }; state.justVoted = true; toast(first ? 'Voto registrato' : t('Voto cambiato')); }
       render(); break;
     }
     case 'none': { const bd = ensureBallotDraft(p); const f = el.dataset.field; bd[f].noneOk = !bd[f].noneOk; if(bd[f].noneOk) bd[f].approved.clear(); render(); break; }
@@ -3109,15 +3288,15 @@ document.addEventListener('click', e => {
       const bd = ensureBallotDraft(p);
       for(const f of decidingFields(p)){ if(!bd[f].approved.size && !bd[f].noneOk){ toast(`Segna almeno un'opzione per "${fieldLabel(p, f)}"`); return; } }
       const b = { at:Date.now() }; decidingFields(p).forEach(f => { b[f] = { approved:[...bd[f].approved], noneOk:bd[f].noneOk, note:bd[f].note }; });
-      const first = !p.ballots[state.me]; p.ballots[state.me] = b; state.justVoted = true; toast(first ? 'Voto inviato' : 'Voto aggiornato'); render(); break;
+      const first = !p.ballots[state.me]; p.ballots[state.me] = b; state.justVoted = true; toast(first ? 'Voto inviato' : t('Voto aggiornato')); render(); break;
     }
     case 'email': { const v = $('#emailInput').value.trim(); if(!v.includes('@')){ toast('Controlla l\'email'); break; } me().email = v.toLowerCase(); toast('Ti avvisiamo alla conferma'); break; }
-    case 'simulate': { const sp = state.plans[el.dataset.plan]; if(sp.groupId) simulateGroupVotes(sp); else simulateFriends(sp); toast('Hanno votato tutti'); render(); break; }
+    case 'simulate': { const sp = state.plans[el.dataset.plan]; if(sp.groupId) simulateGroupVotes(sp); else simulateFriends(sp); toast(t('Hanno votato tutti')); render(); break; }
     case 'proposeCand': openSheet(sheetProposeCand(p, el.dataset.field)); break;
     case 'saveCand': {
       const f = el.dataset.field; const fo = fieldObj(p, f); let c;
-      if(f === 'when'){ const st = $('#pcStart').value; if(!st){ toast('Scegli una data'); break; } if(fo.candidates.some(x => x.start === st)){ toast('Già tra le opzioni'); break; } c = { id:uid(), start:st, end:$('#pcEnd').value, allDay:$('#pcAllDay').classList.contains('on'), proposedBy:state.me }; }
-      else { const n = $('#pcName').value.trim(); if(!n){ toast("Scrivi l'opzione"); break; } if(fo.candidates.some(x => x.name.toLowerCase() === n.toLowerCase())){ toast('Già tra le opzioni'); break; } c = { id:uid(), name:n, address: f === 'where' ? $('#pcAddr').value.trim() : undefined, proposedBy:state.me }; }
+      if(f === 'when'){ const st = $('#pcStart').value; if(!st){ toast('Scegli una data'); break; } if(fo.candidates.some(x => x.start === st)){ toast(t('Già tra le opzioni')); break; } c = { id:uid(), start:st, end:$('#pcEnd').value, allDay:$('#pcAllDay').classList.contains('on'), proposedBy:state.me }; }
+      else { const n = $('#pcName').value.trim(); if(!n){ toast("Scrivi l'opzione"); break; } if(fo.candidates.some(x => x.name.toLowerCase() === n.toLowerCase())){ toast(t('Già tra le opzioni')); break; } c = { id:uid(), name:n, address: f === 'where' ? $('#pcAddr').value.trim() : undefined, proposedBy:state.me }; }
       if(fo.candidates.length >= 5){ toast('Massimo 5 opzioni'); break; }
       fo.candidates.push(c); const bd = ensureBallotDraft(p); bd[f].approved.add(c.id); bd[f].noneOk = false;
       sysComment(p, 'candidate', `${nameOf(state.me)} ha proposto ${candText(f, c)}`); closeSheet(); toast('Opzione aggiunta: invia il voto per confermarla'); render(); break;
@@ -3129,22 +3308,22 @@ document.addEventListener('click', e => {
     /* imprevisti */
     case 'lateSheet': state.lateMin = 20; state.lateNote = ''; openSheet(sheetLate()); break;
     case 'lateMin': state.lateMin = +el.dataset.v; state.lateNote = ($('#lateNote') || { value:'' }).value; openSheet(sheetLate()); break;
-    case 'saveLate': { const m = p.participants.find(x => x.id === state.me); const note = $('#lateNote').value.trim(); m.late = { minutes:state.lateMin, note, at:Date.now() }; if(m.rsvp !== 'yes'){ m.rsvp = 'yes'; m.rsvpAt = Date.now(); } const t = `⏰ ${nameOf(state.me)} arriva in ritardo${state.lateMin ? ` (${state.lateMin} min)` : ''}${note ? ` · “${note}”` : ''}`; sysComment(p, 'late', t); closeSheet(); render(); msgSheet('Avvisato in app', 'Se vuoi, mandalo anche su WhatsApp.', `${t} a ${p.title} 👉 ${linkOf(p)}`, p, 'Aggiornamento'); break; }
+    case 'saveLate': { const m = p.participants.find(x => x.id === state.me); const note = $('#lateNote').value.trim(); m.late = { minutes:state.lateMin, note, at:Date.now() }; if(m.rsvp !== 'yes'){ m.rsvp = 'yes'; m.rsvpAt = Date.now(); } const t = `⏰ ${nameOf(state.me)} arriva in ritardo${state.lateMin ? ` (${state.lateMin} min)` : ''}${note ? ` · “${note}”` : ''}`; sysComment(p, 'late', t); closeSheet(); render(); msgSheet(t('Avvisato in app'), t(t(t(t('Se vuoi, mandalo anche su WhatsApp.')))), `${t} a ${p.title} 👉 ${linkOf(p)}`, p, 'Aggiornamento'); break; }
     case 'clearLate': { const m = p.participants.find(x => x.id === state.me); m.late = null; sysComment(p, 'late', `${nameOf(state.me)} non è più in ritardo`); toast('Ritardo annullato'); render(); break; }
     case 'absentSheet': openSheet(sheetAbsent()); break;
-    case 'saveAbsent': { const m = p.participants.find(x => x.id === state.me); const note = $('#absentNote').value.trim(); m.rsvp = 'no'; m.rsvpAt = Date.now(); m.late = null; const t = `🙁 ${nameOf(state.me)} non può più venire${note ? ` · “${note}”` : ''}`; sysComment(p, 'absent', t); closeSheet(); render(); msgSheet('Avvisato in app', 'Se vuoi, mandalo anche su WhatsApp.', `${t} a ${p.title} 👉 ${linkOf(p)}`, p, 'Aggiornamento'); break; }
+    case 'saveAbsent': { const m = p.participants.find(x => x.id === state.me); const note = $('#absentNote').value.trim(); m.rsvp = 'no'; m.rsvpAt = Date.now(); m.late = null; const t = `🙁 ${nameOf(state.me)} non può più venire${note ? ` · “${note}”` : ''}`; sysComment(p, 'absent', t); closeSheet(); render(); msgSheet('Avvisato in app', t('Se vuoi, mandalo anche su WhatsApp.'), `${t} a ${p.title} 👉 ${linkOf(p)}`, p, 'Aggiornamento'); break; }
 
     /* organizzatore: conferma, modifica */
-    case 'nudge': msgSheet('Sollecita chi manca', 'Un messaggio pronto, con i nomi di chi non ha ancora votato.', msgs.nudge(p, missingIds(p).map(id => nameOf(id))), p, 'Vota qui · non serve installare niente'); break;
+    case 'nudge': msgSheet(t('Sollecita chi manca'), t('Un messaggio pronto, con i nomi di chi non ha ancora votato.'), msgs.nudge(p, missingIds(p).map(id => nameOf(id))), p, 'Vota qui · non serve installare niente'); break;
     case 'openConfirm': openSheet(sheetConfirm(p, true)); break;
     case 'pick': state.picks[el.dataset.field] = el.dataset.id; openSheet(sheetConfirm(p, false)); break;
-    case 'confirm': confirmPlan(p, state.picks); closeSheet(); render(); setTimeout(() => msgSheet(p.kind === 'decision' ? 'Kimari! Deciso' : 'Kimari! Piano confermato', 'Manda il risultato nel gruppo: il link è lo stesso, ora mostra la versione definitiva.', msgs.confirm(p), p, p.kind === 'decision' ? 'Deciso' : 'Confermato'), 450); break;
+    case 'confirm': confirmPlan(p, state.picks); closeSheet(); render(); setTimeout(() => msgSheet(p.kind === 'decision' ? 'Kimari! Deciso' : t('Kimari! Piano confermato'), t('Manda il risultato nel gruppo: il link è lo stesso, ora mostra la versione definitiva.'), msgs.confirm(p), p, p.kind === 'decision' ? 'Deciso' : 'Confermato'), 450); break;
     case 'openEdit': openSheet(sheetEdit(p)); break;
     case 'swLocal': el.classList.toggle('on'); break;
     case 'saveEdit': {
       const when = { start:$('#editStart').value, end:$('#editEnd').value, allDay:$('#editAllDay').classList.contains('on') }; const where = { name:$('#editPlace').value.trim(), address:$('#editAddr').value.trim() };
       const ch = editPlan(p, when, where); closeSheet(); if(!ch.length){ toast('Nessuna modifica'); break; }
-      render(); setTimeout(() => msgSheet(`Versione ${p.version}`, 'Avvisa il gruppo: chi apre il link vede già il piano aggiornato.', msgs.change(p, ch), p, 'Piano aggiornato'), 300); break;
+      render(); setTimeout(() => msgSheet(`Versione ${p.version}`, t('Avvisa il gruppo: chi apre il link vede già il piano aggiornato.'), msgs.change(p, ch), p, 'Piano aggiornato'), 300); break;
     }
     case 'rsvp': { const m = p.participants.find(x => x.id === state.me); if(m){ m.rsvp = el.dataset.v; m.rsvpAt = Date.now(); if(m.rsvp === 'no') m.late = null; render(); } break; }
     case 'ics': downloadIcs(p); break;
@@ -3154,13 +3333,13 @@ document.addEventListener('click', e => {
     case 'prField': state.prField = el.dataset.v; openSheet(sheetPropose(p)); break;
     case 'savePropose': {
       const f = el.dataset.field; let nv; const reason = $('#prReason').value.trim();
-      if(f === 'when'){ const st = $('#prStart').value; if(!st){ toast('Scegli data e ora'); break; } nv = { start:st, end:$('#prEnd').value, allDay:$('#prAllDay').classList.contains('on') }; if(nv.start === p.when.value.start && (nv.end || '') === (p.when.value.end || '') && nv.allDay === !!p.when.value.allDay){ toast('È lo stesso orario di adesso'); break; } }
+      if(f === 'when'){ const st = $('#prStart').value; if(!st){ toast('Scegli data e ora'); break; } nv = { start:st, end:$('#prEnd').value, allDay:$('#prAllDay').classList.contains('on') }; if(nv.start === p.when.value.start && (nv.end || '') === (p.when.value.end || '') && nv.allDay === !!p.when.value.allDay){ toast(t('È lo stesso orario di adesso')); break; } }
       else { const n = $('#prName').value.trim(); if(!n){ toast('Scrivi il nome del posto'); break; } nv = { name:n, address:$('#prAddr').value.trim() }; }
       const pr = openProposal(p, f, nv, reason); const t = prTexts(p, pr); closeSheet(); render();
-      msgSheet('Proposta aperta', 'Il gruppo la vede nel piano. Se vuoi, mandala anche su WhatsApp.', `🔁 ${nameOf(state.me)} propone per ${p.title}: ${t.label} ${t.newText} (era ${t.oldText})${reason ? ' · “' + reason + '”' : ''}. Sì o no? 👉 ${linkOf(p)}`, p, 'Proposta di modifica'); break;
+      msgSheet('Proposta aperta', t('Il gruppo la vede nel piano. Se vuoi, mandala anche su WhatsApp.'), `🔁 ${nameOf(state.me)} propone per ${p.title}: ${t.label} ${t.newText} (era ${t.oldText})${reason ? ' · “' + reason + '”' : ''}. Sì o no? 👉 ${linkOf(p)}`, p, t('Proposta di modifica')); break;
     }
-    case 'pvote': { const pr = p.proposals.find(x => x.id === el.dataset.pr); if(!pr || (pr.status !== 'open' && pr.status !== 'ready')) break; const ch = voteProposal(p, pr, el.dataset.v); render(); if(pr.status === 'approved'){ toast('Proposta approvata: piano aggiornato'); if(ch && ch.length) setTimeout(() => msgSheet(`Versione ${p.version}`, 'La proposta è passata: chi apre il link vede già il piano aggiornato.', msgs.change(p, ch), p, 'Piano aggiornato'), 300); } else if(pr.status === 'ready') toast(`Maggioranza raggiunta: decide ${nameOf(p.organizer)}`); break; }
-    case 'papply': { const pr = p.proposals.find(x => x.id === el.dataset.pr); const ch = applyProposal(p, pr, state.me); render(); if(ch && ch.length) setTimeout(() => msgSheet(`Versione ${p.version}`, 'Hai applicato la proposta: avvisa il gruppo.', msgs.change(p, ch), p, 'Piano aggiornato'), 300); break; }
+    case 'pvote': { const pr = p.proposals.find(x => x.id === el.dataset.pr); if(!pr || (pr.status !== 'open' && pr.status !== 'ready')) break; const ch = voteProposal(p, pr, el.dataset.v); render(); if(pr.status === 'approved'){ toast(t('Proposta approvata: piano aggiornato')); if(ch && ch.length) setTimeout(() => msgSheet(`Versione ${p.version}`, t('La proposta è passata: chi apre il link vede già il piano aggiornato.'), msgs.change(p, ch), p, 'Piano aggiornato'), 300); } else if(pr.status === 'ready') toast(`Maggioranza raggiunta: decide ${nameOf(p.organizer)}`); break; }
+    case 'papply': { const pr = p.proposals.find(x => x.id === el.dataset.pr); const ch = applyProposal(p, pr, state.me); render(); if(ch && ch.length) setTimeout(() => msgSheet(`Versione ${p.version}`, t('Hai applicato la proposta: avvisa il gruppo.'), msgs.change(p, ch), p, 'Piano aggiornato'), 300); break; }
     case 'preject': { const pr = p.proposals.find(x => x.id === el.dataset.pr); rejectProposal(p, pr, state.me); toast('Proposta rifiutata'); render(); break; }
     case 'pwithdraw': { const pr = p.proposals.find(x => x.id === el.dataset.pr); pr.status = 'withdrawn'; pr.closedAt = Date.now(); sysComment(p, 'proposal_no', `${nameOf(state.me)} ha ritirato la proposta`); toast('Proposta ritirata'); render(); break; }
 
@@ -3185,17 +3364,17 @@ document.addEventListener('click', e => {
       let among;
       if(ed.among === 'pick'){ among = [...ed.picked]; if(!among.length){ toast('Scegli per chi è la spesa'); break; } }
       else { among = ed.among === 'yes' ? p.participants.filter(x => x.rsvp === 'yes').map(x => x.id) : p.participants.map(x => x.id); if(!among.includes(ed.payer)) among = [ed.payer, ...among]; if(among.length < 2 && ed.among === 'yes') among = p.participants.map(x => x.id); }
-      p.expenses.push({ id:uid(), desc:ed.desc.trim(), amount:amt, by:ed.payer, among, at:Date.now(), voided:false }); sysComment(p, 'expense', `${nameOf(ed.payer)} ha pagato ${fmtEur(amt)} · ${ed.desc.trim()}${ed.among === 'pick' ? ' (per ' + among.map(id => id === ed.payer ? 'sé' : nameOf(id)).join(', ') + ')' : ''}`); closeSheet(); state.edraft = null; toast('Spesa registrata'); render(); break;
+      p.expenses.push({ id:uid(), desc:ed.desc.trim(), amount:amt, by:ed.payer, among, at:Date.now(), voided:false }); sysComment(p, 'expense', `${nameOf(ed.payer)} ha pagato ${fmtEur(amt)} · ${ed.desc.trim()}${ed.among === 'pick' ? ' (' + t('per {chi}', { chi: among.map(id => id === ed.payer ? t('sé') : nameOf(id)).join(', ') }) + ')' : ''}`); closeSheet(); state.edraft = null; toast(t('Spesa registrata')); render(); break;
     }
     case 'voidExpense': { const ex = p.expenses.find(x => x.id === el.dataset.id); if(!ex) break; ex.voided = true; sysComment(p, 'expense', `${nameOf(state.me)} ha annullato la spesa "${ex.desc}" (${fmtEur(ex.amount)})`); toast('Spesa annullata'); render(); break; }
     case 'settle': { const s = { id:uid(), from:el.dataset.from, to:el.dataset.to, amount:+el.dataset.amount, at:Date.now(), by:state.me }; p.settlements.push(s); sysComment(p, 'expense', `💸 ${nameOf(s.from)} ha pagato ${fmtEur(s.amount)} a ${nameOf(s.to)}`); toast('Pagamento registrato'); render(); break; }
 
     /* posti salvati */
     case 'savePlaceDraft': { const pl = savePlace(d.whereFixed.name, d.whereFixed.address); if(pl) toast('Salvato tra i tuoi posti ★'); render(); break; }
-    case 'savePlaceFromPlan': { const pl = savePlace(p.where.value.name, p.where.value.address); if(pl){ pl.used += 1; if(p.where.value.photo) pl.photos.push({ id:uid(), dataUrl:p.where.value.photo, name:'Dal piano' }); toast('Salvato tra i tuoi posti ★'); } render(); break; }
+    case 'savePlaceFromPlan': { const pl = savePlace(p.where.value.name, p.where.value.address); if(pl){ pl.used += 1; if(p.where.value.photo) pl.photos.push({ id:uid(), dataUrl:p.where.value.photo, name:t('Dal piano') }); toast('Salvato tra i tuoi posti ★'); } render(); break; }
     case 'newPlace': { const pl = { id:uid(), name:'', address:'', note:'', photos:[], files:[], createdAt:Date.now(), used:0 }; me().places.push(pl); state.placeId = pl.id; openSheet(sheetPlace(pl)); break; }
     case 'openPlace': { state.placeId = el.dataset.id; openSheet(sheetPlace(me().places.find(x => x.id === el.dataset.id))); break; }
-    case 'delPlace': { me().places = me().places.filter(x => x.id !== el.dataset.id); state.placeId = null; closeSheet(); toast('Posto eliminato'); render(); break; }
+    case 'delPlace': { me().places = me().places.filter(x => x.id !== el.dataset.id); state.placeId = null; closeSheet(); toast(t('Posto eliminato')); render(); break; }
     case 'plDelFile': { const pl = me().places.find(x => x.id === el.dataset.pl); pl.files = pl.files.filter(x => x.id !== el.dataset.id); openSheet(sheetPlace(pl)); break; }
     case 'plAddPhoto': state.mediaTarget = { kind:'place', id:el.dataset.pl }; $('#photoInput').click(); break;
     case 'plAddFile': state.mediaTarget = { kind:'place', id:el.dataset.pl }; $('#fileInput').click(); break;
@@ -3207,7 +3386,7 @@ document.addEventListener('click', e => {
 
     /* profilo */
     case 'push': state.settings.push[el.dataset.k] = !state.settings.push[el.dataset.k]; render(); break;
-    case 'toggleUnlimited': me().unlimited = !me().unlimited; toast(me().unlimited ? 'Unlimited attivo (demo, non si paga)' : 'Tornato al piano gratuito'); render(); break;
+    case 'toggleUnlimited': me().unlimited = !me().unlimited; toast(me().unlimited ? t('Unlimited attivo (demo, non si paga)') : t('Tornato al piano gratuito')); render(); break;
     case 'secOpen': state.uiOpen = state.uiOpen || {}; state.uiOpen[el.dataset.k] = true; render(); break;
     case 'editName': openSheet(sheetProfile()); break;
     case 'saveProfile': { const n = $('#pname').value.trim(); if(!n){ toast('Il nome serve'); break; } me().name = n; me().email = $('#pemail').value.trim().toLowerCase(); closeSheet(); toast('Profilo aggiornato'); render(); break; }
@@ -3215,7 +3394,7 @@ document.addEventListener('click', e => {
     case 'addFriend': { const u = me(); if(!u.friends.includes(el.dataset.id)) u.friends.push(el.dataset.id); toast(`${nameOf(el.dataset.id)} aggiunto`); openSheet(sheetFriends()); render(); break; }
     case 'rmFriend': { const u = me(); u.friends = u.friends.filter(x => x !== el.dataset.id); render(); break; }
     case 'mergeSheet': openSheet(sheetMerge()); break;
-    case 'doMerge': { const em = $('#mergeEmail').value.trim().toLowerCase(); if(!em.includes('@')){ toast('Controlla l\'email'); break; } const w = Object.values(state.people).find(x => x.web && x.email === em); if(!w){ toast('Nessuna partecipazione web con questa email'); break; } const n = mergePersona(w.id, state.me); if(!me().email) me().email = em; closeSheet(); toast(`Collegati ${n} ${n === 1 ? 'piano' : 'piani'}`); render(); break; }
+    case 'doMerge': { const em = $('#mergeEmail').value.trim().toLowerCase(); if(!em.includes('@')){ toast('Controlla l\'email'); break; } const w = Object.values(state.people).find(x => x.web && x.email === em); if(!w){ toast(t('Nessuna partecipazione web con questa email')); break; } const n = mergePersona(w.id, state.me); if(!me().email) me().email = em; closeSheet(); toast(`Collegati ${n} ${n === 1 ? 'piano' : 'piani'}`); render(); break; }
   }
 });
 $('#photoInput').addEventListener('change', e => {
@@ -3229,13 +3408,13 @@ $('#photoInput').addEventListener('change', e => {
   const L = planLim(p); const room = L.photos - p.photos.length;
   if(room <= 0){ toast(`Limite di ${L.photos} foto per piano`); done(); return; }
   const use = files.slice(0, room); left = use.length; if(files.length > use.length) toast(`Spazio solo per ${use.length}: limite ${L.photos} foto`);
-  use.forEach(f => { const r = new FileReader(); r.onload = () => { p.photos.push({ id:uid(), by:state.me, at:Date.now(), dataUrl:r.result, name:f.name }); if(--left === 0){ sysComment(p, 'photo', `${nameOf(state.me)} ha aggiunto ${use.length === 1 ? 'una foto' : use.length + ' foto'}`); toast('Foto aggiunte (compresse)'); render(); } }; r.readAsDataURL(f); }); done();
+  use.forEach(f => { const r = new FileReader(); r.onload = () => { p.photos.push({ id:uid(), by:state.me, at:Date.now(), dataUrl:r.result, name:f.name }); if(--left === 0){ sysComment(p, 'photo', `${nameOf(state.me)} ha aggiunto ${use.length === 1 ? t('una foto') : t('{n} foto', { n: use.length })}`); toast('Foto aggiunte (compresse)'); render(); } }; r.readAsDataURL(f); }); done();
 });
 $('#fileInput').addEventListener('change', e => {
   const mt = state.mediaTarget; const f = e.target.files[0]; if(!f) return;
   if(mt && mt.kind === 'place'){ const pl = me().places.find(x => x.id === mt.id); state.mediaTarget = null; pl.files.push({ id:uid(), name:f.name, size:f.size, at:Date.now() }); toast('Allegato aggiunto'); openSheet(sheetPlace(pl)); e.target.value = ''; return; }
   const p = state.plans[state.currentPlan]; if(!p) return; const L = planLim(p);
-  if((f.type || '').startsWith('video')){ toast('I video no: metti un link YouTube o Drive'); e.target.value = ''; return; }
+  if((f.type || '').startsWith('video')){ toast(t('I video no: metti un link YouTube o Drive')); e.target.value = ''; return; }
   if(f.size > L.file){ toast(`Allegato troppo grande: max ${Math.round(L.file / 1e6)} MB`); e.target.value = ''; return; }
   if(attachBytes(p) + f.size > L.attach){ toast(`Spazio allegati del piano esaurito (${Math.round(L.attach / 1e6)} MB)`); e.target.value = ''; return; }
   p.files.push({ id:uid(), name:f.name, size:f.size, by:state.me, at:Date.now() }); sysComment(p, 'photo', `${nameOf(state.me)} ha allegato ${f.name}`); toast('Allegato aggiunto'); render(); e.target.value = '';
@@ -3254,6 +3433,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2017%3A36"></script>
+<script type="module" src="./live.js?v=26%2F08%2017%3A52"></script>
 </body>
 </html>

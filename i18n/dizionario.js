@@ -647,6 +647,185 @@ export const DIZIONARIO = {
 
 
 
+
+  /* ================================== app: l'ultimo giro, e i frammenti
+     Le frasi che restavano, comprese quelle che erano costruite attaccando
+     pezzi ('per ' + elenco). Concatenare è il modo classico di rendere una
+     frase intraducibile: qui diventano segnaposto. */
+
+  'Piano': { en: 'Plan', es: 'Plan', de: 'Plan', ja: '予定' },
+  // Singolare e plurale come voci separate: in giapponese il plurale non
+  // esiste, e una regola automatica costringerebbe a inventarne uno.
+  '{n} gruppo': { en: '{n} group', es: '{n} grupo', de: '{n} Gruppe', ja: 'グループ {n} 件' },
+  '{n} gruppi': { en: '{n} groups', es: '{n} grupos', de: '{n} Gruppen', ja: 'グループ {n} 件' },
+  'vota': { en: 'vote', es: 'vota', de: 'abstimmen', ja: '投票' },
+  'conferma': { en: 'confirm', es: 'confirma', de: 'bestätigen', ja: '確定' },
+  'Nome': { en: 'Name', es: 'Nombre', de: 'Name', ja: '名前' },
+  'ai voti': { en: 'up for a vote', es: 'a votación', de: 'zur Abstimmung', ja: '投票中' },
+  'con link': { en: 'by link', es: 'con enlace', de: 'per Link', ja: 'リンクで' },
+  'non vieni': { en: 'you’re not coming', es: 'no vas', de: 'du kommst nicht', ja: '不参加' },
+  'sé': { en: 'themselves', es: 'sí mismo', de: 'sich selbst', ja: '本人' },
+  'una foto': { en: 'a photo', es: 'una foto', de: 'ein Foto', ja: '写真 1 枚' },
+  '{n} foto': { en: '{n} photos', es: '{n} fotos', de: '{n} Fotos', ja: '写真 {n} 枚' },
+  'per {chi}': { en: 'for {chi}', es: 'para {chi}', de: 'für {chi}', ja: '{chi} の分' },
+  '{chi} applica': { en: '{chi} applies it', es: '{chi} lo aplica',
+                     de: '{chi} setzt es um', ja: '{chi} が反映します' },
+  'il piano si aggiorna da solo': { en: 'the plan updates itself',
+    es: 'el plan se actualiza solo', de: 'der Plan aktualisiert sich von selbst',
+    ja: '予定はひとりでに更新されます' },
+  'ha già votato': { en: 'has already voted', es: 'ya ha votado',
+                     de: 'hat schon abgestimmt', ja: '投票済み' },
+  'è già dentro': { en: 'is already in', es: 'ya está dentro',
+                    de: 'ist schon dabei', ja: 'すでに参加中' },
+  '👍 Sì / 👎 No': { en: '👍 Yes / 👎 No', es: '👍 Sí / 👎 No',
+                     de: '👍 Ja / 👎 Nein', ja: '👍 はい ／ 👎 いいえ' },
+  // I valori dei preset: diventano le opzioni vere del piano, quindi vanno
+  // tradotti o un tedesco si ritrova opzioni chiamate "Mare, Montagna, Città".
+  'Mare|Montagna|Città': { en: 'Seaside|Mountains|City', es: 'Playa|Montaña|Ciudad',
+                           de: 'Meer|Berge|Stadt', ja: '海|山|街' },
+  'per sempre con Unlimited attivo': { en: 'forever, with Unlimited on',
+    es: 'para siempre, con Unlimited activo', de: 'für immer, mit aktivem Unlimited',
+    ja: 'Unlimited が有効なら期限なし' },
+  'Con Unlimited: sincronizzazione continua': { en: 'With Unlimited: continuous sync',
+    es: 'Con Unlimited: sincronización continua', de: 'Mit Unlimited: laufende Synchronisierung',
+    ja: 'Unlimited なら：常時同期' },
+  'Unlimited attivo (demo, non si paga)': { en: 'Unlimited on (demo, nothing to pay)',
+    es: 'Unlimited activo (demo, no se paga)', de: 'Unlimited aktiv (Demo, kostenlos)',
+    ja: 'Unlimited 有効（デモ、課金なし）' },
+  'Tornato al piano gratuito': { en: 'Back to the free plan', es: 'De vuelta al plan gratuito',
+                                 de: 'Zurück zum kostenlosen Tarif', ja: '無料プランに戻りました' },
+  'Nel prototipo non si paga 🙂': { en: 'In the prototype there’s nothing to pay 🙂',
+    es: 'En el prototipo no se paga 🙂', de: 'Im Prototyp zahlt man nichts 🙂',
+    ja: 'プロトタイプでは課金はありません 🙂' },
+
+  /* -------------------------------------- condivisione e messaggi pronti */
+  'gli altri rispondono dal link.': { en: 'the others reply from the link.',
+    es: 'los demás responden desde el enlace.', de: 'die anderen antworten über den Link.',
+    ja: 'ほかの人はリンクから返事します。' },
+  'chi non ha l’app vota dal link, senza installare niente.': {
+    en: 'anyone without the app votes from the link, with nothing to install.',
+    es: 'quien no tenga la app vota desde el enlace, sin instalar nada.',
+    de: 'wer die App nicht hat, stimmt über den Link ab, ohne etwas zu installieren.',
+    ja: 'アプリがない人も、何もインストールせずリンクから投票できます。'
+  },
+  'Se vuoi, mandalo anche su WhatsApp.': { en: 'Send it on WhatsApp too, if you like.',
+    es: 'Si quieres, mándalo también por WhatsApp.',
+    de: 'Wenn du magst, schick es auch über WhatsApp.',
+    ja: 'よければ WhatsApp にも送ってください。' },
+  'Il gruppo la vede nel piano. Se vuoi, mandala anche su WhatsApp.': {
+    en: 'The group sees it in the plan. Send it on WhatsApp too, if you like.',
+    es: 'El grupo la ve en el plan. Si quieres, mándala también por WhatsApp.',
+    de: 'Die Gruppe sieht es im Plan. Wenn du magst, schick es auch über WhatsApp.',
+    ja: 'みんなには予定の中で見えます。よければ WhatsApp にも送ってください。'
+  },
+  'Avvisato in app': { en: 'Told in the app', es: 'Avisado en la app',
+                       de: 'In der App Bescheid gegeben', ja: 'アプリで知らせました' },
+  'Sollecita chi manca': { en: 'Nudge whoever’s missing', es: 'Recuerda a quien falta',
+                           de: 'Die Fehlenden anstupsen', ja: 'まだの人にそっと催促' },
+  'Un messaggio pronto, con i nomi di chi non ha ancora votato.': {
+    en: 'A ready-made message, with the names of whoever hasn’t voted yet.',
+    es: 'Un mensaje listo, con los nombres de quien aún no ha votado.',
+    de: 'Eine fertige Nachricht mit den Namen derer, die noch nicht abgestimmt haben.',
+    ja: 'まだ投票していない人の名前入りの、そのまま送れるメッセージ。'
+  },
+  'Kimari! Piano confermato': { en: 'Kimari! Plan confirmed', es: '¡Kimari! Plan confirmado',
+                                de: 'Kimari! Plan bestätigt', ja: 'Kimari！予定が確定' },
+  'Manda il risultato nel gruppo: il link è lo stesso, ora mostra la versione definitiva.': {
+    en: 'Send the result to the group: it’s the same link, now showing the final version.',
+    es: 'Manda el resultado al grupo: el enlace es el mismo, ahora muestra la versión definitiva.',
+    de: 'Schick das Ergebnis in die Gruppe: derselbe Link, jetzt mit der endgültigen Fassung.',
+    ja: '結果をみんなに送りましょう。リンクは同じで、いまは確定版が表示されます。'
+  },
+  'Avvisa il gruppo: chi apre il link vede già il piano aggiornato.': {
+    en: 'Tell the group: whoever opens the link already sees the updated plan.',
+    es: 'Avisa al grupo: quien abra el enlace ya ve el plan actualizado.',
+    de: 'Sag der Gruppe Bescheid: Wer den Link öffnet, sieht schon den aktualisierten Plan.',
+    ja: 'みんなに知らせましょう。リンクを開けば、もう更新後の予定が見えます。'
+  },
+  'Invita nel gruppo': { en: 'Invite to the group', es: 'Invitar al grupo',
+                         de: 'In die Gruppe einladen', ja: 'グループに招待' },
+  'Il gruppo è privato: si entra solo con questo link, che puoi revocare.': {
+    en: 'The group is private: you only get in with this link, which you can revoke.',
+    es: 'El grupo es privado: solo se entra con este enlace, que puedes revocar.',
+    de: 'Die Gruppe ist privat: Zutritt nur über diesen Link, den du widerrufen kannst.',
+    ja: 'グループは非公開です。このリンクからのみ参加でき、いつでも無効にできます。'
+  },
+
+  /* --------------------------------------------- proposte, voti, spese */
+  'Proposta di modifica': { en: 'Suggested change', es: 'Propuesta de cambio',
+                            de: 'Änderungsvorschlag', ja: '変更の提案' },
+  'Proposta approvata: piano aggiornato': { en: 'Suggestion approved — plan updated',
+    es: 'Propuesta aprobada: plan actualizado', de: 'Vorschlag angenommen — Plan aktualisiert',
+    ja: '提案が通りました：予定を更新しました' },
+  'La proposta è passata: chi apre il link vede già il piano aggiornato.': {
+    en: 'The suggestion carried: whoever opens the link already sees the updated plan.',
+    es: 'La propuesta ha salido: quien abra el enlace ya ve el plan actualizado.',
+    de: 'Der Vorschlag ist durch: Wer den Link öffnet, sieht schon den aktualisierten Plan.',
+    ja: '提案が可決されました。リンクを開けば、もう更新後の予定が見えます。'
+  },
+  'Hai applicato la proposta: avvisa il gruppo.': {
+    en: 'You’ve applied the suggestion — tell the group.',
+    es: 'Has aplicado la propuesta: avisa al grupo.',
+    de: 'Du hast den Vorschlag umgesetzt — sag der Gruppe Bescheid.',
+    ja: '提案を反映しました。みんなに知らせましょう。'
+  },
+  'È lo stesso orario di adesso': { en: 'That’s the same time as now',
+    es: 'Es la misma hora que ahora', de: 'Das ist dieselbe Uhrzeit wie jetzt',
+    ja: 'いまと同じ時刻です' },
+  'Voto cambiato': { en: 'Vote changed', es: 'Voto cambiado',
+                     de: 'Stimme geändert', ja: '投票を変えました' },
+  'Voto aggiornato': { en: 'Vote updated', es: 'Voto actualizado',
+                       de: 'Stimme aktualisiert', ja: '投票を更新しました' },
+  'Hanno votato tutti': { en: 'Everyone has voted', es: 'Han votado todos',
+                          de: 'Alle haben abgestimmt', ja: '全員が投票しました' },
+  'Già tra le opzioni': { en: 'Already among the options', es: 'Ya está entre las opciones',
+                          de: 'Steht schon bei den Optionen', ja: 'すでに候補にあります' },
+  'Spesa registrata': { en: 'Expense recorded', es: 'Gasto registrado',
+                        de: 'Ausgabe erfasst', ja: '費用を記録しました' },
+  'Dal piano': { en: 'From the plan', es: 'Del plan', de: 'Aus dem Plan', ja: '予定から' },
+  'Posto eliminato': { en: 'Place deleted', es: 'Sitio eliminado',
+                       de: 'Ort gelöscht', ja: '場所を削除しました' },
+
+  /* ------------------------------------------------ conferme e rifiuti */
+  'Eliminare il gruppo e i suoi piani? Non si torna indietro.': {
+    en: 'Delete the group and its plans? There’s no going back.',
+    es: '¿Eliminar el grupo y sus planes? No hay vuelta atrás.',
+    de: 'Gruppe und ihre Pläne löschen? Das lässt sich nicht rückgängig machen.',
+    ja: 'グループとその予定を削除しますか？ 元には戻せません。'
+  },
+  'Gruppo eliminato': { en: 'Group deleted', es: 'Grupo eliminado',
+                        de: 'Gruppe gelöscht', ja: 'グループを削除しました' },
+  'Ricominciare da zero? Il prototipo non salva nulla.': {
+    en: 'Start from scratch? The prototype saves nothing.',
+    es: '¿Empezar de cero? El prototipo no guarda nada.',
+    de: 'Bei null anfangen? Der Prototyp speichert nichts.',
+    ja: '最初からやり直しますか？ プロトタイプは何も保存しません。'
+  },
+  'Un piano ricorrente ha bisogno del luogo già deciso (o "dopo")': {
+    en: 'A recurring plan needs the place already settled (or “later”)',
+    es: 'Un plan recurrente necesita el sitio ya decidido (o «después»)',
+    de: 'Ein wiederkehrender Plan braucht einen festen Ort (oder „später“)',
+    ja: '繰り返しの予定には、場所が決まっている必要があります（または「あとで」）'
+  },
+  'Nessuna email: aggiungila per recuperare l’account': {
+    en: 'No email: add one so you can recover the account',
+    es: 'Sin correo: añádelo para poder recuperar la cuenta',
+    de: 'Keine E-Mail: Trag eine ein, um das Konto wiederherstellen zu können',
+    ja: 'メール未登録：アカウントを復旧できるように登録してください'
+  },
+  'Nessuna partecipazione web con questa email': {
+    en: 'No web participation with this email',
+    es: 'Ninguna participación web con este correo',
+    de: 'Keine Web-Teilnahme mit dieser E-Mail',
+    ja: 'このメールでのウェブ参加は見つかりません'
+  },
+  'I video no: metti un link YouTube o Drive': {
+    en: 'No videos: put in a YouTube or Drive link',
+    es: 'Vídeos no: pon un enlace de YouTube o Drive',
+    de: 'Keine Videos: nimm einen YouTube- oder Drive-Link',
+    ja: '動画は不可です。YouTube や Drive のリンクを貼ってください'
+  },
+
   /* ================================ app: quello che passa dagli argomenti
      Testo che viaggia come argomento di funzione invece che come markup.
      Finisce a schermo uguale, ma nessuno strumento poteva vederlo. */
