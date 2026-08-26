@@ -124,6 +124,15 @@
      azione ricarica dal server e ridisegna, e senza la classe l'app
      ripartiva da trasparente a ogni tocco: sembrava sfarfallasse. */
   .view.entra{animation:fadeup .22s ease-out}
+  /* Attesa: forme grigie con la stessa struttura di cio' che sta arrivando.
+     Meglio di un cerchietto che gira — si vede gia' com'e' fatta la
+     schermata, e l'attesa sembra piu' corta. Prima al loro posto c'erano i
+     dati finti di Marco, che e' molto peggio: sembravano veri. */
+  .osso{background:var(--fill); border-radius:10px; animation:respira 1.4s ease-in-out infinite}
+  @keyframes respira{0%,100%{opacity:.55} 50%{opacity:.9}}
+  .osso.riga{height:14px; margin:9px 0}
+  .osso.tile{width:44px; height:44px; border-radius:12px; flex:none}
+  @media (prefers-reduced-motion: reduce){ .osso{animation:none} }
   @keyframes fadeup{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
 
   /* ---------- liste ---------- */
@@ -1070,6 +1079,18 @@ const DIZIONARIO = {
 
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
+
+  /* Senza rete si guarda una copia. Va detto: una copia scambiata per lo
+     stato vero è esattamente il tipo di schermo che mente — qualcuno potrebbe
+     aver già cambiato il posto e tu staresti andando in quello vecchio. */
+  'Senza rete: stai guardando una copia': {
+    en: 'No connection — you’re looking at a copy',
+    es: 'Sin conexión: estás viendo una copia',
+    de: 'Keine Verbindung — du siehst eine Kopie',
+    ja: 'オフラインです。表示しているのは保存された内容です'
+  },
+  'Aggiornata {quando}': { en: 'Updated {quando}', es: 'Actualizada {quando}',
+                           de: 'Stand {quando}', ja: '{quando} 時点' },
   'Non ancora acquistabile: arriva con la versione negli store.': {
     en: 'Not on sale yet — it arrives with the version in the stores.',
     es: 'Todavía no está a la venta: llega con la versión de las tiendas.',
@@ -2474,8 +2495,16 @@ function reset(){
     cal:{ y:now.getFullYear(), m:now.getMonth() }, selDay:dkey(now), lastRoute:null, lastSeenNews:Date.now() - 4*3600e3,
     settings:{ push:{ vote:true, confirm:true, change:true, proposal:true, late:true, comment:false, media:false, expense:true, reminder:true, group:false } },
     consented:false, welcomeShown:false, ageOk:false,
+    // Vero finche' live.js non ha portato i dati veri. Serve a distinguere
+    // "non hai ancora niente" da "non lo so ancora": la prima e' una notizia,
+    // la seconda una bugia.
+    caricando: document.body.dataset.demo !== '1',
   });
-  seed();
+  // I dati finti SOLO con ?demo=1. Senza, l'app partiva con Marco, Sara e i
+  // loro piani inventati — e da li' si poteva votare, condividere e confermare
+  // cose che non esistono. E' la radice di tre difetti diversi trovati il
+  // 26/8/2026, non un fastidio estetico.
+  if (document.body.dataset.demo === '1') seed();
 }
 function seed(){
   const P = (id, name, email) => { state.people[id] = { id, name, email:email || '', sections:[], groupSections:{}, friends:[], muted:[], places:[], unlimited:false }; };
@@ -2822,8 +2851,22 @@ function groupRow(g){
   const next = nextPlanOf(g);
   return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? t('ai voti') : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id), '', id)).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
 }
+// Quello che si vede mentre i dati veri arrivano. Non un cerchietto: la
+// forma della schermata che sta per comparire.
+function vAttesa(){
+  const riga = () => `<div class="row"><div class="osso tile"></div><div class="grow" style="margin-left:12px"><div class="osso riga" style="width:60%"></div><div class="osso riga" style="width:35%;height:11px"></div></div></div>`;
+  return `<div class="view"><div class="pad">
+    <div class="group-title"><div class="osso riga" style="width:90px"></div></div>
+    <div class="group">${riga()}${riga()}</div>
+    <div class="group-title"><div class="osso riga" style="width:120px"></div></div>
+    <div class="group">${riga()}${riga()}${riga()}</div>
+  </div></div>`;
+}
+
 function vHome(){
   if(isWeb()) return vWebHome();
+  // Finche' non si sa, non si inventa: ne' piani finti ne' "non hai niente".
+  if(state.caricando) return vAttesa();
   const mine = myGroups(); const u = me(); const secs = u.sections.filter(s => mine.some(g => u.groupSections[g.id] === s.id)); const loose = mine.filter(g => !u.groupSections[g.id] || !u.sections.find(s => s.id === u.groupSections[g.id]));
   const todoC = []; Object.values(state.plans).forEach(p => { if(p.status !== 'deciding' || !p.participants.some(x => x.id === u.id)) return;
     if(p.organizer === u.id && votedIds(p).length && !missingIds(p).length) todoC.push({ p, act:t('conferma') });
@@ -3137,7 +3180,7 @@ function toggleRow(label, on, action, key){ return `<div class="row"><div class=
 function vProfile(){
   const u = me(); const myG = myGroups(); const organized = visiblePlans().filter(p => p.organizer === state.me).length; const webLeft = Object.values(state.people).filter(x => x.web && x.email);
   return `${nav('Profilo', '')}<div class="view">
-    <div class="pad" style="padding-top:12px"><div class="card">${avatar(u.name, 'xl')}<h1 class="title">${esc(u.name)}</h1><div class="s">${u.email ? esc(u.email) : t('Nessuna email: aggiungila per recuperare l\'account')}</div>
+    <div class="pad" style="padding-top:12px"><div class="card">${avatar(u.name, 'xl', u.id)}<h1 class="title">${esc(u.name)}</h1><div class="s">${u.email ? esc(u.email) : t('Nessuna email: aggiungila per recuperare l\'account')}</div>
       <div class="stats"><div><b>${myG.length}</b><span>${t('gruppi')}</span></div><div><b>${organized}</b><span>${t('organizzati')}</span></div><div><b>${visiblePlans().length}</b><span>${t('piani')}</span></div><div><b>${u.friends.length}</b><span>${t('amici')}</span></div></div>
       <button class="btn plain sm" data-action="editName">${t('Modifica profilo')}</button></div></div>
     <div class="group-title">${t('I miei posti')}</div><div class="group">
@@ -3261,7 +3304,7 @@ function sheetFriends(){
   const u = me(); const pool = new Set([...myGroups().flatMap(g => g.members), ...visiblePlans().flatMap(p => p.participants.map(x => x.id))]);
   const sug = [...pool].filter(id => id !== state.me && !u.friends.includes(id) && state.people[id] && !state.people[id].web).map(id => state.people[id]);
   return `<h2 style="display:flex;align-items:center;gap:9px">${mi('amici', 30)} Aggiungi amici</h2><p class="sub">${t('Persone con cui hai già un gruppo o un piano. Gli amici non vedono i tuoi piani: servono solo per invitare in fretta.')}</p>
-  ${sug.length ? `<div class="group">${sug.map(x => `<button class="row link" data-action="addFriend" data-id="${x.id}">${avatar(x.name)}<div class="grow t">${esc(x.name)}</div><span class="add">${t('Aggiungi')}</span></button>`).join('')}</div>` : '<div class="intro">Nessun suggerimento: invita qualcuno con il link.</div>'}
+  ${sug.length ? `<div class="group">${sug.map(x => `<button class="row link" data-action="addFriend" data-id="${x.id}">${avatar(x.name, '', x.id)}<div class="grow t">${esc(x.name)}</div><span class="add">${t('Aggiungi')}</span></button>`).join('')}</div>` : '<div class="intro">Nessun suggerimento: invita qualcuno con il link.</div>'}
   <div class="actions stack"><a class="btn wa" href="${waHref(msgs.friend())}" target="_blank" rel="noopener">${t('Invita un amico su WhatsApp')}</a><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
 function sheetMerge(){ return `<h2>${t('Collega i piani dal web')}</h2><p class="sub">${t('Se hai votato da un link senza app e hai lasciato l\'email, scrivila qui: i tuoi voti e risposte passano a questo account.')}</p><div class="group"><div class="row"><input class="input" id="mergeEmail" type="email" placeholder="${t('L\'email che hai usato sul web')}" inputmode="email"></div></div><div class="group-foot">${t('Nell\'app vera arriva un codice a quell\'email, per sicurezza.')}</div><div class="actions"><button class="btn primary" data-action="doMerge">${t('Collega')}</button></div>`; }
@@ -3396,7 +3439,17 @@ function render(){
   else if(r.name === 'profile' && !isWeb()){ html = vProfile(); tab = 'profile'; }
   else html = vHome();
   if(r.name === 'news' && !isWeb()) state.lastSeenNews = Date.now();
-  aggiorna($('#app'), `<div class="screen" id="screen">${html}</div>${showTab ? tabbar(tab) : ''}`);
+  // Senza rete si guarda una COPIA. Va detto sempre e in cima, non una volta
+  // sola: chi apre l'app in metropolitana deve sapere che i voti degli altri
+  // potrebbero essere gia' cambiati. Una copia scambiata per lo stato vero e'
+  // esattamente il tipo di schermo che mente.
+  const avviso = state.senzaRete
+    ? `<div class="pad" style="padding-top:10px"><div class="card" style="background:var(--fill);text-align:center;padding:10px 12px">
+         <div class="s">${t('Senza rete: stai guardando una copia')}</div>
+         <div class="s" style="opacity:.7">${state.copiaDel ? t('Aggiornata {quando}', { quando: new Date(state.copiaDel).toLocaleString(LINGUA) }) : ''}</div>
+       </div></div>`
+    : '';
+  aggiorna($('#app'), `<div class="screen" id="screen">${avviso}${html}</div>${showTab ? tabbar(tab) : ''}`);
   if(!stessaRotta) $('#app').querySelectorAll('.view').forEach(v => v.classList.add('entra'));
   $('#screen').scrollTop = keep; state.lastRoute = location.hash; renderDevbar();
   // giaEntrato() legge una marcatura lasciata da live.js: senza, questo render
@@ -3694,6 +3747,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2000%3A02"></script>
+<script type="module" src="./live.js?v=27%2F08%2000%3A27"></script>
 </body>
 </html>

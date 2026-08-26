@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=27%2F08%2000%3A02';
+} from './map.js?v=27%2F08%2000%3A27';
 
 let sb = null;
 
@@ -369,7 +369,47 @@ export async function loadState() {
     });
   }
 
-  return { me: actor.id, people, groups, plans };
+  const stato = { me: actor.id, people, groups, plans };
+  salvaCopia(stato);
+  return stato;
+}
+
+/* ================= i dati restano sul telefono ================= */
+
+// Senza rete l'app mostrava lo schermo d'errore e basta. Ma i piani sono già
+// stati letti almeno una volta: tenerne una copia significa poter guardare
+// dove si va a cena mentre si è in metropolitana.
+//
+// È una COPIA PER LEGGERE, non un archivio: al primo caricamento riuscito
+// viene sostituita. Non si scrive mai da qui — le scritture hanno bisogno del
+// server, e fingere che siano andate a buon fine sarebbe la peggiore delle
+// bugie: uno crede di aver votato e non ha votato.
+const COPIA = 'kimari_copia';
+
+function salvaCopia(stato) {
+  try {
+    localStorage.setItem(COPIA, JSON.stringify({ quando: Date.now(), stato }));
+  } catch {
+    // Memoria piena: pazienza. Perdere la copia non deve impedire di usare
+    // l'app quando la rete c'è.
+  }
+}
+
+// `undefined` se non c'è niente, così chi chiama distingue "nessuna copia" da
+// "una copia vuota" — che sono due schermate diverse.
+export function copiaLocale() {
+  try {
+    const c = JSON.parse(localStorage.getItem(COPIA) || 'null');
+    if (!c || !c.stato) return undefined;
+    // Gli URL firmati delle immagini scadono dopo un'ora: dopo non
+    // funzionerebbero, e mostrare riquadri rotti è peggio delle iniziali.
+    for (const p of Object.values(c.stato.people || {})) p.avatar = null;
+    return { ...c.stato, daCopia: true, quando: c.quando };
+  } catch { return undefined; }
+}
+
+export function scordaCopia() {
+  try { localStorage.removeItem(COPIA); } catch { /* niente */ }
 }
 
 /* ====================== portare via i propri dati ====================== */

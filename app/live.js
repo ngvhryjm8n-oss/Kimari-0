@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=27%2F08%2000%3A02';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2000%3A02';
+import * as data from './data.js?v=27%2F08%2000%3A27';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2000%3A27';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '27/08 00:02';
+export const VERSIONE = '27/08 00:27';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -956,6 +956,8 @@ export async function assicuraToken(K) {
 
 export async function reload(K) {
   applyState(K.state, await data.loadState());
+  K.state.caricando = false;
+  K.state.senzaRete = false;
   // Lo stato dell'interruttore vive nel BROWSER, non nel database: la stessa
   // persona puo' averle accese sul telefono e spente sul tablet.
   try { K.state.pushDispositivo = await data.pushAttive(); } catch { /* niente */ }
@@ -1304,6 +1306,28 @@ export async function boot() {
     }
   } catch (e) {
     console.error('boot', e);
+
+    // Senza rete c'e' spesso una copia dell'ultima lettura riuscita. Mostrarla
+    // e' molto meglio di uno schermo d'errore: in metropolitana uno vuole solo
+    // sapere dove si va a cena. Ma va detto CHIARAMENTE che e' una copia, se
+    // no si crede di vedere l'ultimo stato e magari qualcuno ha gia' cambiato
+    // il posto.
+    const copia = data.copiaLocale();
+    if (copia && !navigator.onLine) {
+      applyState(K.state, copia);
+      K.state.caricando = false;
+      K.state.senzaRete = true;
+      K.state.copiaDel = copia.quando;
+      disegna(K);
+      wire(K);
+      document.body.dataset.kimari = 'copia';
+      document.body.dataset.versione = VERSIONE;
+      // Quando la rete torna si riprova da sola: senza, uno resta sulla copia
+      // senza capire perche' i voti degli altri non arrivano.
+      window.addEventListener('online', () => location.reload(), { once: true });
+      return;
+    }
+
     document.body.dataset.kimari = 'errore';
     schermoNonCollegato(K, e);
   }

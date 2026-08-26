@@ -20,9 +20,13 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HTML = readFileSync(join(root, 'app', 'index.html'), 'utf8');
 
-const avvia = (marcatura) => new Promise(resolve => {
+// `conDati`: chiede la modalita' demo. Dal 27/8 l'app NON parte piu' coi dati
+// finti — mostra lo scheletro di caricamento finche' non arrivano i veri. Le
+// prove che hanno bisogno di qualcosa da disegnare devono chiederlo, e questo
+// e' un bene: rende esplicito quali provano il rendering e quali no.
+const avvia = (marcatura, conDati = false) => new Promise(resolve => {
   const dom = new JSDOM(HTML, {
-    url: 'https://esempio.test/Kimari-0/app/',
+    url: 'https://esempio.test/Kimari-0/app/' + (conDati ? '?demo=1' : ''),
     runScripts: 'dangerously',
     pretendToBeVisual: true,
     beforeParse(w) { if (marcatura) w.localStorage.setItem('kimari_profilo', '1'); }
@@ -138,7 +142,7 @@ await test('ridisegnare non ricostruisce quello che non cambia', async () => {
   //
   // Qui si prova la cosa che conta davvero: gli STESSI nodi restano vivi.
   // Un'immagine che sopravvive non lampeggia.
-  const dom = await avvia(true);
+  const dom = await avvia(true, true);   // servono immagini da disegnare
   const D = dom.window.document;
   const W = dom.window;
 
@@ -312,7 +316,7 @@ for (const lingua of ['en', 'de', 'ja']) {
   await test('i messaggi da condividere parlano ' + lingua, async () => {
     const dom = await new Promise(resolve => {
       const d = new JSDOM(HTML, {
-        url: 'https://esempio.test/Kimari-0/app/',
+        url: 'https://esempio.test/Kimari-0/app/?demo=1',   // serve un gruppo vero
         runScripts: 'dangerously', pretendToBeVisual: true,
         beforeParse(w) {
           Object.defineProperty(w.navigator, 'languages', { value: [lingua + '-XX', lingua] });
@@ -434,6 +438,36 @@ await test('esportare i propri dati funziona davvero', () => {
   const policy = readFileSync(join(root, 'PRIVACY.md'), 'utf8');
   assert.match(policy, /leggibile da una macchina/,
     'se la policy non lo promette piu, questa prova va ripensata, non cancellata');
+});
+
+await test('senza dati veri non si inventa niente', async () => {
+  // Vincenzo: "leva Marco e i dati finti, metti l effetto di caricamento".
+  // Aveva ragione oltre l estetica: quei piani inventati erano la radice di
+  // tre difetti diversi trovati il 26/8. Da uno di essi si poteva votare,
+  // condividere un link e confermare cose che non esistono.
+  const dom = await avvia(true);          // SENZA ?demo=1: l app vera
+  const D = dom.window.document;
+  const K = dom.window.__kimari;
+
+  assert.equal(Object.keys(K.state.plans).length, 0, 'sono comparsi piani dal nulla');
+  assert.equal(Object.keys(K.state.people).length, 0, 'sono comparse persone dal nulla');
+  const testo = D.getElementById('app').textContent;
+  assert.ok(!/Marco|Sara|Cena di famiglia|Torneo di padel/.test(testo),
+    'i dati finti sono ancora a schermo: ' + testo.slice(0, 80));
+
+  // E al loro posto? Non "non hai niente" — quello sarebbe un altra bugia,
+  // perche non lo sappiamo ancora. Lo scheletro.
+  assert.ok(D.querySelector('.osso'),
+    'senza scheletro resta uno schermo vuoto, che si legge come "non hai piani"');
+});
+
+await test('con ?demo=1 i dati finti tornano', async () => {
+  // Serve a mostrare il prototipo senza database. Senza questa prova, la
+  // precedente si potrebbe "superare" cancellando seed() — e si perderebbe
+  // l unico modo di far vedere l app a qualcuno senza connetterla.
+  const dom = await avvia(true, true);
+  assert.ok(Object.keys(dom.window.__kimari.state.plans).length > 0,
+    'in modalita demo i piani di esempio devono esserci');
 });
 });
 

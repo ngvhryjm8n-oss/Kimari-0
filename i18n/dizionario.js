@@ -699,6 +699,18 @@ export const DIZIONARIO = {
 
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
+
+  /* Senza rete si guarda una copia. Va detto: una copia scambiata per lo
+     stato vero è esattamente il tipo di schermo che mente — qualcuno potrebbe
+     aver già cambiato il posto e tu staresti andando in quello vecchio. */
+  'Senza rete: stai guardando una copia': {
+    en: 'No connection — you’re looking at a copy',
+    es: 'Sin conexión: estás viendo una copia',
+    de: 'Keine Verbindung — du siehst eine Kopie',
+    ja: 'オフラインです。表示しているのは保存された内容です'
+  },
+  'Aggiornata {quando}': { en: 'Updated {quando}', es: 'Actualizada {quando}',
+                           de: 'Stand {quando}', ja: '{quando} 時点' },
   'Non ancora acquistabile: arriva con la versione negli store.': {
     en: 'Not on sale yet — it arrives with the version in the stores.',
     es: 'Todavía no está a la venta: llega con la versión de las tiendas.',
