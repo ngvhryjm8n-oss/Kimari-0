@@ -16,7 +16,7 @@ const test = (nome, fn) => {
   catch (e) { failed++; console.log('  FAIL ' + nome + '\n       ' + e.message); }
 };
 
-console.log('\ndizionario — cinque lingue\n');
+console.log('\ndizionario — sei lingue\n');
 
 test('la lingua si prende da quelle del dispositivo', () => {
   assert.equal(scegliLingua(['de-DE', 'en']), 'de');
@@ -73,7 +73,7 @@ test('nessuna voce lascia un segnaposto senza corrispondenza', () => {
   for (const [it, v] of Object.entries(DIZIONARIO)) {
     const attesi = [...it.matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
     if (!attesi.length) continue;
-    for (const l of ['en', 'es', 'de', 'ja']) {
+    for (const l of ['en', 'es', 'de', 'ja', 'fr']) {
       const dati = [...String(v[l] || '').matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
       if (dati.join() !== attesi.join()) rotte.push(`${l}: ${it}`);
     }
@@ -93,7 +93,7 @@ test('apostrofo dritto e tipografico trovano la stessa voce', () => {
   assert.equal(en('Serve il link d’invito'), 'You need the invite link');
 });
 
-test('ogni voce ha tutte e quattro le lingue', () => {
+test('ogni voce ha tutte e cinque le lingue', () => {
   const buchi = [];
   for (const [it, v] of Object.entries(DIZIONARIO)) {
     for (const l of Object.keys(LINGUE)) {
@@ -151,7 +151,7 @@ test('nessuna traduzione è rimasta uguale all\'italiano per sbaglio', () => {
   const sospette = [];
   for (const [it, v] of Object.entries(DIZIONARIO)) {
     if (NON_SI_TRADUCONO.has(it)) continue;
-    for (const l of ['en', 'es', 'de', 'ja']) {
+    for (const l of ['en', 'es', 'de', 'ja', 'fr']) {
       // Alcune coincidono davvero fra lingue vicine; il giapponese mai.
       if (v[l] === it && l === 'ja') sospette.push(`${l}: ${it}`);
     }
@@ -168,7 +168,7 @@ test('il giapponese non contiene lettere accentate italiane', () => {
 });
 
 test('quanteMancano conta i buchi', () => {
-  for (const l of ['en', 'es', 'de', 'ja']) {
+  for (const l of ['en', 'es', 'de', 'ja', 'fr']) {
     assert.equal(quanteMancano(l), 0, l + ' ha ancora buchi');
   }
 });

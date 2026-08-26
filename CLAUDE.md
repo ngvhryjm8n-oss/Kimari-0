@@ -11,7 +11,7 @@ budget ~0, prodotto in italiano.
 **[STATO.md](STATO.md)** — dove siamo davvero al 27/8/2026: cosa funziona, cosa
 manca, e le otto cose imparate a caro prezzo. Questo file qui sotto descrive V0
 ed e' in parte superato: il dominio adesso e' **kimariapp.com**, le migrazioni
-sono applicate fino alla **0021**, e l'app parla cinque lingue.
+sono applicate fino alla **0021**, e l'app parla sei lingue.
 
 Per pubblicare: `npm run pubblica-main "messaggio"`. Mai a mano — copiare i
 file a mano ha gia' mandato online un index.html nuovo con un live.js vecchio.
@@ -66,7 +66,7 @@ file a mano ha gia' mandato online un index.html nuovo con un live.js vecchio.
    L'APP nativa (Capacitor, push, login Google nativo, deep link) è un progetto
    separato sullo stesso backend, e lì il build step c'è. Vedi PIANO_V1.md.
 2. I link esistenti (?t=...) NON devono mai rompersi.
-3. UI in CINQUE LINGUE — italiano, inglese, spagnolo, tedesco, giapponese —
+3. UI in SEI LINGUE — italiano, inglese, spagnolo, tedesco, giapponese, francese —
    scelte da navigator.language, senza selettore: dentro Capacitor è la lingua
    del telefono. Le stringhe stanno in i18n/dizionario.js, con l'ITALIANO come
    chiave: t('Crea un piano'). Se una traduzione manca esce l'italiano, mai una

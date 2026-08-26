@@ -7,7 +7,7 @@
 // modulo lo usa l'app — viene iniettato dentro index.html fra due marcatori.
 // La sorgente resta i18n/dizionario.js: si modifica quello e si rigenera.
 //
-// Sul peso: cinque lingue aggiungono testo, ma è testo. GitHub Pages serve
+// Sul peso: sei lingue aggiungono testo, ma è testo. GitHub Pages serve
 // compresso e il testo si comprime di brutto — quello che a schermo sono
 // decine di kB, in rete sono pochi.
 import { readFileSync, writeFileSync } from 'node:fs';

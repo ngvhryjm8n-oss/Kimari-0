@@ -18,7 +18,7 @@ import { JSDOM } from 'jsdom';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const HTML = readFileSync(join(root, 'app', 'index.html'), 'utf8');
 
-// Parole che in italiano compaiono ovunque e nelle altre quattro lingue mai.
+// Parole che in italiano compaiono ovunque e nelle altre cinque lingue mai.
 // Corte apposta: se compaiono, il testo intorno è italiano.
 const SPIE = /\b(che|chi|con|dove|quando|della|degli|per|non|una|gli|tuoi|sono|questo|questa|senza|ancora|oppure|nessun|nessuna|tutti|piano|piani|gruppo|gruppi|posto|voto|voti|amici|spesa|spese|nome|link|indietro|annulla|salva|invia|scegli|conferma|elimina|modifica|aggiungi|rimuovi|chiudi|apri|entra|vota)\b/i;
 
@@ -87,7 +87,7 @@ const testoIT = new Set(parole(
   (domIT.window.document.getElementById('app')?.textContent || '') + '\n' +
   (domIT.window.document.getElementById('sheet-root')?.textContent || '')));
 
-for (const lingua of ['en', 'es', 'de', 'ja']) {
+for (const lingua of ['en', 'es', 'de', 'ja', 'fr']) {
   const dom = await rendi(lingua);
   const D = dom.window.document;
 

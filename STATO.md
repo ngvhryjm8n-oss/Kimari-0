@@ -8,7 +8,7 @@ contano più del codice, perché il codice si rilegge e le ragioni no.
 
 ## In una riga
 
-L'app funziona, gira su **kimariapp.com**, parla cinque lingue, e **nessuno
+L'app funziona, gira su **kimariapp.com**, parla sei lingue, e **nessuno
 l'ha ancora usata per organizzare qualcosa di vero**. Quest'ultima è la cosa
 che manca di più.
 
@@ -36,7 +36,7 @@ Provato **contro la produzione**, non solo con le prove:
 creare un piano · invitare con link · votare da ospite senza installare ·
 confermare · annullare · gruppi e inviti · uscire · eliminare · spese e conti ·
 proposte di modifica · immagine del profilo · foto dei posti · esportare i
-propri dati · cinque lingue ovunque, messaggi WhatsApp compresi.
+propri dati · sei lingue ovunque, messaggi WhatsApp compresi.
 
 **40 azioni su 43** salvano sul database. Le tre che restano:
 - `newPlace` — falso allarme, è una bozza che poi viene salvata davvero

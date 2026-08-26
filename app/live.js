@@ -987,11 +987,12 @@ function disegna(K) {
     try { giaProvato = sessionStorage.getItem(SEGNO) === '1'; } catch { /* niente */ }
     if (giaProvato) {
       // Ricaricare non è servito: meglio dirlo che riprovare all'infinito.
-      K.toast && K.toast('La schermata non si aggiorna: ' + (err.message || err));
+      K.toast && K.toast(K.t ? K.t('La schermata non si aggiorna: {errore}', { errore: err.message || err })
+                             : 'La schermata non si aggiorna: ' + (err.message || err));
       return;
     }
     try { sessionStorage.setItem(SEGNO, '1'); } catch { /* niente */ }
-    K.toast && K.toast('Salvato. Ricarico la schermata…');
+    K.toast && K.toast(K.t ? K.t('Salvato. Ricarico la schermata…') : 'Salvato. Ricarico la schermata…');
     setTimeout(() => location.reload(), 600);
   }
 }
@@ -1035,7 +1036,7 @@ export async function mostraInvitoGruppo(K) {
   try {
     const prev = await data.previewGroupInvite(token);
     if (!prev || !prev.ok) {
-      K.toast && K.toast('Questo invito non è più valido');
+      K.toast && K.toast(K.t ? K.t('Questo invito non è più valido') : 'Questo invito non è più valido');
       return false;
     }
     // Già dentro: non si chiede niente, si va e basta.
@@ -1243,7 +1244,8 @@ export async function caricaFile(K, files, tipo, target) {
     if (fatti) e.message = fatti + ' di ' + files.length + ' caricate. ' + e.message;
     throw e;
   }
-  if (K.toast) K.toast(fatti === 1 ? 'Caricata' : fatti + ' caricate');
+  if (K.toast) K.toast(fatti === 1 ? (K.t ? K.t('Caricata') : 'Caricata')
+                                   : (K.t ? K.t('{n} caricate', { n: fatti }) : fatti + ' caricate'));
 }
 
 export async function boot() {
@@ -1251,7 +1253,8 @@ export async function boot() {
   if (!K) { console.error('live.js caricato prima del prototipo'); return; }
 
   if (!window.supabase || !window.supabase.createClient) {
-    K.toast && K.toast('Libreria Supabase non caricata: resto in modalità demo');
+    K.toast && K.toast(K.t ? K.t('Libreria Supabase non caricata: resto in modalità demo')
+                           : 'Libreria Supabase non caricata: resto in modalità demo');
     return;
   }
 
@@ -1286,7 +1289,8 @@ export async function boot() {
     if (K.state.me === 'guest') {
       const s = await data.currentSession();
       if (s && data.haIdentitaVera(s.user)) {
-        K.toast && K.toast('Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.');
+        K.toast && K.toast(K.t ? K.t('Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.')
+                               : 'Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.');
         console.error('sessione con identità vera ma nessun actor', s.user.id);
       } else if (K.openSheet && K.sheetWelcome) {
         K.state.welcomeShown = true;
