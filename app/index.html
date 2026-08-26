@@ -18,7 +18,7 @@
     --sep:rgba(60,60,67,.29); --fill:#E9E9EB; --fill2:#F2F2F7; --bar:rgba(249,249,249,.94);
     --blue:#007AFF; --blue-bg:#E8F1FF; --green:#34C759; --green-bg:#E4F8EA; --green-fg:#1B7B3A;
     --wa:#25D366; --wa-bubble:#DCF8C6; --red:#FF3B30; --amber:#FF9500; --amber-bg:#FFF2DF; --amber-fg:#A85B00;
-    --radius:12px; --nav-h:48px; --dev-h:34px;
+    --radius:12px; --nav-h:48px; --dev-h:0px;   /* la barra demo non c'e': niente spazio riservato */
     --font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --rounded:ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
@@ -43,15 +43,19 @@
   /* ---------- barra prototipo ---------- */
   #devbar{position:fixed; top:0; left:0; right:0; z-index:60; height:calc(var(--dev-h) + env(safe-area-inset-top)); padding:env(safe-area-inset-top) 12px 0; display:flex; align-items:center; gap:10px; background:#1C1C1E; color:#fff; font-size:12px; font-weight:600}
   /* La barra "Prototipo" e' un pannello da demo: cambia identita' in persone
-     finte, crea ospiti finti e riempie l'app di dati inventati. Nell'app vera
-     non deve esistere. Vincenzo l'ha trovata premendo Reset e ritrovandosi i
-     piani di un Marco che non esiste.
-     live.js mette data-kimari="live" appena il database risponde: fino ad
-     allora la barra resta, perche' li' l'app E' una demo. */
-  body[data-kimari="live"] #devbar{display:none}
-  body[data-kimari="live"]{--dev-h:0px}
-  body[data-kimari="errore"] #devbar{display:none}
-  body[data-kimari="errore"]{--dev-h:0px}
+     finte, crea ospiti finti e riempie l'app di dati inventati. Vincenzo l'ha
+     trovata premendo Reset e ritrovandosi i piani di un Marco che non esiste.
+
+     Nascosta di default, non "nascosta appena il database risponde": quella
+     versione la faceva comparire per un secondo a ogni apertura, perche' il
+     database ci mette un attimo. Un pannello di sviluppo che lampeggia
+     all'avvio di un'app vera e' un difetto, non un dettaglio.
+
+     Torna con ?demo=1, che e' l'unico posto dove serve davvero: far vedere il
+     prototipo senza database. */
+  #devbar{display:none}
+  body[data-demo="1"] #devbar{display:flex}
+  body[data-demo="1"]{--dev-h:34px}
   #devbar .lab{opacity:.6}
   #devbar select{background:#2C2C2E; color:#fff; border:0; border-radius:8px; padding:4px 8px; font-size:12px; font-weight:600; -webkit-appearance:none; appearance:none; max-width:170px}
   #devbar .spacer{flex:1}
@@ -317,6 +321,15 @@
 </style>
 </head>
 <body>
+<script>
+  // Prima di qualsiasi altra cosa: se non c'è ?demo=1 la barra di sviluppo non
+  // esiste. Sta qui e non più in basso perché tutto ciò che decide se una cosa
+  // si vede deve essere già deciso quando il browser dipinge la prima volta —
+  // altrimenti lampeggia, che è il difetto che si sta togliendo.
+  try {
+    if (new URLSearchParams(location.search).has('demo')) document.body.dataset.demo = '1';
+  } catch (_) { /* un URL storto non deve impedire l'avvio */ }
+</script>
 <div id="devbar">
   <span>🧪 Prototipo</span>
   <span class="lab">Sei</span>
@@ -2275,6 +2288,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2015%3A32"></script>
+<script type="module" src="./live.js?v=26%2F08%2015%3A36"></script>
 </body>
 </html>

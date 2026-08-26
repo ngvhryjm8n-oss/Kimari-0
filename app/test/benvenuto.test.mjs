@@ -194,6 +194,43 @@ await test('ridisegnare svuota una casella quando deve', async () => {
   b.querySelector('input').value = 'scritto a mano';
   W.__kimari.aggiorna(b, '<input value="">');
   assert.equal(b.querySelector('input').value, '', 'la casella non si e svuotata');
+
+await test('la barra di sviluppo non compare, nemmeno per un istante', async () => {
+  // Compariva per un secondo a ogni apertura: era nascosta solo quando il
+  // database rispondeva, e il database ci mette un attimo. Un pannello di
+  // sviluppo che lampeggia all'avvio di un'app vera e' un difetto.
+  //
+  // Da quella barra si cambia identita' in persone finte e si azzera tutto
+  // caricando dati inventati — e' cosi' che Vincenzo si e' ritrovato i piani
+  // di un Marco che non esiste.
+  const dom = await avvia(true);
+  const D = dom.window.document;
+  const barra = D.getElementById('devbar');
+  assert.ok(barra, 'la barra deve esistere ancora: serve in modalita' + "'" + ' demo');
+  assert.notEqual(D.body.dataset.demo, '1', 'senza ?demo non va accesa');
+
+  // Non basta che sia nascosta DOPO: la regola deve stare nel CSS, cosi' vale
+  // gia' alla prima pittura. Se dipendesse da JavaScript, lampeggerebbe.
+  const css = HTML.slice(0, HTML.indexOf('</style>'));
+  assert.match(css, /#devbar\{display:none\}/,
+    'la barra deve essere spenta dal CSS, non da JavaScript: se no lampeggia');
+  assert.match(css, /body\[data-demo="1"\] #devbar\{display:flex\}/,
+    'e deve poter tornare con ?demo=1');
+});
+
+await test('con ?demo=1 la barra torna', async () => {
+  // Senza questa prova la correzione qui sopra si potrebbe "superare"
+  // cancellando la barra, e si perderebbe il modo di mostrare il prototipo.
+  const dom = await new Promise(resolve => {
+    const d = new JSDOM(HTML, {
+      url: 'https://esempio.test/Kimari-0/app/?demo=1',
+      runScripts: 'dangerously', pretendToBeVisual: true,
+      beforeParse(w) { w.localStorage.setItem('kimari_profilo', '1'); }
+    });
+    setTimeout(() => resolve(d), 300);
+  });
+  assert.equal(dom.window.document.body.dataset.demo, '1');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
