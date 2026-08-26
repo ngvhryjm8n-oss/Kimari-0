@@ -993,6 +993,223 @@ const DIZIONARIO = {
     ja: 'パスワードも連絡先も不要です。メールは自分の予定を見つけ直すためだけに使います。'
   },
 
+  /* ===================================== app: le etichette dell'interfaccia
+     Sono le parole brevi — bottoni, titoletti, segnaposto. Erano rimaste fuori
+     da tutti i controlli perché il rilevatore cercava parole italiane comuni
+     ("che", "con", "dove") e "Nuovo gruppo" non ne contiene nessuna. Sono
+     metà dell'interfaccia: senza queste l'app risultava tradotta e a schermo
+     era mezza italiana. */
+
+  /* -------------------------------------------------------- azioni comuni */
+  'Aggiungi': { en: 'Add', es: 'Añadir', de: 'Hinzufügen', ja: '追加' },
+  'aggiungi': { en: 'add', es: 'añadir', de: 'hinzufügen', ja: '追加' },
+  'Rimuovi': { en: 'Remove', es: 'Quitar', de: 'Entfernen', ja: '削除' },
+  'Togli': { en: 'Take off', es: 'Quitar', de: 'Wegnehmen', ja: '外す' },
+  'Elimina': { en: 'Delete', es: 'Eliminar', de: 'Löschen', ja: '削除' },
+  'Modifica': { en: 'Edit', es: 'Editar', de: 'Bearbeiten', ja: '編集' },
+  'Annulla': { en: 'Cancel', es: 'Cancelar', de: 'Abbrechen', ja: 'キャンセル' },
+  'Chiudi': { en: 'Close', es: 'Cerrar', de: 'Schließen', ja: '閉じる' },
+  'Indietro': { en: 'Back', es: 'Atrás', de: 'Zurück', ja: '戻る' },
+  'Scegli': { en: 'Choose', es: 'Elegir', de: 'Wählen', ja: '選ぶ' },
+  'Condividi': { en: 'Share', es: 'Compartir', de: 'Teilen', ja: '共有' },
+  'Collega': { en: 'Link', es: 'Vincular', de: 'Verknüpfen', ja: '連携' },
+  'Applica ora': { en: 'Apply now', es: 'Aplicar ahora', de: 'Jetzt übernehmen', ja: '今すぐ反映' },
+  'Rifiuta': { en: 'Turn down', es: 'Rechazar', de: 'Ablehnen', ja: '却下' },
+  'Proponi': { en: 'Suggest', es: 'Proponer', de: 'Vorschlagen', ja: '提案' },
+  'Sollecita': { en: 'Nudge', es: 'Recordar', de: 'Anstupsen', ja: 'そっと催促' },
+  'Silenzia': { en: 'Mute', es: 'Silenciar', de: 'Stumm', ja: '通知オフ' },
+  'Avvisami': { en: 'Let me know', es: 'Avísame', de: 'Sag mir Bescheid', ja: '知らせて' },
+  'Passa ★': { en: 'Make it ★', es: 'Pasar a ★', de: 'Zu ★ machen', ja: '★ にする' },
+
+  /* ------------------------------------------------ navigazione e sezioni */
+  'Gruppi': { en: 'Groups', es: 'Grupos', de: 'Gruppen', ja: 'グループ' },
+  'gruppi': { en: 'groups', es: 'grupos', de: 'Gruppen', ja: 'グループ' },
+  'Novità': { en: 'News', es: 'Novedades', de: 'Neues', ja: '新着' },
+  'Persone': { en: 'People', es: 'Personas', de: 'Leute', ja: 'メンバー' },
+  'Account': { en: 'Account', es: 'Cuenta', de: 'Konto', ja: 'アカウント' },
+  'Opzioni': { en: 'Options', es: 'Opciones', de: 'Optionen', ja: '設定' },
+  'Commenti': { en: 'Comments', es: 'Comentarios', de: 'Kommentare', ja: 'コメント' },
+  'Spese': { en: 'Expenses', es: 'Gastos', de: 'Ausgaben', ja: '費用' },
+  'Saldi': { en: 'Balances', es: 'Saldos', de: 'Salden', ja: '精算' },
+  'Storico': { en: 'History', es: 'Historial', de: 'Verlauf', ja: '履歴' },
+  'Allegati': { en: 'Attachments', es: 'Adjuntos', de: 'Anhänge', ja: '添付' },
+  'Allegati e foto': { en: 'Attachments and photos', es: 'Adjuntos y fotos',
+                       de: 'Anhänge und Fotos', ja: '添付と写真' },
+  'Contenuti': { en: 'Content', es: 'Contenidos', de: 'Inhalte', ja: 'コンテンツ' },
+  'I miei posti': { en: 'My places', es: 'Mis sitios', de: 'Meine Orte', ja: '自分の場所' },
+  'Calendario': { en: 'Calendar', es: 'Calendario', de: 'Kalender', ja: 'カレンダー' },
+  'Calendario di sistema': { en: 'System calendar', es: 'Calendario del sistema',
+                             de: 'Systemkalender', ja: '端末のカレンダー' },
+  'Mese precedente': { en: 'Previous month', es: 'Mes anterior',
+                       de: 'Voriger Monat', ja: '前の月' },
+  'Mese successivo': { en: 'Next month', es: 'Mes siguiente',
+                       de: 'Nächster Monat', ja: '次の月' },
+  'Niente in programma': { en: 'Nothing on', es: 'Nada previsto',
+                           de: 'Nichts geplant', ja: '予定はありません' },
+  'organizzati': { en: 'organised', es: 'organizados', de: 'organisiert', ja: '企画済み' },
+
+  /* ------------------------------------------------- creazione di un piano */
+  'Cosa organizzi?': { en: 'What are you organising?', es: '¿Qué organizas?',
+                       de: 'Was organisierst du?', ja: '何を企画しますか？' },
+  'Cena sabato': { en: 'Dinner on Saturday', es: 'Cena el sábado',
+                   de: 'Essen am Samstag', ja: '土曜の夕食' },
+  'Cambia emoji': { en: 'Change emoji', es: 'Cambiar emoji',
+                    de: 'Emoji ändern', ja: '絵文字を変える' },
+  'So già': { en: 'I already know', es: 'Ya lo sé', de: 'Weiß ich schon', ja: 'もう決まっている' },
+  'Decidiamo insieme': { en: 'Let’s decide together', es: 'Lo decidimos juntos',
+                         de: 'Entscheiden wir gemeinsam', ja: 'みんなで決める' },
+  'Inizio': { en: 'Start', es: 'Inicio', de: 'Beginn', ja: '開始' },
+  'Fine': { en: 'End', es: 'Fin', de: 'Ende', ja: '終了' },
+  '(facoltativa)': { en: '(optional)', es: '(opcional)', de: '(optional)', ja: '（任意）' },
+  'Titolo (facoltativo)': { en: 'Title (optional)', es: 'Título (opcional)',
+                            de: 'Titel (optional)', ja: 'タイトル（任意）' },
+  'Si ripete': { en: 'Repeats', es: 'Se repite', de: 'Wiederholt sich', ja: '繰り返し' },
+  'Quante volte': { en: 'How many times', es: 'Cuántas veces',
+                    de: 'Wie oft', ja: '回数' },
+  'Luogo': { en: 'Place', es: 'Sitio', de: 'Ort', ja: '場所' },
+  'Indirizzo': { en: 'Address', es: 'Dirección', de: 'Adresse', ja: '住所' },
+  'Indirizzo (facoltativo)': { en: 'Address (optional)', es: 'Dirección (opcional)',
+                               de: 'Adresse (optional)', ja: '住所（任意）' },
+  'nome, indirizzo, menu': { en: 'name, address, menu', es: 'nombre, dirección, menú',
+                             de: 'Name, Adresse, Karte', ja: '名前、住所、メニュー' },
+  'Pizza / Sushi / Carne': { en: 'Pizza / Sushi / Grill', es: 'Pizza / Sushi / Carne',
+                             de: 'Pizza / Sushi / Fleisch', ja: 'ピザ／寿司／焼肉' },
+  'Mare / Montagna / Città': { en: 'Seaside / Mountains / City',
+    es: 'Playa / Montaña / Ciudad', de: 'Meer / Berge / Stadt', ja: '海／山／街' },
+  'es. "Cosa portiamo?"': { en: 'e.g. “What shall we bring?”',
+    es: 'ej. «¿Qué llevamos?»', de: 'z.B. „Was bringen wir mit?“',
+    ja: '例：「何を持っていく？」' },
+  'Un\'opzione': { en: 'One option', es: 'Una opción', de: 'Eine Option', ja: '選択肢' },
+  'Scelta tra opzioni': { en: 'Pick between options', es: 'Elección entre opciones',
+                          de: 'Auswahl zwischen Optionen', ja: '候補から選ぶ' },
+  'Sì o No': { en: 'Yes or No', es: 'Sí o No', de: 'Ja oder Nein', ja: 'はい／いいえ' },
+  '👍 Sì': { en: '👍 Yes', es: '👍 Sí', de: '👍 Ja', ja: '👍 はい' },
+  '👎 No': { en: '👎 No', es: '👎 No', de: '👎 Nein', ja: '👎 いいえ' },
+  'Fra 2 giorni alle 18:00': { en: 'In 2 days at 18:00', es: 'Dentro de 2 días a las 18:00',
+                               de: 'In 2 Tagen um 18:00', ja: '2 日後の 18:00' },
+  'Massimo di persone': { en: 'Maximum number of people', es: 'Máximo de personas',
+                          de: 'Höchstzahl an Personen', ja: '人数の上限' },
+  'Aggiungi un nome': { en: 'Add a name', es: 'Añadir un nombre',
+                        de: 'Namen hinzufügen', ja: '名前を追加' },
+  '＋ Nuova': { en: '＋ New', es: '＋ Nueva', de: '＋ Neu', ja: '＋ 新規' },
+  '＋ Nuovo ospite (web)': { en: '＋ New guest (web)', es: '＋ Invitado nuevo (web)',
+                            de: '＋ Neuer Gast (Web)', ja: '＋ 新しいゲスト（ウェブ）' },
+  'Icona': { en: 'Icon', es: 'Icono', de: 'Symbol', ja: 'アイコン' },
+  'Colore': { en: 'Colour', es: 'Color', de: 'Farbe', ja: '色' },
+  'Icona, colore, nome, sezione': { en: 'Icon, colour, name, section',
+    es: 'Icono, color, nombre, sección', de: 'Symbol, Farbe, Name, Bereich',
+    ja: 'アイコン、色、名前、セクション' },
+
+  /* ------------------------------------------------- il piano, giorno per giorno */
+  'In decisione': { en: 'Being decided', es: 'En decisión',
+                    de: 'Wird entschieden', ja: '決定中' },
+  'Annullato': { en: 'Called off', es: 'Cancelado', de: 'Abgesagt', ja: '中止' },
+  'Kimari!': { en: 'Kimari!', es: '¡Kimari!', de: 'Kimari!', ja: 'Kimari！' },
+  'Ci sei?': { en: 'Are you in?', es: '¿Te apuntas?', de: 'Bist du dabei?', ja: '参加しますか？' },
+  'Le altre date': { en: 'The other dates', es: 'Las otras fechas',
+                     de: 'Die anderen Termine', ja: 'ほかの日程' },
+  'Orario': { en: 'Time', es: 'Hora', de: 'Uhrzeit', ja: '時刻' },
+  'Il link': { en: 'The link', es: 'El enlace', de: 'Der Link', ja: 'リンク' },
+  'Copia messaggio': { en: 'Copy the message', es: 'Copiar el mensaje',
+                       de: 'Nachricht kopieren', ja: 'メッセージをコピー' },
+  'Condividi su WhatsApp': { en: 'Share on WhatsApp', es: 'Compartir por WhatsApp',
+                             de: 'Auf WhatsApp teilen', ja: 'WhatsApp で共有' },
+  'Invita un amico su WhatsApp': { en: 'Invite a friend on WhatsApp',
+    es: 'Invitar a un amigo por WhatsApp', de: 'Freund über WhatsApp einladen',
+    ja: 'WhatsApp で友だちを誘う' },
+  'Revoca il link': { en: 'Revoke the link', es: 'Revocar el enlace',
+                      de: 'Link widerrufen', ja: 'リンクを無効にする' },
+  'Revoca il link d\'invito': { en: 'Revoke the invite link', es: 'Revocar el enlace de invitación',
+                                de: 'Einladungslink widerrufen', ja: '招待リンクを無効にする' },
+  'Apri in Mappe': { en: 'Open in Maps', es: 'Abrir en Mapas',
+                     de: 'In Karten öffnen', ja: 'マップで開く' },
+  'Apri la decisione': { en: 'Open the decision', es: 'Abrir la decisión',
+                         de: 'Entscheidung öffnen', ja: '決めごとを開く' },
+  'Arrivo in ritardo': { en: 'I’ll be late', es: 'Llego tarde',
+                         de: 'Ich komme später', ja: '遅れて行きます' },
+  'Imprevisti dell\'ultimo minuto': { en: 'Last-minute hitches',
+    es: 'Imprevistos de última hora', de: 'Was kurzfristig dazwischenkommt',
+    ja: '直前のトラブル' },
+  'Se salta': { en: 'If it falls through', es: 'Si se cae',
+                de: 'Wenn es platzt', ja: '中止になったら' },
+  'Un motivo, se vuoi': { en: 'A reason, if you like', es: 'Un motivo, si quieres',
+                          de: 'Ein Grund, wenn du magst', ja: '理由（任意）' },
+  'Perché': { en: 'Why', es: 'Por qué', de: 'Warum', ja: '理由' },
+  'Com\'è andata': { en: 'How it went', es: 'Qué tal fue',
+                     de: 'Wie es war', ja: 'どうだった' },
+  'Ho prenotato': { en: 'I’ve booked', es: 'He reservado',
+                    de: 'Ich habe reserviert', ja: '予約しました' },
+  'Proponi un cambio': { en: 'Suggest a change', es: 'Proponer un cambio',
+                         de: 'Änderung vorschlagen', ja: '変更を提案' },
+  'Proponi un\'altra opzione': { en: 'Suggest another option',
+    es: 'Proponer otra opción', de: 'Andere Option vorschlagen', ja: '別の候補を提案' },
+  'Ritira la proposta': { en: 'Withdraw the suggestion', es: 'Retirar la propuesta',
+                          de: 'Vorschlag zurückziehen', ja: '提案を取り下げる' },
+  'Ricevi il risultato': { en: 'Get the result', es: 'Recibe el resultado',
+                           de: 'Ergebnis bekommen', ja: '結果を受け取る' },
+  'Nota (es. chiedi il tavolo fuori)': { en: 'Note (e.g. ask for a table outside)',
+    es: 'Nota (ej. pide mesa fuera)', de: 'Notiz (z.B. nach einem Tisch draußen fragen)',
+    ja: 'メモ（例：外の席をお願い）' },
+
+  /* ------------------------------------------------------- soldi e allegati */
+  'Aggiungi spesa': { en: 'Add an expense', es: 'Añadir gasto',
+                      de: 'Ausgabe hinzufügen', ja: '費用を追加' },
+  'Importo': { en: 'Amount', es: 'Importe', de: 'Betrag', ja: '金額' },
+  'Ha pagato': { en: 'Paid by', es: 'Ha pagado', de: 'Bezahlt von', ja: '支払った人' },
+  'Diviso tra': { en: 'Split between', es: 'Dividido entre',
+                  de: 'Geteilt unter', ja: '分担する人' },
+  'Cosa (es. cena, benzina, casa)': { en: 'What for (e.g. dinner, petrol, the house)',
+    es: 'Concepto (ej. cena, gasolina, casa)', de: 'Wofür (z.B. Essen, Benzin, Haus)',
+    ja: '内容（例：夕食、ガソリン、宿）' },
+  'Aggiungi un link': { en: 'Add a link', es: 'Añadir un enlace',
+                        de: 'Link hinzufügen', ja: 'リンクを追加' },
+  '🔗 Link': { en: '🔗 Link', es: '🔗 Enlace', de: '🔗 Link', ja: '🔗 リンク' },
+  '📎 Allegato': { en: '📎 Attachment', es: '📎 Adjunto', de: '📎 Anhang', ja: '📎 添付' },
+  'https://…': { en: 'https://…', es: 'https://…', de: 'https://…', ja: 'https://…' },
+  'Copertina': { en: 'Cover', es: 'Portada', de: 'Titelbild', ja: 'カバー' },
+
+  /* -------------------------------------------------- profilo e impostazioni */
+  'Modifica profilo': { en: 'Edit profile', es: 'Editar perfil',
+                        de: 'Profil bearbeiten', ja: 'プロフィールを編集' },
+  'Lingua': { en: 'Language', es: 'Idioma', de: 'Sprache', ja: '言語' },
+  'Italiano': { en: 'Italian', es: 'Italiano', de: 'Italienisch', ja: 'イタリア語' },
+  'Notifiche push': { en: 'Push notifications', es: 'Notificaciones push',
+                      de: 'Push-Benachrichtigungen', ja: 'プッシュ通知' },
+  'Niente push, ma le novità restano': { en: 'No push, but the news stays',
+    es: 'Sin notificaciones, pero las novedades se quedan',
+    de: 'Kein Push, aber das Neue bleibt', ja: 'プッシュは届きませんが、新着には残ります' },
+  'Esporta i miei dati': { en: 'Export my data', es: 'Exportar mis datos',
+                           de: 'Meine Daten exportieren', ja: 'データを書き出す' },
+  'Elimina account': { en: 'Delete account', es: 'Eliminar cuenta',
+                       de: 'Konto löschen', ja: 'アカウントを削除' },
+  'Cancellazione': { en: 'Deletion', es: 'Eliminación', de: 'Löschung', ja: '削除について' },
+  'Cosa raccogliamo': { en: 'What we collect', es: 'Qué recogemos',
+                        de: 'Was wir erheben', ja: '取得する情報' },
+  'Gruppi privati': { en: 'Private groups', es: 'Grupos privados',
+                      de: 'Private Gruppen', ja: '非公開グループ' },
+  'Termini, privacy ed età': { en: 'Terms, privacy and age',
+    es: 'Términos, privacidad y edad', de: 'Bedingungen, Datenschutz und Alter',
+    ja: '規約・プライバシー・年齢' },
+  'Termini, privacy ed età minima': { en: 'Terms, privacy and minimum age',
+    es: 'Términos, privacidad y edad mínima', de: 'Bedingungen, Datenschutz und Mindestalter',
+    ja: '規約・プライバシー・年齢制限' },
+  'Età minima 16 anni.': { en: 'Minimum age 16.', es: 'Edad mínima 16 años.',
+                           de: 'Mindestalter 16 Jahre.', ja: '16 歳以上が対象です。' },
+  'In breve, il testo vero lo scrive un avvocato.': {
+    en: 'The short version — the real text is written by a lawyer.',
+    es: 'En resumen; el texto de verdad lo escribe un abogado.',
+    de: 'Kurz gefasst — den echten Text schreibt ein Anwalt.',
+    ja: '要点だけです。正式な文面は弁護士が作成します。'
+  },
+  'Kimari Unlimited': { en: 'Kimari Unlimited', es: 'Kimari Unlimited',
+                        de: 'Kimari Unlimited', ja: 'Kimari Unlimited' },
+  'Unlimited': { en: 'Unlimited', es: 'Unlimited', de: 'Unlimited', ja: 'Unlimited' },
+  'Pass evento singolo': { en: 'Single-event pass', es: 'Pase de evento único',
+                           de: 'Pass für ein einzelnes Event', ja: 'イベント単発パス' },
+  'Prototipo': { en: 'Prototype', es: 'Prototipo', de: 'Prototyp', ja: 'プロトタイプ' },
+  'Kimari · prototipo app': { en: 'Kimari · app prototype', es: 'Kimari · prototipo de app',
+                              de: 'Kimari · App-Prototyp', ja: 'Kimari · アプリのプロトタイプ' },
+
   /* ------------------------------------------------- app: gruppi e sezioni */
   'Nome del gruppo': { en: 'Group name', es: 'Nombre del grupo',
                        de: 'Name der Gruppe', ja: 'グループ名' },
@@ -1385,11 +1602,23 @@ const addMonths = (d, n) => { const x = new Date(d); x.setMonth(x.getMonth() + n
 const dayDiff = (a, b) => Math.round((dayStart(b) - dayStart(a)) / 864e5);
 function nextDow(dow, h, m = 0){ const d = new Date(); d.setSeconds(0,0); const diff = ((dow - d.getDay() + 7) % 7) || 7; d.setDate(d.getDate() + diff); d.setHours(h, m, 0, 0); return d; }
 const at = (days, h = 0, m = 0) => { const d = dayStart(new Date()); d.setDate(d.getDate() + days); d.setHours(h, m, 0, 0); return toLocalInput(d); };
-const fDay = new Intl.DateTimeFormat('it-IT', { weekday:'short', day:'numeric', month:'short' });
-const fTime = new Intl.DateTimeFormat('it-IT', { hour:'2-digit', minute:'2-digit' });
-const fFull = new Intl.DateTimeFormat('it-IT', { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
-const fMonth = new Intl.DateTimeFormat('it-IT', { month:'long', year:'numeric' });
-const fWeekday = new Intl.DateTimeFormat('it-IT', { weekday:'long' });
+// LINGUA, non 'it-IT'. Regola 4: le date le fa il dispositivo, mai stringhe a
+// mano — e "il dispositivo" vuol dire la lingua che l'interfaccia ha scelto,
+// se no si finisce con testo inglese e "Mercoledi 26 agosto" nella stessa
+// schermata. Il FUSO resta quello del telefono, che e' sempre giusto: e' l'ora
+// a cui quella persona deve presentarsi.
+const fDay = new Intl.DateTimeFormat(LINGUA, { weekday:'short', day:'numeric', month:'short' });
+const fTime = new Intl.DateTimeFormat(LINGUA, { hour:'2-digit', minute:'2-digit' });
+const fFull = new Intl.DateTimeFormat(LINGUA, { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+const fMonth = new Intl.DateTimeFormat(LINGUA, { month:'long', year:'numeric' });
+const fWeekday = new Intl.DateTimeFormat(LINGUA, { weekday:'long' });
+// Le iniziali della settimana erano scritte a mano: L M M G V S D. In inglese
+// e in giapponese non vogliono dire niente. Si ricavano dalla lingua, partendo
+// da un lunedi' vero (5 gennaio 2026).
+const INIZIALI_GIORNI = (() => {
+  const f = new Intl.DateTimeFormat(LINGUA, { weekday: 'narrow' });
+  return Array.from({ length: 7 }, (_, i) => f.format(new Date(2026, 0, 5 + i)));
+})();
 function fmtWhen(w){
   if(!w || !w.start) return 'Data da decidere';
   const s = new Date(w.start), e = w.end ? new Date(w.end) : null;
@@ -1398,7 +1627,7 @@ function fmtWhen(w){
 }
 const fmtWhere = p => (p && p.name) ? p.name : 'Luogo da decidere';
 const fmtDeadline = iso => cap(fFull.format(new Date(iso)));
-const fmtEur = c => (c / 100).toLocaleString('it-IT', { style:'currency', currency:'EUR' });
+const fmtEur = c => (c / 100).toLocaleString(LINGUA, { style:'currency', currency:'EUR' });
 const parseEur = s => { const n = parseFloat(String(s).replace(/[^\d,.-]/g, '').replace(',', '.')); return isNaN(n) ? null : Math.round(n * 100); };
 function ago(ts){ const m = Math.round((Date.now() - ts) / 60000); if(m < 1) return 'adesso'; if(m < 60) return `${m} min fa`; const h = Math.round(m / 60); if(h < 24) return `${h} h fa`; const d = Math.round(h / 24); return d === 1 ? 'ieri' : `${d} g fa`; }
 const initials = n => n.trim().split(/\s+/).slice(0,2).map(x => x[0].toUpperCase()).join('');
@@ -1763,9 +1992,9 @@ function calItems(){
 }
 function vCalendar(){
   const { y, m } = state.cal; const weeks = monthGrid(y, m); const items = calItems(); const todayKey = dkey(new Date());
-  return `<section class="cal" aria-label="Calendario">
-    <div class="cal-head"><div class="cal-title">${cap(fMonth.format(new Date(y, m, 1)))}</div><button class="cal-today" data-action="calToday">Oggi</button><button class="cal-nav" data-action="calPrev" aria-label="Mese precedente">${ICON.chevL}</button><button class="cal-nav" data-action="calNext" aria-label="Mese successivo">${ICON.chevR}</button></div>
-    <div class="cal-dow">${['L','M','M','G','V','S','D'].map(d => `<span>${d}</span>`).join('')}</div>
+  return `<section class="cal" aria-label="${t('Calendario')}">
+    <div class="cal-head"><div class="cal-title">${cap(fMonth.format(new Date(y, m, 1)))}</div><button class="cal-today" data-action="calToday">Oggi</button><button class="cal-nav" data-action="calPrev" aria-label="${t('Mese precedente')}">${ICON.chevL}</button><button class="cal-nav" data-action="calNext" aria-label="${t('Mese successivo')}">${ICON.chevR}</button></div>
+    <div class="cal-dow">${INIZIALI_GIORNI.map(d => `<span>${d}</span>`).join('')}</div>
     ${weeks.map(w => {
       const col6 = addDays(w.col0, 6);
       const bars = items.bars.map(b => { const bs = b.from > w.col0 ? b.from : w.col0; const be = b.to < col6 ? b.to : col6; if(bs > be) return null; return { b, start:dayDiff(w.col0, bs), span:dayDiff(bs, be) + 1 }; }).filter(Boolean).slice(0, 2);
@@ -1780,7 +2009,7 @@ function vAgenda(){
   const list = [...(items.byDay[k] || []), ...items.bars.filter(b => dkey(b.from) <= k && dkey(b.to) >= k).map(b => ({ p:b.p, kind:'bar', color:b.color, time:b.time }))];
   const label = k === dkey(new Date()) ? 'Oggi' : cap(fDay.format(sel));
   return `<div class="agenda"><div class="group-title" style="margin:14px 16px 6px">${label}</div>
-    ${list.length ? `<div class="group" style="margin:0">${list.map(it => `<button class="row link" data-action="go" data-to="p/${it.p.id}"><span class="time">${esc(it.time)}</span><span class="cdot ${it.kind === 'ring' ? 'ring' : ''}" style="${it.kind === 'ring' ? '' : 'background:' + it.color}"></span><div class="grow"><div class="t">${it.p.emoji} ${esc(it.p.title)}${it.kind === 'ring' ? '<span class="tag amber">ai voti</span>' : ''}${it.p.seriesId ? ` <span class="s">· ${it.p.occurrence} di ${it.p.of}</span>` : ''}</div><div class="s">${groupOf(it.p) ? esc(groupOf(it.p).name) : 'Con link'}${it.p.status === 'confirmed' && it.p.where.value ? ' · ' + esc(fmtWhere(it.p.where.value)) : ''}</div></div><span class="chev"></span></button>`).join('')}</div>` : `<div class="group" style="margin:0"><div class="row">${mi('shrug', 40)}<div class="grow s">Niente in programma</div></div></div>`}</div>`;
+    ${list.length ? `<div class="group" style="margin:0">${list.map(it => `<button class="row link" data-action="go" data-to="p/${it.p.id}"><span class="time">${esc(it.time)}</span><span class="cdot ${it.kind === 'ring' ? 'ring' : ''}" style="${it.kind === 'ring' ? '' : 'background:' + it.color}"></span><div class="grow"><div class="t">${it.p.emoji} ${esc(it.p.title)}${it.kind === 'ring' ? '<span class="tag amber">ai voti</span>' : ''}${it.p.seriesId ? ` <span class="s">· ${it.p.occurrence} di ${it.p.of}</span>` : ''}</div><div class="s">${groupOf(it.p) ? esc(groupOf(it.p).name) : 'Con link'}${it.p.status === 'confirmed' && it.p.where.value ? ' · ' + esc(fmtWhere(it.p.where.value)) : ''}</div></div><span class="chev"></span></button>`).join('')}</div>` : `<div class="group" style="margin:0"><div class="row">${mi('shrug', 40)}<div class="grow s">${t('Niente in programma')}</div></div></div>`}</div>`;
 }
 
 /* =============================== viste =============================== */
@@ -1800,7 +2029,7 @@ function vHome(){
     if(p.organizer === u.id && votedIds(p).length && !missingIds(p).length) todoC.push({ p, act:'conferma' });
     else if(!p.ballots[u.id]) todoC.push({ p, act:'vota' }); });
   todoC.sort((a,b) => (a.act === 'conferma' ? 0 : 1) - (b.act === 'conferma' ? 0 : 1));
-  const oggi = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long' });
+  const oggi = new Date().toLocaleDateString(LINGUA, { weekday:'long', day:'numeric', month:'long' });
   return `${nav('', '', `<button class="iconbtn" data-action="newGroup" aria-label="${t('Nuovo gruppo')}">${ICON.plus}</button>`)}
   <div class="view">
     <div class="pad" style="padding-top:8px;padding-bottom:2px"><div class="greet-b">Kimari</div><div class="greet-d">${oggi.charAt(0).toUpperCase() + oggi.slice(1)}</div></div>
@@ -1809,7 +2038,7 @@ function vHome(){
       ${todoC.slice(0, 4).map(t => `<button class="todo-r" data-action="go" data-to="p/${t.p.id}"><span class="ptile" style="--h:${planHue(t.p)};width:32px;height:32px;font-size:17px;border-radius:9px">${t.p.emoji}</span><span class="grow t" style="text-align:left;font-size:15px">${esc(t.p.title)}</span><span class="tag ${t.act === 'conferma' ? 'okk' : 'amber'}" style="margin:0">${t.act}</span><span class="chev"></span></button>`).join('')}
     </div></div>` : ''}
     ${vCalendar()}${vAgenda()}
-    <div class="list-head"><h2>Gruppi</h2><span class="s">${mine.length} ${mine.length === 1 ? 'gruppo' : 'gruppi'}</span></div>
+    <div class="list-head"><h2>${t('Gruppi')}</h2><span class="s">${mine.length} ${mine.length === 1 ? 'gruppo' : 'gruppi'}</span></div>
     ${secs.map(s => `<div class="group-title">${esc(s.name)}</div><div class="group">${mine.filter(g => u.groupSections[g.id] === s.id).map(groupRow).join('')}</div>`).join('')}
     ${loose.length ? `<div class="group-title">${secs.length ? 'Altri' : 'Tutti'}</div><div class="group">${loose.map(groupRow).join('')}</div>` : ''}
     ${mine.length ? '' : `<div class="intro">${t('Nessun gruppo ancora. Creane uno per la famiglia, gli amici o il prossimo viaggio.')}</div>`}
@@ -1848,8 +2077,8 @@ function vNew(){
   const d = state.draft; const web = isWeb(); const q = quickWhen();
   let body = '';
   if(d.step === 1){
-    body = `<h2 class="large">Cosa organizzi?</h2>
-    <div class="group"><div class="row"><button class="emoji big" style="background:none;border:0;padding:0" data-action="emoji" aria-label="Cambia emoji">${d.emoji}</button><input class="input" placeholder="Cena sabato" value="${esc(d.title)}" data-bind="title" maxlength="80" autocomplete="off"></div></div>
+    body = `<h2 class="large">${t('Cosa organizzi?')}</h2>
+    <div class="group"><div class="row"><button class="emoji big" style="background:none;border:0;padding:0" data-action="emoji" aria-label="${t('Cambia emoji')}">${d.emoji}</button><input class="input" placeholder="${t('Cena sabato')}" value="${esc(d.title)}" data-bind="title" maxlength="80" autocomplete="off"></div></div>
     <div class="chips">${TITLE_PRESETS.map(p => `<button class="chip" data-action="preset" data-emoji="${p.e}" data-title="${esc(p.t)}">${p.e} ${esc(p.t)}</button>`).join('')}</div>
     ${web ? `<div class="group-title">${t('Il tuo nome')}</div><div class="group"><div class="row"><input class="input" placeholder="${t('Come ti chiami?')}" value="${esc(d.name)}" data-bind="name" maxlength="40" autocomplete="off"></div></div><div class="group-foot">${t('Gli invitati ti vedranno così. Niente account, niente password.')}</div>` : `
     <div class="group-title">${t('Con chi?')}</div>
@@ -1857,27 +2086,27 @@ function vNew(){
     <div class="group-foot">${t('Con un gruppo, i membri vedono il piano subito in app. Con il link, chi lo riceve entra dal web senza installare niente.')}</div>`}`;
   } else if(d.step === 2){
     body = `<h2 class="large">${t('Quando?')}</h2>
-    <div class="pad"><div class="seg"><button class="${d.whenMode === 'fixed' ? 'on' : ''}" data-action="mode" data-k="whenMode" data-v="fixed">So già</button><button class="${d.whenMode === 'deciding' ? 'on' : ''}" data-action="mode" data-k="whenMode" data-v="deciding">Decidiamo insieme</button></div></div>
+    <div class="pad"><div class="seg"><button class="${d.whenMode === 'fixed' ? 'on' : ''}" data-action="mode" data-k="whenMode" data-v="fixed">${t('So già')}</button><button class="${d.whenMode === 'deciding' ? 'on' : ''}" data-action="mode" data-k="whenMode" data-v="deciding">${t('Decidiamo insieme')}</button></div></div>
     ${d.whenMode === 'fixed' ? `<div class="group-title">${t('Data e ora')}</div><div class="group">
-        <div class="row"><div class="grow t">Inizio</div><input type="datetime-local" class="input right" value="${esc(d.whenFixed.start)}" data-bind="whenFixed.start"></div>
-        <div class="row"><div class="grow t">Fine <span class="s">(facoltativa)</span></div><input type="datetime-local" class="input right" value="${esc(d.whenFixed.end)}" data-bind="whenFixed.end"></div>
+        <div class="row"><div class="grow t">${t('Inizio')}</div><input type="datetime-local" class="input right" value="${esc(d.whenFixed.start)}" data-bind="whenFixed.start"></div>
+        <div class="row"><div class="grow t">${t('Fine')} <span class="s">${t('(facoltativa)')}</span></div><input type="datetime-local" class="input right" value="${esc(d.whenFixed.end)}" data-bind="whenFixed.end"></div>
         <div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${d.whenFixed.allDay ? 'on' : ''}" data-action="toggle" data-path="whenFixed.allDay" aria-label="${t('Tutto il giorno')}"></button></div></div>
       <div class="chips">${q.map(x => `<button class="chip" data-action="quickFixedWhen" data-start="${x.start}" data-end="${x.end || ''}" data-allday="${x.allDay ? 1 : 0}">${esc(x.label)}</button>`).join('')}</div>
-      <div class="group-title">Si ripete</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Piano ricorrente')}</div><div class="s">${t('Calcetto ogni martedì, cena ogni primo venerdì: una data per volta, ognuna con il suo "ci sono"')}</div></div><button class="sw ${d.recur.on ? 'on' : ''}" data-action="toggle" data-path="recur.on" aria-label="Si ripete"></button></div>
-      ${d.recur.on ? `<div class="row"><div class="seg grow">${Object.entries(FREQ).map(([k, v]) => `<button class="${d.recur.freq === k ? 'on' : ''}" data-action="recurFreq" data-v="${k}">${v.label}</button>`).join('')}</div></div><div class="row"><div class="grow t">Quante volte</div><div class="chips" style="padding:0">${[4,6,8,12].map(n => `<button class="chip ${d.recur.count === n ? 'on' : ''}" data-action="recurCount" data-v="${n}">${n}</button>`).join('')}</div></div>` : ''}</div>` : `
+      <div class="group-title">${t('Si ripete')}</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Piano ricorrente')}</div><div class="s">${t('Calcetto ogni martedì, cena ogni primo venerdì: una data per volta, ognuna con il suo "ci sono"')}</div></div><button class="sw ${d.recur.on ? 'on' : ''}" data-action="toggle" data-path="recur.on" aria-label="${t('Si ripete')}"></button></div>
+      ${d.recur.on ? `<div class="row"><div class="seg grow">${Object.entries(FREQ).map(([k, v]) => `<button class="${d.recur.freq === k ? 'on' : ''}" data-action="recurFreq" data-v="${k}">${v.label}</button>`).join('')}</div></div><div class="row"><div class="grow t">${t('Quante volte')}</div><div class="chips" style="padding:0">${[4,6,8,12].map(n => `<button class="chip ${d.recur.count === n ? 'on' : ''}" data-action="recurCount" data-v="${n}">${n}</button>`).join('')}</div></div>` : ''}</div>` : `
       <div class="group-title">Opzioni da votare · ${d.whenCands.length} di 5</div><div class="group">
-        ${d.whenCands.map(c => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${fmtWhen(c)}</div><button class="x" data-action="rmWhen" data-id="${c.id}" aria-label="Rimuovi">×</button></div>`).join('')}
-        ${d.whenCands.length < 5 ? `<div class="row"><input type="datetime-local" class="input" id="whenAdd"><button class="add" data-action="addWhen">Aggiungi</button></div>` : ''}</div>
+        ${d.whenCands.map(c => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${fmtWhen(c)}</div><button class="x" data-action="rmWhen" data-id="${c.id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
+        ${d.whenCands.length < 5 ? `<div class="row"><input type="datetime-local" class="input" id="whenAdd"><button class="add" data-action="addWhen">${t('Aggiungi')}</button></div>` : ''}</div>
       ${d.whenCands.length < 5 ? `<div class="chips">${q.map(x => `<button class="chip" data-action="quickWhen" data-start="${x.start}" data-end="${x.end || ''}" data-allday="${x.allDay ? 1 : 0}">${esc(x.label)}</button>`).join('')}</div>` : ''}
       <div class="group-foot">${t('Gli invitati segnano tutte le opzioni che gli vanno bene. Vince quella compatibile con più persone; la conferma è tua.')}</div>`}`;
   } else if(d.step === 3){
     body = `<h2 class="large">${t('Dove?')}</h2>
-    <div class="pad"><div class="seg"><button class="${d.whereMode === 'fixed' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="fixed">So già</button><button class="${d.whereMode === 'deciding' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="deciding">Decidiamo insieme</button><button class="${d.whereMode === 'later' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="later">Dopo</button></div></div>
-    ${d.whereMode === 'fixed' ? `<div class="group-title">Luogo</div><div class="group"><div class="row"><input class="input" placeholder="${t('Nome del posto')}" value="${esc(d.whereFixed.name)}" data-bind="whereFixed.name" maxlength="60"></div><div class="row"><input class="input" placeholder="Indirizzo (facoltativo)" value="${esc(d.whereFixed.address)}" data-bind="whereFixed.address" maxlength="120"></div>${d.whereFixed.name.trim() ? (savedPlace(d.whereFixed.name) ? `<div class="row"><div class="grow s">${t('★ È tra i tuoi posti')}</div></div>` : `<button class="row link" data-action="savePlaceDraft"><div class="grow t" style="color:var(--blue)">${t('☆ Salva tra i miei posti')}</div><div class="s">nome, indirizzo, menu</div></button>`) : ''}</div>
+    <div class="pad"><div class="seg"><button class="${d.whereMode === 'fixed' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="fixed">${t('So già')}</button><button class="${d.whereMode === 'deciding' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="deciding">${t('Decidiamo insieme')}</button><button class="${d.whereMode === 'later' ? 'on' : ''}" data-action="mode" data-k="whereMode" data-v="later">Dopo</button></div></div>
+    ${d.whereMode === 'fixed' ? `<div class="group-title">${t('Luogo')}</div><div class="group"><div class="row"><input class="input" placeholder="${t('Nome del posto')}" value="${esc(d.whereFixed.name)}" data-bind="whereFixed.name" maxlength="60"></div><div class="row"><input class="input" placeholder="${t('Indirizzo (facoltativo)')}" value="${esc(d.whereFixed.address)}" data-bind="whereFixed.address" maxlength="120"></div>${d.whereFixed.name.trim() ? (savedPlace(d.whereFixed.name) ? `<div class="row"><div class="grow s">${t('★ È tra i tuoi posti')}</div></div>` : `<button class="row link" data-action="savePlaceDraft"><div class="grow t" style="color:var(--blue)">${t('☆ Salva tra i miei posti')}</div><div class="s">${t('nome, indirizzo, menu')}</div></button>`) : ''}</div>
       <div class="chips">${myPlaces().map(x => `<button class="chip" data-action="quickFixedWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}${WHERE_PRESETS.filter(x => !savedPlace(x.name)).map(x => `<button class="chip" data-action="quickFixedWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">${esc(x.name)}</button>`).join('')}</div>` :
     d.whereMode === 'deciding' ? `<div class="group-title">Opzioni da votare · ${d.whereCands.length} di 5</div><div class="group">
-        ${d.whereCands.map(c => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow"><div class="t">${esc(c.name)}</div>${c.address ? `<div class="s">${esc(c.address)}</div>` : ''}</div><button class="x" data-action="rmWhere" data-id="${c.id}" aria-label="Rimuovi">×</button></div>`).join('')}
-        ${d.whereCands.length < 5 ? `<div class="row"><input class="input" id="whereAdd" placeholder="${t('Nome del posto')}" maxlength="60"><button class="add" data-action="addWhere">Aggiungi</button></div>` : ''}</div>
+        ${d.whereCands.map(c => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow"><div class="t">${esc(c.name)}</div>${c.address ? `<div class="s">${esc(c.address)}</div>` : ''}</div><button class="x" data-action="rmWhere" data-id="${c.id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
+        ${d.whereCands.length < 5 ? `<div class="row"><input class="input" id="whereAdd" placeholder="${t('Nome del posto')}" maxlength="60"><button class="add" data-action="addWhere">${t('Aggiungi')}</button></div>` : ''}</div>
       ${d.whereCands.length < 5 ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="quickWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}${WHERE_PRESETS.filter(x => !savedPlace(x.name)).map(x => `<button class="chip" data-action="quickWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">${esc(x.name)}</button>`).join('')}</div>` : ''}` :
     `<div class="intro">${t('Il luogo lo decidete dopo. Il piano si può confermare anche senza: sulla pagina comparirà "Luogo da decidere".')}</div>`}`;
   } else {
@@ -1886,16 +2115,16 @@ function vNew(){
     body = `<h2 class="large">${t('Tutto pronto')}</h2>
     <div class="group"><div class="row"><span class="emoji">${d.emoji}</span><div class="grow t">${esc(d.title)}</div><div class="s">${g ? g.emoji + ' ' + esc(g.name) : 'con link'}</div></div><div class="row"><div class="grow"><div class="s">${t('Quando')}</div><div class="t">${whenSum}</div></div></div><div class="row"><div class="grow"><div class="s">Dove</div><div class="t">${esc(whereSum)}</div></div></div></div>
     <div class="group-title">${t('Altro da decidere insieme?')}</div><div class="group">
-      ${d.extras.map((x, i) => `<div class="row">${mi('domanda', 30, '❓')}<div class="grow"><div class="t">${esc(x.question)}</div><div class="s">${x.binary ? '👍 Sì / 👎 No' : x.options.map(esc).join(' · ')}</div></div><button class="x" data-action="rmExtra" data-i="${i}" aria-label="Rimuovi">×</button></div>`).join('')}
-      <button class="row link" data-action="addExtra">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi una domanda')}</div><div class="s">es. "Cosa portiamo?"</div></button></div>
-    ${anyDeciding ? `<div class="group-title">${t('Scadenza del voto · facoltativa')}</div><div class="group"><div class="row"><div class="grow t">Si chiude</div><input type="datetime-local" class="input right" value="${esc(d.deadline)}" data-bind="deadline"></div></div>
-    <div class="chips"><button class="chip" data-action="quickDeadline" data-v="${toLocalInput(dl)}">Fra 2 giorni alle 18:00</button>${d.deadline ? `<button class="chip" data-action="quickDeadline" data-v="">${t('Nessuna')}</button>` : ''}</div>
+      ${d.extras.map((x, i) => `<div class="row">${mi('domanda', 30, '❓')}<div class="grow"><div class="t">${esc(x.question)}</div><div class="s">${x.binary ? '👍 Sì / 👎 No' : x.options.map(esc).join(' · ')}</div></div><button class="x" data-action="rmExtra" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
+      <button class="row link" data-action="addExtra">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi una domanda')}</div><div class="s">${t('es. "Cosa portiamo?"')}</div></button></div>
+    ${anyDeciding ? `<div class="group-title">${t('Scadenza del voto · facoltativa')}</div><div class="group"><div class="row"><div class="grow t">${t('Si chiude')}</div><input type="datetime-local" class="input right" value="${esc(d.deadline)}" data-bind="deadline"></div></div>
+    <div class="chips"><button class="chip" data-action="quickDeadline" data-v="${toLocalInput(dl)}">${t('Fra 2 giorni alle 18:00')}</button>${d.deadline ? `<button class="chip" data-action="quickDeadline" data-v="">${t('Nessuna')}</button>` : ''}</div>
     <div class="group-foot">${t('La scadenza è un promemoria per il gruppo. Il piano si chiude quando lo confermi tu.')}</div>` : `<div class="intro">${t('Sai già quando e dove: il piano nasce confermato e gli invitati rispondono solo "ci sono / forse / no".')}</div>`}
-    <div class="group-title">Opzioni</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Gli altri possono proporre')}</div><div class="s">${t('Altre date o luoghi ai voti, e cambi dopo la conferma')}</div></div><button class="sw ${d.allowProposals ? 'on' : ''}" data-action="allowDraft" aria-label="${t('Gli altri possono proporre')}"></button></div></div>`;
+    <div class="group-title">${t('Opzioni')}</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Gli altri possono proporre')}</div><div class="s">${t('Altre date o luoghi ai voti, e cambi dopo la conferma')}</div></div><button class="sw ${d.allowProposals ? 'on' : ''}" data-action="allowDraft" aria-label="${t('Gli altri possono proporre')}"></button></div></div>`;
   }
   return `${nav('Nuovo piano', d.step === 1 ? 'cancel' : '', `<span>${d.step} di 4</span>`, d.step === 1 ? 'Annulla' : 'Indietro')}
   <div class="view">${body}</div>
-  <div class="cta">${d.step > 1 ? `<button class="btn tint" style="flex:0 0 120px" data-action="prev">Indietro</button>` : ''}<button class="btn primary" data-action="next">${d.step === 4 ? 'Crea il piano' : 'Continua'}</button></div>`;
+  <div class="cta">${d.step > 1 ? `<button class="btn tint" style="flex:0 0 120px" data-action="prev">${t('Indietro')}</button>` : ''}<button class="btn primary" data-action="next">${d.step === 4 ? 'Crea il piano' : 'Continua'}</button></div>`;
 }
 function waBlock(text, p, sub){ return `<div class="wa-bg"><div class="wa-bubble">${esc(text)}<div class="wa-preview"><div class="pt">${p.emoji} ${esc(p.title)}</div><div class="ps">${esc(sub)}</div><div class="ph">${SITO.replace(/^https?:\/\//,"").replace(/\/$/,"")}</div></div><div class="wa-time">${fTime.format(new Date())} ✓✓</div></div></div>`; }
 function vShare(p){
@@ -1904,9 +2133,9 @@ function vShare(p){
   <div class="view">
     <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : 'Il piano è pronto'}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? 'gli altri rispondono dal link.' : 'chi non ha l\'app vota dal link, senza installare niente.'}</p></div>
     ${waBlock(text, p, confirmed ? 'Dimmi se ci sei' : 'Vota qui · non serve installare niente')}
-    <div class="pad stack" style="margin-top:16px"><button class="btn wa" data-action="share" data-text="${esc(text)}">Condividi</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">${t('Copia solo il link')}</button></div>
+    <div class="pad stack" style="margin-top:16px"><button class="btn wa" data-action="share" data-text="${esc(text)}">${t('Condividi')}</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">${t('Copia messaggio')}</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">${t('Copia solo il link')}</button></div>
     <div class="pad" style="margin-top:6px"><button class="btn plain" data-action="go" data-to="p/${p.id}">${t('Vai al piano')}</button></div>
-    <div class="proto"><div class="lab">Prototipo</div><button class="btn tint sm" data-action="asGuest" data-plan="${p.id}">${t('Apri il link come nuovo ospite (web)')}</button></div>
+    <div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="asGuest" data-plan="${p.id}">${t('Apri il link come nuovo ospite (web)')}</button></div>
   </div>`;
 }
 function ensureBallotDraft(p){
@@ -1917,11 +2146,11 @@ function ensureBallotDraft(p){
 function vBallot(p, interactive){
   const bd = interactive ? ensureBallotDraft(p) : null;
   return decidingFields(p).map(f => { const fo = fieldObj(p, f);
-    if(fo.binary){ const selId = bd ? [...bd[f].approved][0] : null; const [y, n] = fo.candidates; return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="pad"><div class="yn"><button class="yn-btn yes ${selId === y.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${y.id}">👍 Sì</button><button class="yn-btn no ${selId === n.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${n.id}">👎 No</button></div></div>${interactive && p.kind === 'decision' ? `<div class="group-foot center">${selId ? 'Il tuo voto è registrato: tocca l\'altro per cambiarlo.' : 'Tocca per votare: vale subito.'}</div>` : ''}`; }
+    if(fo.binary){ const selId = bd ? [...bd[f].approved][0] : null; const [y, n] = fo.candidates; return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="pad"><div class="yn"><button class="yn-btn yes ${selId === y.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${y.id}">${t('👍 Sì')}</button><button class="yn-btn no ${selId === n.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${n.id}">${t('👎 No')}</button></div></div>${interactive && p.kind === 'decision' ? `<div class="group-foot center">${selId ? 'Il tuo voto è registrato: tocca l\'altro per cambiarlo.' : 'Tocca per votare: vale subito.'}</div>` : ''}`; }
     return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group">
       ${fo.candidates.map(c => { const sub = [f === 'where' && c.address ? esc(c.address) : '', c.proposedBy && c.proposedBy !== p.organizer ? 'proposta da ' + esc(nameOf(c.proposedBy)) : ''].filter(Boolean).join(' · '); return `<button class="row ${bd && bd[f].approved.has(c.id) ? 'on' : ''}" data-action="${interactive ? 'tog' : 'guestTap'}" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}</div>${sub ? `<div class="s">${sub}</div>` : ''}</div></button>`; }).join('')}
       <button class="row ${bd && bd[f].noneOk ? 'on' : ''}" data-action="${interactive ? 'none' : 'guestTap'}" data-field="${f}"><span class="chk"></span><div class="grow t sec">${t('Nessuna mi va bene')}</div></button>
-      ${interactive && (p.allowProposals || p.organizer === state.me) && fo.candidates.length < 5 ? `<button class="row link" data-action="proposeCand" data-field="${f}"><span class="chk" style="border-style:dashed"></span><div class="grow t" style="color:var(--blue)">Proponi un'altra opzione</div></button>` : ''}</div>`; }).join('');
+      ${interactive && (p.allowProposals || p.organizer === state.me) && fo.candidates.length < 5 ? `<button class="row link" data-action="proposeCand" data-field="${f}"><span class="chk" style="border-style:dashed"></span><div class="grow t" style="color:var(--blue)">${t('Proponi un\'altra opzione')}</div></button>` : ''}</div>`; }).join('');
 }
 function vResults(p){
   const n = p.participants.length;
@@ -1938,41 +2167,41 @@ function vProposal(p, pr){
     <div class="pr-votes"><button class="chip ${mine === 'yes' ? 'on' : ''}" data-action="pvote" data-pr="${pr.id}" data-v="yes">👍 Sì · ${c.yes}</button><button class="chip ${mine === 'no' ? 'on' : ''}" data-action="pvote" data-pr="${pr.id}" data-v="no">👎 No · ${c.no}</button><span class="s">${c.n - c.yes - c.no} senza risposta</span></div>
     ${c.yes || c.no ? `<div class="s">${c.yes ? 'Sì: ' + Object.entries(pr.votes).filter(([,v]) => v === 'yes').map(([id]) => esc(nameOf(id))).join(', ') : ''}${c.yes && c.no ? ' · ' : ''}${c.no ? 'No: ' + Object.entries(pr.votes).filter(([,v]) => v === 'no').map(([id]) => esc(nameOf(id))).join(', ') : ''}</div>` : ''}
     <div class="s" style="margin-top:4px">${pr.status === 'ready' ? `Passata ai voti, ma ${esc(nameOf(p.organizer))} ${p.booked ? 'ha prenotato' : 'è a meno di ' + LOCK_HOURS + ' ore dall\'inizio'}: la applica o la rifiuta lui.` : `Passa con ${need} sì su ${c.n}. Resta aperta finché non passa e il voto si può cambiare. ${esc(nameOf(p.organizer))} può applicarla o rifiutarla subito.`}</div>
-    ${isOrg ? `<div class="pr-actions"><button class="btn tint sm" data-action="papply" data-pr="${pr.id}">Applica ora</button><button class="btn danger sm" data-action="preject" data-pr="${pr.id}">Rifiuta</button></div>` : pr.by === state.me ? `<button class="btn plain sm" style="margin-top:6px" data-action="pwithdraw" data-pr="${pr.id}">Ritira la proposta</button>` : ''}</div>`;
+    ${isOrg ? `<div class="pr-actions"><button class="btn tint sm" data-action="papply" data-pr="${pr.id}">${t('Applica ora')}</button><button class="btn danger sm" data-action="preject" data-pr="${pr.id}">${t('Rifiuta')}</button></div>` : pr.by === state.me ? `<button class="btn plain sm" style="margin-top:6px" data-action="pwithdraw" data-pr="${pr.id}">${t('Ritira la proposta')}</button>` : ''}</div>`;
 }
 function vComments(p){
   const list = p.comments.slice(-40); const mod = canModerate(p);
-  return `<div class="group-title">Commenti</div><div class="group">
-    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by))}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? 'Tu' : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="Elimina">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
+  return `<div class="group-title">${t('Commenti')}</div><div class="group">
+    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by))}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? 'Tu' : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
     <div class="row"><input class="input" id="commentInput" placeholder="${t('Scrivi un commento')}" maxlength="300" autocomplete="off"><button class="add" data-action="comment">${t('Invia')}</button></div></div>
   ${hint(`<div class="group-foot">${t('Commenti interni al piano, visibili solo a chi è dentro. Per chiacchierare c\'è WhatsApp.')}</div>`)}`;
 }
 function vMedia(p){
   state.uiOpen = state.uiOpen || {};
-  if(!p.photos.length && !p.files.length && !state.uiOpen['m' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="m${p.id}">${mi('clip', 26, '📎')}<div class="grow t">Allegati e foto</div><span class="s">aggiungi</span><span class="chev"></span></button></div>`;
+  if(!p.photos.length && !p.files.length && !state.uiOpen['m' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="m${p.id}">${mi('clip', 26, '📎')}<div class="grow t">${t('Allegati e foto')}</div><span class="s">${t('aggiungi')}</span><span class="chev"></span></button></div>`;
   const L = planLim(p); const ab = attachBytes(p); const full = p.photos.length >= L.photos || ab >= L.attach;
-  return `<div class="group-title">Allegati <span style="text-transform:none">· foto ${p.photos.length}/${L.photos} · ${(ab / 1e6).toFixed(1)}/${Math.round(L.attach / 1e6)} MB</span></div>
+  return `<div class="group-title">${t('Allegati')} <span style="text-transform:none">· foto ${p.photos.length}/${L.photos} · ${(ab / 1e6).toFixed(1)}/${Math.round(L.attach / 1e6)} MB</span></div>
     ${full ? `<div class="intro" style="background:var(--amber-bg);color:var(--amber-fg)">Limite del piano ${L === LIMITS.free ? 'gratuito' : ''} raggiunto. ${L === LIMITS.free ? `Con Kimari Unlimited dell'organizzatore: ${LIMITS.unlimited.photos} foto e ${Math.round(LIMITS.unlimited.attach / 1e6)} MB.` : 'Elimina qualcosa per fare spazio.'}</div>` : ''}
     <div class="group">
-      ${p.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div><div class="s">${f.url ? esc(f.url.replace(/^https?:\/\//, '').slice(0, 40)) : fmtSize(f.size)} · ${esc(nameOf(f.by))}</div></div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}${canModerate(p) || f.by === state.me ? `<button class="x" data-action="delFile" data-id="${f.id}" aria-label="Elimina">×</button>` : ''}</div>`).join('')}
+      ${p.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div><div class="s">${f.url ? esc(f.url.replace(/^https?:\/\//, '').slice(0, 40)) : fmtSize(f.size)} · ${esc(nameOf(f.by))}</div></div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}${canModerate(p) || f.by === state.me ? `<button class="x" data-action="delFile" data-id="${f.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('')}
       <div class="row" style="gap:18px"><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addFile">${mi('clip', 20, '📎')} Allegato</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addLink">${mi('link', 20, '🔗')} Link</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addPhoto">${mi('foto', 20, '📷')} Foto</button></div></div>
     ${hint(`<div class="group-foot">Biglietti, prenotazioni, menu: qui restano trovabili invece di sparire in chat. Niente video: per quelli metti un link YouTube o Drive. Le foto restano 12 mesi dopo l'evento${planLim(p) === LIMITS.unlimited ? ', per sempre con Unlimited attivo' : ''}.</div>`)}
     ${p.photos.length ? `<div class="photos" style="margin-top:12px">${p.photos.map(ph => `<button class="photo" data-action="lightbox" data-id="${ph.id}" aria-label="Foto di ${esc(nameOf(ph.by))}"><img src="${ph.dataUrl}" alt=""></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Le foto restano nel piano, compresse; gli originali restano sul tuo telefono.')}</div>`)}` : ''}`;
 }
 function vExpenses(p){
   state.uiOpen = state.uiOpen || {};
-  if(!p.expenses.length && !state.uiOpen['e' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="e${p.id}">${mi('euro', 26, '💶')}<div class="grow t">Spese</div><span class="s">aggiungi</span><span class="chev"></span></button></div>`;
+  if(!p.expenses.length && !state.uiOpen['e' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="e${p.id}">${mi('euro', 26, '💶')}<div class="grow t">${t('Spese')}</div><span class="s">${t('aggiungi')}</span><span class="chev"></span></button></div>`;
   const b = balances(p); const sug = settleSuggestions(b); const total = p.expenses.filter(e => !e.voided).reduce((a, e) => a + e.amount, 0); const mod = canModerate(p);
   return `<div class="group-title">Spese${total ? ` · ${fmtEur(total)}` : ''}</div><div class="group">
-    ${p.expenses.filter(e => !e.voided).map(e => `<div class="row">${mi('euro', 30, '💶')}<div class="grow"><div class="t" style="font-size:15px">${esc(e.desc)}</div><div class="s">ha pagato ${esc(nameOf(e.by))} · ${e.among.length <= 3 && !(e.among.length === 1 && e.among[0] === e.by) && e.among.length < p.participants.length ? 'per ' + e.among.map(id => id === e.by ? 'sé' : esc(nameOf(id))).join(', ') : 'diviso tra ' + e.among.length}</div></div><span class="amt">${fmtEur(e.amount)}</span>${mod || e.by === state.me ? `<button class="x" data-action="voidExpense" data-id="${e.id}" aria-label="Annulla">×</button>` : ''}</div>`).join('')}
-    <button class="row link" data-action="addExpense">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">Aggiungi spesa</div></button></div>
-    ${total ? `<div class="group-title">Saldi</div><div class="group">${p.participants.map(x => `<div class="row"><div class="grow t" style="font-size:15px">${x.id === state.me ? 'Tu' : esc(nameOf(x.id))}</div><span class="amt ${b[x.id] > 0 ? 'pos' : b[x.id] < 0 ? 'neg' : ''}">${b[x.id] > 0 ? '+' : ''}${fmtEur(b[x.id])}</span></div>`).join('')}
+    ${p.expenses.filter(e => !e.voided).map(e => `<div class="row">${mi('euro', 30, '💶')}<div class="grow"><div class="t" style="font-size:15px">${esc(e.desc)}</div><div class="s">ha pagato ${esc(nameOf(e.by))} · ${e.among.length <= 3 && !(e.among.length === 1 && e.among[0] === e.by) && e.among.length < p.participants.length ? 'per ' + e.among.map(id => id === e.by ? 'sé' : esc(nameOf(id))).join(', ') : 'diviso tra ' + e.among.length}</div></div><span class="amt">${fmtEur(e.amount)}</span>${mod || e.by === state.me ? `<button class="x" data-action="voidExpense" data-id="${e.id}" aria-label="${t('Annulla')}">×</button>` : ''}</div>`).join('')}
+    <button class="row link" data-action="addExpense">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi spesa')}</div></button></div>
+    ${total ? `<div class="group-title">${t('Saldi')}</div><div class="group">${p.participants.map(x => `<div class="row"><div class="grow t" style="font-size:15px">${x.id === state.me ? 'Tu' : esc(nameOf(x.id))}</div><span class="amt ${b[x.id] > 0 ? 'pos' : b[x.id] < 0 ? 'neg' : ''}">${b[x.id] > 0 ? '+' : ''}${fmtEur(b[x.id])}</span></div>`).join('')}
       ${sug.map(s => `<div class="row"><div class="grow"><div class="t" style="font-size:15px">${esc(nameOf(s.from))} → ${esc(nameOf(s.to))}</div><div class="s">${fmtEur(s.amount)}</div></div>${s.from === state.me || s.to === state.me || mod ? `<button class="add" data-action="settle" data-from="${s.from}" data-to="${s.to}" data-amount="${s.amount}">${t('Segna pagato')}</button>` : ''}</div>`).join('')}
       ${p.settlements.length ? `<div class="row sys"><div class="grow s">Pagamenti registrati: ${p.settlements.map(s => `${esc(nameOf(s.from))} → ${esc(nameOf(s.to))} ${fmtEur(s.amount)}`).join(', ')}</div></div>` : ''}</div>
     ${hint(`<div class="group-foot">${t('Solo registrazione: i soldi passano fuori da Kimari (PayPal, Satispay, contanti). Le voci non si modificano, si annullano.')}</div>`)}` : '<div class="group-foot">Parti uguali, una valuta. I soldi passano fuori da Kimari.</div>'}`;
 }
 const optionsBlock = (p, isOrg) => `<div class="group-title">${t('Opzioni del piano')}</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Gli altri possono proporre')}</div><div class="s">${t('Altre date o luoghi ai voti, e cambi dopo la conferma')}</div></div><button class="sw ${p.allowProposals ? 'on' : ''}" data-action="toggleAllow" aria-label="${t('Gli altri possono proporre')}"></button></div>
-  ${p.status === 'confirmed' && p.kind === 'plan' ? `<div class="row"><div class="grow"><div class="t">Ho prenotato</div><div class="s">${t('Le proposte del gruppo non cambiano il piano da sole: decidi tu')}</div></div><button class="sw ${p.booked ? 'on' : ''}" data-action="toggleBooked" aria-label="Ho prenotato"></button></div>` : ''}
+  ${p.status === 'confirmed' && p.kind === 'plan' ? `<div class="row"><div class="grow"><div class="t">${t('Ho prenotato')}</div><div class="s">${t('Le proposte del gruppo non cambiano il piano da sole: decidi tu')}</div></div><button class="sw ${p.booked ? 'on' : ''}" data-action="toggleBooked" aria-label="${t('Ho prenotato')}"></button></div>` : ''}
   ${isOrg && p.status === 'deciding' ? `<button class="row link" data-action="joinPolicy"><div class="grow"><div class="t">${t('Chi può votare')}</div><div class="s">${POLICY_LABEL[p.joinPolicy || 'open']}</div></div><span class="chev">›</span></button>` : ''}</div>`;
 
 const POLICY_LABEL = {
@@ -2001,18 +2230,18 @@ function sheetJoinPolicy(p){
     <div class="group-title">L'elenco · ${segnaposto.length} ${segnaposto.length === 1 ? 'nome' : 'nomi'}</div>
     <div class="group">
       ${segnaposto.map(x => `<div class="row">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div>
-        <button class="x" data-action="rmRoster" data-id="${x.id}" aria-label="Togli">×</button></div>`).join('')}
-      <div class="row"><input class="input" id="rosterName" placeholder="Aggiungi un nome" maxlength="40">
-        <button class="btn sec" style="width:auto;padding:8px 14px" data-action="addRoster">Aggiungi</button></div>
+        <button class="x" data-action="rmRoster" data-id="${x.id}" aria-label="${t('Togli')}">×</button></div>`).join('')}
+      <div class="row"><input class="input" id="rosterName" placeholder="${t('Aggiungi un nome')}" maxlength="40">
+        <button class="btn sec" style="width:auto;padding:8px 14px" data-action="addRoster">${t('Aggiungi')}</button></div>
     </div>
     <p class="foot">${t('Chi apre il link vedrà questi nomi e sceglierà il suo.')}</p>` : ''}
-  <div class="group-title">Il link</div>
+  <div class="group-title">${t('Il link')}</div>
   <div class="group">
-    <div class="row"><div class="grow t">Massimo di persone</div>
+    <div class="row"><div class="grow t">${t('Massimo di persone')}</div>
       <input class="input" id="maxUses" type="number" min="1" max="50" style="width:80px;text-align:right"
              value="${p.maxUses || ''}" placeholder="—"></div>
     <button class="row link" data-action="saveLimits"><div class="grow t" style="color:var(--blue)">${t('Salva il limite')}</div></button>
-    <button class="row link" data-action="revokePlanLink"><div class="grow t" style="color:var(--red)">Revoca il link</div><div class="s">${t('Chi è già entrato resta')}</div></button>
+    <button class="row link" data-action="revokePlanLink"><div class="grow t" style="color:var(--red)">${t('Revoca il link')}</div><div class="s">${t('Chi è già entrato resta')}</div></button>
   </div>
   <p class="foot">${t('Revocare non rompe niente per chi ha già votato: serve quando il link finisce dove non doveva.')}</p>`;
 }
@@ -2029,7 +2258,7 @@ function vPlan(p){
     return `${nav('Piano annullato', isWeb() ? '' : (gg ? `g/${gg.id}` : 'home'))}<div class="view"><div class="pad" style="padding-top:12px">
       <div class="card">
         <h1 class="title">${esc(p.title)}</h1>
-        <span class="badge gray">Annullato</span>
+        <span class="badge gray">${t('Annullato')}</span>
         <p class="sub" style="margin-top:10px">${esc(org)} ha annullato questo piano.${perche && perche.note ? ' ' + esc(perche.note) : ''}</p>
         ${gg ? `<div class="s" style="margin-top:6px">${gg.emoji} ${esc(gg.name)}</div>` : ''}
       </div>
@@ -2040,67 +2269,67 @@ function vPlan(p){
   const mine = state.me; const isP = p.participants.some(x => x.id === mine); const isOrg = p.organizer === mine; const orgName = nameOf(p.organizer); const web = isWeb(); const g = groupOf(p);
   const deadlinePast = p.deadline && new Date(p.deadline) < new Date(); const back = web ? '' : (g ? `g/${g.id}` : 'home'); const webTitle = 'Kimari 🐧'; const decision = p.kind === 'decision';
   const head = `<div class="pad" style="padding-top:12px"><div class="card ${p.status === 'confirmed' ? 'hero' : ''}" style="--h:${planHue(p)}">
-    ${p.status === 'confirmed' ? `${A.party ? `<span class="mplate"><img class="mascot-hero" src="${A.party}" alt=""></span>` : `<div class="bigcheck">${ICON.check}</div>`}<div class="kimari">Kimari!</div>` : (() => { const m = (decision && p.extras[0] && p.extras[0].binary) ? A.vota : A.pensa; return m ? `<span class="mplate"><img class="mascot-hero" src="${m}" alt="" style="width:112px">`+`</span>` : `<div class="emoji huge">${p.emoji}</div>`; })()}
+    ${p.status === 'confirmed' ? `${A.party ? `<span class="mplate"><img class="mascot-hero" src="${A.party}" alt=""></span>` : `<div class="bigcheck">${ICON.check}</div>`}<div class="kimari">${t('Kimari!')}</div>` : (() => { const m = (decision && p.extras[0] && p.extras[0].binary) ? A.vota : A.pensa; return m ? `<span class="mplate"><img class="mascot-hero" src="${m}" alt="" style="width:112px">`+`</span>` : `<div class="emoji huge">${p.emoji}</div>`; })()}
     <h1 class="title">${p.status === 'confirmed' || p.kind === 'decision' ? '' : p.emoji + ' '}${esc(p.title)}</h1>
     ${p.status === 'confirmed' ? (decision ? `<div class="when">${esc(resultText(p))}</div>` : `<div class="when">${fmtWhen(p.when.value)}</div><div class="where">${esc(fmtWhere(p.where.value))}${p.where.value && p.where.value.address ? `<div class="s">${esc(p.where.value.address)}</div>` : ''}</div>${p.where.value && p.where.value.photo ? `<img class="where-photo" src="${p.where.value.photo}" alt="">` : ''}${(p.extras || []).filter(x => x.value).map(x => `<div class="where">${esc(x.question)} <b>${esc(x.value.name)}</b></div>`).join('')}`) : `<div class="sec">${decision ? 'Domanda di' : 'Organizza'} ${esc(orgName)}</div>`}
     ${g ? `<div class="s" style="margin-top:6px">${g.emoji} ${esc(g.name)}${p.seriesId ? ` · 🔁 ${recurLabel(p)} · ${p.occurrence} di ${p.of}` : ''}</div>` : ''}
-    <div class="badges">${p.status === 'confirmed' ? `<span class="badge confirmed">${decision ? 'Deciso' : 'Confermato'}</span><span class="badge gray">v${p.version}</span>${p.booked ? '<span class="badge gray">📌 prenotato</span>' : ''}` : `<span class="badge deciding">In decisione</span>${p.deadline ? `<span class="badge gray">${deadlinePast ? 'Scaduto · in attesa di ' + esc(orgName) : 'Si chiude ' + fmtDeadline(p.deadline)}</span>` : ''}`}</div>
+    <div class="badges">${p.status === 'confirmed' ? `<span class="badge confirmed">${decision ? 'Deciso' : 'Confermato'}</span><span class="badge gray">v${p.version}</span>${p.booked ? '<span class="badge gray">📌 prenotato</span>' : ''}` : `<span class="badge deciding">${t('In decisione')}</span>${p.deadline ? `<span class="badge gray">${deadlinePast ? 'Scaduto · in attesa di ' + esc(orgName) : 'Si chiude ' + fmtDeadline(p.deadline)}</span>` : ''}`}</div>
     ${p.status === 'deciding' ? `<div class="s" style="margin-top:10px">${votedIds(p).length} su ${p.participants.length} hanno votato</div>` : ''}
   </div></div>`;
   if(p.status === 'deciding'){
     if(!isP) return `${nav(webTitle, '')}<div class="view">${head}<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? 'Tocca Sì o No.' : 'Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone.'}</div></div>${vBallot(p, false)}<p class="foot">${t('Tocca per entrare. Ti chiederemo solo il nome.')}</p></div>`;
     const hasVoted = !!p.ballots[mine]; const missing = missingIds(p).map(id => nameOf(id)); const bd = ensureBallotDraft(p);
     const noteField = `<div class="group-title">${t('Nota per il gruppo · facoltativa')}</div><div class="group"><div class="row"><textarea class="input" rows="2" placeholder="${t('Es. per me va bene tutto ma non troppo tardi')}" data-bind-note="1" maxlength="200">${esc(Object.values(bd)[0] ? Object.values(bd)[0].note : '')}</textarea></div></div>`;
-    return `${nav(isOrg ? (decision ? 'La tua decisione' : 'Il tuo piano') : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">Condividi</button>` : '')}
+    return `${nav(isOrg ? (decision ? 'La tua decisione' : 'Il tuo piano') : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
     <div class="view">${head}
       ${state.justVoted ? `<div class="notice">Hai votato ✓ ${p.organizer === state.me ? `Ora tocca a te: ${decision ? 'chiudi' : 'conferma'} quando vuoi, anche prima che abbiano votato tutti.` : `${decision ? 'Il risultato' : 'Il piano'} si aggiorna qui: quando ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}, lo vedi in questa pagina.`}</div>` : ''}
       ${isOrg ? '' : `<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? `Tocca Sì o No. Vince la maggioranza di chi risponde; ${esc(orgName)} chiude.` : `Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone; ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}.`}</div></div>`}
       ${vBallot(p, true)}${decision && p.extras[0].binary ? '' : noteField}
       ${decision && p.extras[0].binary ? '' : (hasVoted || isOrg ? `<div class="pad" style="margin-top:12px"><button class="btn ${isOrg ? 'tint' : 'primary'}" data-action="vote">${hasVoted ? 'Aggiorna il mio voto' : 'Invia il mio voto'}</button></div>` : '')}
-      ${state.justVoted && web ? `<div class="group-title">Ricevi il risultato</div><div class="group"><div class="row"><input class="input" type="email" placeholder="${t('La tua email (facoltativa)')}" id="emailInput" inputmode="email" autocomplete="email"><button class="add" data-action="email">Avvisami</button></div></div><div class="group-foot">${t('Nessuna newsletter: una sola email quando viene confermato. La stessa email ti permette di ritrovare questo piano se poi installi l\'app.')}</div>` : ''}
+      ${state.justVoted && web ? `<div class="group-title">${t('Ricevi il risultato')}</div><div class="group"><div class="row"><input class="input" type="email" placeholder="${t('La tua email (facoltativa)')}" id="emailInput" inputmode="email" autocomplete="email"><button class="add" data-action="email">${t('Avvisami')}</button></div></div><div class="group-foot">${t('Nessuna newsletter: una sola email quando viene confermato. La stessa email ti permette di ritrovare questo piano se poi installi l\'app.')}</div>` : ''}
       ${vResults(p)}
       ${missing.length ? `<div class="group-title">${t('Non hanno ancora votato')}</div><div class="group"><div class="row">${mi('aspetta', 42)}<div class="avatars">${missing.slice(0, 5).map(n => avatar(n)).join('')}</div><div class="grow t">${missing.map(esc).join(', ')}</div></div></div>` : ''}
       ${isOrg ? optionsBlock(p, isOrg) : ''}${decision ? '' : vMedia(p)}${vComments(p)}
       ${web && !isOrg && hasVoted ? `<div class="pad" style="margin-top:24px"><button class="btn tint" data-action="tab" data-to="new">${t('Fai lo stesso per il tuo gruppo')}</button></div><div class="group-foot" style="text-align:center">${t('Crea un piano in 30 secondi, direttamente da qui.')}</div>` : ''}
-      ${isOrg && missing.length ? `<div class="proto"><div class="lab">Prototipo</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? 'Simula i voti del gruppo' : 'Simula 3 amici che votano'}</button></div>` : ''}
+      ${isOrg && missing.length ? `<div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? 'Simula i voti del gruppo' : 'Simula 3 amici che votano'}</button></div>` : ''}
     </div>
-    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">Sollecita</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>
+    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>
     <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? 'Annulla la decisione' : 'Annulla il piano'}</div></button></div>
     <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t('Invia il mio voto')}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
   }
   if(decision){
     return `${nav(isOrg ? 'La tua decisione' : (web ? webTitle : 'Decisione'), back)}<div class="view">${head}
-      <div class="group-title">Com'è andata</div>${vResults({ ...p, extras:p.extras.map(x => ({ ...x, mode:'deciding' })) })}
+      <div class="group-title">${t('Com\'è andata')}</div>${vResults({ ...p, extras:p.extras.map(x => ({ ...x, mode:'deciding' })) })}
       ${isP ? vComments(p) : ''}
-      <div class="group-title">Storico</div><div class="group history">${[...p.changes].reverse().map(c => `<div class="row"><span class="v">v${c.version}</span><div class="grow"><div class="t" style="font-size:15px">${esc(c.text)}</div><div class="s">${esc(nameOf(c.by))} · ${fFull.format(new Date(c.at))}</div></div></div>`).join('')}</div></div>`;
+      <div class="group-title">${t('Storico')}</div><div class="group history">${[...p.changes].reverse().map(c => `<div class="row"><span class="v">v${c.version}</span><div class="grow"><div class="t" style="font-size:15px">${esc(c.text)}</div><div class="s">${esc(nameOf(c.by))} · ${fFull.format(new Date(c.at))}</div></div></div>`).join('')}</div></div>`;
   }
   const rsvp = p.participants.find(x => x.id === mine); const groups = { yes:[], maybe:[], no:[], none:[] }; p.participants.forEach(x => groups[x.rsvp || 'none'].push(nameOf(x.id)));
   const late = p.participants.filter(x => x.late && x.rsvp !== 'no'); const openPrs = p.proposals.filter(x => x.status === 'open' || x.status === 'ready'); const locked = isLocked(p); const canPropose = isP && (p.allowProposals || isOrg) && openPrs.length < 2 && !locked && !isPast(p);
   const mapsQ = encodeURIComponent([p.where.value && p.where.value.name, p.where.value && p.where.value.address].filter(Boolean).join(' '));
   const siblings = p.seriesId ? Object.values(state.plans).filter(x => x.seriesId === p.seriesId && x.id !== p.id).sort((a,b) => a.occurrence - b.occurrence) : [];
-  return `${nav(isOrg ? 'Il tuo piano' : (web ? webTitle : 'Piano'), back, isOrg ? `<button class="textbtn" data-action="openEdit">Modifica</button>` : '')}
+  return `${nav(isOrg ? 'Il tuo piano' : (web ? webTitle : 'Piano'), back, isOrg ? `<button class="textbtn" data-action="openEdit">${t('Modifica')}</button>` : '')}
   <div class="view">${head}
     ${openPrs.map(pr => vProposal(p, pr)).join('')}
-    ${isP ? `<div class="group-title">Ci sei?</div><div class="pad"><div class="seg"><button class="${rsvp.rsvp === 'yes' ? 'on' : ''}" data-action="rsvp" data-v="yes">${t('Ci sono')}</button><button class="${rsvp.rsvp === 'maybe' ? 'on' : ''}" data-action="rsvp" data-v="maybe">Forse</button><button class="${rsvp.rsvp === 'no' ? 'on' : ''}" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div></div>${!web && !rsvp.rsvp ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="rsvp" data-v="yes">${t('Ci sono ✓')}</button><button class="btn tint" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div>` : ''}
-    ${rsvp.late ? `<div class="notice" style="background:var(--amber-bg);color:var(--amber-fg)">⏰ Hai avvisato che arrivi in ritardo${rsvp.late.minutes ? ` (${rsvp.late.minutes} min)` : ''}. <button class="add" style="color:inherit;text-decoration:underline" data-action="clearLate">Annulla</button></div>` : ''}
-    ${isPast(p) ? '' : `<div class="group-title">Imprevisti dell'ultimo minuto</div><div class="group">
-      ${isSoon(p) ? `<button class="row link" data-action="lateSheet">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">Arrivo in ritardo</div><div class="s">${t('Tutti lo vedono qui, senza cercarlo in chat')}</div></div><span class="chev"></span></button>` : `<div class="row lock">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">Arrivo in ritardo</div><div class="s">${t('Disponibile nelle 24 ore prima dell\'inizio')}</div></div></div>`}
+    ${isP ? `<div class="group-title">${t('Ci sei?')}</div><div class="pad"><div class="seg"><button class="${rsvp.rsvp === 'yes' ? 'on' : ''}" data-action="rsvp" data-v="yes">${t('Ci sono')}</button><button class="${rsvp.rsvp === 'maybe' ? 'on' : ''}" data-action="rsvp" data-v="maybe">${t('Forse')}</button><button class="${rsvp.rsvp === 'no' ? 'on' : ''}" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div></div>${!web && !rsvp.rsvp ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="rsvp" data-v="yes">${t('Ci sono ✓')}</button><button class="btn tint" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div>` : ''}
+    ${rsvp.late ? `<div class="notice" style="background:var(--amber-bg);color:var(--amber-fg)">⏰ Hai avvisato che arrivi in ritardo${rsvp.late.minutes ? ` (${rsvp.late.minutes} min)` : ''}. <button class="add" style="color:inherit;text-decoration:underline" data-action="clearLate">${t('Annulla')}</button></div>` : ''}
+    ${isPast(p) ? '' : `<div class="group-title">${t('Imprevisti dell\'ultimo minuto')}</div><div class="group">
+      ${isSoon(p) ? `<button class="row link" data-action="lateSheet">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">${t('Arrivo in ritardo')}</div><div class="s">${t('Tutti lo vedono qui, senza cercarlo in chat')}</div></div><span class="chev"></span></button>` : `<div class="row lock">${mi('ritardo', 32, '⏰')}<div class="grow"><div class="t">${t('Arrivo in ritardo')}</div><div class="s">${t('Disponibile nelle 24 ore prima dell\'inizio')}</div></div></div>`}
       ${rsvp.rsvp !== 'no' ? `<button class="row link" data-action="absentSheet">${mi('addio', 32, '🙁')}<div class="grow"><div class="t">${t('Non posso più venire')}</div></div><span class="chev"></span></button>` : ''}
-      ${canPropose ? `<button class="row link" data-action="proposeChange">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">Proponi un cambio</div><div class="s">Orario o luogo: il gruppo vota${p.booked ? ', ' + esc(orgName) + ' applica' : ', il piano si aggiorna da solo'}</div></div><span class="chev"></span></button>` : locked && isP && !isOrg ? `<div class="row lock">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">Proponi un cambio</div><div class="s">Mancano meno di ${LOCK_HOURS} ore: ora può cambiare solo ${esc(orgName)}</div></div></div>` : ''}</div>`}
+      ${canPropose ? `<button class="row link" data-action="proposeChange">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Orario o luogo: il gruppo vota${p.booked ? ', ' + esc(orgName) + ' applica' : ', il piano si aggiorna da solo'}</div></div><span class="chev"></span></button>` : locked && isP && !isOrg ? `<div class="row lock">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Mancano meno di ${LOCK_HOURS} ore: ora può cambiare solo ${esc(orgName)}</div></div></div>` : ''}</div>`}
     ${isOrg ? optionsBlock(p, isOrg) : ''}` :
-    `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">Forse</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
+    `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">${t('Forse')}</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
     <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no','Non vengono'],['none','Non hanno risposto']].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
       ${late.length ? `<div class="row">${mi('ritardo', 30, '⏰')}<div class="grow"><div class="t">${late.map(x => esc(nameOf(x.id)) + (x.late.minutes ? ` +${x.late.minutes} min` : ' (non sa quanto)')).join(', ')}</div><div class="s">In ritardo${late.some(x => x.late.note) ? ' · ' + late.filter(x => x.late.note).map(x => '“' + esc(x.late.note) + '”').join(', ') : ''}</div></div></div>` : ''}</div>
-    ${siblings.length ? `<div class="group-title">Le altre date</div><div class="group">${siblings.map(x => `<button class="row link" data-action="go" data-to="p/${x.id}"><div class="grow"><div class="t" style="font-size:15px">${fmtWhen(x.when.value)} <span class="s">· ${x.occurrence} di ${x.of}</span></div><div class="s">${x.participants.filter(y => y.rsvp === 'yes').length} ci sono</div></div><span class="chev"></span></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.')}</div>`)}` : ''}
-    <div class="pad stack" style="margin-top:24px"><button class="btn tint" data-action="ics">Aggiungi al calendario</button>${p.where.value && p.where.value.name ? `<a class="btn tint" href="https://maps.apple.com/?q=${mapsQ}" target="_blank" rel="noopener">Apri in Mappe</a>` : ''}${isP ? `<a class="btn wa" href="${waHref(msgs.confirm(p))}" target="_blank" rel="noopener">Condividi su WhatsApp</a>` : ''}${isP && !web && p.where.value && p.where.value.name ? (savedPlace(p.where.value.name) ? `<button class="btn plain" data-action="openPlace" data-id="${savedPlace(p.where.value.name).id}">${t('★ Posto salvato · apri scheda')}</button>` : `<button class="btn plain" data-action="savePlaceFromPlan">☆ Salva "${esc(p.where.value.name)}" nei miei posti</button>`) : ''}${isP && !web ? `<button class="btn plain" data-action="repeatPlan">${t('Ripeti questo piano')}</button>` : ''}</div>
+    ${siblings.length ? `<div class="group-title">${t('Le altre date')}</div><div class="group">${siblings.map(x => `<button class="row link" data-action="go" data-to="p/${x.id}"><div class="grow"><div class="t" style="font-size:15px">${fmtWhen(x.when.value)} <span class="s">· ${x.occurrence} di ${x.of}</span></div><div class="s">${x.participants.filter(y => y.rsvp === 'yes').length} ci sono</div></div><span class="chev"></span></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.')}</div>`)}` : ''}
+    <div class="pad stack" style="margin-top:24px"><button class="btn tint" data-action="ics">${t('Aggiungi al calendario')}</button>${p.where.value && p.where.value.name ? `<a class="btn tint" href="https://maps.apple.com/?q=${mapsQ}" target="_blank" rel="noopener">${t('Apri in Mappe')}</a>` : ''}${isP ? `<a class="btn wa" href="${waHref(msgs.confirm(p))}" target="_blank" rel="noopener">${t('Condividi su WhatsApp')}</a>` : ''}${isP && !web && p.where.value && p.where.value.name ? (savedPlace(p.where.value.name) ? `<button class="btn plain" data-action="openPlace" data-id="${savedPlace(p.where.value.name).id}">${t('★ Posto salvato · apri scheda')}</button>` : `<button class="btn plain" data-action="savePlaceFromPlan">☆ Salva "${esc(p.where.value.name)}" nei miei posti</button>`) : ''}${isP && !web ? `<button class="btn plain" data-action="repeatPlan">${t('Ripeti questo piano')}</button>` : ''}</div>
     ${isP ? vExpenses(p) + vMedia(p) + vComments(p) : ''}
-    <div class="group-title">Storico</div><div class="group history">${[...p.changes].reverse().map(c => `<div class="row"><span class="v">v${c.version}</span><div class="grow"><div class="t" style="font-size:15px">${esc(c.text)}</div><div class="s">${esc(nameOf(c.by))} · ${fFull.format(new Date(c.at))}</div></div></div>`).join('')}</div>
+    <div class="group-title">${t('Storico')}</div><div class="group history">${[...p.changes].reverse().map(c => `<div class="row"><span class="v">v${c.version}</span><div class="grow"><div class="t" style="font-size:15px">${esc(c.text)}</div><div class="s">${esc(nameOf(c.by))} · ${fFull.format(new Date(c.at))}</div></div></div>`).join('')}</div>
     <p class="foot">${t('Questo link resta sempre aggiornato: se qualcosa cambia, lo vedi qui con la versione nuova.')}</p>
   </div>`;
 }
 function vNews(){
   const items = feedItems(); const unreadFrom = state.lastSeenNews;
-  return `${nav('Novità', '')}<div class="view"><h2 class="large">Novità</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
+  return `${nav('Novità', '')}<div class="view"><h2 class="large">${t('Novità')}</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
   ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="p/${it.p.id}">${avatar(n)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, 'non vieni') : esc(it.text)}`}</div><div class="s">${it.p.emoji} ${esc(it.p.title)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
 }
 function toggleRow(label, on, action, key){ return `<div class="row"><div class="grow t">${label}</div><button class="sw ${on ? 'on' : ''}" data-action="${action}" data-k="${key}" aria-label="${label}"></button></div>`; }
@@ -2108,31 +2337,31 @@ function vProfile(){
   const u = me(); const myG = myGroups(); const organized = visiblePlans().filter(p => p.organizer === state.me).length; const webLeft = Object.values(state.people).filter(x => x.web && x.email);
   return `${nav('Profilo', '')}<div class="view">
     <div class="pad" style="padding-top:12px"><div class="card">${avatar(u.name, 'xl')}<h1 class="title">${esc(u.name)}</h1><div class="s">${u.email ? esc(u.email) : 'Nessuna email: aggiungila per recuperare l\'account'}</div>
-      <div class="stats"><div><b>${myG.length}</b><span>gruppi</span></div><div><b>${organized}</b><span>organizzati</span></div><div><b>${visiblePlans().length}</b><span>${t('piani')}</span></div><div><b>${u.friends.length}</b><span>${t('amici')}</span></div></div>
-      <button class="btn plain sm" data-action="editName">Modifica profilo</button></div></div>
-    <div class="group-title">I miei posti</div><div class="group">
+      <div class="stats"><div><b>${myG.length}</b><span>${t('gruppi')}</span></div><div><b>${organized}</b><span>${t('organizzati')}</span></div><div><b>${visiblePlans().length}</b><span>${t('piani')}</span></div><div><b>${u.friends.length}</b><span>${t('amici')}</span></div></div>
+      <button class="btn plain sm" data-action="editName">${t('Modifica profilo')}</button></div></div>
+    <div class="group-title">${t('I miei posti')}</div><div class="group">
       ${myPlaces().map(x => `<button class="row link" data-action="openPlace" data-id="${x.id}">${x.photos.length ? `<img class="thumb" src="${x.photos[0].dataUrl}" alt="">` : mi('pin', 34, '📍')}<div class="grow"><div class="t">${esc(x.name)}</div><div class="s">${[x.address ? esc(x.address) : '', x.photos.length ? x.photos.length + ' foto' : '', x.files.length ? x.files.length + ' allegati' : '', x.used ? 'usato ' + x.used + ' volte' : ''].filter(Boolean).join(' · ') || 'Solo il nome'}</div></div><span class="chev"></span></button>`).join('')}
       <button class="row link" data-action="newPlace">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi un posto')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu fotografato). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.')}</div>`)}
     <div class="group-title">${t('Amici')}</div><div class="group">
-      ${u.friends.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow t">${esc(nameOf(id))}</div><button class="x" data-action="rmFriend" data-id="${id}" aria-label="Rimuovi">×</button></div>`).join('')}
+      ${u.friends.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow t">${esc(nameOf(id))}</div><button class="x" data-action="rmFriend" data-id="${id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
       <button class="row link" data-action="addFriends">${mi('amici', 30, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi amici')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Gli amici servono per invitare in fretta quando crei un gruppo. Non vedono i tuoi piani: la visibilità resta per gruppo.')}</div>`)}
-    ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">Notifiche push</div><div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
-    ${hint(`<div class="group-foot">${t('Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.')}</div>`)}` : `<div class="group"><button class="row link" data-action="secOpen" data-k="profNotif">${mi('campana', 28, '🔔')}<div class="grow t">Notifiche push</div><span class="s">${PUSH.filter(([k]) => state.settings.push[k]).length} attive</span><span class="chev"></span></button></div>`}
-    <div class="group-title">Kimari Unlimited</div><div class="group"><div class="row">${mi('corona', 34, '✨')}<div class="grow"><div class="t">${u.unlimited ? 'Unlimited attivo ✓' : 'Passa a Unlimited'}</div><div class="s">19,99 €/anno o 2,99 €/mese · foto per piano ${LIMITS.free.photos}→${LIMITS.unlimited.photos}, allegati ${Math.round(LIMITS.free.attach / 1e6)}→${Math.round(LIMITS.unlimited.attach / 1e6)} MB, posti salvati senza limite, foto per sempre</div></div><button class="add" data-action="toggleUnlimited">${u.unlimited ? 'Disattiva' : 'Prova'}</button></div>
-      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">Pass evento singolo</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="Nel prototipo non si paga 🙂">Info</button></div></div>
+    ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">${t('Notifiche push')}</div><div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
+    ${hint(`<div class="group-foot">${t('Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.')}</div>`)}` : `<div class="group"><button class="row link" data-action="secOpen" data-k="profNotif">${mi('campana', 28, '🔔')}<div class="grow t">${t('Notifiche push')}</div><span class="s">${PUSH.filter(([k]) => state.settings.push[k]).length} attive</span><span class="chev"></span></button></div>`}
+    <div class="group-title">${t('Kimari Unlimited')}</div><div class="group"><div class="row">${mi('corona', 34, '✨')}<div class="grow"><div class="t">${u.unlimited ? 'Unlimited attivo ✓' : 'Passa a Unlimited'}</div><div class="s">19,99 €/anno o 2,99 €/mese · foto per piano ${LIMITS.free.photos}→${LIMITS.unlimited.photos}, allegati ${Math.round(LIMITS.free.attach / 1e6)}→${Math.round(LIMITS.unlimited.attach / 1e6)} MB, posti salvati senza limite, foto per sempre</div></div><button class="add" data-action="toggleUnlimited">${u.unlimited ? 'Disattiva' : 'Prova'}</button></div>
+      <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="Nel prototipo non si paga 🙂">Info</button></div></div>
     <div class="group-foot">${t('I limiti valgono per piano e li sblocca l\'Unlimited di chi organizza: paga uno, respira tutto il gruppo.')}</div>
-    <div class="group-title">Account</div><div class="group">
+    <div class="group-title">${t('Account')}</div><div class="group">
       <button class="row link" data-action="mergeSheet">${mi('link', 30, '🔗')}<div class="grow"><div class="t">${t('Hai partecipato dal web?')}</div><div class="s">Collega con l'email i piani votati senza app${webLeft.length ? ` · ${webLeft.length} da collegare` : ''}</div></div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Italiano · English · 日本語 (presto)"><div class="grow t">Lingua</div><div class="s">Italiano</div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Con Unlimited: sincronizzazione continua"><div class="grow t">Calendario di sistema</div><div class="s">Unlimited</div><span class="chev"></span></button>
-      <button class="row link" data-action="termsSheet"><div class="grow t">Termini, privacy ed età minima</div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Esportazione in arrivo"><div class="grow t">Esporta i miei dati</div><span class="chev"></span></button>
+      <button class="row link" data-action="toast" data-msg="Italiano · English · 日本語 (presto)"><div class="grow t">${t('Lingua')}</div><div class="s">${t('Italiano')}</div><span class="chev"></span></button>
+      <button class="row link" data-action="toast" data-msg="Con Unlimited: sincronizzazione continua"><div class="grow t">${t('Calendario di sistema')}</div><div class="s">${t('Unlimited')}</div><span class="chev"></span></button>
+      <button class="row link" data-action="termsSheet"><div class="grow t">${t('Termini, privacy ed età minima')}</div><span class="chev"></span></button>
+      <button class="row link" data-action="toast" data-msg="Esportazione in arrivo"><div class="grow t">${t('Esporta i miei dati')}</div><span class="chev"></span></button>
       <button class="row link" data-action="signOut"><div class="grow t" style="color:var(--blue)">Esci</div></button>
-      <button class="row link" data-action="deleteAccount"><div class="grow t" style="color:var(--red)">Elimina account</div></button></div>
+      <button class="row link" data-action="deleteAccount"><div class="grow t" style="color:var(--red)">${t('Elimina account')}</div></button></div>
     <div class="group-foot">${t('Eliminare l\'account cancella profilo, voti e risposte. Nei piani a cui hai partecipato resti come «Membro eliminato», così agli altri non spariscono i conti e i messaggi.')}</div>
-    <p class="foot center">Kimari · prototipo app</p></div>`;
+    <p class="foot center">${t('Kimari · prototipo app')}</p></div>`;
 }
 const vInvalid = () => `${nav('Kimari', isWeb() ? '' : 'home')}<div class="view"><div class="intro">${t('Questo link non porta a nessun piano. Chiedi all\'organizzatore di rimandartelo.')}</div></div>`;
 
@@ -2150,13 +2379,13 @@ function sheetWelcome(){
   <p class="foot">${t('Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.')}</p>
   <p class="foot center" style="margin-top:14px">${t("Niente password, niente rubrica. L’email serve solo a ritrovare i tuoi piani.")}<br><span style="opacity:.5">v${state.versione || "—"}</span></p>`;
 }
-function sheetTerms(){ return `<h2>Termini, privacy ed età</h2><p class="sub">In breve, il testo vero lo scrive un avvocato.</p><div class="group"><div class="row col"><div class="t" style="font-size:15px">Età minima 16 anni.</div><div class="s">${t('Chi ha meno di 16 anni non può creare un account. Nei gruppi famiglia i nomi dei minori restano solo come nomi, senza altri dati.')}</div></div><div class="row col"><div class="t" style="font-size:15px">Cosa raccogliamo</div><div class="s">${t('Nome, email se la dai, voti, risposte, commenti, allegati e foto che carichi. Niente rubrica, niente posizione in background.')}</div></div><div class="row col"><div class="t" style="font-size:15px">Gruppi privati</div><div class="s">${t('Si entra solo su invito. Chi non è in un piano non ne vede nulla.')}</div></div><div class="row col"><div class="t" style="font-size:15px">Contenuti</div><div class="s">${t('Gli admin possono rimuovere commenti, allegati e persone. Puoi segnalare un contenuto o bloccare una persona.')}</div></div><div class="row col"><div class="t" style="font-size:15px">Cancellazione</div><div class="s">${t('Dall\'app o dal web. Lo storico condiviso resta come «Membro eliminato».')}</div></div></div><div class="actions"><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`; }
+function sheetTerms(){ return `<h2>${t('Termini, privacy ed età')}</h2><p class="sub">${t('In breve, il testo vero lo scrive un avvocato.')}</p><div class="group"><div class="row col"><div class="t" style="font-size:15px">${t('Età minima 16 anni.')}</div><div class="s">${t('Chi ha meno di 16 anni non può creare un account. Nei gruppi famiglia i nomi dei minori restano solo come nomi, senza altri dati.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Cosa raccogliamo')}</div><div class="s">${t('Nome, email se la dai, voti, risposte, commenti, allegati e foto che carichi. Niente rubrica, niente posizione in background.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Gruppi privati')}</div><div class="s">${t('Si entra solo su invito. Chi non è in un piano non ne vede nulla.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Contenuti')}</div><div class="s">${t('Gli admin possono rimuovere commenti, allegati e persone. Puoi segnalare un contenuto o bloccare una persona.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Cancellazione')}</div><div class="s">${t('Dall\'app o dal web. Lo storico condiviso resta come «Membro eliminato».')}</div></div></div><div class="actions"><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`; }
 function sheetName(p){
   const others = p.participants.filter(x => x.id !== p.organizer);
   return `<h2>${t('Come ti chiami?')}</h2><p class="sub">${t('Niente account: il nome serve solo agli amici per sapere chi ha risposto.')}</p>
   <div class="group"><div class="row"><input class="input" id="nameInput" placeholder="${t('Il tuo nome')}" maxlength="40" autocomplete="off" autocapitalize="words"></div></div>
   ${others.length ? `<div class="group-title">${t('Sei uno di questi?')}</div><div class="group">${others.map(x => `<button class="row link" data-action="claim" data-id="${x.id}">${avatar(nameOf(x.id))}<div class="grow t">${esc(nameOf(x.id))}</div><div class="s">${p.ballots[x.id] ? 'ha già votato' : 'è già dentro'}</div></button>`).join('')}</div>` : ''}
-  <div class="actions"><button class="btn primary" data-action="join">Entra</button></div>`;
+  <div class="actions"><button class="btn primary" data-action="join">${t('Entra')}</button></div>`;
 }
 function sheetConfirm(p, fresh){
   const fields = decidingFields(p); if(fresh || !state.picks){ state.picks = {}; fields.forEach(f => { state.picks[f] = results(p, f).suggested || fieldObj(p, f).candidates[0].id; }); }
@@ -2166,99 +2395,99 @@ function sheetConfirm(p, fresh){
 }
 function sheetMessage(title, sub, text, p, previewSub){
   return `<h2>${esc(title)}</h2><p class="sub">${esc(sub)}</p>${waBlock(text, p, previewSub)}
-  <div class="actions stack"><button class="btn wa" data-action="share" data-text="${esc(text)}">Condividi</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">Copia messaggio</button><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
+  <div class="actions stack"><button class="btn wa" data-action="share" data-text="${esc(text)}">${t('Condividi')}</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">${t('Copia messaggio')}</button><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
 function sheetEdit(p){
   const w = p.when.value, pl = p.where.value || { name:'', address:'' };
   return `<h2>${t('Modifica il piano')}</h2><p class="sub">Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c'era prima.${p.seriesId ? ' Vale solo per questa data.' : ''}</p>
-  <div class="group-title">${t('Quando')}</div><div class="group"><div class="row"><div class="grow t">Inizio</div><input type="datetime-local" class="input right" id="editStart" value="${esc(w.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="editEnd" value="${esc(w.end || '')}"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${w.allDay ? 'on' : ''}" id="editAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div>
-  <div class="group-title">Dove</div><div class="group"><div class="row"><input class="input" id="editPlace" placeholder="${t('Nome del posto')}" value="${esc(pl.name)}" maxlength="60"></div><div class="row"><input class="input" id="editAddr" placeholder="Indirizzo" value="${esc(pl.address)}" maxlength="120"></div></div>
-  <div class="actions stack"><button class="btn primary" data-action="saveEdit">${t('Salva e avvisa il gruppo')}</button><button class="btn plain" data-action="closeSheet">Annulla</button></div>
-  ${p.organizer === state.me ? `<div class="group-title">Se salta</div><div class="group"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${t('Annulla il piano')}</div></button></div>
+  <div class="group-title">${t('Quando')}</div><div class="group"><div class="row"><div class="grow t">${t('Inizio')}</div><input type="datetime-local" class="input right" id="editStart" value="${esc(w.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="editEnd" value="${esc(w.end || '')}"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${w.allDay ? 'on' : ''}" id="editAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div>
+  <div class="group-title">Dove</div><div class="group"><div class="row"><input class="input" id="editPlace" placeholder="${t('Nome del posto')}" value="${esc(pl.name)}" maxlength="60"></div><div class="row"><input class="input" id="editAddr" placeholder="${t('Indirizzo')}" value="${esc(pl.address)}" maxlength="120"></div></div>
+  <div class="actions stack"><button class="btn primary" data-action="saveEdit">${t('Salva e avvisa il gruppo')}</button><button class="btn plain" data-action="closeSheet">${t('Annulla')}</button></div>
+  ${p.organizer === state.me ? `<div class="group-title">${t('Se salta')}</div><div class="group"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${t('Annulla il piano')}</div></button></div>
   <div class="group-foot">${t('Il link resta valido e mostra a tutti che è saltato. Nessuno perde i messaggi né le spese.')}</div>` : ''}`;
 }
 function sheetGroup(){
   const d = state.gdraft; const u = me(); const pool = new Set([...u.friends, ...myGroups().flatMap(g => g.members)]); const people = [...pool].filter(id => id !== state.me && state.people[id] && !state.people[id].web).map(id => state.people[id]);
   return `<h2>${d.id ? 'Modifica gruppo' : 'Nuovo gruppo'}</h2><p class="sub">${d.id ? 'Icona, colore, nome e la sezione in cui lo tieni tu.' : 'Una cerchia che userai più volte. Privata: si entra solo su invito.'}</p>
   <div class="group"><div class="row"><span class="gicon" style="background:${d.color}26">${d.emoji}</span><input class="input" id="gname" placeholder="${t('Nome del gruppo')}" value="${esc(d.name)}" maxlength="40" autocomplete="off" data-gbind="name"></div></div>
-  <div class="group-title">Icona</div><div class="emoji-grid">${GROUP_EMOJIS.map(e => `<button class="${d.emoji === e ? 'on' : ''}" data-action="gEmoji" data-v="${e}">${e}</button>`).join('')}</div>
-  <div class="group-title">Colore</div><div class="swatches">${GROUP_COLORS.map(c => `<button class="${d.color === c ? 'on' : ''}" style="background:${c}" data-action="gColor" data-v="${c}" aria-label="${c}"></button>`).join('')}</div>
-  <div class="group-title">${t('La tua sezione')}</div><div class="chips" style="padding-top:0">${u.sections.map(s => `<button class="chip ${d.sectionId === s.id ? 'on' : ''}" data-action="gSection" data-v="${s.id}">${esc(s.name)}</button>`).join('')}<button class="chip ${d.sectionId === '' ? 'on' : ''}" data-action="gSection" data-v="">${t('Nessuna')}</button><button class="chip ${d.sectionId === 'new' ? 'on' : ''}" data-action="gSection" data-v="new">＋ Nuova</button></div>
+  <div class="group-title">${t('Icona')}</div><div class="emoji-grid">${GROUP_EMOJIS.map(e => `<button class="${d.emoji === e ? 'on' : ''}" data-action="gEmoji" data-v="${e}">${e}</button>`).join('')}</div>
+  <div class="group-title">${t('Colore')}</div><div class="swatches">${GROUP_COLORS.map(c => `<button class="${d.color === c ? 'on' : ''}" style="background:${c}" data-action="gColor" data-v="${c}" aria-label="${c}"></button>`).join('')}</div>
+  <div class="group-title">${t('La tua sezione')}</div><div class="chips" style="padding-top:0">${u.sections.map(s => `<button class="chip ${d.sectionId === s.id ? 'on' : ''}" data-action="gSection" data-v="${s.id}">${esc(s.name)}</button>`).join('')}<button class="chip ${d.sectionId === '' ? 'on' : ''}" data-action="gSection" data-v="">${t('Nessuna')}</button><button class="chip ${d.sectionId === 'new' ? 'on' : ''}" data-action="gSection" data-v="new">${t('＋ Nuova')}</button></div>
   ${d.sectionId === 'new' ? `<div class="group" style="margin-top:10px"><div class="row"><input class="input" placeholder="${t('Nome della sezione, es. Milano')}" value="${esc(d.newSection)}" data-gbind="newSection" maxlength="30"></div></div>` : ''}
   <div class="group-foot">${t('Le sezioni sono solo tue: gli altri membri ordinano i gruppi a modo loro.')}</div>
-  ${d.id ? '' : `<div class="group-title">Persone</div><div class="chips" style="padding-top:0">${people.map(x => `<button class="chip ${d.members.has(x.id) ? 'on' : ''}" data-action="gMember" data-v="${x.id}">${esc(x.name)}${u.friends.includes(x.id) ? ' ★' : ''}</button>`).join('')}</div><div class="group-foot">${t('★ amici. Gli altri si aggiungono anche dopo, con il link d\'invito.')}</div>`}
+  ${d.id ? '' : `<div class="group-title">${t('Persone')}</div><div class="chips" style="padding-top:0">${people.map(x => `<button class="chip ${d.members.has(x.id) ? 'on' : ''}" data-action="gMember" data-v="${x.id}">${esc(x.name)}${u.friends.includes(x.id) ? ' ★' : ''}</button>`).join('')}</div><div class="group-foot">${t('★ amici. Gli altri si aggiungono anche dopo, con il link d\'invito.')}</div>`}
   <div class="actions stack"><button class="btn primary" data-action="saveGroup">${d.id ? 'Salva' : 'Crea gruppo'}</button></div>`;
 }
 function sheetManage(g){
   const admin = isAdmin(g); const creator = g.createdBy === state.me; const u = me();
   return `<h2>${esc(g.name)}</h2><p class="sub">${t('🔒 Gruppo privato: si entra solo con il link d\'invito.')}</p>
-  <div class="group"><div class="row"><div class="grow"><div class="t">${t('Silenzia questo gruppo')}</div><div class="s">Niente push, ma le novità restano</div></div><button class="sw ${u.muted.includes(g.id) ? 'on' : ''}" data-action="muteGroup" data-g="${g.id}" aria-label="Silenzia"></button></div>
-  ${admin ? `<button class="row link" data-action="editGroup" data-g="${g.id}"><div class="grow t">Icona, colore, nome, sezione</div><span class="chev"></span></button><button class="row link" data-action="revokeLink" data-g="${g.id}"><div class="grow"><div class="t">Revoca il link d'invito</div><div class="s">${t('Chi l\'ha già usato resta dentro')}</div></div><span class="chev"></span></button>` : ''}</div>
+  <div class="group"><div class="row"><div class="grow"><div class="t">${t('Silenzia questo gruppo')}</div><div class="s">${t('Niente push, ma le novità restano')}</div></div><button class="sw ${u.muted.includes(g.id) ? 'on' : ''}" data-action="muteGroup" data-g="${g.id}" aria-label="${t('Silenzia')}"></button></div>
+  ${admin ? `<button class="row link" data-action="editGroup" data-g="${g.id}"><div class="grow t">${t('Icona, colore, nome, sezione')}</div><span class="chev"></span></button><button class="row link" data-action="revokeLink" data-g="${g.id}"><div class="grow"><div class="t">${t('Revoca il link d\'invito')}</div><div class="s">${t('Chi l\'ha già usato resta dentro')}</div></div><span class="chev"></span></button>` : ''}</div>
   <div class="group-title">Persone · ${g.members.length}</div><div class="group">${g.members.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow"><div class="t">${id === state.me ? 'Tu' : esc(nameOf(id))}</div>${id === g.createdBy ? '<div class="s">Creatore</div>' : g.admins.includes(id) ? '<div class="s">Admin</div>' : ''}</div>
-    ${admin && id !== state.me && id !== g.createdBy ? `<button class="add" data-action="toggleAdmin" data-g="${g.id}" data-id="${id}">${g.admins.includes(id) ? 'Togli admin' : 'Admin'}</button><button class="x" data-action="removeMember" data-g="${g.id}" data-id="${id}" aria-label="Rimuovi">×</button>` : ''}
-    ${creator && id !== state.me ? `<button class="add" data-action="transferOwner" data-g="${g.id}" data-id="${id}">Passa ★</button>` : ''}</div>`).join('')}</div>
+    ${admin && id !== state.me && id !== g.createdBy ? `<button class="add" data-action="toggleAdmin" data-g="${g.id}" data-id="${id}">${g.admins.includes(id) ? 'Togli admin' : 'Admin'}</button><button class="x" data-action="removeMember" data-g="${g.id}" data-id="${id}" aria-label="${t('Rimuovi')}">×</button>` : ''}
+    ${creator && id !== state.me ? `<button class="add" data-action="transferOwner" data-g="${g.id}" data-id="${id}">${t('Passa ★')}</button>` : ''}</div>`).join('')}</div>
   <div class="group-foot">${t('Chi entra dopo viene aggiunto solo ai piani ancora ai voti. Chi esce sparisce dai piani futuri e resta in quelli passati.')}</div>
-  <div class="actions stack">${creator ? `<button class="btn danger" data-action="deleteGroup" data-g="${g.id}">${t('Elimina gruppo')}</button>` : `<button class="btn danger" data-action="leaveGroup" data-g="${g.id}">${t('Esci dal gruppo')}</button>`}<button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
+  <div class="actions stack">${creator ? `<button class="btn danger" data-action="deleteGroup" data-g="${g.id}">${t('Elimina gruppo')}</button>` : `<button class="btn danger" data-action="leaveGroup" data-g="${g.id}">${t('Esci dal gruppo')}</button>`}<button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
-function sheetProfile(){ const u = me(); return `<h2>Modifica profilo</h2><div class="group"><div class="row"><input class="input" id="pname" placeholder="Nome" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
+function sheetProfile(){ const u = me(); return `<h2>${t('Modifica profilo')}</h2><div class="group"><div class="row"><input class="input" id="pname" placeholder="Nome" value="${esc(u.name)}" maxlength="40"></div><div class="row"><input class="input" id="pemail" type="email" placeholder="${t('Email')}" value="${esc(u.email || '')}"></div></div><div class="group-foot">${t('Il nome è quello che vedono gli altri nei piani.')}</div><div class="actions"><button class="btn primary" data-action="saveProfile">${t('Salva')}</button></div>`; }
 function sheetFriends(){
   const u = me(); const pool = new Set([...myGroups().flatMap(g => g.members), ...visiblePlans().flatMap(p => p.participants.map(x => x.id))]);
   const sug = [...pool].filter(id => id !== state.me && !u.friends.includes(id) && state.people[id] && !state.people[id].web).map(id => state.people[id]);
   return `<h2 style="display:flex;align-items:center;gap:9px">${mi('amici', 30)} Aggiungi amici</h2><p class="sub">${t('Persone con cui hai già un gruppo o un piano. Gli amici non vedono i tuoi piani: servono solo per invitare in fretta.')}</p>
-  ${sug.length ? `<div class="group">${sug.map(x => `<button class="row link" data-action="addFriend" data-id="${x.id}">${avatar(x.name)}<div class="grow t">${esc(x.name)}</div><span class="add">Aggiungi</span></button>`).join('')}</div>` : '<div class="intro">Nessun suggerimento: invita qualcuno con il link.</div>'}
-  <div class="actions stack"><a class="btn wa" href="${waHref(msgs.friend())}" target="_blank" rel="noopener">Invita un amico su WhatsApp</a><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
+  ${sug.length ? `<div class="group">${sug.map(x => `<button class="row link" data-action="addFriend" data-id="${x.id}">${avatar(x.name)}<div class="grow t">${esc(x.name)}</div><span class="add">${t('Aggiungi')}</span></button>`).join('')}</div>` : '<div class="intro">Nessun suggerimento: invita qualcuno con il link.</div>'}
+  <div class="actions stack"><a class="btn wa" href="${waHref(msgs.friend())}" target="_blank" rel="noopener">${t('Invita un amico su WhatsApp')}</a><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
-function sheetMerge(){ return `<h2>${t('Collega i piani dal web')}</h2><p class="sub">${t('Se hai votato da un link senza app e hai lasciato l\'email, scrivila qui: i tuoi voti e risposte passano a questo account.')}</p><div class="group"><div class="row"><input class="input" id="mergeEmail" type="email" placeholder="${t('L\'email che hai usato sul web')}" inputmode="email"></div></div><div class="group-foot">${t('Nell\'app vera arriva un codice a quell\'email, per sicurezza.')}</div><div class="actions"><button class="btn primary" data-action="doMerge">Collega</button></div>`; }
+function sheetMerge(){ return `<h2>${t('Collega i piani dal web')}</h2><p class="sub">${t('Se hai votato da un link senza app e hai lasciato l\'email, scrivila qui: i tuoi voti e risposte passano a questo account.')}</p><div class="group"><div class="row"><input class="input" id="mergeEmail" type="email" placeholder="${t('L\'email che hai usato sul web')}" inputmode="email"></div></div><div class="group-foot">${t('Nell\'app vera arriva un codice a quell\'email, per sicurezza.')}</div><div class="actions"><button class="btn primary" data-action="doMerge">${t('Collega')}</button></div>`; }
 function sheetProposeCand(p, field){
   const org = esc(nameOf(p.organizer));
-  return field === 'when' ? `<h2>${t('Proponi un\'altra data')}</h2><p class="sub">Entra subito tra le opzioni ai voti; ${org} conferma alla fine.</p><div class="group"><div class="row"><div class="grow t">Inizio</div><input type="datetime-local" class="input right" id="pcStart"></div><div class="row"><div class="grow t">Fine <span class="s">(facoltativa)</span></div><input type="datetime-local" class="input right" id="pcEnd"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw" id="pcAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div><div class="actions"><button class="btn primary" data-action="saveCand" data-field="when">Proponi</button></div>`
-  : `<h2>Proponi un'altra opzione</h2><p class="sub">Entra subito tra le opzioni ai voti; ${org} conferma alla fine.</p><div class="group"><div class="row"><input class="input" id="pcName" placeholder="${field === 'where' ? 'Nome del posto' : 'La tua opzione'}" maxlength="60"></div>${field === 'where' ? `<div class="row"><input class="input" id="pcAddr" placeholder="Indirizzo (facoltativo)" maxlength="120"></div>` : ''}</div>${field === 'where' && myPlaces().length ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="fillPlace" data-t="pc" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}</div>` : ''}<div class="actions"><button class="btn primary" data-action="saveCand" data-field="${field}">Proponi</button></div>`;
+  return field === 'when' ? `<h2>${t('Proponi un\'altra data')}</h2><p class="sub">Entra subito tra le opzioni ai voti; ${org} conferma alla fine.</p><div class="group"><div class="row"><div class="grow t">${t('Inizio')}</div><input type="datetime-local" class="input right" id="pcStart"></div><div class="row"><div class="grow t">${t('Fine')} <span class="s">${t('(facoltativa)')}</span></div><input type="datetime-local" class="input right" id="pcEnd"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw" id="pcAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div><div class="actions"><button class="btn primary" data-action="saveCand" data-field="when">${t('Proponi')}</button></div>`
+  : `<h2>${t('Proponi un\'altra opzione')}</h2><p class="sub">Entra subito tra le opzioni ai voti; ${org} conferma alla fine.</p><div class="group"><div class="row"><input class="input" id="pcName" placeholder="${field === 'where' ? 'Nome del posto' : 'La tua opzione'}" maxlength="60"></div>${field === 'where' ? `<div class="row"><input class="input" id="pcAddr" placeholder="${t('Indirizzo (facoltativo)')}" maxlength="120"></div>` : ''}</div>${field === 'where' && myPlaces().length ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="fillPlace" data-t="pc" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}</div>` : ''}<div class="actions"><button class="btn primary" data-action="saveCand" data-field="${field}">${t('Proponi')}</button></div>`;
 }
-function sheetLate(){ return `<h2 style="display:flex;align-items:center;gap:9px">${mi('ritardo', 30)} Arrivo in ritardo</h2><p class="sub">${t('Tutti lo vedono nel piano, senza cercare il messaggio in chat.')}</p><div class="chips" style="padding-top:0">${[10,20,30,60].map(m => `<button class="chip ${state.lateMin === m ? 'on' : ''}" data-action="lateMin" data-v="${m}">${m} min</button>`).join('')}<button class="chip ${state.lateMin === 0 ? 'on' : ''}" data-action="lateMin" data-v="0">${t('Non so')}</button></div><div class="group" style="margin-top:12px"><div class="row"><input class="input" id="lateNote" placeholder="Un motivo, se vuoi" maxlength="80" value="${esc(state.lateNote || '')}"></div></div><div class="actions"><button class="btn primary" data-action="saveLate">${t('Avvisa il gruppo')}</button></div>`; }
-function sheetAbsent(){ return `<h2 style="display:flex;align-items:center;gap:9px">${mi('addio', 30)} Non posso più venire</h2><p class="sub">${t('Il tuo "ci sono" diventa "non vengo" e il gruppo lo vede subito.')}</p><div class="group"><div class="row"><input class="input" id="absentNote" placeholder="Un motivo, se vuoi" maxlength="80"></div></div><div class="actions stack"><button class="btn primary" data-action="saveAbsent">${t('Avvisa il gruppo')}</button><button class="btn plain" data-action="closeSheet">Annulla</button></div>`; }
+function sheetLate(){ return `<h2 style="display:flex;align-items:center;gap:9px">${mi('ritardo', 30)} Arrivo in ritardo</h2><p class="sub">${t('Tutti lo vedono nel piano, senza cercare il messaggio in chat.')}</p><div class="chips" style="padding-top:0">${[10,20,30,60].map(m => `<button class="chip ${state.lateMin === m ? 'on' : ''}" data-action="lateMin" data-v="${m}">${m} min</button>`).join('')}<button class="chip ${state.lateMin === 0 ? 'on' : ''}" data-action="lateMin" data-v="0">${t('Non so')}</button></div><div class="group" style="margin-top:12px"><div class="row"><input class="input" id="lateNote" placeholder="${t('Un motivo, se vuoi')}" maxlength="80" value="${esc(state.lateNote || '')}"></div></div><div class="actions"><button class="btn primary" data-action="saveLate">${t('Avvisa il gruppo')}</button></div>`; }
+function sheetAbsent(){ return `<h2 style="display:flex;align-items:center;gap:9px">${mi('addio', 30)} Non posso più venire</h2><p class="sub">${t('Il tuo "ci sono" diventa "non vengo" e il gruppo lo vede subito.')}</p><div class="group"><div class="row"><input class="input" id="absentNote" placeholder="${t('Un motivo, se vuoi')}" maxlength="80"></div></div><div class="actions stack"><button class="btn primary" data-action="saveAbsent">${t('Avvisa il gruppo')}</button><button class="btn plain" data-action="closeSheet">${t('Annulla')}</button></div>`; }
 function sheetPropose(p){
   const f = state.prField || 'when'; const busy = !!openProposalFor(p, f);
   return `<h2 style="display:flex;align-items:center;gap:9px">${mi('cambio', 30)} Proponi un cambio</h2><p class="sub">Il gruppo risponde sì o no. ${p.booked ? `${esc(nameOf(p.organizer))} ha prenotato: anche con la maggioranza, la applica lui.` : `Passa con più della metà dei sì, oppure quando ${esc(nameOf(p.organizer))} la applica.`}</p>
-  <div class="pad"><div class="seg"><button class="${f === 'when' ? 'on' : ''}" data-action="prField" data-v="when">Orario</button><button class="${f === 'where' ? 'on' : ''}" data-action="prField" data-v="where">Luogo</button></div></div>
+  <div class="pad"><div class="seg"><button class="${f === 'when' ? 'on' : ''}" data-action="prField" data-v="when">${t('Orario')}</button><button class="${f === 'where' ? 'on' : ''}" data-action="prField" data-v="where">${t('Luogo')}</button></div></div>
   ${busy ? `<div class="intro">C'è già una proposta aperta per ${f === 'when' ? "l'orario" : 'il luogo'}: vota quella prima di aprirne un'altra.</div>` :
-  f === 'when' ? `<div class="group-title">Nuovo orario · ora ${fmtWhen(p.when.value)}</div><div class="group"><div class="row"><div class="grow t">Inizio</div><input type="datetime-local" class="input right" id="prStart" value="${esc(p.when.value.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="prEnd" value="${esc(p.when.value.end || '')}"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${p.when.value.allDay ? 'on' : ''}" id="prAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div>`
-  : `<div class="group-title">Nuovo luogo · ora ${esc(fmtWhere(p.where.value))}</div><div class="group"><div class="row"><input class="input" id="prName" placeholder="${t('Nome del posto')}" maxlength="60"></div><div class="row"><input class="input" id="prAddr" placeholder="Indirizzo (facoltativo)" maxlength="120"></div></div>${myPlaces().length ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="fillPlace" data-t="pr" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}</div>` : ''}`}
-  ${busy ? '' : `<div class="group-title">Perché</div><div class="group"><div class="row"><input class="input" id="prReason" placeholder="${t('Es. esco tardi dal lavoro')}" maxlength="100"></div></div>`}
+  f === 'when' ? `<div class="group-title">Nuovo orario · ora ${fmtWhen(p.when.value)}</div><div class="group"><div class="row"><div class="grow t">${t('Inizio')}</div><input type="datetime-local" class="input right" id="prStart" value="${esc(p.when.value.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="prEnd" value="${esc(p.when.value.end || '')}"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${p.when.value.allDay ? 'on' : ''}" id="prAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div>`
+  : `<div class="group-title">Nuovo luogo · ora ${esc(fmtWhere(p.where.value))}</div><div class="group"><div class="row"><input class="input" id="prName" placeholder="${t('Nome del posto')}" maxlength="60"></div><div class="row"><input class="input" id="prAddr" placeholder="${t('Indirizzo (facoltativo)')}" maxlength="120"></div></div>${myPlaces().length ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="fillPlace" data-t="pr" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}</div>` : ''}`}
+  ${busy ? '' : `<div class="group-title">${t('Perché')}</div><div class="group"><div class="row"><input class="input" id="prReason" placeholder="${t('Es. esco tardi dal lavoro')}" maxlength="100"></div></div>`}
   <div class="actions"><button class="btn primary" data-action="savePropose" data-field="${f}" ${busy ? 'disabled' : ''}>${t('Proponi al gruppo')}</button></div>`;
 }
 function sheetPlace(pl){
   return `<h2>${esc(pl.name || 'Nuovo posto')}</h2><p class="sub">Scheda tua, non condivisa. ${pl.used ? `Usato in ${pl.used} piani.` : ''}</p>
-  <div class="group"><div class="row"><input class="input" placeholder="${t('Nome del posto')}" value="${esc(pl.name)}" data-plbind="name" maxlength="60"></div><div class="row"><input class="input" placeholder="Indirizzo" value="${esc(pl.address)}" data-plbind="address" maxlength="120"></div><div class="row"><input class="input" placeholder="Nota (es. chiedi il tavolo fuori)" value="${esc(pl.note)}" data-plbind="note" maxlength="120"></div></div>
-  ${pl.photos.length ? `<img class="cover" src="${pl.photos[0].dataUrl}" alt="" data-action="plLightbox" data-pl="${pl.id}" data-id="${pl.photos[0].id}"><div class="photos" style="margin-top:8px">${pl.photos.map((ph, i) => `<div class="photo"><img src="${ph.dataUrl}" alt="${esc(ph.name || '')}" data-action="plLightbox" data-pl="${pl.id}" data-id="${ph.id}"><button class="pbtn cov ${i === 0 ? 'on' : ''}" data-action="plCover" data-pl="${pl.id}" data-id="${ph.id}" aria-label="Copertina">${i === 0 ? '★' : '☆'}</button><button class="pbtn del" data-action="plDelPhoto" data-pl="${pl.id}" data-id="${ph.id}" aria-label="Elimina">×</button></div>`).join('')}</div><div class="group-foot">${t('★ = copertina: è la foto che vedi in giro per l\'app e nei piani in cui usi il posto.')}</div>` : ''}
-  <div class="group" style="margin-top:12px">${pl.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div>${f.url ? '' : `<div class="s">${fmtSize(f.size)}</div>`}</div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}<button class="x" data-action="plDelFile" data-pl="${pl.id}" data-id="${f.id}" aria-label="Elimina">×</button></div>`).join('')}
-    <div class="row" style="gap:18px"><button class="add" data-action="plAddPhoto" data-pl="${pl.id}">${t('📷 Foto del menu')}</button><button class="add" data-action="plAddFile" data-pl="${pl.id}">📎 Allegato</button><button class="add" data-action="plAddLink" data-pl="${pl.id}">🔗 Link</button></div></div>
-  <div class="actions stack">${pl.address ? `<a class="btn tint" href="https://maps.apple.com/?q=${encodeURIComponent(pl.name + ' ' + pl.address)}" target="_blank" rel="noopener">Apri in Mappe</a>` : ''}<button class="btn danger" data-action="delPlace" data-id="${pl.id}">${t('Elimina posto')}</button><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`;
+  <div class="group"><div class="row"><input class="input" placeholder="${t('Nome del posto')}" value="${esc(pl.name)}" data-plbind="name" maxlength="60"></div><div class="row"><input class="input" placeholder="${t('Indirizzo')}" value="${esc(pl.address)}" data-plbind="address" maxlength="120"></div><div class="row"><input class="input" placeholder="${t('Nota (es. chiedi il tavolo fuori)')}" value="${esc(pl.note)}" data-plbind="note" maxlength="120"></div></div>
+  ${pl.photos.length ? `<img class="cover" src="${pl.photos[0].dataUrl}" alt="" data-action="plLightbox" data-pl="${pl.id}" data-id="${pl.photos[0].id}"><div class="photos" style="margin-top:8px">${pl.photos.map((ph, i) => `<div class="photo"><img src="${ph.dataUrl}" alt="${esc(ph.name || '')}" data-action="plLightbox" data-pl="${pl.id}" data-id="${ph.id}"><button class="pbtn cov ${i === 0 ? 'on' : ''}" data-action="plCover" data-pl="${pl.id}" data-id="${ph.id}" aria-label="${t('Copertina')}">${i === 0 ? '★' : '☆'}</button><button class="pbtn del" data-action="plDelPhoto" data-pl="${pl.id}" data-id="${ph.id}" aria-label="${t('Elimina')}">×</button></div>`).join('')}</div><div class="group-foot">${t('★ = copertina: è la foto che vedi in giro per l\'app e nei piani in cui usi il posto.')}</div>` : ''}
+  <div class="group" style="margin-top:12px">${pl.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div>${f.url ? '' : `<div class="s">${fmtSize(f.size)}</div>`}</div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}<button class="x" data-action="plDelFile" data-pl="${pl.id}" data-id="${f.id}" aria-label="${t('Elimina')}">×</button></div>`).join('')}
+    <div class="row" style="gap:18px"><button class="add" data-action="plAddPhoto" data-pl="${pl.id}">${t('📷 Foto del menu')}</button><button class="add" data-action="plAddFile" data-pl="${pl.id}">${t('📎 Allegato')}</button><button class="add" data-action="plAddLink" data-pl="${pl.id}">${t('🔗 Link')}</button></div></div>
+  <div class="actions stack">${pl.address ? `<a class="btn tint" href="https://maps.apple.com/?q=${encodeURIComponent(pl.name + ' ' + pl.address)}" target="_blank" rel="noopener">${t('Apri in Mappe')}</a>` : ''}<button class="btn danger" data-action="delPlace" data-id="${pl.id}">${t('Elimina posto')}</button><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`;
 }
-function sheetLink(){ return `<h2>Aggiungi un link</h2><div class="group"><div class="row"><input class="input" id="lkUrl" type="url" placeholder="https://…" inputmode="url"></div><div class="row"><input class="input" id="lkName" placeholder="Titolo (facoltativo)" maxlength="60"></div></div><div class="actions"><button class="btn primary" data-action="saveLink">Aggiungi</button></div>`; }
+function sheetLink(){ return `<h2>${t('Aggiungi un link')}</h2><div class="group"><div class="row"><input class="input" id="lkUrl" type="url" placeholder="${t('https://…')}" inputmode="url"></div><div class="row"><input class="input" id="lkName" placeholder="${t('Titolo (facoltativo)')}" maxlength="60"></div></div><div class="actions"><button class="btn primary" data-action="saveLink">${t('Aggiungi')}</button></div>`; }
 function sheetExpense(p){
   const d = state.edraft;
   return `<h2 style="display:flex;align-items:center;gap:9px">${mi('euro', 30)} Aggiungi spesa</h2><p class="sub">${t('Parti uguali tra chi scegli. Si può annullare, non modificare.')}</p>
-  <div class="group"><div class="row"><input class="input" id="exDesc" placeholder="Cosa (es. cena, benzina, casa)" value="${esc(d.desc)}" data-ebind="desc" maxlength="60"></div><div class="row"><div class="grow t">Importo</div><input class="input right" id="exAmount" inputmode="decimal" placeholder="0,00 €" value="${esc(d.amount)}" data-ebind="amount" style="width:120px"></div></div>
-  <div class="group-title">Ha pagato</div><div class="chips" style="padding-top:0">${p.participants.map(x => `<button class="chip ${d.payer === x.id ? 'on' : ''}" data-action="exPayer" data-v="${x.id}">${x.id === state.me ? 'Io' : esc(nameOf(x.id))}</button>`).join('')}</div>
-  <div class="group-title">Diviso tra</div><div class="pad"><div class="seg"><button class="${d.among === 'yes' ? 'on' : ''}" data-action="exAmong" data-v="yes">Chi c'è (${p.participants.filter(x => x.rsvp === 'yes').length})</button><button class="${d.among === 'all' ? 'on' : ''}" data-action="exAmong" data-v="all">Tutti (${p.participants.length})</button><button class="${d.among === 'pick' ? 'on' : ''}" data-action="exAmong" data-v="pick">Scegli</button></div></div>
+  <div class="group"><div class="row"><input class="input" id="exDesc" placeholder="${t('Cosa (es. cena, benzina, casa)')}" value="${esc(d.desc)}" data-ebind="desc" maxlength="60"></div><div class="row"><div class="grow t">${t('Importo')}</div><input class="input right" id="exAmount" inputmode="decimal" placeholder="0,00 €" value="${esc(d.amount)}" data-ebind="amount" style="width:120px"></div></div>
+  <div class="group-title">${t('Ha pagato')}</div><div class="chips" style="padding-top:0">${p.participants.map(x => `<button class="chip ${d.payer === x.id ? 'on' : ''}" data-action="exPayer" data-v="${x.id}">${x.id === state.me ? 'Io' : esc(nameOf(x.id))}</button>`).join('')}</div>
+  <div class="group-title">${t('Diviso tra')}</div><div class="pad"><div class="seg"><button class="${d.among === 'yes' ? 'on' : ''}" data-action="exAmong" data-v="yes">Chi c'è (${p.participants.filter(x => x.rsvp === 'yes').length})</button><button class="${d.among === 'all' ? 'on' : ''}" data-action="exAmong" data-v="all">Tutti (${p.participants.length})</button><button class="${d.among === 'pick' ? 'on' : ''}" data-action="exAmong" data-v="pick">${t('Scegli')}</button></div></div>
   ${d.among === 'pick' ? `<div class="chips">${p.participants.map(x => `<button class="chip ${d.picked.has(x.id) ? 'on' : ''}" data-action="exPick" data-v="${x.id}">${x.id === state.me ? 'Io' : esc(nameOf(x.id))}</button>`).join('')}</div><div class="group-foot">${t('La spesa pesa solo su chi scegli: "Marco ha pagato la cena di Silvio" = paga Marco, scegli solo Silvio. Chi paga può anche non esserci.')}</div>` : ''}
-  <div class="actions"><button class="btn primary" data-action="saveExpense">Aggiungi</button></div>`;
+  <div class="actions"><button class="btn primary" data-action="saveExpense">${t('Aggiungi')}</button></div>`;
 }
 function sheetDecision(g){
   const d = state.ddraft;
   return `<h2 style="display:flex;align-items:center;gap:9px">${mi('domanda', 30)} Decidi qualcosa</h2><p class="sub">Una domanda secca per ${esc(g.name)}. Tu chiudi.</p>
-  <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="dBinary" data-v="1">Sì o No</button><button class="${d.binary ? '' : 'on'}" data-action="dBinary" data-v="0">Scelta tra opzioni</button></div></div>
+  <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="dBinary" data-v="1">${t('Sì o No')}</button><button class="${d.binary ? '' : 'on'}" data-action="dBinary" data-v="0">${t('Scelta tra opzioni')}</button></div></div>
   <div class="group"><div class="row"><input class="input" id="dq" placeholder="${d.binary ? 'Es. Invitiamo anche Paolo?' : 'Es. Cosa regaliamo a papà?'}" value="${esc(d.question)}" data-dbind="question" maxlength="80"></div></div>
-  ${d.binary ? `<div class="group-foot">${t('Due bottoni, 👍 Sì e 👎 No. Il voto vale subito, vince la maggioranza di chi risponde.')}</div>` : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmDOpt" data-i="${i}" aria-label="Rimuovi">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="dopt" placeholder="Un'opzione" maxlength="40"><button class="add" data-action="addDOpt">Aggiungi</button></div>` : ''}</div>
-  <div class="chips"><button class="chip" data-action="dPreset" data-v="Pizza|Sushi|Carne">Pizza / Sushi / Carne</button><button class="chip" data-action="dPreset" data-v="Mare|Montagna|Città">Mare / Montagna / Città</button></div>`}
-  <div class="actions"><button class="btn primary" data-action="saveDecision" data-g="${g.id}">Apri la decisione</button></div>`;
+  ${d.binary ? `<div class="group-foot">${t('Due bottoni, 👍 Sì e 👎 No. Il voto vale subito, vince la maggioranza di chi risponde.')}</div>` : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmDOpt" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="dopt" placeholder="${t('Un\'opzione')}" maxlength="40"><button class="add" data-action="addDOpt">${t('Aggiungi')}</button></div>` : ''}</div>
+  <div class="chips"><button class="chip" data-action="dPreset" data-v="Pizza|Sushi|Carne">${t('Pizza / Sushi / Carne')}</button><button class="chip" data-action="dPreset" data-v="Mare|Montagna|Città">${t('Mare / Montagna / Città')}</button></div>`}
+  <div class="actions"><button class="btn primary" data-action="saveDecision" data-g="${g.id}">${t('Apri la decisione')}</button></div>`;
 }
 function sheetExtra(){
   const d = state.xdraft;
   return `<h2>${t('Aggiungi una domanda')}</h2><p class="sub">${t('Si vota insieme a quando e dove.')}</p>
-  <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="xBinary" data-v="1">Sì o No</button><button class="${d.binary ? '' : 'on'}" data-action="xBinary" data-v="0">Scelta tra opzioni</button></div></div>
+  <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="xBinary" data-v="1">${t('Sì o No')}</button><button class="${d.binary ? '' : 'on'}" data-action="xBinary" data-v="0">${t('Scelta tra opzioni')}</button></div></div>
   <div class="group"><div class="row"><input class="input" id="xq" placeholder="${d.binary ? 'Es. Portiamo i bambini?' : 'Es. Cosa portiamo?'}" value="${esc(d.question)}" data-xbind="question" maxlength="80"></div></div>
-  ${d.binary ? '<div class="group-foot">Due bottoni, Sì e No.</div>' : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmXOpt" data-i="${i}" aria-label="Rimuovi">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="xopt" placeholder="Un'opzione" maxlength="40"><button class="add" data-action="addXOpt">Aggiungi</button></div>` : ''}</div>`}
+  ${d.binary ? '<div class="group-foot">Due bottoni, Sì e No.</div>' : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmXOpt" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="xopt" placeholder="${t('Un\'opzione')}" maxlength="40"><button class="add" data-action="addXOpt">${t('Aggiungi')}</button></div>` : ''}</div>`}
   <div class="actions"><button class="btn primary" data-action="saveExtra">${t('Aggiungi al piano')}</button></div>`;
 }
 
@@ -2270,7 +2499,7 @@ function renderDevbar(){
   const sel = $('#who');
   sel.innerHTML = Object.values(state.people).filter(p => !p.web).map(p => `<option value="${p.id}" ${state.me === p.id ? 'selected' : ''}>${esc(p.name)} (app)</option>`).join('')
     + Object.values(state.people).filter(p => p.web).map(p => `<option value="${p.id}" ${state.me === p.id ? 'selected' : ''}>${esc(p.name)} (web)</option>`).join('')
-    + `<option value="guest" ${state.me === 'guest' ? 'selected' : ''}>＋ Nuovo ospite (web)</option>`;
+    + `<option value="guest" ${state.me === 'guest' ? 'selected' : ''}>${t('＋ Nuovo ospite (web)')}</option>`;
 }
 // Aggiorna il DOM al posto di rifarlo. Serve perché ogni azione che salva
 // ridisegna tutto: misurando un tocco su "Forse" si vedeva la pagina aspettare
@@ -2632,6 +2861,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2016%3A13"></script>
+<script type="module" src="./live.js?v=26%2F08%2016%3A28"></script>
 </body>
 </html>
