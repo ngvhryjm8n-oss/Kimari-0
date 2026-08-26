@@ -6,6 +6,16 @@ l'organizzatore propone date/posti, il gruppo vota da un link web senza installa
 niente, l'organizzatore conferma → "Kimari! ✅". Sviluppatore solo (Vincenzo),
 budget ~0, prodotto in italiano.
 
+## Da leggere per primo
+
+**[STATO.md](STATO.md)** — dove siamo davvero al 27/8/2026: cosa funziona, cosa
+manca, e le sei cose imparate a caro prezzo. Questo file qui sotto descrive V0
+ed e' in parte superato: il dominio adesso e' **kimariapp.com**, le migrazioni
+sono applicate fino alla **0020**, e l'app parla cinque lingue.
+
+Per pubblicare: `npm run pubblica-main "messaggio"`. Mai a mano — copiare i
+file a mano ha gia' mandato online un index.html nuovo con un live.js vecchio.
+
 ## Stato attuale — FUNZIONA IN PRODUZIONE
 - Sito: GitHub Pages da questo repo (branch main), file UNICO `index.html`.
   URL: https://ngvhryjm8n-oss.github.io/Kimari-0/
