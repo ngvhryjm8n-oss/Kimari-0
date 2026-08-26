@@ -19,7 +19,8 @@
     "test:i18n-mancanti": "node tools/i18n-mancanti.mjs",
     "test:i18n-non-avvolte": "node tools/i18n-non-avvolte.mjs",
     "test:accenti": "node tools/accenti.mjs",
-    "test:i18n-avvolgi": "node tools/i18n-verifica-avvolgi.mjs index.html && node tools/i18n-verifica-avvolgi.mjs app/index.html"
+    "test:i18n-avvolgi": "node tools/i18n-verifica-avvolgi.mjs index.html && node tools/i18n-verifica-avvolgi.mjs app/index.html",
+    "pubblica-main": "bash tools/pubblica-su-main.sh"
   },
   "devDependencies": {
     "jsdom": "^27.0.0"
