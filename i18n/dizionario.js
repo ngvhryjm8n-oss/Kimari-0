@@ -40,6 +40,12 @@ export const DIZIONARIO = {
     de: 'Wann passt es dir? Markiere alles, was geht',
     ja: 'いつがいいですか？　都合のいい日をすべて選んでください'
   },
+  'Segna tutte le opzioni che ti vanno bene': {
+    en: 'Tick every option that works for you',
+    es: 'Marca todas las opciones que te vengan bien',
+    de: 'Markiere alles, was dir passt',
+    ja: '都合のいい候補をすべて選んでください'
+  },
   'Dove ti va bene?': {
     en: 'Where works for you?', es: '¿Dónde te viene bien?',
     de: 'Wo passt es dir?', ja: 'どこがいいですか？'
@@ -56,6 +62,36 @@ export const DIZIONARIO = {
   'Sei uno di questi?': {
     en: 'Are you one of these?', es: '¿Eres una de estas personas?',
     de: 'Bist du eine davon?', ja: 'この中にいますか？'
+  },
+  'Chi sei?': {
+    en: 'Who are you?', es: '¿Quién eres?',
+    de: 'Wer bist du?', ja: 'どなたですか？'
+  },
+  // Titoletti di sezione quando la data o il posto sono già decisi.
+  'Quando': { en: 'When', es: 'Cuándo', de: 'Wann', ja: '日時' },
+  'Dove': { en: 'Where', es: 'Dónde', de: 'Wo', ja: '場所' },
+  // La data la formatta toLocaleString (regola 4): qui passa già scritta.
+  'Si chiude {quando}': {
+    en: 'Closes {quando}', es: 'Se cierra {quando}',
+    de: 'Schließt {quando}', ja: '締切 {quando}'
+  },
+  'Nota per il gruppo · facoltativa': {
+    en: 'A note for the group · optional',
+    es: 'Una nota para el grupo · opcional',
+    de: 'Notiz für die Gruppe · optional',
+    ja: 'みんなへのひとこと · 任意'
+  },
+  'Es. per me va bene tutto, ma non troppo tardi': {
+    en: 'E.g. anything works for me, just not too late',
+    es: 'Ej. me viene bien todo, pero no muy tarde',
+    de: 'Z.B. mir passt alles, nur nicht zu spät',
+    ja: '例：どれでもいいですが、あまり遅くない時間で'
+  },
+  'Se non segni nulla vale come "nessuna opzione mi va bene". L’ultimo invio sostituisce il precedente.': {
+    en: 'Marking nothing counts as “none of these work for me”. Your latest submission replaces the previous one.',
+    es: 'No marcar nada cuenta como «ninguna me viene bien». El último envío sustituye al anterior.',
+    de: 'Nichts zu markieren gilt als „keine passt mir“. Die letzte Antwort ersetzt die vorherige.',
+    ja: '何も選ばない場合は「どれも都合が合わない」として扱われます。最後に送ったものが有効です。'
   },
   'Invia il mio voto': {
     en: 'Send my vote', es: 'Enviar mi voto',

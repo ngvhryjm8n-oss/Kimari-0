@@ -276,7 +276,10 @@ CREATE OR REPLACE FUNCTION public.set_rsvp(p_plan uuid, p_rsvp rsvp_status)
  SET search_path TO 'public'
 AS $function$
 begin
-  update participants set rsvp = p_rsvp where plan_id = p_plan and actor_id = current_actor_id();
+  update participants
+     set rsvp = p_rsvp,
+         rsvp_at = case when rsvp is distinct from p_rsvp then now() else rsvp_at end
+   where plan_id = p_plan and actor_id = current_actor_id();
   if not found then raise exception 'not a participant'; end if;
 end $function$;
 

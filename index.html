@@ -129,6 +129,12 @@ const DIZIONARIO = {
     de: 'Wann passt es dir? Markiere alles, was geht',
     ja: 'いつがいいですか？　都合のいい日をすべて選んでください'
   },
+  'Segna tutte le opzioni che ti vanno bene': {
+    en: 'Tick every option that works for you',
+    es: 'Marca todas las opciones que te vengan bien',
+    de: 'Markiere alles, was dir passt',
+    ja: '都合のいい候補をすべて選んでください'
+  },
   'Dove ti va bene?': {
     en: 'Where works for you?', es: '¿Dónde te viene bien?',
     de: 'Wo passt es dir?', ja: 'どこがいいですか？'
@@ -145,6 +151,36 @@ const DIZIONARIO = {
   'Sei uno di questi?': {
     en: 'Are you one of these?', es: '¿Eres una de estas personas?',
     de: 'Bist du eine davon?', ja: 'この中にいますか？'
+  },
+  'Chi sei?': {
+    en: 'Who are you?', es: '¿Quién eres?',
+    de: 'Wer bist du?', ja: 'どなたですか？'
+  },
+  // Titoletti di sezione quando la data o il posto sono già decisi.
+  'Quando': { en: 'When', es: 'Cuándo', de: 'Wann', ja: '日時' },
+  'Dove': { en: 'Where', es: 'Dónde', de: 'Wo', ja: '場所' },
+  // La data la formatta toLocaleString (regola 4): qui passa già scritta.
+  'Si chiude {quando}': {
+    en: 'Closes {quando}', es: 'Se cierra {quando}',
+    de: 'Schließt {quando}', ja: '締切 {quando}'
+  },
+  'Nota per il gruppo · facoltativa': {
+    en: 'A note for the group · optional',
+    es: 'Una nota para el grupo · opcional',
+    de: 'Notiz für die Gruppe · optional',
+    ja: 'みんなへのひとこと · 任意'
+  },
+  'Es. per me va bene tutto, ma non troppo tardi': {
+    en: 'E.g. anything works for me, just not too late',
+    es: 'Ej. me viene bien todo, pero no muy tarde',
+    de: 'Z.B. mir passt alles, nur nicht zu spät',
+    ja: '例：どれでもいいですが、あまり遅くない時間で'
+  },
+  'Se non segni nulla vale come "nessuna opzione mi va bene". L’ultimo invio sostituisce il precedente.': {
+    en: 'Marking nothing counts as “none of these work for me”. Your latest submission replaces the previous one.',
+    es: 'No marcar nada cuenta como «ninguna me viene bien». El último envío sustituye al anterior.',
+    de: 'Nichts zu markieren gilt als „keine passt mir“. Die letzte Antwort ersetzt die vorherige.',
+    ja: '何も選ばない場合は「どれも都合が合わない」として扱われます。最後に送ったものが有効です。'
   },
   'Invia il mio voto': {
     en: 'Send my vote', es: 'Enviar mi voto',
@@ -337,12 +373,17 @@ const fmtWhen = c => {
   const d = new Date(c.starts_at);
   const opts = c.all_day ? { weekday:'short', day:'numeric', month:'long' }
                          : { weekday:'short', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' };
-  let out = d.toLocaleString(undefined, opts);
-  if (c.ends_at && !c.all_day) out += ' – ' + new Date(c.ends_at).toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+  // LINGUA e non `undefined`: `undefined` prende la lingua del sistema, che
+  // può essere diversa da quella che l'interfaccia ha scelto. Chi ha il
+  // telefono in inglese e il browser in italiano vedeva testo italiano e date
+  // inglesi nella stessa schermata. Il fuso resta quello del dispositivo, che
+  // è sempre giusto: è l'ora in cui quella persona deve presentarsi.
+  let out = d.toLocaleString(LINGUA, opts);
+  if (c.ends_at && !c.all_day) out += ' – ' + new Date(c.ends_at).toLocaleTimeString(LINGUA, { hour:'2-digit', minute:'2-digit' });
   return out.charAt(0).toUpperCase() + out.slice(1);
 };
 const err = m => { const e = $('#err'); if(e){ e.textContent = m; e.style.display = 'block'; } };
-const brand = `<div class="brand"><img src="${ICON}" alt=""> Fatto con <b>&nbsp;Kimari</b></div>`;
+const brand = `<div class="brand"><img src="${ICON}" alt=""> ${t('Fatto con')} <b>&nbsp;Kimari</b></div>`;
 const topbar = (right) => `<div class="topbar"><a href="${location.pathname}">‹ Kimari</a>${right || '<span></span>'}</div>`;
 
 async function ensureSession(){
@@ -504,13 +545,13 @@ function renderCreate(){
     <div class="row"><input type="text" id="c-title" placeholder="Es. Pizzata di venerdì" maxlength="80" value="${esc(cdraft.title || '')}"></div>
     ${ME ? '' : `<div class="row"><input type="text" id="c-name" placeholder="Il tuo nome (organizzatore)" maxlength="40" value="${esc(cdraft.name || '')}"></div>`}
   </div>
-  <div class="stitle">Quando</div>
+  <div class="stitle">${t('Quando')}</div>
   <div class="seg"><button data-wm="deciding" class="${wm === 'deciding' ? 'on' : ''}">Ai voti</button><button data-wm="fixed" class="${wm === 'fixed' ? 'on' : ''}">Già deciso</button></div>
   <div class="group">${wm === 'deciding'
     ? [1,2,3,4,5].map(i => `<div class="row"><input type="datetime-local" id="c-w${i}"></div>`).join('')
     : `<div class="row"><input type="datetime-local" id="c-wf"></div>`}</div>
   ${wm === 'deciding' ? '<p class="fnote">Anche una sola: chi vota dice se gli va bene, e potrai aggiungerne altre dopo.</p>' : ''}
-  <div class="stitle">Dove</div>
+  <div class="stitle">${t('Dove')}</div>
   <div class="seg"><button data-dm="deciding" class="${dm === 'deciding' ? 'on' : ''}">Ai voti</button><button data-dm="fixed" class="${dm === 'fixed' ? 'on' : ''}">Già deciso</button><button data-dm="later" class="${dm === 'later' ? 'on' : ''}">Si vedrà</button></div>
   ${dm === 'later' ? '' : `<div class="group">${dm === 'deciding'
     ? [1,2,3].map(i => `<div class="row"><input type="text" id="c-p${i}" placeholder="Posto ${i}" maxlength="60"></div>`).join('')
@@ -671,24 +712,24 @@ function renderBallot(o){
   <div class="card">
     <span class="mplate"><img src="${PENSA}" width="86" alt=""></span>
     <h1>${esc(preview.title)}</h1>
-    <p class="sub">${esc(preview.organizer)} chiede al gruppo · ${preview.voters} ${preview.voters === 1 ? 'ha' : 'hanno'} già votato</p>
+    <p class="sub">${t('{nome} chiede al gruppo', { nome: esc(preview.organizer) })} · ${t('{n} hanno già votato', { n: preview.voters })}</p>
     <span class="badge dec">${t('Ai voti')}</span>
-    ${preview.deadline_at ? `<div class="sub" style="margin-top:8px">Si chiude ${fmtWhen({ starts_at: preview.deadline_at })}</div>` : ''}
+    ${preview.deadline_at ? `<div class="sub" style="margin-top:8px">${t('Si chiude {quando}', { quando: fmtWhen({ starts_at: preview.deadline_at }) })}</div>` : ''}
   </div>
   ${askWhen ? `<div class="stitle">${t('Quando ti va bene? Segna tutte le opzioni ok')}</div><div class="group" id="g-when">${cw.map(c => candRow(c, counts)).join('')}</div>` : ''}
   ${preview.when_mode === 'fixed' && preview.starts_at ? `<div class="stitle">Quando</div><div class="group"><div class="row"><b>${esc(fmtWhen(preview))}</b></div></div>` : ''}
   ${askWhere ? `<div class="stitle">${t('Dove ti va bene?')}</div><div class="group" id="g-where">${cd.map(c => candRow(c, counts)).join('')}</div>` : ''}
   ${preview.where_mode === 'fixed' && preview.place_name ? `<div class="stitle">Dove</div><div class="group"><div class="row"><b>${esc(preview.place_name)}</b>${preview.place_address ? ` · <span class="s">${esc(preview.place_address)}</span>` : ''}</div></div>` : ''}
-  ${o.guest ? `<div class="stitle">Chi sei?</div>
+  ${o.guest ? `<div class="stitle">${t('Chi sei?')}</div>
   <div class="group">
     ${people.length ? `<div class="chips" id="claims">${people.map(x => `<button class="chip" data-claim="${x.actor_id}">${esc(x.name)}</button>`).join('')}</div>` : ''}
-    <div class="row"><input type="text" id="name" placeholder="${people.length ? 'Oppure scrivi il tuo nome' : 'Il tuo nome'}" maxlength="40" autocomplete="name"></div>
+    <div class="row"><input type="text" id="name" placeholder="${people.length ? t('Oppure scrivi il tuo nome') : t('Il tuo nome')}" maxlength="40" autocomplete="name"></div>
   </div>` : ''}
-  <div class="stitle">Nota per il gruppo · facoltativa</div>
-  <div class="group"><div class="row"><textarea id="note" rows="2" maxlength="200" placeholder="Es. per me va bene tutto, ma non troppo tardi">${esc(myBallot ? myBallot.note : '')}</textarea></div></div>
+  <div class="stitle">${t('Nota per il gruppo · facoltativa')}</div>
+  <div class="group"><div class="row"><textarea id="note" rows="2" maxlength="200" placeholder="${t('Es. per me va bene tutto, ma non troppo tardi')}">${esc(myBallot ? myBallot.note : '')}</textarea></div></div>
   <div class="err" id="err"></div>
-  <button class="btn" id="send">${o.prefill && preview.voters && FULL.ballots.some(b => b.actor_id === ME.id) ? 'Aggiorna il mio voto' : 'Invia il mio voto'}</button>
-  <p class="foot">Se non segni nulla vale come "nessuna opzione mi va bene". L'ultimo invio sostituisce il precedente.</p>
+  <button class="btn" id="send">${o.prefill && preview.voters && FULL.ballots.some(b => b.actor_id === ME.id) ? t('Aggiorna il mio voto') : t('Invia il mio voto')}</button>
+  <p class="foot">${t(`Se non segni nulla vale come "nessuna opzione mi va bene". L'ultimo invio sostituisce il precedente.`)}</p>
   ${brand}`;
 
   document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
