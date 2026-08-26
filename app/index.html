@@ -1665,6 +1665,54 @@ function renderDevbar(){
     + Object.values(state.people).filter(p => p.web).map(p => `<option value="${p.id}" ${state.me === p.id ? 'selected' : ''}>${esc(p.name)} (web)</option>`).join('')
     + `<option value="guest" ${state.me === 'guest' ? 'selected' : ''}>＋ Nuovo ospite (web)</option>`;
 }
+// Aggiorna il DOM al posto di rifarlo. Serve perché ogni azione che salva
+// ridisegna tutto: misurando un tocco su "Forse" si vedeva la pagina aspettare
+// 719 ms e poi sostituire 40.073 caratteri di DOM per cambiarne 2, buttando e
+// ricreando anche le 7 immagini. Le immagini sono base64 e non passano dalla
+// rete, ma vengono comunque ridecodificate e ridisegnate: è quello lo
+// sfarfallio che si vede sul telefono.
+//
+// Qui si scende in parallelo nei due alberi e si tocca solo ciò che differisce.
+// Non serve una libreria: il prototipo ascolta i click su document, quindi
+// nessun nodo porta ascoltatori da preservare.
+function aggiorna(vecchio, nuovoHtml){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = nuovoHtml;
+  sincronizza(vecchio, tmp);
+}
+function sincronizza(a, b){
+  const fa = a.childNodes, fb = b.childNodes;
+  // Coda in eccesso: si toglie dal fondo, così gli indici davanti non ballano.
+  while(fa.length > fb.length) a.removeChild(a.lastChild);
+  for(let i = 0; i < fb.length; i++){
+    const vn = fa[i], nn = fb[i];
+    if(!vn){ a.appendChild(nn.cloneNode(true)); continue; }
+    if(vn.nodeType !== nn.nodeType || vn.nodeName !== nn.nodeName){
+      a.replaceChild(nn.cloneNode(true), vn); continue;
+    }
+    if(vn.nodeType === 3){                                          // testo
+      if(vn.nodeValue !== nn.nodeValue) vn.nodeValue = nn.nodeValue;
+      continue;
+    }
+    if(vn.nodeType !== 1) continue;
+    // attributi: solo quelli che cambiano davvero
+    for(const at of [...nn.attributes]){
+      if(vn.getAttribute(at.name) !== at.value) vn.setAttribute(at.name, at.value);
+    }
+    for(const at of [...vn.attributes]){
+      if(!nn.hasAttribute(at.name)) vn.removeAttribute(at.name);
+    }
+    // I campi hanno un valore che vive nella proprietà, non nell'attributo:
+    // senza questo, svuotare una casella dopo averla salvata non funziona.
+    if(vn.nodeName === 'INPUT' || vn.nodeName === 'TEXTAREA'){
+      const nuovo = vn.nodeName === 'TEXTAREA' ? nn.textContent : (nn.getAttribute('value') || '');
+      if(vn.value !== nuovo) vn.value = nuovo;
+      if(vn.type === 'checkbox' || vn.type === 'radio') vn.checked = nn.hasAttribute('checked');
+    }
+    sincronizza(vn, nn);
+  }
+}
+
 function render(){
   const kk = (location.hash.replace('#','') || 'home').split('/')[0];
   if(state._lastRoute !== location.hash){ state._lastRoute = location.hash; state.visits = state.visits || {}; state.visits[kk] = (state.visits[kk] || 0) + 1; }
@@ -1685,7 +1733,7 @@ function render(){
   else if(r.name === 'profile' && !isWeb()){ html = vProfile(); tab = 'profile'; }
   else html = vHome();
   if(r.name === 'news' && !isWeb()) state.lastSeenNews = Date.now();
-  $('#app').innerHTML = `<div class="screen" id="screen">${html}</div>${showTab ? tabbar(tab) : ''}`;
+  aggiorna($('#app'), `<div class="screen" id="screen">${html}</div>${showTab ? tabbar(tab) : ''}`);
   if(!stessaRotta) $('#app').querySelectorAll('.view').forEach(v => v.classList.add('entra'));
   $('#screen').scrollTop = keep; state.lastRoute = location.hash; renderDevbar();
   // giaEntrato() legge una marcatura lasciata da live.js: senza, questo render
@@ -1966,7 +2014,7 @@ $('#fileInput').addEventListener('change', e => {
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target && e.target.id === 'commentInput'){ e.preventDefault(); const b = $('[data-action="comment"]'); if(b) b.click(); } });
 window.addEventListener('hashchange', render);
 reset();
-window.__kimari = { state, render, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy, msgSheet, sheetName };
+window.__kimari = { state, render, aggiorna, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy, msgSheet, sheetName };
 render();
 })();
 </script>
@@ -1977,6 +2025,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2014%3A15"></script>
+<script type="module" src="./live.js?v=26%2F08%2014%3A23"></script>
 </body>
 </html>
