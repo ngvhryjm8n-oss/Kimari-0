@@ -726,6 +726,41 @@ export const DIZIONARIO = {
   'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
   'è entrato nel gruppo': { en: 'joined the group', es: 'se ha unido al grupo',
                               de: 'ist der Gruppe beigetreten', ja: 'がグループに参加しました' },
+  /* ------------------------------- aggiungere alla schermata Home
+     Per chi è entrato col solo nome non è un consiglio estetico: la sua
+     sessione vive in quel browser, e senza un account non c'è modo di
+     recuperarla. È anche l'unico modo di ricevere notifiche su iPhone. */
+  'Tieni Kimari a portata di mano': {
+    en: 'Keep Kimari within reach', es: 'Ten Kimari a mano',
+    de: 'Kimari griffbereit halten', ja: 'Kimari をすぐ開けるように'
+  },
+  'Aggiungila alla schermata Home: ricevi le notifiche dei piani nuovi, e non perdi i tuoi piani se cambi browser.': {
+    en: 'Add it to your Home Screen: you’ll get notified about new plans, and you won’t lose your plans if you change browser.',
+    es: 'Añádela a la pantalla de inicio: recibirás avisos de los planes nuevos y no perderás los tuyos si cambias de navegador.',
+    de: 'Leg sie auf den Home-Bildschirm: Du bekommst Bescheid über neue Pläne und verlierst deine nicht, wenn du den Browser wechselst.',
+    ja: 'ホーム画面に追加しておくと、新しい予定の通知が届き、ブラウザを変えても予定が消えません。'
+  },
+  'Installa': { en: 'Install', es: 'Instalar', de: 'Installieren', ja: 'インストール' },
+  'Ho capito': { en: 'Got it', es: 'Entendido', de: 'Verstanden', ja: 'わかりました' },
+  'Tocca Condividi in basso, poi "Aggiungi a Home".': {
+    en: 'Tap Share at the bottom, then “Add to Home Screen”.',
+    es: 'Toca Compartir abajo y luego «Añadir a pantalla de inicio».',
+    de: 'Tippe unten auf Teilen, dann „Zum Home-Bildschirm“.',
+    ja: '下の「共有」をタップして、「ホーム画面に追加」を選びます。'
+  },
+  'Apri il menu del browser, poi "Installa app".': {
+    en: 'Open the browser menu, then “Install app”.',
+    es: 'Abre el menú del navegador y luego «Instalar aplicación».',
+    de: 'Öffne das Browser-Menü, dann „App installieren“.',
+    ja: 'ブラウザのメニューから「アプリをインストール」を選びます。'
+  },
+  'Su iPhone serve Safari: apri kimariapp.com con Safari, poi Condividi e "Aggiungi a Home".': {
+    en: 'On iPhone you need Safari: open kimariapp.com in Safari, then Share and “Add to Home Screen”.',
+    es: 'En iPhone hace falta Safari: abre kimariapp.com con Safari, luego Compartir y «Añadir a pantalla de inicio».',
+    de: 'Auf dem iPhone brauchst du Safari: Öffne kimariapp.com in Safari, dann Teilen und „Zum Home-Bildschirm“.',
+    ja: 'iPhone では Safari が必要です。Safari で kimariapp.com を開き、「共有」から「ホーム画面に追加」を選んでください。'
+  },
+
   'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
