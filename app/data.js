@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2021%3A23';
+} from './map.js?v=26%2F08%2021%3A43';
 
 let sb = null;
 
@@ -425,7 +425,10 @@ export async function attivaPush() {
 
   const j = sub.toJSON();
   await rpc('save_push_subscription', {
-    p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth
+    p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth,
+    // La lingua di QUESTO dispositivo: la notifica comparira' qui, e il server
+    // non ha altro modo di saperla.
+    p_lingua: (navigator.language || 'it').slice(0, 2)
   });
   return true;
 }

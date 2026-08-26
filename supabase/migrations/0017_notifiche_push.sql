@@ -21,6 +21,13 @@ create table if not exists public.push_subscriptions (
   -- A cosa serve saperlo: se una notifica viene rifiutata perche' l'iscrizione
   -- e' morta, la si cancella. Tenere endpoint defunti vuol dire ritentare per
   -- sempre verso dispositivi che non esistono piu'.
+  -- La lingua di QUESTO dispositivo, non della persona: la notifica compare
+  -- li', e chi ha il telefono in inglese e il tablet in italiano si aspetta
+  -- ciascuno nella propria. Il server non puo' saperla in altro modo — e
+  -- senza, dopo aver tolto l'italiano da ogni schermata, tornerebbe dalla
+  -- finestra proprio nelle notifiche.
+  lingua      text        not null default 'it'
+              check (lingua in ('it','en','es','de','ja')),
   ultimo_ok   timestamptz,
   errori      integer     not null default 0,
   created_at  timestamptz not null default now()
@@ -42,7 +49,7 @@ create policy push_subscriptions_read on public.push_subscriptions
 -- Iscriversi. Se l'endpoint c'e' gia' si aggiorna: il browser puo' rinnovarlo
 -- da solo, e ritrovarselo due volte significherebbe due notifiche identiche.
 create or replace function public.save_push_subscription(
-  p_endpoint text, p_p256dh text, p_auth text)
+  p_endpoint text, p_p256dh text, p_auth text, p_lingua text default 'it')
 returns uuid
 language plpgsql
 security definer
@@ -67,12 +74,14 @@ begin
     raise exception 'iscrizione senza chiavi: le notifiche sarebbero in chiaro';
   end if;
 
-  insert into public.push_subscriptions (actor_id, endpoint, p256dh, auth)
-  values (v_actor, btrim(p_endpoint), p_p256dh, p_auth)
+  insert into public.push_subscriptions (actor_id, endpoint, p256dh, auth, lingua)
+  values (v_actor, btrim(p_endpoint), p_p256dh, p_auth,
+          case when p_lingua in ('it','en','es','de','ja') then p_lingua else 'it' end)
   on conflict (endpoint) do update
      set actor_id = excluded.actor_id,
          p256dh   = excluded.p256dh,
          auth     = excluded.auth,
+         lingua   = excluded.lingua,
          errori   = 0
   returning id into v_id;
 
@@ -96,9 +105,9 @@ begin
 end;
 $$;
 
-revoke all on function public.save_push_subscription(text, text, text) from public;
+revoke all on function public.save_push_subscription(text, text, text, text) from public;
 revoke all on function public.delete_push_subscription(text) from public;
-grant execute on function public.save_push_subscription(text, text, text) to anon, authenticated;
+grant execute on function public.save_push_subscription(text, text, text, text) to anon, authenticated;
 grant execute on function public.delete_push_subscription(text) to anon, authenticated;
 
 -- ------------------------------------------------------------------ prova
