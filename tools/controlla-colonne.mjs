@@ -35,7 +35,10 @@ for (const m of src.matchAll(/\.from\('([a-z_]+)'\)\s*\.select\(\s*'([^']*)'/g))
 // la ricaduta sparisce, l'eccezione cade con lei. Senza questo controllo una
 // riga qui dentro diventerebbe il modo comodo per far tacere lo strumento.
 const RICADUTE = {
-  'actors.avatar_path': /COLONNE_ATTORE = 'id, display_name'/
+  'actors.avatar_path': /COLONNE_ATTORE = 'id, display_name'/,
+  // Una TABELLA intera puo' mancare: e' il caso di una vista nuova che arriva
+  // con una migrazione non ancora applicata.
+  'persone_visibili': /ELENCO_NOMI = 'actors'/
 };
 
 console.log('\ncolonne che il client legge, contro il database vero\n');
@@ -59,8 +62,9 @@ for (const [tabella, campi] of [...letture].sort()) {
     continue;
   }
 
-  // Quale colonna manca, per poter cercare la sua ricaduta.
-  const quale = (messaggio.match(/column ([a-z_]+\.[a-z_]+) does not exist/) || [])[1];
+  // Quale colonna — o quale tabella intera — manca, per cercarne la ricaduta.
+  const quale = (messaggio.match(/column ([a-z_]+\.[a-z_]+) does not exist/) || [])[1]
+             || (/PGRST205|Could not find the table/.test(messaggio) ? tabella : null);
   const ricaduta = quale && RICADUTE[quale];
 
   if (ricaduta && ricaduta.test(src)) {

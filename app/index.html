@@ -1088,6 +1088,8 @@ const DIZIONARIO = {
   'Crea': { en: 'Create', es: 'Crear', de: 'Neu', ja: 'つくる' },
   'Novità': { en: 'News', es: 'Novedades', de: 'Neues', ja: '新着' },
   'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
+  'è entrato nel gruppo': { en: 'joined the group', es: 'se ha unido al grupo',
+                              de: 'ist der Gruppe beigetreten', ja: 'がグループに参加しました' },
   'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
@@ -2801,6 +2803,14 @@ function mergePersona(webId, appId){
 const decisioneOPiano = p => p.kind === 'decision' ? t('ha annullato la decisione') : t('ha annullato il piano');
 function feedItems(){
   const items = [];
+  // Chi entra in un gruppo. Mancava del tutto: si mandava l'invito e non si
+  // sapeva se qualcuno l'avesse aperto. Segnalato da Vincenzo il 27/8.
+  Object.values(state.groups).forEach(g => {
+    (g.entrati || []).forEach(e => {
+      if(e.id === state.me) return;           // il proprio ingresso non e' una notizia
+      items.push({ at:e.il, by:e.id, text:t('è entrato nel gruppo'), g, cat:'group' });
+    });
+  });
   visiblePlans().forEach(p => {
     const g = groupOf(p);
     p.changes.forEach(c => { if(c.kind === 'created') items.push({ at:c.at, by:c.by, text: p.kind === 'decision' ? t('ha aperto una decisione') : t('ha creato un piano'), p, g, cat: p.status === 'deciding' ? 'vote' : 'confirm' }); if(c.kind === 'confirmed') items.push({ at:c.at, by:c.by, text:`ha ${p.kind === 'decision' ? 'chiuso la decisione' : 'confermato'}: ${c.text.replace(/^(Confermato|Deciso): /,'')}`, p, g, cat:'confirm' }); if(c.kind === 'changed') items.push({ at:c.at, by:c.by, text:`ha modificato il piano · ${c.text}`, p, g, cat:'change' }); if(c.kind === 'cancelled') items.push({ at:c.at, by:c.by, text: decisioneOPiano(p) + ' · ' + c.text, p, g, cat:'change' }); });
@@ -3759,6 +3769,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2000%3A46"></script>
+<script type="module" src="./live.js?v=27%2F08%2001%3A08"></script>
 </body>
 </html>

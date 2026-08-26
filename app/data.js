@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=27%2F08%2000%3A46';
+} from './map.js?v=27%2F08%2001%3A08';
 
 let sb = null;
 
@@ -42,6 +42,15 @@ async function rpc(name, args) {
 //
 // Si prova una volta sola all'avvio e ci si ricorda la risposta.
 let COLONNE_ATTORE = 'id, display_name, avatar_path';
+
+// persone_visibili arriva con la 0021. Finche' non e' applicata la vista non
+// esiste, e leggerla farebbe fallire l'avvio dell'app intera — che e'
+// esattamente l'errore commesso il 26/8 con avatar_path.
+//
+// Si prova una volta all'avvio e ci si ricorda la risposta. Con actors si
+// vedono meno nomi (chi condivide solo un gruppo resta "Membro eliminato"),
+// ma l'app funziona: meglio un'etichetta sbagliata che uno schermo d'errore.
+let ELENCO_NOMI = 'persone_visibili';
 
 async function conRicaduta(fn, senza) {
   try { return await fn(); }
@@ -255,6 +264,10 @@ export async function loadState() {
     try { await rows(sb.from('actors').select('avatar_path').limit(1), 'le immagini'); }
     catch { COLONNE_ATTORE = 'id, display_name'; }
   }
+  if (ELENCO_NOMI === 'persone_visibili') {
+    try { await rows(sb.from('persone_visibili').select('id').limit(1), 'i nomi'); }
+    catch { ELENCO_NOMI = 'actors'; }
+  }
 
   // TUTTO in un giro solo. Prima erano quattro ondate in fila — l'attore, poi
   // i piani, poi le righe filtrate per plan_id, poi quelle filtrate per
@@ -305,7 +318,13 @@ export async function loadState() {
     rows(sb.from('extra_approvals').select('*'), 'le preferenze sulle domande'),
     rows(sb.from('proposal_votes').select('*'), 'i voti sulle proposte'),
     rows(sb.from('expense_shares').select('*'), 'le quote delle spese'),
-    rows(sb.from('actors').select(COLONNE_ATTORE), 'i nomi')
+    // persone_visibili invece di actors (0021): la vista mostra anche chi
+    // condivide solo un GRUPPO, e non espone le email. Leggendo actors
+    // direttamente, nell'elenco dei membri comparivano tutti come "Membro
+    // eliminato".
+    rows(sb.from(ELENCO_NOMI).select(
+      ELENCO_NOMI === 'persone_visibili' ? 'id, display_name, avatar_path' : COLONNE_ATTORE
+    ), 'i nomi')
   ]);
 
   // Il controllo va DOPO: senza profilo non c'è niente da mostrare, ma le

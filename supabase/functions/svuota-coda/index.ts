@@ -46,6 +46,13 @@ const TESTI: Record<string, Record<string, { t: string; c: string }>> = {
     de: { t: 'Etwas hat sich geändert', c: '{piano}: öffnen, um zu sehen was' },
     ja: { t: '変更がありました',          c: '{piano}：開いて確認してください' }
   },
+  group: {
+    it: { t: 'Qualcuno e’ entrato', c: 'Un amico e’ entrato nel gruppo' },
+    en: { t: 'Someone joined',     c: 'A friend joined the group' },
+    es: { t: 'Alguien se ha unido', c: 'Un amigo se ha unido al grupo' },
+    de: { t: 'Jemand ist dazugekommen', c: 'Ein Freund ist der Gruppe beigetreten' },
+    ja: { t: '新しいメンバー',        c: '友だちがグループに参加しました' }
+  },
   late: {
     it: { t: 'Imprevisto', c: '{piano}: qualcuno arriva tardi o non viene' },
     en: { t: 'A hitch',    c: '{piano}: someone’s late or can’t come' },
