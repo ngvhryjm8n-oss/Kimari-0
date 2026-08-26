@@ -3314,8 +3314,8 @@ function vPlan(p){
 }
 function vNews(){
   const items = feedItems(); const unreadFrom = state.lastSeenNews;
-  return `${nav('Novità', '')}<div class="view"><h2 class="large">${t('Novità')}</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
-  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="p/${it.p.id}">${avatar(n)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, t('non vieni')) : esc(it.text)}`}</div><div class="s">${it.p.emoji} ${esc(it.p.title)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
+  return `${nav(t('Novità'), '')}<div class="view"><h2 class="large">${t('Novità')}</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
+  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="${it.p ? 'p/' + it.p.id : 'g/' + it.g.id}">${avatar(n, '', it.by)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, t('non vieni')) : esc(it.text)}`}</div><div class="s">${it.p ? it.p.emoji + ' ' + esc(it.p.title) : (it.g.emoji || '') + ' ' + esc(it.g.name)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
 }
 function toggleRow(label, on, action, key){ return `<div class="row"><div class="grow t">${label}</div><button class="sw ${on ? 'on' : ''}" data-action="${action}" data-k="${key}" aria-label="${label}"></button></div>`; }
 function vProfile(){
@@ -3905,6 +3905,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2002%3A02"></script>
+<script type="module" src="./live.js?v=27%2F08%2003%3A15"></script>
 </body>
 </html>

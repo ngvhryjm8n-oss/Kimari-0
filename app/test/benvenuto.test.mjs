@@ -527,6 +527,30 @@ await test('matchMedia mancante non deve far morire il render', async () => {
   assert.ok(dom.window.document.getElementById('app').textContent.length > 0,
     'schermata vuota');
 });
+
+await test('le Novita reggono anche le voci senza piano', async () => {
+  // Difetto introdotto da me stanotte, trovato da Vincenzo: "non riesco a
+  // cliccare novita". Avevo aggiunto le voci "e entrato nel gruppo", che NON
+  // hanno un piano — e la schermata faceva it.p.title su ogni voce. Su un
+  // account con gruppi la pagina moriva, e il tocco sembrava non funzionare.
+  //
+  // Il sintomo non diceva niente della causa: sembrava un problema del tocco.
+  const dom = await avvia(true, true);
+  const K = dom.window.__kimari;
+
+  // Una voce di feed senza piano, come quelle degli ingressi nei gruppi.
+  const g = Object.values(K.state.groups)[0];
+  assert.ok(g, 'senza gruppi questa prova non misura niente');
+  g.entrati = [{ id: Object.keys(K.state.people)[0], il: Date.now() - 60000 }];
+
+  // Non deve morire, e la voce deve comparire.
+  K.state.lastSeenNews = 0;
+  dom.window.location.hash = '#news';
+  K.render();
+  const testo = dom.window.document.getElementById('app').textContent;
+  assert.ok(testo.length > 0, 'la schermata Novita e morta');
+  assert.ok(!/undefined/.test(testo), 'a schermo compare "undefined"');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
