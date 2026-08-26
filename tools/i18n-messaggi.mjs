@@ -27,7 +27,12 @@ let quanti = 0;
 // "Annullato: l\'account" la stringa sembrerebbe finire sull'apostrofo e il
 // messaggio uscirebbe troncato — cosa che è successa, e sembrava una
 // traduzione mancante invece che uno strumento rotto.
-for (const re of [/toast: '((?:\\.|[^'\\])*)'/g, /K\.t\('((?:\\.|[^'\\])*)'/g]) {
+// `tr(...)` è l'alias che usa lo schermo di errore, dove K può non esserci.
+// Era sfuggito al primo giro: l'ho scoperto vedendo quello schermo comparire
+// in italiano su un'app resa in inglese, e non da un controllo.
+for (const re of [/toast: '((?:\\.|[^'\\])*)'/g,
+                  /K\.t\('((?:\\.|[^'\\])*)'/g,
+                  /\btr\('((?:\\.|[^'\\])*)'/g]) {
   for (const m of src.matchAll(re)) {
     const testo = m[1].replace(/\\'/g, "'");
     quanti++;

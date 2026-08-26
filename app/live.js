@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2017%3A52';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2017%3A52';
+import * as data from './data.js?v=26%2F08%2017%3A56';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2017%3A56';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 17:52';
+export const VERSIONE = '26/08 17:56';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -1172,13 +1172,18 @@ export function schermoNonCollegato(K, e) {
   card.className = 'card';
   card.style.cssText = 'margin:40px 16px; text-align:center';
 
+  // Tradotto come tutto il resto: e' una schermata che la gente legge, e
+  // arriva proprio nel momento peggiore per leggerla in una lingua altrui.
+  // K puo' essere vuoto quando la chiama una prova: allora esce l'italiano.
+  const tr = (K && K.t) ? K.t : (x => x);
+
   const h = document.createElement('h1');
-  h.textContent = orologio ? 'L’orologio del telefono è sbagliato' : 'Non riesco a collegarmi';
+  h.textContent = orologio ? tr('L’orologio del telefono è sbagliato') : tr('Non riesco a collegarmi');
   const p = document.createElement('p');
   p.className = 'sub';
   p.textContent = orologio
-    ? 'Kimari non riesce ad autenticarsi finché la data e l’ora non sono giuste. Attiva l’orario automatico nelle impostazioni.'
-    : 'I tuoi piani sono al sicuro sul server: non si vedono perché non riesco a leggerli adesso.';
+    ? tr('Kimari non riesce ad autenticarsi finché la data e l’ora non sono giuste. Attiva l’orario automatico nelle impostazioni.')
+    : tr('I tuoi piani sono al sicuro sul server: non si vedono perché non riesco a leggerli adesso.');
 
   // Regola 5: il dettaglio vero di Supabase, non un messaggio generico.
   const d = document.createElement('p');
@@ -1189,7 +1194,7 @@ export function schermoNonCollegato(K, e) {
   const b = document.createElement('button');
   b.className = 'btn';
   b.style.marginTop = '14px';
-  b.textContent = 'Riprova';
+  b.textContent = tr('Riprova');
   b.addEventListener('click', () => location.reload());
 
   card.append(h, p, b, d);
