@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2019%3A02';
+} from './map.js?v=26%2F08%2019%3A18';
 
 let sb = null;
 
@@ -85,6 +85,27 @@ export async function ensureSession() {
     // Scaduta l'attesa senza sessione: c'è stato un errore vero, e va detto.
     const motivo = new URLSearchParams(location.hash.replace(/^#/, '')).get('error_description')
                 || new URLSearchParams(location.search).get('error_description');
+
+    // "Identity is already linked to another user": si stava provando a
+    // collegare Apple o Google a una sessione ospite, ma quell'identità
+    // appartiene già a un account. Non è un errore da mostrare: la persona ha
+    // semplicemente già un account, e la cosa giusta è farla entrare.
+    //
+    // Succede a chi apre l'app su un secondo dispositivo. Prima si tornava
+    // alla schermata d'ingresso senza una parola, e riprovando succedeva
+    // sempre lo stesso: un vicolo cieco.
+    if (motivo && /already.*(linked|registered|exists)|identity_already/i.test(motivo)) {
+      try { localStorage.removeItem(PENDING_LINK); } catch { /* niente */ }
+      const provider = new URLSearchParams(location.hash.replace(/^#/, '')).get('provider')
+                    || localStorage.getItem('kimari_provider') || 'google';
+      const { error } = await sb.auth.signInWithOAuth({
+        provider, options: { redirectTo: location.origin + location.pathname }
+      });
+      if (error) throw new Error('Accesso rifiutato: ' + error.message);
+      // Da qui parte un redirect: la pagina se ne va.
+      return null;
+    }
+
     if (motivo) throw new Error('Accesso rifiutato: ' + motivo);
   }
 
@@ -109,16 +130,38 @@ const PENDING_LINK = 'kimari_link_google';
 export async function signInWithProvider(provider, redirectTo) {
   const s = await currentSession();
   const opts = { provider, options: { redirectTo } };
-  // Chi è entrato come ospite collega Google all'account che ha già, così non
-  // perde i piani a cui ha partecipato.
-  if (s && s.user.is_anonymous) {
+
+  // Collegare serve a NON perdere quello che si è fatto da ospite. Ma se da
+  // ospite non si è ancora fatto niente — sessione appena creata, nessun
+  // profilo — non c'è niente da salvare, e collegare fa danno: se quella
+  // identità Apple o Google è già legata a un altro account, Supabase rifiuta
+  // e si torna alla schermata d'ingresso senza spiegazioni.
+  //
+  // È il caso normale di chi apre l'app su un secondo dispositivo, o su un
+  // indirizzo nuovo: lì la sessione ospite è vuota per definizione.
+  const daSalvare = s && s.user.is_anonymous && await hoQualcosaDaSalvare();
+
+  // Quale provider si sta usando, per poterlo riprovare al ritorno se il
+  // collegamento viene rifiutato: nell'URL di ritorno quell'informazione non c'e'.
+  try { localStorage.setItem('kimari_provider', provider); } catch { /* niente */ }
+
+  if (daSalvare) {
     try { localStorage.setItem(PENDING_LINK, '1'); } catch { /* niente */ }
     const { error } = await sb.auth.linkIdentity(opts);
     if (error) throw error;
   } else {
+    try { localStorage.removeItem(PENDING_LINK); } catch { /* niente */ }
     const { error } = await sb.auth.signInWithOAuth(opts);
     if (error) throw error;
   }
+}
+
+// C'è qualcosa che si perderebbe entrando come un altro utente? Un profilo
+// basta: significa che questa persona ha già scritto il proprio nome, e forse
+// votato. Senza profilo la sessione ospite è un contenitore vuoto.
+async function hoQualcosaDaSalvare() {
+  try { return !!(await myActor()); }
+  catch { return false; }   // se non si riesce a chiedere, non si rischia il collegamento
 }
 
 // Da chiamare all'avvio. Se si torna da un collegamento, l'actor c'è già ma si
