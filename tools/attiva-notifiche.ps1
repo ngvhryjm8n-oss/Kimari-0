@@ -56,6 +56,14 @@ npx --yes supabase functions deploy svuota-coda --project-ref $Progetto --no-ver
 if ($LASTEXITCODE -ne 0) { Write-Host "non riuscito" -ForegroundColor Red; exit 1 }
 
 Write-Host ""
+# Si scrive il SQL gia' pronto invece di far modificare il modello a mano:
+# Blocco note salva in UTF-16 e il database legge caratteri separati da byte
+# nulli. Il sintomo non ha niente a che vedere con la causa, e ci si perde
+# mezz'ora. Il file pronto contiene un segreto, quindi non entra nel repo.
+$modello = Get-Content "tools\cron-notifiche.sql" -Raw
+$pronto = $modello -replace "__SEGRETO__", $cron
+[System.IO.File]::WriteAllText("$PWD\tools\cron-notifiche-pronto.sql", $pronto, (New-Object System.Text.UTF8Encoding $false))
+
 Write-Host "Fatto. Resta un passo solo, nel SQL Editor di Supabase." -ForegroundColor Green
-Write-Host "Apri tools\cron-notifiche.sql, metti la chiave service_role dove"
-Write-Host "indicato, e incollalo."
+Write-Host "Apri tools\cron-notifiche-pronto.sql e incolla TUTTO nel SQL Editor."
+Write-Host "Il segreto e' gia' dentro: non va modificato niente a mano."
