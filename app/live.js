@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2021%3A19';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2021%3A19';
+import * as data from './data.js?v=26%2F08%2021%3A23';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2021%3A23';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 21:19';
+export const VERSIONE = '26/08 21:23';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -1267,6 +1267,19 @@ export async function boot() {
 // cui disegna() non lascia mai a schermo dati vecchi.
 export function schermoNonCollegato(K, e) {
   const msg = String((e && e.message) || e);
+
+  // PRIMA di tutto: via qualunque schermata aperta.
+  //
+  // Se l'avvio fallisce, wire() non viene mai chiamata — quindi live.js non
+  // intercetta niente e i pulsanti che restano a schermo li gestisce il
+  // PROTOTIPO, cioe' la demo. Il 26/8/2026 Vincenzo si e' trovato la porta
+  // d'ingresso ancora aperta sopra lo schermo d'errore, ha toccato "entra", e
+  // l'app lo ha salutato "Benvenuto Marco" — un nome dei dati finti.
+  //
+  // Uno schermo d'errore con sopra dei pulsanti che funzionano per finta e'
+  // peggio di un errore e basta: invita a usarli.
+  try { const sr = document.getElementById('sheet-root'); if (sr) sr.innerHTML = ''; } catch { /* niente */ }
+  try { document.querySelectorAll('.toast').forEach(x => x.remove()); } catch { /* niente */ }
 
   // Un telefono con l'orologio sbagliato riceve "JWT issued at future" e non
   // c'è niente da riprovare finché non lo sistema. Vale la pena dirglielo:
