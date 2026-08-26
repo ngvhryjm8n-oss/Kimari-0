@@ -12,7 +12,7 @@
 // produzione ma quel file non c'è. L'unica fonte che non mente è il database.
 //
 //   node tools/controlla-tabelle-sql.mjs supabase/tools/pulizia_prove.sql
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,10 +27,29 @@ const sql = readFileSync(join(root, file), 'utf8');
 // riempirebbe l'elenco di falsi allarmi.
 const pulito = sql.replace(/--[^\n]*/g, ' ').replace(/\/\*[\s\S]*?\*\//g, ' ');
 
+// Una migrazione crea le tabelle che poi usa — e le migrazioni precedenti ne
+// hanno create altre che questa usa a sua volta. Segnalarle come inesistenti
+// è gridare al lupo, e un controllo che grida al lupo viene ignorato: è
+// successo oggi con questo stesso strumento sulla 0017 e sulla 0019.
+const nascono = new Set();
+const dir = join(root, 'supabase', 'migrations');
+try {
+  const qui = file.split(/[\\/]/).pop();
+  for (const f of readdirSync(dir).sort()) {
+    // Solo le migrazioni FINO a questa: se una tabella nasce dopo, usarla
+    // prima è un errore vero e va detto.
+    if (f > qui) break;
+    for (const m of readFileSync(join(dir, f), 'utf8')
+           .matchAll(/create table (?:if not exists )?public\.([a-z_][a-z0-9_]*)/gi)) {
+      nascono.add(m[1].toLowerCase());
+    }
+  }
+} catch { /* fuori da supabase/migrations non c'è niente da sapere */ }
+
 const nomi = [...new Set(
   [...pulito.matchAll(/\b(?:from|into|update|join)\s+public\.([a-z_][a-z0-9_]*)/gi)]
     .map(m => m[1].toLowerCase())
-)].sort();
+)].filter(t => !nascono.has(t)).sort();
 
 console.log('\n' + file + ': ' + nomi.length + ' tabelle nominate\n');
 
