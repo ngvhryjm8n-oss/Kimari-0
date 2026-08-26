@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2020%3A22';
+} from './map.js?v=26%2F08%2020%3A41';
 
 let sb = null;
 
@@ -324,6 +324,85 @@ export async function loadState() {
   }
 
   return { me: actor.id, people, groups, plans };
+}
+
+/* ========================== notifiche push ========================== */
+
+// La chiave pubblica VAPID: la vedono tutti, sta qui apposta. Quella privata
+// firma le notifiche e vive SOLO nei segreti di Supabase — se finisse qui,
+// chiunque potrebbe mandare notifiche a nome di Kimari.
+const VAPID = 'BGnXCaULtWGf9hHfDsBTOQ8Ij56OqCBeFRytaWjlxFm42wCJ-PaPdXfGG0o9WUIotpl33h-M-sLe33VKK_Lof18';
+
+const inBytes = b64 => {
+  const s = (b64 + '='.repeat((4 - b64.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(s);
+  return Uint8Array.from(raw, c => c.charCodeAt(0));
+};
+
+// Su iPhone le notifiche arrivano SOLO all'app aggiunta alla schermata Home, e
+// solo da iOS 16.4. In Safari normale l'API non c'è proprio: chiederle
+// darebbe un errore incomprensibile invece di una spiegazione.
+export function pushPossibili() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return { si: false, perche: 'Questo browser non sa ricevere notifiche' };
+  }
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const installata = window.matchMedia('(display-mode: standalone)').matches
+                  || navigator.standalone === true;
+  if (iOS && !installata) {
+    return { si: false, perche: 'Su iPhone servono l\'app aggiunta alla schermata Home' };
+  }
+  return { si: true };
+}
+
+export async function attivaPush() {
+  const p = pushPossibili();
+  if (!p.si) throw new Error(p.perche);
+
+  const permesso = await Notification.requestPermission();
+  if (permesso !== 'granted') {
+    // Un rifiuto non è un errore da nascondere: il browser non lo richiede
+    // una seconda volta, e chi ha detto no deve sapere dove ripensarci.
+    throw new Error('Notifiche negate: si riattivano dalle impostazioni del browser');
+  }
+
+  const reg = await navigator.serviceWorker.register('./sw.js');
+  await navigator.serviceWorker.ready;
+
+  // Se c'è già un'iscrizione la si riusa: chiederne una nuova ogni volta
+  // lascerebbe dietro endpoint morti a cui il server continua a scrivere.
+  const sub = await reg.pushManager.getSubscription()
+           || await reg.pushManager.subscribe({
+                userVisibleOnly: true,          // niente notifiche invisibili
+                applicationServerKey: inBytes(VAPID)
+              });
+
+  const j = sub.toJSON();
+  await rpc('save_push_subscription', {
+    p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth
+  });
+  return true;
+}
+
+export async function spegniPush() {
+  if (!('serviceWorker' in navigator)) return false;
+  const reg = await navigator.serviceWorker.getRegistration();
+  const sub = reg && await reg.pushManager.getSubscription();
+  if (!sub) return false;
+  // Prima si toglie dal server, poi dal browser: se si facesse il contrario e
+  // la chiamata fallisse, resterebbe un endpoint a cui scrivere per sempre
+  // senza più nessuno che possa cancellarlo.
+  await rpc('delete_push_subscription', { p_endpoint: sub.endpoint });
+  await sub.unsubscribe();
+  return true;
+}
+
+export async function pushAttive() {
+  if (!('serviceWorker' in navigator)) return false;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    return !!(reg && await reg.pushManager.getSubscription());
+  } catch { return false; }
 }
 
 /* ------- token degli inviti: restano sul dispositivo, come in V0 ------- */

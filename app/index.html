@@ -1027,6 +1027,38 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* ------------------------------------------------ notifiche push */
+  'Ricevi notifiche su questo dispositivo': {
+    en: 'Get notifications on this device', es: 'Recibir notificaciones en este dispositivo',
+    de: 'Benachrichtigungen auf diesem Gerät', ja: 'この端末で通知を受け取る' },
+  'Attive qui': { en: 'On here', es: 'Activas aquí', de: 'Hier an', ja: 'この端末ではオン' },
+  'Spente: le novità restano in app': {
+    en: 'Off — the news still waits in the app',
+    es: 'Desactivadas: las novedades siguen en la app',
+    de: 'Aus — das Neue wartet trotzdem in der App',
+    ja: 'オフ：新着はアプリ内には残ります' },
+  'Notifiche attive su questo dispositivo': {
+    en: 'Notifications on for this device', es: 'Notificaciones activas en este dispositivo',
+    de: 'Benachrichtigungen für dieses Gerät an', ja: 'この端末の通知をオンにしました' },
+  'Notifiche spente su questo dispositivo': {
+    en: 'Notifications off for this device', es: 'Notificaciones desactivadas en este dispositivo',
+    de: 'Benachrichtigungen für dieses Gerät aus', ja: 'この端末の通知をオフにしました' },
+  'Questo browser non sa ricevere notifiche': {
+    en: 'This browser can’t receive notifications',
+    es: 'Este navegador no sabe recibir notificaciones',
+    de: 'Dieser Browser kann keine Benachrichtigungen empfangen',
+    ja: 'このブラウザは通知を受け取れません' },
+  'Su iPhone servono l’app aggiunta alla schermata Home': {
+    en: 'On iPhone you need the app added to the Home Screen',
+    es: 'En iPhone hace falta la app añadida a la pantalla de inicio',
+    de: 'Auf dem iPhone muss die App zum Home-Bildschirm hinzugefügt sein',
+    ja: 'iPhone では、ホーム画面に追加したアプリが必要です' },
+  'Notifiche negate: si riattivano dalle impostazioni del browser': {
+    en: 'Notifications denied — you can switch them back on in the browser settings',
+    es: 'Notificaciones denegadas: se reactivan desde los ajustes del navegador',
+    de: 'Benachrichtigungen abgelehnt — im Browser wieder einschaltbar',
+    ja: '通知が拒否されました。ブラウザの設定から再度オンにできます' },
+
   /* ============================ i messaggi che finiscono su WhatsApp
      Sono la faccia che Kimari mostra a chi non l'ha mai vista: spesso il primo
      contatto è questo messaggio inoltrato da un amico, non l'app. Restavano in
@@ -3047,7 +3079,10 @@ function vProfile(){
       ${u.friends.map(id => `<div class="row">${avatar(nameOf(id))}<div class="grow t">${esc(nameOf(id))}</div><button class="x" data-action="rmFriend" data-id="${id}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
       <button class="row link" data-action="addFriends">${mi('amici', 30, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi amici')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Gli amici servono per invitare in fretta quando crei un gruppo. Non vedono i tuoi piani: la visibilità resta per gruppo.')}</div>`)}
-    ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">${t('Notifiche push')}</div><div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
+    ${state.uiOpen && state.uiOpen.profNotif ? `<div class="group-title">${t('Notifiche push')}</div>
+    <div class="group"><div class="row"><div class="grow"><div class="t">${t('Ricevi notifiche su questo dispositivo')}</div><div class="s">${state.pushDispositivo ? t('Attive qui') : t('Spente: le novità restano in app')}</div></div><button class="sw ${state.pushDispositivo ? 'on' : ''}" data-action="pushDispositivo" aria-label="${t('Ricevi notifiche su questo dispositivo')}"></button></div></div>
+    ${state.pushMotivo ? `<p class="foot">${esc(state.pushMotivo)}</p>` : ''}
+    <div class="group">${PUSH.map(([k, l]) => toggleRow(l, state.settings.push[k], 'push', k)).join('')}</div>
     ${hint(`<div class="group-foot">${t('Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.')}</div>`)}` : `<div class="group"><button class="row link" data-action="secOpen" data-k="profNotif">${mi('campana', 28, '🔔')}<div class="grow t">${t('Notifiche push')}</div><span class="s">${PUSH.filter(([k]) => state.settings.push[k]).length} attive</span><span class="chev"></span></button></div>`}
     <div class="group-title">${t('Kimari Unlimited')}</div><div class="group"><div class="row">${mi('corona', 34, '✨')}<div class="grow"><div class="t">${u.unlimited ? 'Unlimited attivo ✓' : 'Passa a Unlimited'}</div><div class="s">19,99 €/anno o 2,99 €/mese · foto per piano ${LIMITS.free.photos}→${LIMITS.unlimited.photos}, allegati ${Math.round(LIMITS.free.attach / 1e6)}→${Math.round(LIMITS.unlimited.attach / 1e6)} MB, posti salvati senza limite, foto per sempre</div></div><button class="add" data-action="toggleUnlimited">${u.unlimited ? 'Disattiva' : 'Prova'}</button></div>
       <div class="row">${mi('pass', 34, '🎟')}<div class="grow"><div class="t">${t('Pass evento singolo')}</div><div class="s">${t('4,99 € una volta · un solo piano con limiti Unlimited: matrimoni, feste grandi, viaggi')}</div></div><button class="add" data-action="toast" data-msg="${t('Nel prototipo non si paga 🙂')}">Info</button></div></div>
@@ -3579,6 +3614,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2020%3A22"></script>
+<script type="module" src="./live.js?v=26%2F08%2020%3A41"></script>
 </body>
 </html>

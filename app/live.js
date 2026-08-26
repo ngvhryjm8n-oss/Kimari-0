@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2020%3A22';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2020%3A22';
+import * as data from './data.js?v=26%2F08%2020%3A41';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2020%3A41';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 20:22';
+export const VERSIONE = '26/08 20:41';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -679,6 +679,40 @@ export const HANDLERS = {
     return { toast: 'Ricaricato dal server' };
   },
 
+  /* ---------------------------------------------------- notifiche */
+
+  // L'interruttore che chiede il permesso al browser e registra il dispositivo.
+  // Su iPhone le notifiche arrivano SOLO all'app aggiunta alla schermata Home,
+  // e solo da iOS 16.4: se non si può, lo si dice invece di far fallire una
+  // richiesta con un errore che non spiega niente.
+  //
+  // Il permesso si può chiedere UNA volta sola: se la persona dice no, il
+  // browser non lo richiede più. Per questo il rifiuto non è un errore da
+  // ingoiare — va detto dove si ripensa.
+  async pushDispositivo(el, K) {
+    if (K.state.pushDispositivo) {
+      await data.spegniPush();
+      K.state.pushDispositivo = false;
+      K.state.pushMotivo = '';
+      return { toast: 'Notifiche spente su questo dispositivo' };
+    }
+    const p = data.pushPossibili();
+    if (!p.si) {
+      K.state.pushMotivo = p.perche;
+      return { toast: p.perche, skipReload: true };
+    }
+    try {
+      await data.attivaPush();
+      K.state.pushDispositivo = true;
+      K.state.pushMotivo = '';
+      return { toast: 'Notifiche attive su questo dispositivo' };
+    } catch (e) {
+      K.state.pushDispositivo = false;
+      K.state.pushMotivo = e.message || String(e);
+      return { toast: e.message || String(e), skipReload: true };
+    }
+  },
+
   /* ------------------------------------------------------ sezioni */
 
   // Le sezioni si creavano e basta. rename_section e delete_section erano
@@ -899,6 +933,9 @@ export async function assicuraToken(K) {
 
 export async function reload(K) {
   applyState(K.state, await data.loadState());
+  // Lo stato dell'interruttore vive nel BROWSER, non nel database: la stessa
+  // persona puo' averle accese sul telefono e spente sul tablet.
+  try { K.state.pushDispositivo = await data.pushAttive(); } catch { /* niente */ }
   await caricaInvito(K);
   if (await assicuraToken(K)) { /* il piano ora ha un link da condividere */ }
   disegna(K);
