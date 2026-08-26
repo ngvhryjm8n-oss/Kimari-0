@@ -67,7 +67,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'adottaIdentitaGoogle','pulisciUrlDopoLogin','signOut','myActor',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra',
                  'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount',
-                 'renameSection','deleteSection','planBalances','createInviteLink','tokenFor'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'renameSection','deleteSection','planBalances','createInviteLink','tokenFor',
+                 'attivaPush','spegniPush','pushAttive','pushPossibili'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
