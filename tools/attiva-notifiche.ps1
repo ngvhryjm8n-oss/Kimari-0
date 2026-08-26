@@ -60,8 +60,22 @@ Write-Host ""
 # Blocco note salva in UTF-16 e il database legge caratteri separati da byte
 # nulli. Il sintomo non ha niente a che vedere con la causa, e ci si perde
 # mezz'ora. Il file pronto contiene un segreto, quindi non entra nel repo.
-$modello = Get-Content "tools\cron-notifiche.sql" -Raw
+# Si legge in UTF-8 esplicito: se il modello fosse salvato in UTF-16 (Blocco
+# note lo fa), Get-Content senza -Encoding lo leggerebbe come caratteri
+# separati da byte nulli, il segnaposto non si troverebbe, e il file uscirebbe
+# con dentro la scritta __SEGRETO__ invece del segreto vero. Il cron poi
+# risponderebbe 401 per sempre senza spiegare perche.
+$modello = Get-Content "tools\cron-notifiche.sql" -Raw -Encoding UTF8
+if ($modello -notmatch "__SEGRETO__") {
+  Write-Host "FERMO: nel modello SQL manca il segnaposto __SEGRETO__." -ForegroundColor Red
+  Write-Host "Probabile codifica sbagliata di tools\\cron-notifiche.sql."
+  exit 1
+}
 $pronto = $modello -replace "__SEGRETO__", $cron
+if ($pronto -match "__SEGRETO__") {
+  Write-Host "FERMO: la sostituzione del segreto non e riuscita." -ForegroundColor Red
+  exit 1
+}
 [System.IO.File]::WriteAllText("$PWD\tools\cron-notifiche-pronto.sql", $pronto, (New-Object System.Text.UTF8Encoding $false))
 
 Write-Host "Fatto. Resta un passo solo, nel SQL Editor di Supabase." -ForegroundColor Green

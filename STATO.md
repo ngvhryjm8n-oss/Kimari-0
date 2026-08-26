@@ -21,10 +21,10 @@ che manca di più.
 | sito (chi riceve un link) | `index.html`, un file solo — **non si tocca la regola 1** |
 | app | `app/index.html` + `live.js` + `data.js` + `map.js` |
 | traduzioni | `i18n/dizionario.js`, 540 voci · si modifica il .js, **mai** l'HTML |
-| database | Supabase `fnafzokgkbhhjircrogy` · migrazioni fino alla **0020 applicate** |
+| database | Supabase `fnafzokgkbhhjircrogy` · migrazioni fino alla **0021 applicate** |
 | dominio | kimariapp.com (Porkbun) → GitHub Pages · vecchi link reindirizzati |
 
-**Prima di ogni commit:** `npm test` (209 prove).
+**Prima di ogni commit:** `npm test` (216 prove).
 **Per pubblicare:** `npm run pubblica-main "messaggio"` — mai a mano.
 
 ---
@@ -61,8 +61,28 @@ gira: `succeeded` a ogni minuto in `cron.job_run_details`.
 
 Quello che NON è stato verificato: una notifica arrivata su un telefono vero.
 La prova è stata fatta con un dispositivo finto, che ha fallito come doveva
-(tre tentativi e poi basta). Perché arrivi davvero servono due cose da chi la
-riceve: l'app aggiunta alla schermata Home, e il permesso concesso dal Profilo.
+(tre tentativi e poi basta).
+
+**Come si attivano, e i due telefoni non fanno la stessa cosa.**
+
+| | iPhone | Android |
+|---|---|---|
+| serve installare l'app? | **sì, obbligatorio** | no, bastano dal browser |
+| come | Safari → Condividi → Aggiungi a Home | Chrome → ⋮ → Installa app |
+| poi | aprire dall'icona → Profilo → Notifiche → permesso | Profilo → Notifiche → permesso |
+
+Su iPhone non è una preferenza: Apple consegna le notifiche web **solo** a un
+sito aggiunto alla schermata Home (da iOS 16.4). Finché resta una scheda di
+Safari, l'interruttore nel Profilo non compare proprio — e sembra un difetto
+dell'app mentre è una regola del telefono.
+
+Su Android funzionano anche da scheda del browser. Installare conviene lo
+stesso: l'icona resta, la sessione non si perde, e si apre a schermo pieno.
+
+Chi è entrato **col solo nome** ha più bisogno di installarla degli altri: non
+avendo Google né Apple, senza icona non ha un modo comodo per tornare. Per
+questo il consiglio "aggiungi a Home" glielo mostra l'app da sola, con il testo
+giusto per il suo telefono.
 
 **L'app negli store.** `nativa/` è pronta e `CAPACITOR.md` spiega tutto.
 Android si fa da Windows; **iOS richiede macOS**, e non è aggirabile.
@@ -107,6 +127,23 @@ qualcuno cancellava l'account, l'accesso da un secondo dispositivo, l'invito al
 gruppo che si perdeva: **tutti trovati usando l'app**, nessuno leggendo il
 codice. E le due domande più utili della giornata le ha fatte Vincenzo
 guardando lo schermo — «a che serve questo colore?», «perché è in italiano?».
+
+**7. Un sintomo può non assomigliare per niente alla sua causa.**
+Tre casi nello stesso giorno. "Non riesco a cliccare Novità" non era il tocco:
+era la schermata che moriva, perché le voci "è entrato nel gruppo" non hanno un
+piano e il codice leggeva `it.p.title` su tutto. Il database che rispondeva
+`42501: permission denied to set parameter` non voleva più permessi: voleva la
+cassaforte. E PowerShell che si lamentava di un simbolo dentro un commento
+aveva in realtà un file salvato con la codifica sbagliata. In tutti e tre i
+casi la prima ipotesi, quella ovvia, era quella sbagliata.
+
+**8. Le codifiche di Windows fanno perdere più tempo dei bug.**
+Blocco note salva in UTF-16, PowerShell 5.1 legge male le accentate senza
+marcatore in testa, il SQL Editor riceve caratteri separati da byte nulli. Tre
+volte in due ore. La difesa non è stare attenti: è non far modificare file a
+mano. Lo script genera il SQL già pronto, lo legge in UTF-8 esplicito, e si
+ferma se il segnaposto non è stato sostituito invece di produrre un file che
+sembra giusto.
 
 ---
 

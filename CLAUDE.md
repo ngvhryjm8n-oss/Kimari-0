@@ -9,9 +9,9 @@ budget ~0, prodotto in italiano.
 ## Da leggere per primo
 
 **[STATO.md](STATO.md)** — dove siamo davvero al 27/8/2026: cosa funziona, cosa
-manca, e le sei cose imparate a caro prezzo. Questo file qui sotto descrive V0
+manca, e le otto cose imparate a caro prezzo. Questo file qui sotto descrive V0
 ed e' in parte superato: il dominio adesso e' **kimariapp.com**, le migrazioni
-sono applicate fino alla **0020**, e l'app parla cinque lingue.
+sono applicate fino alla **0021**, e l'app parla cinque lingue.
 
 Per pubblicare: `npm run pubblica-main "messaggio"`. Mai a mano — copiare i
 file a mano ha gia' mandato online un index.html nuovo con un live.js vecchio.
