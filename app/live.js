@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2005%3A07';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2005%3A07';
+import * as data from './data.js?v=26%2F08%2009%3A07';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2009%3A07';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 05:07';
+export const VERSIONE = '26/08 09:07';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -726,6 +726,16 @@ export async function mostraDiagnostica(K) {
   return true;
 }
 
+// Chiude la schermata SOLO se e' il benvenuto. Il riconoscimento sta sul
+// pulsante d'ingresso col nome, che non esiste da nessun'altra parte: piu'
+// solido di un testo, che cambia con la lingua.
+function chiudiSoloIlBenvenuto(K) {
+  const sr = document.getElementById('sheet-root');
+  if (!sr || !sr.querySelector('[data-action="loginName"]')) return false;
+  K.closeSheet();
+  return true;
+}
+
 export async function reload(K) {
   applyState(K.state, await data.loadState());
   await caricaInvito(K);
@@ -962,8 +972,13 @@ export async function boot() {
       // Al primo avvio dopo il login la marcatura non c'era ancora, quindi il
       // prototipo il benvenuto l'ha gia' aperto: si chiude. Dal secondo avvio
       // non verra' nemmeno programmato.
-      K.closeSheet();
-      setTimeout(() => K.closeSheet(), 120);   // il suo setTimeout e' a 60 ms
+      //
+      // Si chiude SOLO il benvenuto. Prima chiudevo qualunque cosa fosse
+      // aperta, e con un ritardo: cosi' ammazzavo anche l'invito a un gruppo,
+      // che reload() apre proprio durante l'avvio. Chi riceveva un link a un
+      // gruppo lo vedeva lampeggiare e sparire, e restava fuori.
+      chiudiSoloIlBenvenuto(K);
+      setTimeout(() => chiudiSoloIlBenvenuto(K), 120);   // il suo setTimeout e' a 60 ms
     }
   } catch (e) {
     // Non si azzera lo schermo: i dati finti del prototipo restano, e l'utente

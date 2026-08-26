@@ -80,6 +80,23 @@ await test('la marcatura si legge prima che parta il render', async () => {
     'la marcatura deve venire da localStorage: è l\'unica cosa disponibile così presto');
 });
 
+await test('la chiusura del benvenuto non ammazza le altre schermate', () => {
+  // reload() apre l'invito a un gruppo proprio durante l'avvio, e subito dopo
+  // l'avvio chiudeva il benvenuto. Chiudendo "qualunque cosa sia aperta" —
+  // e per giunta con un ritardo — spariva anche l'invito: chi riceveva il
+  // link a un gruppo lo vedeva lampeggiare e restava fuori.
+  const live = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  assert.ok(/function chiudiSoloIlBenvenuto/.test(live),
+    'manca la chiusura mirata');
+  assert.ok(/data-action="loginName"/.test(live),
+    'il riconoscimento deve stare su un elemento, non su un testo: i testi cambiano con la lingua');
+
+  // Dopo l'avvio non deve restare nessuna chiusura cieca.
+  const dopoAvvio = live.slice(live.indexOf('} else if (K.closeSheet) {'));
+  assert.ok(!/setTimeout\(\(\) => K\.closeSheet\(\)/.test(dopoAvvio),
+    'chiusura cieca ritardata: ammazzerebbe di nuovo l\'invito al gruppo');
+});
+
 await test("l'import di live.js porta la versione giusta", () => {
   // Senza, dopo ogni pubblicazione il browser tiene il live.js vecchio per
   // dieci minuti e lo abbina all'HTML nuovo: uno stato ibrido che non esiste
