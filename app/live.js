@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=27%2F08%2001%3A51';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2001%3A51';
+import * as data from './data.js?v=27%2F08%2002%3A02';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2002%3A02';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '27/08 01:51';
+export const VERSIONE = '27/08 02:02';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -1291,6 +1291,12 @@ export async function boot() {
       } else if (K.openSheet && K.sheetWelcome) {
         K.state.welcomeShown = true;
         K.openSheet(K.sheetWelcome());
+        // La porta appena riaperta ha cancellato il cartellino scritto da
+        // mostraInvitoGruppo un attimo prima: chi arrivava dal link di un
+        // gruppo si ritrovava la presentazione generica di Kimari, senza
+        // sapere dove stesse entrando. Lo si riscrive DOPO, che e' l'unico
+        // ordine che regge — provato il 27/8 col link mandato a un familiare.
+        await mostraInvitoGruppo(K);
       }
     } else if (K.closeSheet) {
       // Al primo avvio dopo il login la marcatura non c'era ancora, quindi il
