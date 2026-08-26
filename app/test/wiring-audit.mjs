@@ -100,3 +100,70 @@ riga('solo interfaccia — non vanno convertite', soloUI);
 
 const pct = scriventi.length ? Math.round(fatte.length / scriventi.length * 100) : 100;
 console.log(`\n  ${fatte.length} su ${scriventi.length} azioni che scrivono: ${pct}%\n`);
+
+/* ---------- 3. le capacità scritte e mai offerte ---------- */
+// data.js parla col database. Una funzione esportata che nessuno chiama non è
+// codice morto innocuo: è una cosa che l'utente NON può fare, anche se sotto
+// è tutto pronto.
+//
+// cancelPlan stava lì dal primo giorno — RPC scritta, funzione esportata, il
+// sito la usava — ma nell'app non c'era il bottone. Se una cena saltava e eri
+// nell'app, l'unica strada era sciogliere il gruppo. Nessuna prova poteva
+// vederlo: tutto quello che c'era funzionava.
+const dataSrc = readFileSync(join(root, 'app', 'data.js'), 'utf8');
+const esportate = [...dataSrc.matchAll(/export (?:async function|const) ([a-zA-Z]+)/g)]
+  .map(m => m[1]);
+
+// Chiamate come data.qualcosa(...) da live.js, più quelle che data.js usa al
+// proprio interno (init chiama ensureSession, e va bene così).
+const usate = new Set([
+  ...[...liveSrc.matchAll(/data\.([a-zA-Z]+)\s*\(/g)].map(m => m[1]),
+  ...[...dataSrc.matchAll(/(?<!export (?:async function|const) )\b([a-zA-Z]+)\s*\(/g)].map(m => m[1])
+]);
+
+// Non tutte devono essere chiamate da live.js: alcune servono all'avvio o alle
+// prove. Si elencano a mano, con il motivo, perché un elenco che cresce da solo
+// smette di dire qualcosa.
+const NON_DA_BOTTONE = new Set([
+  // servono all'avvio, non a un bottone
+  'init', 'ensureSession', 'currentSession', 'loadState', 'saveToken',
+  'savedTokens', 'previewInvite', 'previewGroupInvite',
+  'tornandoDaLogin', 'aspettaSessione', 'pulisciUrlDopoLogin', 'haIdentitaVera',
+  'adottaIdentitaGoogle', 'signInWithProvider', 'urlFor',
+  // sostituite dalla 0010: create_plan_full fa tutto in una transazione, cosi'
+  // un piano non puo' piu' restare mezzo creato. Restano esportate perche' il
+  // sito V0 le usa ancora.
+  'createPlan', 'finalizePlan'
+]);
+
+// Pronte sotto ma senza un bottone sopra. Non sono difetti da correggere di
+// corsa: sono decisioni, scritte qui perché non si dimentichino. Un controllo
+// che fallisce sempre smette di dire qualcosa, quindi queste si elencano e
+// basta; fallisce solo quello che è scollegato per distrazione.
+const DA_OFFRIRE = {
+  logEvent: "il funnel del gate dei 10 gruppi resta vuoto finché non si chiama",
+  removeParticipant: "togliere qualcuno da un PIANO (dal gruppo si può già)",
+  renameSection: "le sezioni si creano ma non si rinominano",
+  deleteSection: "né si cancellano",
+  planBalances: "i conti li fa il prototipo in locale; il server ha la sua vista",
+  addPlaceLink: "link a un posto salvato",
+  mediaUrl: "usata solo indirettamente, dentro loadState"
+};
+
+const mai = esportate.filter(n => !usate.has(n) && !NON_DA_BOTTONE.has(n));
+const inattese = mai.filter(n => !DA_OFFRIRE[n]);
+
+console.log('');
+if (inattese.length) {
+  console.log('  !    scritte in data.js e nessuno le chiama: ' + inattese.join(', '));
+  console.log("       (o si collega un bottone, o si scrive in DA_OFFRIRE perché no)");
+  process.exitCode = 1;
+} else {
+  console.log('  ok   nessuna capacità scollegata per distrazione');
+}
+
+const attese = mai.filter(n => DA_OFFRIRE[n]);
+if (attese.length) {
+  console.log('\n  pronte sotto, ancora senza bottone sopra:');
+  attese.forEach(n => console.log('    · ' + n + ' — ' + DA_OFFRIRE[n]));
+}

@@ -1493,8 +1493,9 @@ function vProfile(){
       <button class="row link" data-action="toast" data-msg="Con Unlimited: sincronizzazione continua"><div class="grow t">Calendario di sistema</div><div class="s">Unlimited</div><span class="chev"></span></button>
       <button class="row link" data-action="termsSheet"><div class="grow t">Termini, privacy ed età minima</div><span class="chev"></span></button>
       <button class="row link" data-action="toast" data-msg="Esportazione in arrivo"><div class="grow t">Esporta i miei dati</div><span class="chev"></span></button>
-      <button class="row link" data-action="toast" data-msg="Nel prototipo sei sempre dentro"><div class="grow t" style="color:var(--blue)">Esci</div></button>
-      <button class="row link" data-action="toast" data-msg="In app e dal web, come richiede lo store. Lo storico resta come «Membro eliminato»."><div class="grow t" style="color:var(--red)">Elimina account</div></button></div>
+      <button class="row link" data-action="signOut"><div class="grow t" style="color:var(--blue)">Esci</div></button>
+      <button class="row link" data-action="deleteAccount"><div class="grow t" style="color:var(--red)">Elimina account</div></button></div>
+    <div class="group-foot">Eliminare l'account cancella profilo, voti e risposte. Nei piani a cui hai partecipato resti come «Membro eliminato», così agli altri non spariscono i conti e i messaggi.</div>
     <p class="foot center">Kimari · prototipo app</p></div>`;
 }
 const vInvalid = () => `${nav('Kimari', isWeb() ? '' : 'home')}<div class="view"><div class="intro">Questo link non porta a nessun piano. Chiedi all'organizzatore di rimandartelo.</div></div>`;
@@ -1536,7 +1537,9 @@ function sheetEdit(p){
   return `<h2>Modifica il piano</h2><p class="sub">Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c'era prima.${p.seriesId ? ' Vale solo per questa data.' : ''}</p>
   <div class="group-title">Quando</div><div class="group"><div class="row"><div class="grow t">Inizio</div><input type="datetime-local" class="input right" id="editStart" value="${esc(w.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="editEnd" value="${esc(w.end || '')}"></div><div class="row"><div class="grow t">Tutto il giorno</div><button class="sw ${w.allDay ? 'on' : ''}" id="editAllDay" data-action="swLocal" aria-label="Tutto il giorno"></button></div></div>
   <div class="group-title">Dove</div><div class="group"><div class="row"><input class="input" id="editPlace" placeholder="Nome del posto" value="${esc(pl.name)}" maxlength="60"></div><div class="row"><input class="input" id="editAddr" placeholder="Indirizzo" value="${esc(pl.address)}" maxlength="120"></div></div>
-  <div class="actions stack"><button class="btn primary" data-action="saveEdit">Salva e avvisa il gruppo</button><button class="btn plain" data-action="closeSheet">Annulla</button></div>`;
+  <div class="actions stack"><button class="btn primary" data-action="saveEdit">Salva e avvisa il gruppo</button><button class="btn plain" data-action="closeSheet">Annulla</button></div>
+  ${p.organizer === state.me ? `<div class="group-title">Se salta</div><div class="group"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">Annulla il piano</div></button></div>
+  <div class="group-foot">Il link resta valido e mostra a tutti che è saltato. Nessuno perde i messaggi né le spese.</div>` : ''}`;
 }
 function sheetGroup(){
   const d = state.gdraft; const u = me(); const pool = new Set([...u.friends, ...myGroups().flatMap(g => g.members)]); const people = [...pool].filter(id => id !== state.me && state.people[id] && !state.people[id].web).map(id => state.people[id]);
@@ -1938,6 +1941,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2009%3A07"></script>
+<script type="module" src="./live.js?v=26%2F08%2009%3A15"></script>
 </body>
 </html>
