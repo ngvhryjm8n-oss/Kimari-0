@@ -580,8 +580,7 @@ export const DIZIONARIO = {
   '★ Posto salvato · apri scheda': { en: '★ Saved place · open card',
     es: '★ Sitio guardado · abrir ficha', de: '★ Gespeicherter Ort · Karte öffnen',
     ja: '★ 保存した場所 · カードを開く' },
-  '📷 Foto del menu': { en: '📷 Photo of the menu', es: '📷 Foto del menú',
-                        de: '📷 Foto der Karte', ja: '📷 メニューの写真' },
+  '📷 Foto': { en: '📷 Photo', es: '📷 Foto', de: '📷 Foto', ja: '📷 写真' },
   'Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu fotografato). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.': {
     en: 'The usual restaurant, the pitch, the house by the sea: name, address and your own attachments (the menu you photographed). When you use it in a plan, the others only see name and address.',
     es: 'El restaurante de siempre, la cancha, la casa en la playa: nombre, dirección y tus propios adjuntos (el menú fotografiado). Cuando lo usas en un plan, los demás solo ven el nombre y la dirección.',
@@ -602,6 +601,30 @@ export const DIZIONARIO = {
   },
   'Membro eliminato': { en: 'Deleted member', es: 'Miembro eliminado',
                         de: 'Gelöschtes Mitglied', ja: '退会したメンバー' },
+
+  /* Un posto salvato non è sempre un ristorante: il campo, la casa al mare, il
+     parcheggio dietro l'angolo. "Foto del menu" restringeva una cosa che non
+     è ristretta — segnalato da Vincenzo. */
+  'Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu, il cancello giusto, il codice del portone). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.': {
+    en: 'The usual restaurant, the pitch, the house by the sea: name, address and your own attachments — the menu, the right gate, the door code. When you use it in a plan, the others only see name and address.',
+    es: 'El restaurante de siempre, la cancha, la casa en la playa: nombre, dirección y tus propios adjuntos: el menú, la verja correcta, el código del portal. Cuando lo usas en un plan, los demás solo ven el nombre y la dirección.',
+    de: 'Das Stammlokal, der Platz, das Haus am Meer: Name, Adresse und deine eigenen Anhänge — die Karte, das richtige Tor, der Türcode. Wenn du den Ort in einem Plan verwendest, sehen die anderen nur Name und Adresse.',
+    ja: 'いつもの店、コート、海辺の家。名前と住所、そしてあなただけの添付——メニュー、正しい入口、玄関の暗証番号。予定で使うとき、ほかの人に見えるのは名前と住所だけです。'
+  },
+  'Kimari segue la lingua del telefono: per cambiarla si cambia quella nelle impostazioni.': {
+    en: 'Kimari follows your phone’s language: to change it, change that one in the settings.',
+    es: 'Kimari sigue el idioma del teléfono: para cambiarlo, cambia ese en los ajustes.',
+    de: 'Kimari folgt der Sprache deines Handys: Zum Ändern änderst du sie in den Einstellungen.',
+    ja: 'Kimari は端末の言語に合わせます。変えたいときは、端末の設定で変更してください。'
+  },
+  'Ogni piano confermato si aggiunge al calendario dalla sua pagina.': {
+    en: 'Every confirmed plan can be added to your calendar from its own page.',
+    es: 'Cada plan confirmado se añade al calendario desde su propia página.',
+    de: 'Jeder bestätigte Plan lässt sich von seiner eigenen Seite aus in den Kalender eintragen.',
+    ja: '確定した予定は、そのページからカレンダーに追加できます。'
+  },
+  'Da ogni piano': { en: 'From each plan', es: 'Desde cada plan',
+                     de: 'Aus jedem Plan', ja: '各予定から' },
 
   /* ----------------------------------- app: la porta d'ingresso
      È la prima schermata che vede chi installa. Se resta in italiano, per un
