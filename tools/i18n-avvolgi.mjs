@@ -28,63 +28,80 @@ const src = readFileSync(join(root, file), 'utf8');
 // Trova le regioni che stanno dentro un template letterale al livello più
 // esterno, saltando stringhe e commenti. Le ${...} annidate si scavalcano:
 // dentro c'è codice, non testo scritto a mano.
+// Riconoscere dove sta il TESTO dentro un file pieno di template annidati.
+//
+// La prima versione cercava la fine di un template annidato scorrendo fino al
+// backtick successivo, senza saltare le ${} che stanno dentro. Su una cosa
+// come `${sug.map(s => `<div>${x}</div>`)}` finiva sul backtick sbagliato e da
+// li' in poi leggeva tutto storto: intere schermate restavano fuori, in
+// silenzio. Erano una cinquantina di frasi.
+//
+// Ora sono due funzioni che si richiamano — un template contiene espressioni,
+// un'espressione contiene template — che e' la forma vera del problema.
+
+function fineStringa(s, i) {
+  const q = s[i];
+  let j = i + 1;
+  while (j < s.length) {
+    if (s[j] === '\\') { j += 2; continue; }
+    if (s[j] === q) return j + 1;
+    j++;
+  }
+  return j;
+}
+
+// `inizio` punta al backtick di apertura. Rende [posizioneDopoIlTemplate, regioni].
+function leggiTemplate(s, inizio) {
+  const regioni = [];
+  let j = inizio + 1, testoDa = j;
+  while (j < s.length) {
+    if (s[j] === '\\') { j += 2; continue; }
+    if (s[j] === '`') { regioni.push([testoDa, j]); return [j + 1, regioni]; }
+    if (s[j] === '$' && s[j + 1] === '{') {
+      regioni.push([testoDa, j]);
+      const [fine, dentro] = leggiEspressione(s, j + 2);
+      regioni.push(...dentro);
+      j = fine; testoDa = j; continue;
+    }
+    j++;
+  }
+  regioni.push([testoDa, j]);
+  return [j, regioni];
+}
+
+// `inizio` punta al primo carattere dopo `${`. Rende [posizioneDopoLaGraffa, regioni].
+function leggiEspressione(s, inizio) {
+  const regioni = [];
+  let j = inizio, liv = 1;
+  while (j < s.length && liv > 0) {
+    const c = s[j];
+    if (c === '\\') { j += 2; continue; }
+    if (c === '/' && s[j + 1] === '/') { const k = s.indexOf('\n', j); j = k < 0 ? s.length : k; continue; }
+    if (c === '/' && s[j + 1] === '*') { const k = s.indexOf('*/', j); j = k < 0 ? s.length : k + 2; continue; }
+    if (c === "'" || c === '"') { j = fineStringa(s, j); continue; }
+    if (c === '`') { const [fine, dentro] = leggiTemplate(s, j); regioni.push(...dentro); j = fine; continue; }
+    if (c === '{') liv++;
+    if (c === '}') { liv--; if (liv === 0) return [j + 1, regioni]; }
+    j++;
+  }
+  return [j, regioni];
+}
+
 function regioniTemplate(s) {
   const out = [];
   let i = 0;
   while (i < s.length) {
     const c = s[i];
     if (c === '\\') { i += 2; continue; }
-    if (c === '/' && s[i + 1] === '/') { i = s.indexOf('\n', i); if (i === -1) break; continue; }
-    if (c === '/' && s[i + 1] === '*') { i = s.indexOf('*/', i); if (i === -1) break; i += 2; continue; }
-    if (c === "'" || c === '"') {
-      const q = c; i++;
-      while (i < s.length && s[i] !== q) { if (s[i] === '\\') i++; i++; }
-      i++; continue;
-    }
-    if (c === '`') {
-      let j = i + 1, inizio = j;
-      while (j < s.length) {
-        if (s[j] === '\\') { j += 2; continue; }
-        if (s[j] === '`') break;
-        if (s[j] === '$' && s[j + 1] === '{') {
-          out.push([inizio, j]);                       // testo prima della ${
-          let liv = 1; j += 2;
-          while (j < s.length && liv > 0) {            // scorre l'espressione
-            if (s[j] === '\\') { j += 2; continue; }
-            if (s[j] === '`') {
-              // Template annidato: dentro c'è altro testo da tradurre. È la
-              // gran parte del sorgente, perché ogni ramo di un ternario che
-              // produce markup è un template dentro un'espressione. Saltarlo
-              // lasciava fuori metà pagina.
-              let k = j + 1, l = 1;
-              while (k < s.length && l > 0) {
-                if (s[k] === '\\') { k += 2; continue; }
-                if (s[k] === '`') l--;
-                k++;
-              }
-              for (const r of regioniTemplate(s.slice(j, k))) out.push([j + r[0], j + r[1]]);
-              j = k; continue;
-            }
-            if (s[j] === "'" || s[j] === '"') {
-              const q = s[j]; j++;
-              while (j < s.length && s[j] !== q) { if (s[j] === '\\') j++; j++; }
-              j++; continue;
-            }
-            if (s[j] === '{') liv++;
-            if (s[j] === '}') liv--;
-            j++;
-          }
-          inizio = j; continue;
-        }
-        j++;
-      }
-      out.push([inizio, j]);
-      i = j + 1; continue;
-    }
+    if (c === '/' && s[i + 1] === '/') { const k = s.indexOf('\n', i); i = k < 0 ? s.length : k; continue; }
+    if (c === '/' && s[i + 1] === '*') { const k = s.indexOf('*/', i); i = k < 0 ? s.length : k + 2; continue; }
+    if (c === "'" || c === '"') { i = fineStringa(s, i); continue; }
+    if (c === '`') { const [fine, regioni] = leggiTemplate(s, i); out.push(...regioni); i = fine; continue; }
     i++;
   }
   return out;
 }
+
 
 const pulito = t => !/[$`{}<>]/.test(t) && t.trim().length >= 5 && SPIE.test(t);
 const dentro = t => "t('" + t.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "')";
@@ -129,6 +146,21 @@ for (const [a, b] of regioni) {
   if (mod !== testo) { pezzi.push(src.slice(ultimo, a), mod); ultimo = b; }
 }
 pezzi.push(src.slice(ultimo));
+
+// --copre="testo": dice se quel punto del file sta dentro una regione
+// riconosciuta, e con quale. Serve quando una frase non viene avvolta e non si
+// capisce se e' il riconoscitore a non arrivarci o pulito() a rifiutarla.
+const copre = (args.find(a => a.startsWith('--copre=')) || '').slice(8);
+if (copre) {
+  const i = src.indexOf(copre);
+  if (i < 0) { console.log('quel testo non compare nel file'); process.exit(1); }
+  const dentro = regioni.find(([a, b]) => i >= a && i < b);
+  console.log('offset ' + i + ' · riga ' + rigaDi(src, i));
+  console.log(dentro ? 'DENTRO la regione [' + dentro[0] + ', ' + dentro[1] + ']'
+                     : 'FUORI da ogni regione: il riconoscitore non ci arriva');
+  if (dentro) console.log('pulito(): ' + pulito(copre));
+  process.exit(0);
+}
 
 console.log(avvolte.length + ' frasi' + (prova ? ' da avvolgere' : ' avvolte') + ' in ' + file + ':');
 avvolte.forEach(x => console.log('  ' + x));
