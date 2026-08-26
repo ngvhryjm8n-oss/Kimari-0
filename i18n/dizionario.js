@@ -1516,6 +1516,16 @@ export const DIZIONARIO = {
                        de: 'Was organisierst du?', ja: '何を企画しますか？' },
   'Cena sabato': { en: 'Dinner on Saturday', es: 'Cena el sábado',
                    de: 'Essen am Samstag', ja: '土曜の夕食' },
+  /* I suggerimenti rapidi del titolo: erano scolpiti in italiano nel codice
+     e comparivano tali e quali anche nell'app in tedesco (27/8/2026). */
+  'Weekend al mare': { en: 'Weekend at the beach', es: 'Finde en la playa',
+                       de: 'Wochenende am Meer', ja: '海で週末' },
+  'Calcetto': { en: 'Five-a-side', es: 'Futbito', de: 'Kicken', ja: 'フットサル' },
+  'Compleanno di Anna': { en: 'Anna’s birthday', es: 'Cumpleaños de Anna',
+                          de: 'Annas Geburtstag', ja: 'アンナの誕生日' },
+  'Giappone 2027': { en: 'Japan 2027', es: 'Japón 2027', de: 'Japan 2027', ja: '日本 2027' },
+  'Da me': { en: 'At my place', es: 'En mi casa', de: 'Bei mir', ja: 'うちで' },
+  'Weekend': { en: 'Weekend', es: 'Finde', de: 'Wochenende', ja: '週末' },
   'Cambia emoji': { en: 'Change emoji', es: 'Cambiar emoji',
                     de: 'Emoji ändern', ja: '絵文字を変える' },
   'So già': { en: 'I already know', es: 'Ya lo sé', de: 'Weiß ich schon', ja: 'もう決まっている' },
