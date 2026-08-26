@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2016%3A57';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2016%3A57';
+import * as data from './data.js?v=26%2F08%2017%3A24';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2017%3A24';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 16:57';
+export const VERSIONE = '26/08 17:24';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -155,7 +155,7 @@ export const HANDLERS = {
     if (!K.state.ageOk) return { toast: 'Conferma prima di avere almeno 16 anni', skipReload: true };
     await data.ensureActor(nome);
     K.state.consented = true;
-    return { toast: 'Benvenuto, ' + nome, closeSheet: true };
+    return { toast: K.t ? K.t('Benvenuto, {nome}', { nome }) : 'Benvenuto, ' + nome, closeSheet: true };
   },
 
   // Un gestore solo per tutti e due: il provider arriva dal bottone. Prima
@@ -173,11 +173,13 @@ export const HANDLERS = {
       const m = String((e && e.message) || e).toLowerCase();
       const nome = chi === 'apple' ? 'Apple' : 'Google';
       if (m.includes('not enabled') || m.includes('provider is not')) {
-        return { toast: nome + ' non è attivo su Supabase', skipReload: true };
+        return { toast: K.t ? K.t('{chi} non è attivo su Supabase', { chi: nome }) : nome + ' non è attivo su Supabase', skipReload: true };
       }
       if (m.includes('redirect') || m.includes('not allowed')) {
-        return { toast: 'Questo indirizzo non è fra i Redirect URLs di Supabase: ' +
-                        location.origin + location.pathname, skipReload: true };
+        const dove = location.origin + location.pathname;
+        return { toast: K.t ? K.t('Questo indirizzo non è fra i Redirect URLs di Supabase: {dove}', { dove })
+                            : 'Questo indirizzo non è fra i Redirect URLs di Supabase: ' + dove,
+                 skipReload: true };
       }
       throw e;
     }
@@ -294,7 +296,7 @@ export const HANDLERS = {
     const v = K.$('#maxUses');
     const n = v && v.value ? parseInt(v.value, 10) : null;
     await data.setInviteLimits(curPlan(K).id, n, null);
-    return { toast: n ? 'Massimo ' + n + ' persone' : 'Nessun limite' };
+    return { toast: n ? (K.t ? K.t('Massimo {n} persone', { n }) : 'Massimo ' + n + ' persone') : 'Nessun limite' };
   },
 
   async revokePlanLink(el, K) {
@@ -998,7 +1000,11 @@ function wire(K) {
         // stava in fondo, e fra il tocco e qualunque segno passavano ~700 ms
         // in cui non succedeva niente — misurati: 114 ms l'RPC, il resto
         // l'attesa delle 27 letture. Sembrava che il tocco non fosse arrivato.
-        if (res.toast && K.toast) K.toast(res.toast);
+        // Tradotto QUI e non nei 76 gestori: passano tutti da questa riga.
+        // Il prototipo espone t() in window.__kimari; se per qualche motivo non
+        // c'e', esce l'italiano invece di un errore — che e' la stessa regola
+        // del dizionario (regola 3: mai una chiave a video).
+        if (res.toast && K.toast) K.toast(K.t ? K.t(res.toast) : res.toast);
 
         if (!res.skipReload) await reload(K);
         // Alcune schermate si modificano mentre le si usa: scegliere "elenco
