@@ -68,10 +68,14 @@ fi
 
 echo
 echo "5. Il file CNAME nel repo"
-if [ -f CNAME ]; then
-  [ "$(cat CNAME)" = "$D" ] && ok "CNAME contiene $D" || no "CNAME contiene $(cat CNAME)"
+# Su MAIN, non nella cartella: il file può esserci in produzione e non nel ramo
+# su cui si sta lavorando. Guardare la cartella diceva "manca" mentre il sito
+# era già collegato — un controllo che risponde sulla copia sbagliata.
+CN="$(git show main:CNAME 2>/dev/null | tr -d '[:space:]')"
+if [ -n "$CN" ]; then
+  [ "$CN" = "$D" ] && ok "main ha CNAME = $D" || no "main ha CNAME = $CN"
 else
-  attesa "CNAME non c'è ancora — va aggiunto DOPO che il DNS risponde"
+  attesa "CNAME non è su main — va aggiunto DOPO che il DNS risponde"
 fi
 
 echo

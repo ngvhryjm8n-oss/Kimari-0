@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2018%3A01';
+} from './map.js?v=26%2F08%2019%3A02';
 
 let sb = null;
 
@@ -288,6 +288,16 @@ const LSK = 'kimari_tokens';
 const store = () => { try { return JSON.parse(localStorage.getItem(LSK) || '{}'); }
                       catch { return {}; } };
 export const tokenFor = planId => store()[planId] || null;
+
+// I token restano sul dispositivo perché nel database sono hashati: il server
+// non può restituirli, nemmeno a chi ha creato il piano. Quindi chi apre il
+// proprio piano da un altro telefono — o dopo aver svuotato il browser — non
+// ce l'ha più, e il messaggio da mandare conteneva "?t=null": un link rotto,
+// pronto da incollare su WhatsApp.
+//
+// Questa ne fa uno nuovo. Il server la concede solo a chi organizza, e i link
+// vecchi restano validi: chi ha già votato non se ne accorge.
+export const createInviteLink = plan => rpc('create_invite_link', { p_plan: plan });
 export function saveToken(planId, token) {
   try { const m = store(); m[planId] = token; localStorage.setItem(LSK, JSON.stringify(m)); }
   catch { /* navigazione privata: pazienza, il link resta su WhatsApp */ }

@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2018%3A01';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2018%3A01';
+import * as data from './data.js?v=26%2F08%2019%3A02';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2019%3A02';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 18:01';
+export const VERSIONE = '26/08 19:02';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -871,9 +871,36 @@ function chiudiSoloIlBenvenuto(K) {
   return true;
 }
 
+// Il messaggio da mandare su WhatsApp conteneva "?t=null" — un link rotto,
+// pronto da incollare — a chi apriva il proprio piano da un altro telefono o
+// dopo aver svuotato il browser.
+//
+// I token stanno solo sul dispositivo perché nel database sono hashati: il
+// server non può ridarli a nessuno, nemmeno a chi ha creato il piano. Ma può
+// farne uno nuovo, e a chi organizza lo concede. I vecchi restano validi, così
+// chi ha già il link in chat non si accorge di niente.
+//
+// Si fa solo per i PROPRI piani: a un invitato il token non serve, e chiederlo
+// verrebbe comunque rifiutato dal server.
+export async function assicuraToken(K) {
+  const p = curPlan(K) || K.state.plans[(location.hash.match(/^#\/?(?:share|p)\/([^/?#]+)/) || [])[1]];
+  if (!p || p.token || p.organizer !== K.state.me) return false;
+  try {
+    const token = await data.createInviteLink(p.id);
+    if (!token) return false;
+    data.saveToken(p.id, token);
+    p.token = token;                       // subito a schermo, senza rileggere tutto
+    return true;
+  } catch (e) {
+    console.error('token', e);
+    return false;                          // meglio un link mancante che un errore in faccia
+  }
+}
+
 export async function reload(K) {
   applyState(K.state, await data.loadState());
   await caricaInvito(K);
+  if (await assicuraToken(K)) { /* il piano ora ha un link da condividere */ }
   disegna(K);
   await mostraInvitoGruppo(K);
 }

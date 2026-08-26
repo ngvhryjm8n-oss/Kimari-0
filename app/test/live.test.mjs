@@ -31,6 +31,7 @@ const fake = new Proxy({}, {
       if (name === 'createGroup')    return 'g-nuovo';
       if (name === 'createSection')  return 's-nuova';
       if (name === 'createPlanFull') return { plan_id: 'p-nuovo', token: 'tok-nuovo' };
+      if (name === 'createInviteLink') return 'tok-rifatto';
       if (name === 'loadState')      return { me: 'u1', people: {}, groups: {}, plans: {} };
       return null;
     };
@@ -66,7 +67,7 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'adottaIdentitaGoogle','pulisciUrlDopoLogin','signOut','myActor',
                  'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra',
                  'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount',
-                 'renameSection','deleteSection','planBalances'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'renameSection','deleteSection','planBalances','createInviteLink','tokenFor'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
@@ -465,6 +466,42 @@ await test("se l'avvio fallisce non restano a schermo i piani finti", () => {
     assert.ok(testo.includes('JWT issued at future'), 'regola 5: il dettaglio vero, non un messaggio generico');
     assert.ok(D.window.document.querySelector('button'), 'senza un modo di riprovare si resta bloccati');
   } finally { globalThis.document = vecchio; }
+});
+
+await test('senza il token in tasca se ne chiede uno nuovo, non si manda ?t=null', async () => {
+  // Trovato provando il giro completo sul dominio nuovo: il messaggio pronto
+  // da incollare su WhatsApp conteneva "?t=null". Un link rotto, gia' scritto
+  // nel messaggio, pronto da mandare a quattro amici.
+  //
+  // I token stanno solo sul dispositivo perche' nel database sono hashati: il
+  // server non puo' ridarli a nessuno. Ma puo' farne uno nuovo.
+  const K = { state: { me: 'io', currentPlan: 'p1',
+    plans: { p1: { id: 'p1', organizer: 'io', token: null } } } };
+  globalThis.location.hash = '#/share/p1';
+
+  const fatto = await live.assicuraToken(K);
+  assert.ok(fatto, 'non ha chiesto il token');
+  assert.equal(calls.at(-2).name, 'createInviteLink');
+  assert.ok(K.state.plans.p1.token, 'il piano deve avere un link subito, senza rileggere tutto');
+  assert.equal(calls.at(-1).name, 'saveToken', 'e va ricordato, o lo si richiede a ogni apertura');
+});
+
+await test('il token non si chiede per i piani degli altri', async () => {
+  // A un invitato il token non serve, e il server glielo rifiuterebbe:
+  // chiederlo vorrebbe dire un errore in console a ogni apertura.
+  const prima = calls.length;
+  const K = { state: { me: 'io', currentPlan: 'p2',
+    plans: { p2: { id: 'p2', organizer: 'qualcun-altro', token: null } } } };
+  assert.equal(await live.assicuraToken(K), false);
+  assert.equal(calls.length, prima, 'non deve partire niente');
+});
+
+await test("se il token c'è già non se ne chiede un altro", async () => {
+  const prima = calls.length;
+  const K = { state: { me: 'io', currentPlan: 'p3',
+    plans: { p3: { id: 'p3', organizer: 'io', token: 'tok-buono' } } } };
+  assert.equal(await live.assicuraToken(K), false);
+  assert.equal(calls.length, prima, 'un token nuovo a ogni ricarica e uno spreco');
 });
 
 await test('le sezioni si rinominano e si cancellano', async () => {
