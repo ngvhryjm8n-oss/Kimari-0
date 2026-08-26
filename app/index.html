@@ -1103,6 +1103,21 @@ const DIZIONARIO = {
   /* ------------------------------------------------- il piano, giorno per giorno */
   'In decisione': { en: 'Being decided', es: 'En decisión',
                     de: 'Wird entschieden', ja: '決定中' },
+  'Il tuo piano': { en: 'Your plan', es: 'Tu plan', de: 'Dein Plan', ja: 'あなたの予定' },
+  'La tua decisione': { en: 'Your decision', es: 'Tu decisión',
+                        de: 'Deine Entscheidung', ja: 'あなたの決めごと' },
+  // Due numeri: vanno da segnaposto, così ogni lingua li mette dove le servono
+  // — in giapponese il conteggio precede il verbo e la frase si ribalta.
+  '{n} su {tot} hanno votato': {
+    en: '{n} of {tot} have voted', es: '{n} de {tot} han votado',
+    de: '{n} von {tot} haben abgestimmt', ja: '{tot} 人中 {n} 人が投票済み'
+  },
+  'In decisione · {n} su {tot} hanno votato': {
+    en: 'Being decided · {n} of {tot} have voted',
+    es: 'En decisión · {n} de {tot} han votado',
+    de: 'Wird entschieden · {n} von {tot} haben abgestimmt',
+    ja: '決定中 · {tot} 人中 {n} 人が投票済み'
+  },
   'Annullato': { en: 'Called off', es: 'Cancelado', de: 'Abgesagt', ja: '中止' },
   'Kimari!': { en: 'Kimari!', es: '¡Kimari!', de: 'Kimari!', ja: 'Kimari！' },
   'Ci sei?': { en: 'Are you in?', es: '¿Te apuntas?', de: 'Bist du dabei?', ja: '参加しますか？' },
@@ -2013,7 +2028,7 @@ function vAgenda(){
 }
 
 /* =============================== viste =============================== */
-const nav = (title, back, right = '', backLabel = 'Indietro') => `<header class="nav">${back ? `<button class="back" data-action="go" data-to="${back}">${backLabel === 'Annulla' ? '' : ICON.chevL}${backLabel}</button>` : '<span></span>'}<h1>${esc(title)}</h1><div class="right">${right}</div></header>`;
+const nav = (title, back, right = '', backLabel = t('Indietro')) => `<header class="nav">${back ? `<button class="back" data-action="go" data-to="${back}">${backLabel === 'Annulla' ? '' : ICON.chevL}${backLabel}</button>` : '<span></span>'}<h1>${esc(title)}</h1><div class="right">${right}</div></header>`;
 function tabbar(active){
   const n = newsCount();
   return `<nav class="tabbar">${[['home','Gruppi',ICON.groups],['new','Crea',ICON.plus],['news','Novità',ICON.news],['profile','Profilo',ICON.profile]].map(([r,l,i]) => `<button class="tab ${active === r ? 'on' : ''}" data-action="tab" data-to="${r}">${r === 'new' ? `<span class="plusb">${i}</span>` : i}<span>${l}</span>${r === 'news' && n ? `<span class="badge-n">${n}</span>` : ''}</button>`).join('')}</nav>`;
@@ -2048,11 +2063,11 @@ function vHome(){
 function vWebHome(){
   const mine = visiblePlans().sort((a,b) => b.createdAt - a.createdAt);
   return `<div class="view"><div class="home">${A.icon ? `<img src="${A.icon}" alt="Kimari" style="width:84px;height:84px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.15)">` : '<div class="logo">🐧</div>'}<h1 class="brand">Kimari</h1><p class="tagline">${t('Tutti hanno un\'opinione.')}<br>${t('Kimari la trasforma in un piano.')}</p><button class="btn primary" data-action="tab" data-to="new">${t('Crea un piano')}</button></div>
-  ${mine.length ? `<div class="group-title">${t('I tuoi piani')}</div><div class="group">${mine.map(p => `<button class="row link" data-action="go" data-to="p/${p.id}"><span class="ptile" style="--h:${planHue(p)}">${p.emoji}</span><div class="grow"><div class="t">${esc(p.title)}</div><div class="s">${p.status === 'confirmed' ? resultText(p) : `In decisione · ${votedIds(p).length} su ${p.participants.length} hanno votato`}</div></div><span class="chev"></span></button>`).join('')}</div>` : ''}
+  ${mine.length ? `<div class="group-title">${t('I tuoi piani')}</div><div class="group">${mine.map(p => `<button class="row link" data-action="go" data-to="p/${p.id}"><span class="ptile" style="--h:${planHue(p)}">${p.emoji}</span><div class="grow"><div class="t">${esc(p.title)}</div><div class="s">${p.status === 'confirmed' ? resultText(p) : t('In decisione · {n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}</div></div><span class="chev"></span></button>`).join('')}</div>` : ''}
   <p class="foot">${t('Versione web: chi riceve il link entra, scrive il nome e vota. L\'app con calendario e gruppi è per chi organizza.')}</p></div>`;
 }
 function planRow(p){
-  return `<button class="row link" data-action="go" data-to="p/${p.id}"><span class="ptile" style="--h:${planHue(p)}">${p.emoji}</span><div class="grow"><div class="t">${esc(p.title)}${p.seriesId ? ` <span class="s">· ${p.occurrence} di ${p.of}</span>` : ''}</div><div class="s">${p.status === 'deciding' ? `${votedIds(p).length} su ${p.participants.length} hanno votato${p.deadline ? ' · si chiude ' + fmtDeadline(p.deadline) : ''}` : `${esc(resultText(p))}${p.proposals.some(x => x.status === 'open' || x.status === 'ready') ? ' · 🔁 proposta aperta' : ''}`}</div></div>${p.status === 'deciding' ? '<span class="tag amber" style="margin:0">ai voti</span>' : ''}<span class="chev"></span></button>`;
+  return `<button class="row link" data-action="go" data-to="p/${p.id}"><span class="ptile" style="--h:${planHue(p)}">${p.emoji}</span><div class="grow"><div class="t">${esc(p.title)}${p.seriesId ? ` <span class="s">· ${p.occurrence} di ${p.of}</span>` : ''}</div><div class="s">${p.status === 'deciding' ? `${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}${p.deadline ? ' · si chiude ' + fmtDeadline(p.deadline) : ''}` : `${esc(resultText(p))}${p.proposals.some(x => x.status === 'open' || x.status === 'ready') ? ' · 🔁 proposta aperta' : ''}`}</div></div>${p.status === 'deciding' ? '<span class="tag amber" style="margin:0">ai voti</span>' : ''}<span class="chev"></span></button>`;
 }
 function vGroup(g){
   const ps = plansOfGroup(g); const deciding = ps.filter(p => p.status === 'deciding'); const upcoming = ps.filter(p => p.status === 'confirmed' && p.kind === 'plan' && !isPast(p)).sort((a,b) => planStart(a) - planStart(b)); const decided = ps.filter(p => p.status === 'confirmed' && p.kind === 'decision'); const past = ps.filter(isPast);
@@ -2274,18 +2289,18 @@ function vPlan(p){
     ${p.status === 'confirmed' ? (decision ? `<div class="when">${esc(resultText(p))}</div>` : `<div class="when">${fmtWhen(p.when.value)}</div><div class="where">${esc(fmtWhere(p.where.value))}${p.where.value && p.where.value.address ? `<div class="s">${esc(p.where.value.address)}</div>` : ''}</div>${p.where.value && p.where.value.photo ? `<img class="where-photo" src="${p.where.value.photo}" alt="">` : ''}${(p.extras || []).filter(x => x.value).map(x => `<div class="where">${esc(x.question)} <b>${esc(x.value.name)}</b></div>`).join('')}`) : `<div class="sec">${decision ? 'Domanda di' : 'Organizza'} ${esc(orgName)}</div>`}
     ${g ? `<div class="s" style="margin-top:6px">${g.emoji} ${esc(g.name)}${p.seriesId ? ` · 🔁 ${recurLabel(p)} · ${p.occurrence} di ${p.of}` : ''}</div>` : ''}
     <div class="badges">${p.status === 'confirmed' ? `<span class="badge confirmed">${decision ? 'Deciso' : 'Confermato'}</span><span class="badge gray">v${p.version}</span>${p.booked ? '<span class="badge gray">📌 prenotato</span>' : ''}` : `<span class="badge deciding">${t('In decisione')}</span>${p.deadline ? `<span class="badge gray">${deadlinePast ? 'Scaduto · in attesa di ' + esc(orgName) : 'Si chiude ' + fmtDeadline(p.deadline)}</span>` : ''}`}</div>
-    ${p.status === 'deciding' ? `<div class="s" style="margin-top:10px">${votedIds(p).length} su ${p.participants.length} hanno votato</div>` : ''}
+    ${p.status === 'deciding' ? `<div class="s" style="margin-top:10px">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}</div>` : ''}
   </div></div>`;
   if(p.status === 'deciding'){
     if(!isP) return `${nav(webTitle, '')}<div class="view">${head}<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? 'Tocca Sì o No.' : 'Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone.'}</div></div>${vBallot(p, false)}<p class="foot">${t('Tocca per entrare. Ti chiederemo solo il nome.')}</p></div>`;
     const hasVoted = !!p.ballots[mine]; const missing = missingIds(p).map(id => nameOf(id)); const bd = ensureBallotDraft(p);
     const noteField = `<div class="group-title">${t('Nota per il gruppo · facoltativa')}</div><div class="group"><div class="row"><textarea class="input" rows="2" placeholder="${t('Es. per me va bene tutto ma non troppo tardi')}" data-bind-note="1" maxlength="200">${esc(Object.values(bd)[0] ? Object.values(bd)[0].note : '')}</textarea></div></div>`;
-    return `${nav(isOrg ? (decision ? 'La tua decisione' : 'Il tuo piano') : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
+    return `${nav(isOrg ? (decision ? t('La tua decisione') : t('Il tuo piano')) : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
     <div class="view">${head}
       ${state.justVoted ? `<div class="notice">Hai votato ✓ ${p.organizer === state.me ? `Ora tocca a te: ${decision ? 'chiudi' : 'conferma'} quando vuoi, anche prima che abbiano votato tutti.` : `${decision ? 'Il risultato' : 'Il piano'} si aggiorna qui: quando ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}, lo vedi in questa pagina.`}</div>` : ''}
       ${isOrg ? '' : `<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? `Tocca Sì o No. Vince la maggioranza di chi risponde; ${esc(orgName)} chiude.` : `Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone; ${esc(orgName)} ${decision ? 'chiude' : 'conferma'}.`}</div></div>`}
       ${vBallot(p, true)}${decision && p.extras[0].binary ? '' : noteField}
-      ${decision && p.extras[0].binary ? '' : (hasVoted || isOrg ? `<div class="pad" style="margin-top:12px"><button class="btn ${isOrg ? 'tint' : 'primary'}" data-action="vote">${hasVoted ? 'Aggiorna il mio voto' : 'Invia il mio voto'}</button></div>` : '')}
+      ${decision && p.extras[0].binary ? '' : (hasVoted || isOrg ? `<div class="pad" style="margin-top:12px"><button class="btn ${isOrg ? 'tint' : 'primary'}" data-action="vote">${hasVoted ? t('Aggiorna il mio voto') : t('Invia il mio voto')}</button></div>` : '')}
       ${state.justVoted && web ? `<div class="group-title">${t('Ricevi il risultato')}</div><div class="group"><div class="row"><input class="input" type="email" placeholder="${t('La tua email (facoltativa)')}" id="emailInput" inputmode="email" autocomplete="email"><button class="add" data-action="email">${t('Avvisami')}</button></div></div><div class="group-foot">${t('Nessuna newsletter: una sola email quando viene confermato. La stessa email ti permette di ritrovare questo piano se poi installi l\'app.')}</div>` : ''}
       ${vResults(p)}
       ${missing.length ? `<div class="group-title">${t('Non hanno ancora votato')}</div><div class="group"><div class="row">${mi('aspetta', 42)}<div class="avatars">${missing.slice(0, 5).map(n => avatar(n)).join('')}</div><div class="grow t">${missing.map(esc).join(', ')}</div></div></div>` : ''}
@@ -2295,10 +2310,10 @@ function vPlan(p){
     </div>
     ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>
     <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? 'Annulla la decisione' : 'Annulla il piano'}</div></button></div>
-    <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t('Invia il mio voto')}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
+    <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t(t('Invia il mio voto'))}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
   }
   if(decision){
-    return `${nav(isOrg ? 'La tua decisione' : (web ? webTitle : 'Decisione'), back)}<div class="view">${head}
+    return `${nav(isOrg ? t('La tua decisione') : (web ? webTitle : 'Decisione'), back)}<div class="view">${head}
       <div class="group-title">${t('Com\'è andata')}</div>${vResults({ ...p, extras:p.extras.map(x => ({ ...x, mode:'deciding' })) })}
       ${isP ? vComments(p) : ''}
       <div class="group-title">${t('Storico')}</div><div class="group history">${[...p.changes].reverse().map(c => `<div class="row"><span class="v">v${c.version}</span><div class="grow"><div class="t" style="font-size:15px">${esc(c.text)}</div><div class="s">${esc(nameOf(c.by))} · ${fFull.format(new Date(c.at))}</div></div></div>`).join('')}</div></div>`;
@@ -2307,7 +2322,7 @@ function vPlan(p){
   const late = p.participants.filter(x => x.late && x.rsvp !== 'no'); const openPrs = p.proposals.filter(x => x.status === 'open' || x.status === 'ready'); const locked = isLocked(p); const canPropose = isP && (p.allowProposals || isOrg) && openPrs.length < 2 && !locked && !isPast(p);
   const mapsQ = encodeURIComponent([p.where.value && p.where.value.name, p.where.value && p.where.value.address].filter(Boolean).join(' '));
   const siblings = p.seriesId ? Object.values(state.plans).filter(x => x.seriesId === p.seriesId && x.id !== p.id).sort((a,b) => a.occurrence - b.occurrence) : [];
-  return `${nav(isOrg ? 'Il tuo piano' : (web ? webTitle : 'Piano'), back, isOrg ? `<button class="textbtn" data-action="openEdit">${t('Modifica')}</button>` : '')}
+  return `${nav(isOrg ? t('Il tuo piano') : (web ? webTitle : 'Piano'), back, isOrg ? `<button class="textbtn" data-action="openEdit">${t('Modifica')}</button>` : '')}
   <div class="view">${head}
     ${openPrs.map(pr => vProposal(p, pr)).join('')}
     ${isP ? `<div class="group-title">${t('Ci sei?')}</div><div class="pad"><div class="seg"><button class="${rsvp.rsvp === 'yes' ? 'on' : ''}" data-action="rsvp" data-v="yes">${t('Ci sono')}</button><button class="${rsvp.rsvp === 'maybe' ? 'on' : ''}" data-action="rsvp" data-v="maybe">${t('Forse')}</button><button class="${rsvp.rsvp === 'no' ? 'on' : ''}" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div></div>${!web && !rsvp.rsvp ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="rsvp" data-v="yes">${t('Ci sono ✓')}</button><button class="btn tint" data-action="rsvp" data-v="no">${t('Non vengo')}</button></div>` : ''}
@@ -2389,7 +2404,7 @@ function sheetName(p){
 }
 function sheetConfirm(p, fresh){
   const fields = decidingFields(p); if(fresh || !state.picks){ state.picks = {}; fields.forEach(f => { state.picks[f] = results(p, f).suggested || fieldObj(p, f).candidates[0].id; }); }
-  return `<h2>${p.kind === 'decision' ? 'Chiudi la decisione' : 'Conferma il piano'}</h2><p class="sub">${votedIds(p).length} su ${p.participants.length} hanno votato. Il suggerimento è l'opzione compatibile con più persone; la scelta finale è tua.</p>
+  return `<h2>${p.kind === 'decision' ? 'Chiudi la decisione' : 'Conferma il piano'}</h2><p class="sub">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}. Il suggerimento è l'opzione compatibile con più persone; la scelta finale è tua.</p>
   ${fields.map(f => { const r = results(p, f); return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group radio">${r.counts.map(({ c, voters }) => `<button class="row ${state.picks[f] === c.id ? 'on' : ''}" data-action="pick" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}${r.suggested === c.id ? '<span class="tag">più compatibile</span>' : ''}</div><div class="s">${voters.length} ${voters.length === 1 ? 'persona' : 'persone'}</div></div></button>`).join('')}</div>`; }).join('')}
   <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? 'Chiudi' : 'Conferma'}</button></div>`;
 }
@@ -2861,6 +2876,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2016%3A49"></script>
+<script type="module" src="./live.js?v=26%2F08%2016%3A57"></script>
 </body>
 </html>

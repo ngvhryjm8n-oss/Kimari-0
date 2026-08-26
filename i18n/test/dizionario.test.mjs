@@ -3,7 +3,12 @@
 //
 //   node i18n/test/dizionario.test.mjs
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DIZIONARIO, LINGUE, scegliLingua, traduttore, quanteMancano } from '../dizionario.js';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 let passed = 0, failed = 0;
 const test = (nome, fn) => {
@@ -97,6 +102,35 @@ test('ogni voce ha tutte e quattro le lingue', () => {
     }
   }
   assert.deepEqual(buchi, [], 'traduzioni mancanti');
+});
+
+test('il dizionario iniettato nelle pagine combacia con la sorgente', () => {
+  // Il dizionario viene copiato dentro index.html e app/index.html da
+  // tools/genera-i18n.mjs. Vive quindi in tre posti, e i due copiati sono
+  // dentro file enormi dove capita di fare sostituzioni globali.
+  //
+  // E' successo: cercando di avvolgere 'Invia il mio voto' in t() ho colpito
+  // anche la CHIAVE del dizionario, che e' la stessa stringa. Il file smette
+  // di essere JavaScript valido — quella volta se n'e' accorto il controllo di
+  // sintassi, ma se avessi toccato un valore invece di una chiave sarebbe
+  // passato liscio e sarebbe uscita la traduzione sbagliata a schermo.
+  // Tre chiavi sparse invece di una: una sostituzione globale sbagliata
+  // colpisce un punto solo, e guardando sempre la prima non la si vedrebbe.
+  const tutte = Object.keys(DIZIONARIO);
+  const campione = [tutte[0], tutte[Math.floor(tutte.length / 2)], tutte[tutte.length - 1]];
+  for (const f of ['index.html', join('app', 'index.html')]) {
+    let html;
+    try { html = readFileSync(join(root, f), 'utf8'); } catch { continue; }
+    const da = html.indexOf('/* ==== i18n:');
+    const a = html.indexOf('/* ==== fine i18n ==== */');
+    assert.ok(da >= 0 && a > da, f + ': manca il blocco i18n');
+    const blocco = html.slice(da, a);
+    for (const chiave of campione) {
+      assert.ok(blocco.includes("'" + chiave.replace(/'/g, "\\'") + "':"),
+        f + ': la chiave "' + chiave.slice(0, 30) + "\" non c'è nel blocco iniettato. "
+          + 'Gira `node tools/genera-i18n.mjs`');
+    }
+  }
 });
 
 // Nomi propri e cose che non sono parole: restano identiche in ogni lingua, e
