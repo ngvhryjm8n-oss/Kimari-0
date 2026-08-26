@@ -63,6 +63,17 @@ Quello che NON è stato verificato: una notifica arrivata su un telefono vero.
 La prova è stata fatta con un dispositivo finto, che ha fallito come doveva
 (tre tentativi e poi basta).
 
+Il banco per la prova vera è già montato (27/8 sera): esiste il piano
+"PROVA-CLAUDE Cena 🍕" con invito `kimariapp.com/?t=vyNvw92m5VP_6kw8`.
+La sequenza: aprire il link sul telefono → votare/entrare → installare
+l'app sulla Home → Profilo → Notifiche → permesso. Poi qualcun altro
+(dal browser va benissimo) conferma il piano o si dichiara in ritardo:
+entro un minuto il cron consegna. Chi causa l'evento non riceve mai la
+propria notifica, quindi la prova va fatta in due sessioni diverse.
+Alla fine, la pulizia dei dati PROVA-CLAUDE sta in
+`supabase/tools/pulizia_prove.sql` (verificato il 27/8: tutti i 19 nomi
+di tabella esistono).
+
 **Come si attivano, e i due telefoni non fanno la stessa cosa.**
 
 | | iPhone | Android |
@@ -86,6 +97,17 @@ giusto per il suo telefono.
 
 **L'app negli store.** `nativa/` è pronta e `CAPACITOR.md` spiega tutto.
 Android si fa da Windows; **iOS richiede macOS**, e non è aggirabile.
+
+Al 27/8 sera il progetto Android è **generato** (`npx cap add android` fatto,
+Capacitor 8.5; la cartella è gitignorata e si rigenera). Il muro successivo è
+Android Studio: non è installato, sono ~8 GB, e serve per compilare l'APK.
+
+Gli asset per le schede degli store sono in `store/`: icone 512/1024 a tutto
+quadro, feature graphic 1024×500, screenshot chiari/IT/EN presi dalla
+produzione, e `store/LISTING.md` con i testi in cinque lingue e le avvertenze
+(l'icona grande è un ingrandimento della 192px: prima dell'App Store va
+ridisegnata vettoriale; gli screenshot vanno rifatti con un piano dal nome
+presentabile, non PROVA-CLAUDE).
 
 ---
 
