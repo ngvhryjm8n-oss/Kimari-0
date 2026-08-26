@@ -600,6 +600,166 @@ export const DIZIONARIO = {
     de: 'Die Ausgabe trifft nur die, die du auswählst: „Marco hat Silvios Essen bezahlt“ = Marco zahlt, du wählst nur Silvio. Wer zahlt, muss nicht dabei sein.',
     ja: '費用は選んだ人にだけかかります。「マルコがシルヴィオの夕食を払った」＝ 払うのはマルコ、選ぶのはシルヴィオだけ。払った人が対象に入っていなくてもかまいません。'
   },
+  'Membro eliminato': { en: 'Deleted member', es: 'Miembro eliminado',
+                        de: 'Gelöschtes Mitglied', ja: '退会したメンバー' },
+
+  /* ------------------------------------------- app: parole corte e titoli */
+  'Nuovo gruppo': { en: 'New group', es: 'Grupo nuevo', de: 'Neue Gruppe', ja: '新しいグループ' },
+  'Icona del gruppo': { en: 'Group icon', es: 'Icono del grupo',
+                        de: 'Gruppensymbol', ja: 'グループのアイコン' },
+  'I tuoi piani': { en: 'Your plans', es: 'Tus planes', de: 'Deine Pläne', ja: 'あなたの予定' },
+  'Come ti chiami?': { en: 'What’s your name?', es: '¿Cómo te llamas?',
+                       de: 'Wie heißt du?', ja: 'お名前は？' },
+  'Con chi?': { en: 'With whom?', es: '¿Con quién?', de: 'Mit wem?', ja: 'だれと？' },
+  'Quando?': { en: 'When?', es: '¿Cuándo?', de: 'Wann?', ja: 'いつ？' },
+  'Dove?': { en: 'Where?', es: '¿Dónde?', de: 'Wo?', ja: 'どこで？' },
+  'Data e ora': { en: 'Date and time', es: 'Fecha y hora', de: 'Datum und Uhrzeit', ja: '日時' },
+  'Invia': { en: 'Send', es: 'Enviar', de: 'Senden', ja: '送信' },
+  'Vai al piano': { en: 'Go to the plan', es: 'Ir al plan', de: 'Zum Plan', ja: '予定を開く' },
+  'Tutto pronto': { en: 'All set', es: 'Todo listo', de: 'Alles bereit', ja: '準備完了' },
+  'Copia solo il link': { en: 'Copy the link only', es: 'Copiar solo el enlace',
+                          de: 'Nur den Link kopieren', ja: 'リンクだけコピー' },
+  'Scrivi un commento': { en: 'Write a comment', es: 'Escribe un comentario',
+                          de: 'Kommentar schreiben', ja: 'コメントを書く' },
+  'Piano ricorrente': { en: 'Recurring plan', es: 'Plan recurrente',
+                        de: 'Wiederkehrender Plan', ja: '繰り返しの予定' },
+  'Altro da decidere insieme?': { en: 'Anything else to decide together?',
+    es: '¿Algo más que decidir juntos?', de: 'Noch etwas gemeinsam zu entscheiden?',
+    ja: 'ほかに決めることは？' },
+  'Non posso più venire': { en: 'I can’t make it any more', es: 'Ya no puedo ir',
+                            de: 'Ich kann doch nicht', ja: '行けなくなりました' },
+  'Scadenza del voto · facoltativa': { en: 'Voting deadline · optional',
+    es: 'Fecha límite del voto · opcional', de: 'Abstimmungsfrist · optional',
+    ja: '投票の締切 · 任意' },
+  'Gli altri possono proporre': { en: 'Others can suggest things',
+    es: 'Los demás pueden proponer', de: 'Andere dürfen Vorschläge machen',
+    ja: 'ほかの人も提案できる' },
+  'Altre date o luoghi ai voti, e cambi dopo la conferma': {
+    en: 'More dates or places up for a vote, and changes after it’s confirmed',
+    es: 'Más fechas o sitios a votación, y cambios tras la confirmación',
+    de: 'Weitere Termine oder Orte zur Abstimmung, und Änderungen nach der Bestätigung',
+    ja: '候補の日時や場所の追加、確定後の変更もできます'
+  },
+  '🔗 Solo con link': { en: '🔗 By link only', es: '🔗 Solo con enlace',
+                        de: '🔗 Nur per Link', ja: '🔗 リンクのみ' },
+  'Disponibile nelle 24 ore prima dell\'inizio': {
+    en: 'Available in the 24 hours before it starts',
+    es: 'Disponible en las 24 horas previas al inicio',
+    de: 'Verfügbar in den 24 Stunden davor',
+    ja: '開始 24 時間前から使えます' },
+  'Apri il link come nuovo ospite (web)': {
+    en: 'Open the link as a new guest (web)', es: 'Abrir el enlace como invitado nuevo (web)',
+    de: 'Link als neuer Gast öffnen (Web)', ja: '新しいゲストとしてリンクを開く（ウェブ）' },
+
+  /* ----------------------------------------- app: spiegazioni piu' lunghe */
+  'Le sezioni (Roma, Bari…) sono tue e solo tue: servono a ordinare le cerchie, non le vedono gli altri. Ogni gruppo è privato: si entra solo su invito.': {
+    en: 'Sections (Rome, Bari…) are yours and only yours — they’re for tidying your circles, and nobody else sees them. Every group is private: you get in by invitation only.',
+    es: 'Las secciones (Roma, Bari…) son tuyas y solo tuyas: sirven para ordenar tus círculos y nadie más las ve. Cada grupo es privado: solo se entra por invitación.',
+    de: 'Bereiche (Rom, Bari…) gehören dir allein — sie ordnen deine Kreise, und niemand sonst sieht sie. Jede Gruppe ist privat: Zutritt nur auf Einladung.',
+    ja: 'セクション（ローマ、バーリなど）はあなただけのもので、グループを整理するためのものです。ほかの人には見えません。グループはすべて非公開で、招待からのみ参加できます。'
+  },
+  'Versione web: chi riceve il link entra, scrive il nome e vota. L\'app con calendario e gruppi è per chi organizza.': {
+    en: 'Web version: whoever gets the link comes in, types a name and votes. The app, with calendar and groups, is for whoever organises.',
+    es: 'Versión web: quien recibe el enlace entra, escribe su nombre y vota. La app, con calendario y grupos, es para quien organiza.',
+    de: 'Web-Version: Wer den Link bekommt, kommt rein, tippt einen Namen und stimmt ab. Die App mit Kalender und Gruppen ist für die, die organisieren.',
+    ja: 'ウェブ版：リンクを受け取った人が開いて、名前を書いて投票します。カレンダーとグループのあるアプリは、幹事のためのものです。'
+  },
+  'Nessun gruppo ancora. Creane uno per la famiglia, gli amici o il prossimo viaggio.': {
+    en: 'No groups yet. Make one for the family, your friends, or the next trip.',
+    es: 'Aún no hay grupos. Crea uno para la familia, los amigos o el próximo viaje.',
+    de: 'Noch keine Gruppen. Leg eine an — für die Familie, die Freunde oder die nächste Reise.',
+    ja: 'まだグループがありません。家族、友だち、次の旅行用に作ってみてください。'
+  },
+  'Nessun piano ancora. Il primo lo crei tu: cena, weekend, partita. Oppure "Decidi qualcosa" per una domanda secca.': {
+    en: 'No plans yet. You make the first one: dinner, a weekend, a match. Or “Decide something” for a straight question.',
+    es: 'Aún no hay planes. El primero lo creas tú: una cena, un finde, un partido. O «Decide algo» para una pregunta directa.',
+    de: 'Noch keine Pläne. Den ersten machst du: Essen, ein Wochenende, ein Spiel. Oder „Etwas entscheiden“ für eine schlichte Frage.',
+    ja: 'まだ予定がありません。最初のひとつはあなたから。夕食、週末、試合。ひとこと聞きたいだけなら「決めよう」を。'
+  },
+  '★ creatore · ✦ admin. Gli admin possono rimuovere persone e cancellare commenti.': {
+    en: '★ creator · ✦ admin. Admins can remove people and delete comments.',
+    es: '★ creador · ✦ admin. Los admins pueden quitar personas y borrar comentarios.',
+    de: '★ Ersteller · ✦ Admin. Admins können Leute entfernen und Kommentare löschen.',
+    ja: '★ 作成者 · ✦ 管理者。管理者はメンバーの削除とコメントの削除ができます。'
+  },
+  'Gli invitati ti vedranno così. Niente account, niente password.': {
+    en: 'This is how the people you invite will see you. No account, no password.',
+    es: 'Así te verán los invitados. Sin cuenta, sin contraseña.',
+    de: 'So sehen dich die Eingeladenen. Kein Konto, kein Passwort.',
+    ja: '招待した人にはこう表示されます。アカウントもパスワードもいりません。'
+  },
+  'Con un gruppo, i membri vedono il piano subito in app. Con il link, chi lo riceve entra dal web senza installare niente.': {
+    en: 'With a group, the members see the plan right away in the app. With the link, whoever gets it comes in from the web without installing anything.',
+    es: 'Con un grupo, los miembros ven el plan al momento en la app. Con el enlace, quien lo recibe entra desde la web sin instalar nada.',
+    de: 'Mit einer Gruppe sehen die Mitglieder den Plan sofort in der App. Mit dem Link kommt jeder übers Web rein, ohne etwas zu installieren.',
+    ja: 'グループなら、メンバーはアプリですぐ予定を見られます。リンクなら、受け取った人が何もインストールせずウェブから参加できます。'
+  },
+  'Gli invitati segnano tutte le opzioni che gli vanno bene. Vince quella compatibile con più persone; la conferma è tua.': {
+    en: 'The people you invite tick every option that works for them. The one that suits the most people wins; confirming is up to you.',
+    es: 'Los invitados marcan todas las opciones que les vengan bien. Gana la que funcione para más gente; confirmar te toca a ti.',
+    de: 'Die Eingeladenen markieren alles, was ihnen passt. Es gewinnt die Option, die den meisten passt; bestätigen tust du.',
+    ja: '招待された人は、都合のいい候補をすべて選びます。いちばん多くの人に合うものが勝ち、確定するのはあなたです。'
+  },
+  'Sai già quando e dove: il piano nasce confermato e gli invitati rispondono solo "ci sono / forse / no".': {
+    en: 'You already know when and where: the plan starts out confirmed and the people you invite just answer “in / maybe / out”.',
+    es: 'Ya sabes cuándo y dónde: el plan nace confirmado y los invitados solo responden «voy / quizá / no».',
+    de: 'Du weißt schon wann und wo: Der Plan startet bestätigt, und die Eingeladenen antworten nur „dabei / vielleicht / nein“.',
+    ja: '日時も場所も決まっている場合、予定は最初から確定で始まり、招待された人は「参加／たぶん／不参加」を答えるだけです。'
+  },
+  'Il luogo lo decidete dopo. Il piano si può confermare anche senza: sulla pagina comparirà "Luogo da decidere".': {
+    en: 'You’ll settle the place later. The plan can be confirmed without it — the page will say “Place to be decided”.',
+    es: 'El sitio lo decidís después. El plan se puede confirmar igual: en la página pondrá «Sitio por decidir».',
+    de: 'Den Ort klärt ihr später. Der Plan lässt sich auch ohne bestätigen — auf der Seite steht dann „Ort noch offen“.',
+    ja: '場所はあとで決められます。なくても確定でき、ページには「場所は未定」と表示されます。'
+  },
+  'La scadenza è un promemoria per il gruppo. Il piano si chiude quando lo confermi tu.': {
+    en: 'The deadline is a nudge for the group. The plan closes when you confirm it.',
+    es: 'La fecha límite es un recordatorio para el grupo. El plan se cierra cuando lo confirmas tú.',
+    de: 'Die Frist ist eine Erinnerung für die Gruppe. Der Plan schließt, wenn du ihn bestätigst.',
+    ja: '締切はみんなへの目安です。予定が閉じるのは、あなたが確定したときです。'
+  },
+  'Calcetto ogni martedì, cena ogni primo venerdì: una data per volta, ognuna con il suo "ci sono"': {
+    en: 'Five-a-side every Tuesday, dinner every first Friday: one date at a time, each with its own “I’m in”',
+    es: 'Fútbol cada martes, cena cada primer viernes: una fecha a la vez, cada una con su «voy»',
+    de: 'Fußball jeden Dienstag, Essen jeden ersten Freitag: ein Termin nach dem anderen, jeder mit eigenem „Ich bin dabei“',
+    ja: '毎週火曜のフットサル、毎月第一金曜の食事。日付ごとに一つずつ、それぞれに「参加する」があります'
+  },
+  'Le proposte del gruppo non cambiano il piano da sole: decidi tu': {
+    en: 'Suggestions from the group don’t change the plan by themselves — you decide',
+    es: 'Las propuestas del grupo no cambian el plan por sí solas: decides tú',
+    de: 'Vorschläge aus der Gruppe ändern den Plan nicht von allein — du entscheidest',
+    ja: 'みんなの提案だけで予定は変わりません。決めるのはあなたです'
+  },
+  'Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.': {
+    en: 'No comments. Things to decide go through the vote; here goes only what the plan needs.',
+    es: 'Sin comentarios. Lo que hay que decidir pasa por la votación; aquí solo lo que necesita el plan.',
+    de: 'Keine Kommentare. Was zu entscheiden ist, läuft über die Abstimmung; hier steht nur, was der Plan braucht.',
+    ja: 'コメントはまだありません。決めごとは投票で。ここには予定に必要なことだけを。'
+  },
+  'Commenti interni al piano, visibili solo a chi è dentro. Per chiacchierare c\'è WhatsApp.': {
+    en: 'Comments live inside the plan, visible only to those in it. For chatting there’s WhatsApp.',
+    es: 'Comentarios internos del plan, visibles solo para quien está dentro. Para charlar está WhatsApp.',
+    de: 'Kommentare bleiben im Plan und sind nur für die Beteiligten sichtbar. Zum Plaudern gibt es WhatsApp.',
+    ja: 'コメントは予定の中だけのもので、参加者にしか見えません。おしゃべりは WhatsApp で。'
+  },
+  'Tutti lo vedono qui, senza cercarlo in chat': {
+    en: 'Everyone sees it here, without hunting for it in the chat',
+    es: 'Todos lo ven aquí, sin buscarlo en el chat',
+    de: 'Alle sehen es hier, ohne im Chat danach zu suchen',
+    ja: 'チャットを探さなくても、みんながここで見られます'
+  },
+  'Le foto restano nel piano, compresse; gli originali restano sul tuo telefono.': {
+    en: 'Photos stay in the plan, compressed; the originals stay on your phone.',
+    es: 'Las fotos se quedan en el plan, comprimidas; los originales siguen en tu teléfono.',
+    de: 'Fotos bleiben im Plan, komprimiert; die Originale bleiben auf deinem Handy.',
+    ja: '写真は圧縮されて予定に残ります。元の画像はあなたの端末にそのまま残ります。'
+  },
+  'Solo registrazione: i soldi passano fuori da Kimari (PayPal, Satispay, contanti). Le voci non si modificano, si annullano.': {
+    en: 'Record-keeping only: the money moves outside Kimari (PayPal, Satispay, cash). Entries aren’t edited, they’re voided.',
+    es: 'Solo registro: el dinero se mueve fuera de Kimari (PayPal, Bizum, efectivo). Las entradas no se modifican, se anulan.',
+    de: 'Nur zum Festhalten: Das Geld fließt außerhalb von Kimari (PayPal, Satispay, bar). Einträge werden nicht geändert, sondern storniert.',
+    ja: '記録のためだけの機能です。お金のやり取りは Kimari の外で行います（PayPal、Satispay、現金など）。記入は修正ではなく取り消しで直します。'
+  },
   'Parti uguali tra chi scegli. Si può annullare, non modificare.': {
     en: 'Split evenly among the people you pick. It can be voided, not edited.',
     es: 'A partes iguales entre quienes elijas. Se puede anular, no modificar.',
