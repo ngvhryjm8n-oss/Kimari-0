@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2009%3A24';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2009%3A24';
+import * as data from './data.js?v=26%2F08%2014%3A15';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2014%3A15';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 09:24';
+export const VERSIONE = '26/08 14:15';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -204,6 +204,7 @@ export const HANDLERS = {
 
       K.state.draft = null; K.state.justVoted = false;
       K.state.ballotDraft = null; K.state.bdKey = null;
+      data.logEvent('plan_created', id);
       return { go: 'share/' + id };
     }
   },
@@ -224,6 +225,7 @@ export const HANDLERS = {
         extras: [{ question: dd.question.trim(), binary: !!dd.binary,
                    options: dd.binary ? [] : (dd.options || []) }] });
     K.state.ddraft = null;
+    data.logEvent('plan_created', res.plan_id);
     return { closeSheet: true, go: 'p/' + res.plan_id };
   },
 
@@ -317,6 +319,7 @@ export const HANDLERS = {
     }
     K.state.ballotDraft = null; K.state.bdKey = null;   // così si ricarica dai dati veri
     K.state.justVoted = true;
+    data.logEvent('vote_submitted', p.id);
     return { toast: 'Voto inviato' };
   },
 
@@ -371,6 +374,7 @@ export const HANDLERS = {
     if (p.when.mode === 'deciding' || p.where.mode === 'deciding') {
       await data.confirmPlan(p.id, picks.when || null, picks.where || null);
     }
+    data.logEvent('plan_confirmed', p.id);
     return { toast: 'Kimari! ✅', closeSheet: true };
   },
 
@@ -627,6 +631,31 @@ export const HANDLERS = {
     return { toast: ora ? 'Gruppo silenziato' : 'Notifiche riattivate', closeSheet: true };
   },
 
+  // "Aggiungi link" scriveva solo in memoria: il link compariva, arrivava il
+  // "Link aggiunto", e al ricaricamento non c'era più. Sotto non c'era dove
+  // metterlo — media.kind ammetteva solo 'photo' e 'file', e path era
+  // obbligatorio. La 0015 apre il posto; questo lo usa.
+  //
+  // Due destinazioni diverse: un posto salvato (roba tua, add_place_media) e
+  // un piano (lo vedono tutti i partecipanti, add_plan_link).
+  async saveLink(el, K) {
+    let url = val(K, '#lkUrl');
+    if (!url) return { toast: 'Incolla un link', skipReload: true };
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    const nome = val(K, '#lkName') || url.replace(/^https?:\/\//, '').split('/')[0];
+
+    const mt = K.state.mediaTarget;
+    if (mt && mt.kind === 'place') {
+      await data.addPlaceLink(mt.id, nome, url);
+      K.state.mediaTarget = null;
+      return { toast: 'Link aggiunto', closeSheet: true };
+    }
+    const p = curPlan(K);
+    if (!p) return { toast: 'Piano non trovato', skipReload: true };
+    await data.addPlanLink(p.id, nome, url);
+    return { toast: 'Link aggiunto', closeSheet: true };
+  },
+
   /* ------------------------------------------------------ account */
 
   // I due bottoni c'erano già nel prototipo, ma erano finti: `data-action="toast"`.
@@ -875,6 +904,7 @@ export async function caricaInvito(K) {
       if (!K.state.people[id]) K.state.people[id] = p;
     }
     K.state.plans[plan.id] = plan;
+    data.logEvent('invite_opened', plan.id);
     return true;
   } catch (e) {
     console.error('invito', e);

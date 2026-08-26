@@ -189,8 +189,12 @@ export function mapSettlement(row) {
 export function mapMedia(row, urlFor) {
   return {
     id: row.id, by: row.actor_id, name: row.name,
-    size: Number(row.size_bytes), path: row.path,
-    dataUrl: urlFor ? urlFor(row.path) : null,
+    kind: row.kind || 'file',
+    size: Number(row.size_bytes || 0), path: row.path || null,
+    // Un link ha gia' il suo indirizzo: non passa dal bucket e non ha bisogno
+    // di un URL firmato a scadenza.
+    url: row.url || null,
+    dataUrl: row.url ? row.url : (urlFor && row.path ? urlFor(row.path) : null),
     at: ms(row.created_at)
   };
 }
@@ -282,7 +286,10 @@ export function mapPlan(plan, parts = {}) {
   const mine = candidates.filter(c => c.plan_id === plan.id);
   const participantIds = participants.map(p => p.actor_id);
   const photos = media.filter(m => m.kind === 'photo').map(m => mapMedia(m, urlFor));
-  const files  = media.filter(m => m.kind === 'file').map(m => mapMedia(m, urlFor));
+  // Il prototipo tiene link e file nello stesso elenco: un file ha un percorso
+  // nel bucket, un link ha `url` e si apre e basta.
+  const files  = media.filter(m => m.kind === 'file' || m.kind === 'link')
+                      .map(m => mapMedia(m, urlFor));
 
   return {
     id: plan.id,
