@@ -28,6 +28,18 @@ FILE=(index.html app/index.html app/live.js app/data.js app/map.js
 echo "Prove prima di pubblicare…"
 npm test >/dev/null
 
+# Le prove girano contro un finto, e un finto risponde a qualunque colonna gli
+# si chieda. Questo invece chiede al DATABASE VERO. È il controllo che avrebbe
+# fermato la pubblicazione del 26/8, quando ho mandato online un client che
+# leggeva actors.avatar_path prima che la migrazione fosse applicata: l'app è
+# caduta sullo schermo d'errore per tutti.
+echo "Le colonne che il client legge esistono?"
+if ! node tools/controlla-colonne.mjs | tail -4; then
+  echo "FERMO: il database rifiuterebbe una lettura, e l'avvio cadrebbe." >&2
+  echo "O applichi la migrazione, o scrivi una ricaduta nel client." >&2
+  exit 1
+fi
+
 echo "Impronta di ciò che sto per pubblicare:"
 ESISTENTI=()
 for f in "${FILE[@]}"; do
