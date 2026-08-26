@@ -304,6 +304,40 @@ for (const [lingua, atteso, vietato] of [
     assert.equal(dom.window.document.documentElement.lang, lingua);
   });
 }
+
+// I messaggi che finiscono su WhatsApp sono spesso il PRIMO contatto con
+// Kimari: uno li riceve inoltrati da un amico, senza aver mai visto l'app.
+// Restavano in italiano anche a chi usa l'app in un'altra lingua.
+for (const lingua of ['en', 'de', 'ja']) {
+  await test('i messaggi da condividere parlano ' + lingua, async () => {
+    const dom = await new Promise(resolve => {
+      const d = new JSDOM(HTML, {
+        url: 'https://esempio.test/Kimari-0/app/',
+        runScripts: 'dangerously', pretendToBeVisual: true,
+        beforeParse(w) {
+          Object.defineProperty(w.navigator, 'languages', { value: [lingua + '-XX', lingua] });
+          Object.defineProperty(w.navigator, 'language', { value: lingua + '-XX' });
+          w.localStorage.setItem('kimari_profilo', '1');
+        }
+      });
+      setTimeout(() => resolve(d), 300);
+    });
+    const K = dom.window.__kimari;
+    const gruppo = Object.values(K.state.groups)[0];
+    assert.ok(gruppo, 'senza un gruppo questa prova non misura niente');
+
+    const msg = K.msgs.group(gruppo);
+    assert.ok(!/Entra nel gruppo/.test(msg), 'e rimasto l italiano: ' + msg.slice(0, 60));
+    assert.ok(msg.includes('{link}'),
+      'il segnaposto del link e sparito: il messaggio partirebbe senza indirizzo');
+    assert.ok(msg.includes(gruppo.name), 'il nome del gruppo si e perso per strada');
+
+    // L'invito a un amico porta l'indirizzo del sito, non un segnaposto.
+    const amico = K.msgs.friend();
+    assert.ok(!/Aggiungimi su Kimari/.test(amico), 'e rimasto l italiano');
+    assert.ok(/https?:\/\//.test(amico), 'manca il link');
+  });
+}
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);

@@ -90,7 +90,12 @@ delete from public.expenses
  where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
 delete from public.comments
  where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
-delete from public.group_invites
+-- group_invite_links, non group_invites: il nome l'avevo scritto a memoria e la
+-- tabella non esiste. Postgres si ferma alla prima istruzione sbagliata, quindi
+-- tutto quello che viene dopo non veniva eseguito.
+-- (Cade comunque da sola quando sparisce il gruppo, che e' gia' stato
+-- cancellato piu' sopra: questa riga e' una cintura in piu', non la difesa.)
+delete from public.group_invite_links
  where group_id in (select id from public.groups where name like 'PROVA-CLAUDE%');
 delete from public.group_members
  where group_id in (select id from public.groups where name like 'PROVA-CLAUDE%');
