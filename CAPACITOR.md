@@ -39,6 +39,38 @@ npx cap add android
 mai `nativa/www/` a mano**: viene rigenerata ogni volta, e le modifiche
 andrebbero perse senza dire niente.
 
+### 2 bis. L'icona e lo splash
+
+Senza questo passo l'APK esce con l'icona di default di Capacitor:
+
+```bash
+npx @capacitor/assets generate --android
+```
+
+Legge `nativa/assets/` (icon-only, icon-foreground, icon-background, splash —
+PNG resi da `store/icona.svg`, il vettoriale dell'icona) e scrive le 61
+risorse nelle densità giuste. Da rilanciare se l'icona cambia.
+
+### 2 ter. Compilare senza Android Studio (fatto il 27/8/2026)
+
+Android Studio serve per l'emulatore e il debug visuale, non per compilare.
+In `D:\Kimari\strumenti\` ci sono già JDK 21 e l'SDK a riga di comando
+(platform-tools, android-35, build-tools 35): sono ~2 GB invece di 8.
+`nativa/android/local.properties` punta all'SDK — **con le barre dritte**:
+`sdk.dir=D:/Kimari/strumenti/android-sdk`. Con i backslash il formato Java
+Properties li mangia (`\K` → `K`) e Gradle muore con un criptico "The
+filename, directory name, or volume label syntax is incorrect".
+
+```bash
+cd nativa/android
+JAVA_HOME=/d/Kimari/strumenti/jdk-21.0.12.1+1 ./gradlew assembleDebug
+```
+
+L'APK esce in `app/build/outputs/apk/debug/app-debug.apk`: si installa sul
+telefono con `adb install` o copiandolo e aprendolo. Per l'App Bundle firmato
+da caricare sul Play Store (`bundleRelease` + chiave di firma) Android Studio
+resta la strada più comoda, ma anche quello si può fare da qui.
+
 ### 3. Provarla sul telefono
 
 Attiva le **Opzioni sviluppatore** sul telefono (Impostazioni → Info →

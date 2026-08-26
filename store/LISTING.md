@@ -16,10 +16,11 @@ per restare coerenti con quello che l'app dice davvero.
 | `screenshot/03-sito-it.png` | pagina pubblica | 1374×2919 |
 | `lavorazione/` | sorgenti e passaggi intermedi | non si carica |
 
-**Avvertenza sull'icona:** le versioni 512 e 1024 sono ingrandimenti bicubici
-della 192px (l'unica sorgente esistente). A 512 regge; a 1024 i bordi sono
-morbidi. Prima della sottomissione vera all'App Store conviene ridisegnarla
-vettoriale — è geometria piatta, un'ora di lavoro per chi ha lo strumento.
+**L'icona è vettoriale.** `icona.svg` è ricostruita dalla 192px con
+`lavorazione/vettorizza.mjs` (quantizza i sei colori piatti, traccia i
+contorni, semplifica, smussa): le 512 e 1024 sono rese da lì e restano
+nitide a qualunque dimensione. Se l'icona dell'app cambia, si rilancia
+lo script e si riesportano.
 
 **Screenshot:** presi dalla produzione con il piano di prova PROVA-CLAUDE.
 Prima di caricarli negli store andranno rifatti con un piano dal nome
@@ -107,5 +108,5 @@ nativo), altrimenti il rischio di rifiuto come "sito impacchettato" è concreto.
 2. Questionari di Play: privacy (già scritta: kimariapp.com/privacy), data
    safety, contenuti
 3. Rifare gli screenshot con un piano dal titolo presentabile
-4. (App Store) ridisegnare l'icona vettoriale e preparare gli screenshot
-   6.7" e 5.5" — si fanno con lo stesso comando cambiando window-size
+4. (App Store) preparare gli screenshot 6.7" e 5.5" — si fanno con lo
+   stesso comando cambiando window-size
