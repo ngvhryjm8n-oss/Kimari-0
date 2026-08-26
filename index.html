@@ -454,6 +454,246 @@ const DIZIONARIO = {
     es: 'Este plan se abre desde su enlace, el que circula por WhatsApp. Desde este teléfono no constas dentro.',
     de: 'Dieser Plan öffnet sich über seinen Link — den, der auf WhatsApp herumgeht. Von diesem Handy aus bist du nicht dabei.',
     ja: 'この予定は、WhatsApp で回っているリンクから開きます。この端末では参加者として登録されていません。'
+  },
+
+  /* ============================================================== l'app */
+  /* Da qui in giù sono le stringhe dell'app. Il sito è la pagina che si
+     apre da un link; l'app è quella che si installa, ed è molto più larga.
+     Il tono resta lo stesso: si dà del tu, si spiega cosa succede davvero,
+     non si promette niente che il prodotto non faccia. */
+
+  /* ------------------------------------------------------ chi può votare */
+  'Chi può votare': { en: 'Who can vote', es: 'Quién puede votar',
+                      de: 'Wer abstimmen darf', ja: '投票できる人' },
+  'Con un link aperto la stessa persona può votare più volte da finestre diverse. Se conta, stringi.': {
+    en: 'With an open link the same person can vote more than once from different windows. If it matters, tighten it.',
+    es: 'Con un enlace abierto la misma persona puede votar varias veces desde ventanas distintas. Si importa, restríngelo.',
+    de: 'Bei einem offenen Link kann dieselbe Person aus verschiedenen Fenstern mehrmals abstimmen. Wenn es darauf ankommt, schränke ihn ein.',
+    ja: 'リンクを誰でも開ける状態だと、同じ人が別のウィンドウから何度も投票できます。気になる場合は制限してください。'
+  },
+  'Chi apre il link vedrà questi nomi e sceglierà il suo.': {
+    en: 'Whoever opens the link will see these names and pick their own.',
+    es: 'Quien abra el enlace verá estos nombres y elegirá el suyo.',
+    de: 'Wer den Link öffnet, sieht diese Namen und wählt seinen eigenen.',
+    ja: 'リンクを開いた人にはこの名前が並び、自分のものを選びます。'
+  },
+  'Chi è già entrato resta': { en: 'Those already in stay in', es: 'Quien ya entró se queda',
+                               de: 'Wer schon drin ist, bleibt', ja: 'すでに参加した人はそのまま' },
+  'Chi l\'ha già usato resta dentro': {
+    en: 'Anyone who already used it stays in', es: 'Quien ya lo usó se queda dentro',
+    de: 'Wer ihn schon benutzt hat, bleibt dabei', ja: 'すでに使った人はそのまま参加しています' },
+  'Salva il limite': { en: 'Save the limit', es: 'Guardar el límite',
+                       de: 'Grenze speichern', ja: '上限を保存' },
+  'Revocare non rompe niente per chi ha già votato: serve quando il link finisce dove non doveva.': {
+    en: 'Revoking breaks nothing for those who already voted — it’s for when the link ends up where it shouldn’t.',
+    es: 'Revocar no rompe nada para quien ya votó: sirve cuando el enlace acaba donde no debía.',
+    de: 'Ein Widerruf ändert nichts für alle, die schon abgestimmt haben — er ist für den Fall, dass der Link irgendwo landet, wo er nicht hingehört.',
+    ja: '取り消しても、すでに投票した人には何も起きません。リンクが本来届くべきでない場所に渡ったときのためのものです。'
+  },
+
+  /* ------------------------------------------------------------- gruppi */
+  'Esci dal gruppo': { en: 'Leave the group', es: 'Salir del grupo',
+                       de: 'Gruppe verlassen', ja: 'グループを抜ける' },
+  'Elimina gruppo': { en: 'Delete group', es: 'Eliminar grupo',
+                      de: 'Gruppe löschen', ja: 'グループを削除' },
+  'Silenzia questo gruppo': { en: 'Mute this group', es: 'Silenciar este grupo',
+                              de: 'Gruppe stummschalten', ja: 'このグループを通知オフ' },
+  'Chi entra dopo viene aggiunto solo ai piani ancora ai voti. Chi esce sparisce dai piani futuri e resta in quelli passati.': {
+    en: 'Whoever joins later is added only to plans still being voted on. Whoever leaves disappears from future plans and stays in past ones.',
+    es: 'Quien entra después se añade solo a los planes que aún se están votando. Quien sale desaparece de los planes futuros y permanece en los pasados.',
+    de: 'Wer später dazukommt, wird nur zu Plänen hinzugefügt, über die noch abgestimmt wird. Wer geht, verschwindet aus künftigen Plänen und bleibt in den vergangenen.',
+    ja: 'あとから参加した人は、まだ投票中の予定にだけ追加されます。抜けた人は今後の予定から消え、過去の予定には残ります。'
+  },
+  '🔒 Gruppo privato: si entra solo con il link d\'invito.': {
+    en: '🔒 Private group — you get in only with the invite link.',
+    es: '🔒 Grupo privado: solo se entra con el enlace de invitación.',
+    de: '🔒 Private Gruppe — Zutritt nur über den Einladungslink.',
+    ja: '🔒 非公開グループ：招待リンクからのみ参加できます。'
+  },
+  'Fai lo stesso per il tuo gruppo': {
+    en: 'Do the same for your group', es: 'Haz lo mismo con tu grupo',
+    de: 'Mach das Gleiche für deine Gruppe', ja: '自分のグループでも同じように' },
+  'Tocca per entrare. Ti chiederemo solo il nome.': {
+    en: 'Tap to join. We’ll only ask for your name.',
+    es: 'Toca para entrar. Solo te pediremos el nombre.',
+    de: 'Tippen zum Beitreten. Wir fragen nur nach deinem Namen.',
+    ja: 'タップして参加。お名前だけうかがいます。'
+  },
+
+  /* -------------------------------------------------------- amici e conto */
+  'Gli amici servono per invitare in fretta quando crei un gruppo. Non vedono i tuoi piani: la visibilità resta per gruppo.': {
+    en: 'Friends are there so you can invite people quickly when you create a group. They don’t see your plans — visibility stays per group.',
+    es: 'Los amigos sirven para invitar rápido cuando creas un grupo. No ven tus planes: la visibilidad sigue siendo por grupo.',
+    de: 'Freunde sind dazu da, dass du beim Erstellen einer Gruppe schnell einladen kannst. Sie sehen deine Pläne nicht — Sichtbarkeit bleibt pro Gruppe.',
+    ja: '友だちは、グループを作るときにすぐ招待するためのものです。あなたの予定は見えません。公開範囲はグループごとのままです。'
+  },
+  'Persone con cui hai già un gruppo o un piano. Gli amici non vedono i tuoi piani: servono solo per invitare in fretta.': {
+    en: 'People you already share a group or a plan with. Friends don’t see your plans — they’re just there for quick invites.',
+    es: 'Personas con las que ya compartes un grupo o un plan. Los amigos no ven tus planes: solo sirven para invitar rápido.',
+    de: 'Leute, mit denen du schon eine Gruppe oder einen Plan teilst. Freunde sehen deine Pläne nicht — sie sind nur für schnelle Einladungen da.',
+    ja: 'すでにグループや予定を共有している人たちです。友だちにあなたの予定は見えません。すぐ招待するためだけのものです。'
+  },
+  'Il nome è quello che vedono gli altri nei piani.': {
+    en: 'This is the name other people see in plans.',
+    es: 'Este es el nombre que los demás ven en los planes.',
+    de: 'Diesen Namen sehen die anderen in den Plänen.',
+    ja: '予定のなかで、ほかの人に表示される名前です。'
+  },
+  'Email': { en: 'Email', es: 'Correo', de: 'E-Mail', ja: 'メール' },
+  'Collega i piani dal web': { en: 'Bring in your plans from the web',
+    es: 'Vincula tus planes de la web', de: 'Pläne aus dem Web verbinden',
+    ja: 'ウェブでの予定をつなげる' },
+  'L\'email che hai usato sul web': {
+    en: 'The email you used on the web', es: 'El correo que usaste en la web',
+    de: 'Die E-Mail, die du im Web benutzt hast', ja: 'ウェブで使ったメールアドレス' },
+  'Se hai votato da un link senza app e hai lasciato l\'email, scrivila qui: i tuoi voti e risposte passano a questo account.': {
+    en: 'If you voted from a link without the app and left your email, type it here: your votes and answers move over to this account.',
+    es: 'Si votaste desde un enlace sin la app y dejaste tu correo, escríbelo aquí: tus votos y respuestas pasan a esta cuenta.',
+    de: 'Wenn du über einen Link ohne App abgestimmt und deine E-Mail hinterlassen hast, trag sie hier ein: Deine Stimmen und Antworten wandern zu diesem Konto.',
+    ja: 'アプリなしでリンクから投票し、メールアドレスを残していた場合はここに入力してください。投票と回答がこのアカウントに移ります。'
+  },
+  'Nell\'app vera arriva un codice a quell\'email, per sicurezza.': {
+    en: 'In the real app a code goes to that address, for safety.',
+    es: 'En la app real llega un código a ese correo, por seguridad.',
+    de: 'In der echten App geht ein Code an diese Adresse — zur Sicherheit.',
+    ja: '実際のアプリでは、安全のためそのアドレスに確認コードが届きます。'
+  },
+  'Nessuna newsletter: una sola email quando viene confermato. La stessa email ti permette di ritrovare questo piano se poi installi l\'app.': {
+    en: 'No newsletter — one email when it’s confirmed. That same address lets you find this plan again if you install the app later.',
+    es: 'Sin newsletter: un solo correo cuando se confirme. Ese mismo correo te permite recuperar este plan si luego instalas la app.',
+    de: 'Kein Newsletter — eine E-Mail, wenn es bestätigt ist. Mit derselben Adresse findest du diesen Plan wieder, falls du die App später installierst.',
+    ja: 'ニュースレターはありません。確定したときに一通だけ届きます。同じアドレスで、あとからアプリを入れてもこの予定を見つけられます。'
+  },
+  'Ogni voce è tua. Un gruppo si silenzia dalla sua pagina (Gestisci / Info). Quello che non arriva come push resta comunque in Novità.': {
+    en: 'Every setting here is yours. A group is muted from its own page (Manage / Info). Whatever doesn’t arrive as a push is still waiting in News.',
+    es: 'Cada ajuste es tuyo. Un grupo se silencia desde su propia página (Gestionar / Info). Lo que no llegue como notificación sigue estando en Novedades.',
+    de: 'Jede Einstellung hier gehört dir. Eine Gruppe wird auf ihrer eigenen Seite stummgeschaltet (Verwalten / Info). Was nicht als Push ankommt, wartet trotzdem unter Neues.',
+    ja: 'ここの設定はすべてあなたのものです。グループはそのページ（管理／情報）から通知オフにできます。プッシュで届かなかったものも「新着」には残ります。'
+  },
+  'Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.': {
+    en: 'Nothing yet. When someone votes, confirms or replies to a plan, it shows up here.',
+    es: 'Todavía nada. Cuando alguien vote, confirme o responda a un plan, aparecerá aquí.',
+    de: 'Noch nichts. Sobald jemand abstimmt, bestätigt oder auf einen Plan antwortet, erscheint es hier.',
+    ja: 'まだ何もありません。だれかが投票・確定・返信すると、ここに表示されます。'
+  },
+  '🔔 = con le tue impostazioni sarebbe arrivata una notifica.': {
+    en: '🔔 = with your settings, this would have come as a notification.',
+    es: '🔔 = con tus ajustes, esto habría llegado como notificación.',
+    de: '🔔 = mit deinen Einstellungen wäre das als Benachrichtigung gekommen.',
+    ja: '🔔 ＝ 現在の設定なら、これは通知として届いていたものです。'
+  },
+
+  /* ---------------------------------------------------- piani e proposte */
+  'Aggiungi al piano': { en: 'Add to the plan', es: 'Añadir al plan',
+                         de: 'Zum Plan hinzufügen', ja: '予定に追加' },
+  'Aggiungi una domanda': { en: 'Add a question', es: 'Añadir una pregunta',
+                            de: 'Frage hinzufügen', ja: '質問を追加' },
+  'Proponi al gruppo': { en: 'Suggest it to the group', es: 'Propónselo al grupo',
+                         de: 'Der Gruppe vorschlagen', ja: 'みんなに提案' },
+  'Proponi un\'altra data': { en: 'Suggest another date', es: 'Proponer otra fecha',
+                              de: 'Anderes Datum vorschlagen', ja: '別の日を提案' },
+  'Ripeti questo piano': { en: 'Do this again', es: 'Repetir este plan',
+                           de: 'Diesen Plan wiederholen', ja: 'この予定をもう一度' },
+  'Avvisa il gruppo': { en: 'Tell the group', es: 'Avisar al grupo',
+                        de: 'Der Gruppe Bescheid geben', ja: 'みんなに知らせる' },
+  'Tutto il giorno': { en: 'All day', es: 'Todo el día', de: 'Ganztägig', ja: '終日' },
+  'Non so': { en: 'Not sure', es: 'No sé', de: 'Weiß nicht', ja: 'わからない' },
+  'Si vota insieme a quando e dove.': {
+    en: 'It’s voted on together with when and where.',
+    es: 'Se vota junto con el cuándo y el dónde.',
+    de: 'Wird zusammen mit Wann und Wo abgestimmt.',
+    ja: '日時・場所といっしょに投票します。'
+  },
+  'Due bottoni, 👍 Sì e 👎 No. Il voto vale subito, vince la maggioranza di chi risponde.': {
+    en: 'Two buttons, 👍 Yes and 👎 No. The vote counts straight away; whoever answers, the majority wins.',
+    es: 'Dos botones, 👍 Sí y 👎 No. El voto cuenta al momento y gana la mayoría de quienes respondan.',
+    de: 'Zwei Knöpfe, 👍 Ja und 👎 Nein. Die Stimme zählt sofort; es gewinnt die Mehrheit derer, die antworten.',
+    ja: 'ボタンは 👍 はい と 👎 いいえ の二つ。投票はすぐ反映され、答えた人の多数決で決まります。'
+  },
+  'Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.': {
+    en: 'Each date has its own “I’m in”. Changes and suggestions apply to one date only.',
+    es: 'Cada fecha tiene su propio «voy». Los cambios y las propuestas valen para una sola fecha.',
+    de: 'Jedes Datum hat sein eigenes „Ich bin dabei“. Änderungen und Vorschläge gelten für ein einzelnes Datum.',
+    ja: '日付ごとに「参加する」があります。変更や提案は、その日付だけに効きます。'
+  },
+  'Crea un piano in 30 secondi, direttamente da qui.': {
+    en: 'Make a plan in 30 seconds, right from here.',
+    es: 'Crea un plan en 30 segundos, directamente desde aquí.',
+    de: 'Mach in 30 Sekunden einen Plan, direkt von hier.',
+    ja: 'ここから 30 秒で予定を作れます。'
+  },
+  'Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.': {
+    en: 'Tap “I’m in” to answer — we’ll only ask for your name.',
+    es: 'Toca «Voy» para responder: solo te pediremos el nombre.',
+    de: 'Tippe auf „Ich bin dabei“ — wir fragen nur nach deinem Namen.',
+    ja: '「参加する」を押して返事してください。お名前だけうかがいます。'
+  },
+  'Tutti lo vedono nel piano, senza cercare il messaggio in chat.': {
+    en: 'Everyone sees it in the plan, without digging for the message in the chat.',
+    es: 'Todos lo ven en el plan, sin buscar el mensaje en el chat.',
+    de: 'Alle sehen es im Plan, ohne die Nachricht im Chat zu suchen.',
+    ja: 'チャットからメッセージを探さなくても、みんなが予定の中で見られます。'
+  },
+
+  /* -------------------------------------------------- se il piano salta */
+  'Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.': {
+    en: 'If it falls through, saying so here beats vanishing: whoever has the link sees it, and messages and expenses stay put.',
+    es: 'Si se cae, decirlo aquí es mejor que desaparecer: quien tenga el enlace lo ve, y los mensajes y los gastos siguen ahí.',
+    de: 'Wenn es platzt, ist es besser, das hier zu sagen, als zu verschwinden: Wer den Link hat, sieht es, und Nachrichten und Ausgaben bleiben.',
+    ja: '中止になったら、黙って消えるよりここで伝えるほうが親切です。リンクを持つ人には表示され、メッセージや費用はそのまま残ります。'
+  },
+  'Il link resta valido: chi lo apre vede che è saltato. Messaggi e spese restano dove sono.': {
+    en: 'The link still works — whoever opens it sees that it’s off. Messages and expenses stay where they are.',
+    es: 'El enlace sigue siendo válido: quien lo abra verá que se ha cancelado. Los mensajes y los gastos se quedan donde están.',
+    de: 'Der Link bleibt gültig — wer ihn öffnet, sieht, dass es abgesagt ist. Nachrichten und Ausgaben bleiben, wo sie sind.',
+    ja: 'リンクはそのまま使えます。開いた人には中止になったことが表示されます。メッセージや費用はそのまま残ります。'
+  },
+  'Il tuo "ci sono" diventa "non vengo" e il gruppo lo vede subito.': {
+    en: 'Your “I’m in” becomes “I’m out”, and the group sees it right away.',
+    es: 'Tu «voy» pasa a «no voy» y el grupo lo ve enseguida.',
+    de: 'Aus deinem „Ich bin dabei“ wird „Ich komme nicht“, und die Gruppe sieht es sofort.',
+    ja: '「参加する」が「行けない」に変わり、みんなにすぐ伝わります。'
+  },
+  'Es. esco tardi dal lavoro': { en: 'E.g. I’m getting out of work late',
+    es: 'Ej. salgo tarde del trabajo', de: 'Z.B. ich komme spät aus der Arbeit',
+    ja: '例：仕事が遅くなりそう' },
+  'Es. per me va bene tutto ma non troppo tardi': {
+    en: 'E.g. anything works for me, just not too late',
+    es: 'Ej. me viene bien todo, pero no muy tarde',
+    de: 'Z.B. mir passt alles, nur nicht zu spät',
+    ja: '例：どれでもいいですが、あまり遅くない時間で' },
+
+  /* ------------------------------------------------------- posti e spese */
+  'Elimina posto': { en: 'Delete place', es: 'Eliminar sitio',
+                     de: 'Ort löschen', ja: '場所を削除' },
+  '★ Posto salvato · apri scheda': { en: '★ Saved place · open card',
+    es: '★ Sitio guardado · abrir ficha', de: '★ Gespeicherter Ort · Karte öffnen',
+    ja: '★ 保存した場所 · カードを開く' },
+  '📷 Foto del menu': { en: '📷 Photo of the menu', es: '📷 Foto del menú',
+                        de: '📷 Foto der Karte', ja: '📷 メニューの写真' },
+  'Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu fotografato). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.': {
+    en: 'The usual restaurant, the pitch, the house by the sea: name, address and your own attachments (the menu you photographed). When you use it in a plan, the others only see name and address.',
+    es: 'El restaurante de siempre, la cancha, la casa en la playa: nombre, dirección y tus propios adjuntos (el menú fotografiado). Cuando lo usas en un plan, los demás solo ven el nombre y la dirección.',
+    de: 'Das Stammlokal, der Platz, das Haus am Meer: Name, Adresse und deine eigenen Anhänge (die abfotografierte Karte). Wenn du den Ort in einem Plan verwendest, sehen die anderen nur Name und Adresse.',
+    ja: 'いつもの店、コート、海辺の家。名前と住所、そしてあなただけの添付（撮っておいたメニューなど）。予定で使うとき、ほかの人に見えるのは名前と住所だけです。'
+  },
+  '★ = copertina: è la foto che vedi in giro per l\'app e nei piani in cui usi il posto.': {
+    en: '★ = cover: the photo you’ll see around the app and in the plans where you use this place.',
+    es: '★ = portada: es la foto que verás por la app y en los planes donde uses el sitio.',
+    de: '★ = Titelbild: das Foto, das dir in der App und in Plänen mit diesem Ort begegnet.',
+    ja: '★ ＝ カバー写真。アプリのあちこちや、この場所を使った予定で表示されます。'
+  },
+  'La spesa pesa solo su chi scegli: "Marco ha pagato la cena di Silvio" = paga Marco, scegli solo Silvio. Chi paga può anche non esserci.': {
+    en: 'The expense falls only on the people you pick: “Marco paid for Silvio’s dinner” = Marco pays, you pick only Silvio. Whoever paid doesn’t have to be among them.',
+    es: 'El gasto recae solo sobre quien elijas: «Marco pagó la cena de Silvio» = paga Marco, eliges solo a Silvio. Quien paga puede no estar incluido.',
+    de: 'Die Ausgabe trifft nur die, die du auswählst: „Marco hat Silvios Essen bezahlt“ = Marco zahlt, du wählst nur Silvio. Wer zahlt, muss nicht dabei sein.',
+    ja: '費用は選んだ人にだけかかります。「マルコがシルヴィオの夕食を払った」＝ 払うのはマルコ、選ぶのはシルヴィオだけ。払った人が対象に入っていなくてもかまいません。'
+  },
+  'Parti uguali tra chi scegli. Si può annullare, non modificare.': {
+    en: 'Split evenly among the people you pick. It can be voided, not edited.',
+    es: 'A partes iguales entre quienes elijas. Se puede anular, no modificar.',
+    de: 'Zu gleichen Teilen unter den Ausgewählten. Stornierbar, nicht änderbar.',
+    ja: '選んだ人で均等に割ります。取り消しはできますが、修正はできません。'
   }
 };
 
