@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2023%3A19';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2023%3A19';
+import * as data from './data.js?v=27%2F08%2000%3A02';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2000%3A02';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 23:19';
+export const VERSIONE = '27/08 00:02';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -1178,12 +1178,46 @@ function wire(K) {
 // Un file alla volta e non tutti insieme: se il quinto sfora il limite, i
 // primi quattro sono già salvati e l'errore riguarda solo quello. Caricandoli
 // in parallelo il server ne rifiuterebbe alcuni a caso.
+// L'app promette che "le foto restano nel piano, compresse" — e non le
+// comprimeva. Una foto di iPhone è 3-5 MB: cinque riempiono i 25 MB di un
+// piano intero, e su rete mobile il caricamento è lento abbastanza da sembrare
+// rotto.
+//
+// Si ridimensiona nel browser prima di mandarla. L'originale resta sul
+// telefono: è quello che l'app dice, ed è quello che deve succedere.
+async function comprimi(file, latoMax) {
+  if (!/^image\//.test(file.type)) return file;          // i file non-immagine passano interi
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scala = Math.min(1, latoMax / Math.max(bitmap.width, bitmap.height));
+    // Già piccola e già leggera: ricomprimerla peggiorerebbe la qualità senza
+    // guadagnare niente.
+    if (scala === 1 && file.size < 400 * 1024) { bitmap.close?.(); return file; }
+
+    const c = document.createElement('canvas');
+    c.width = Math.round(bitmap.width * scala);
+    c.height = Math.round(bitmap.height * scala);
+    c.getContext('2d').drawImage(bitmap, 0, 0, c.width, c.height);
+    bitmap.close?.();
+
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.85));
+    if (!blob || blob.size >= file.size) return file;    // non è servito: si tiene l'originale
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch {
+    // HEIC che il browser non sa aprire, memoria finita, immagine rotta: si
+    // manda l'originale. Meglio una foto pesante che nessuna foto.
+    return file;
+  }
+}
+
 export async function caricaFile(K, files, tipo, target) {
   // L'immagine del profilo e' una sola: se ne arrivano piu' di una si prende
   // la prima invece di caricarle tutte e tenere l'ultima, che vorrebbe dire
   // pagare il caricamento di file che non si useranno.
   if (target && target.kind === 'avatar') {
-    await data.uploadAvatar(files[0]);
+    // 512 basta: e' un cerchio di 88 pixel a schermo, e il doppio per gli
+    // schermi densi. Mandare 4000 pixel per mostrarne 88 e' spreco puro.
+    await data.uploadAvatar(await comprimi(files[0], 512));
     return { fatti: 1 };
   }
 
@@ -1194,8 +1228,11 @@ export async function caricaFile(K, files, tipo, target) {
   let fatti = 0;
   try {
     for (const f of files) {
-      if (perPosto) await data.uploadPlacePhoto(target.id, f);
-      else await data.uploadMedia(plan, f, tipo);
+      // Le foto si rimpiccioliscono, i file no: un PDF o una prenotazione
+      // vanno mandati come sono.
+      const da = tipo === 'photo' ? await comprimi(f, 1600) : f;
+      if (perPosto) await data.uploadPlacePhoto(target.id, da);
+      else await data.uploadMedia(plan, da, tipo);
       fatti++;
     }
   } catch (e) {
