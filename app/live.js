@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2015%3A13';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A13';
+import * as data from './data.js?v=26%2F08%2015%3A17';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A17';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 15:13';
+export const VERSIONE = '26/08 15:17';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -35,7 +35,16 @@ export function applyState(state, loaded) {
   Object.assign(state.people, loaded.people);
   Object.assign(state.groups, loaded.groups);
   Object.assign(state.plans, loaded.plans);
+
+  // Chi arriva da un invito a un gruppo non ha ancora un'identità: al primo
+  // avvio mostraInvitoGruppo segna il token come "già mostrato", poi la
+  // schermata di benvenuto gli finisce sopra. Dopo il login la guardia era
+  // ancora alzata e l'invito non tornava più: si entrava col proprio nome e ci
+  // si ritrovava in un'app vuota, senza il gruppo per cui si era cliccato.
+  // Cambiare identità azzera quella memoria — è un'altra persona.
+  const eroPrima = state.me;
   state.me = loaded.me;
+  if (eroPrima !== loaded.me) delete state._invitoGruppo;
 
   // QUI stava il bug che sembrava un login rotto. Il prototipo riapre la
   // schermata di benvenuto finché state.consented è falso — e consented vive
