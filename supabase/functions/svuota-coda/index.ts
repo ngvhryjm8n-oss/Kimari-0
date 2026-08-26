@@ -16,6 +16,21 @@ const PUBBLICA = Deno.env.get('VAPID_PUBBLICA') ?? '';
 const CONTATTO = Deno.env.get('VAPID_CONTATTO') ?? 'mailto:kimariapp@gmail.com';
 const SERVIZIO = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
+// Un segreto SOLO per il cron, invece di riusare la chiave di servizio.
+//
+// Due motivi. Il primo pratico: Supabase ha cambiato il sistema delle chiavi
+// (publishable/secret al posto di anon/service_role), e legare il controllo al
+// nome di una chiave significa rompersi a ogni cambio di nomenclatura — e'
+// successo il 27/8/2026, mentre Vincenzo cercava "service_role" in un pannello
+// che non ce l'ha piu'.
+//
+// Il secondo, piu' importante: la chiave di servizio apre TUTTO il database.
+// Metterla dentro una pianificazione di cron significa lasciarla in una
+// tabella, e in ogni backup. Questo segreto invece serve a una cosa sola —
+// dire "sono il cron" — e se trapelasse il peggio che si puo' fare e' far
+// consegnare le notifiche in anticipo.
+const CRON = Deno.env.get('CRON_SEGRETO') ?? '';
+
 webpush.setVapidDetails(CONTATTO, PUBBLICA, PRIVATA);
 const db = createClient(Deno.env.get('SUPABASE_URL') ?? '', SERVIZIO);
 
@@ -71,9 +86,15 @@ const testo = (genere: string, lingua: string, piano: string) => {
 };
 
 Deno.serve(async (req) => {
-  if (!(req.headers.get('Authorization') ?? '').includes(SERVIZIO)) {
-    return new Response('no', { status: 401 });
-  }
+  const auth = req.headers.get('Authorization') ?? '';
+  // Si accetta il segreto del cron, oppure la chiave di servizio per chi
+  // volesse lanciarla a mano. Il confronto e' su stringa intera, non con
+  // includes(): includes('') e' sempre vero, e se la variabile d'ambiente
+  // mancasse la funzione si aprirebbe a chiunque.
+  const chiave = auth.replace(/^Bearer\s+/i, '').trim();
+  const ammesso = (CRON !== '' && chiave === CRON)
+               || (SERVIZIO !== '' && chiave === SERVIZIO);
+  if (!ammesso) return new Response('no', { status: 401 });
 
   // A pacchetti: se ne restano si prendono al giro dopo. Svuotarla tutta in
   // una volta significherebbe che una coda lunga fa scadere la funzione e non
