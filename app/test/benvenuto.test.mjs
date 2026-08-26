@@ -338,6 +338,34 @@ for (const lingua of ['en', 'de', 'ja']) {
     assert.ok(/https?:\/\//.test(amico), 'manca il link');
   });
 }
+
+await test('l app si puo installare sul telefono', async () => {
+  // Sono quattro righe di <head> che nessuno guarda mai, e il sintomo quando
+  // mancano non sembra un difetto: l'app si installa lo stesso, solo con
+  // un'icona brutta o dentro la barra del browser. Nessuno lo segnala.
+  assert.match(HTML, /<link rel="manifest" href="\.\/manifest\.json">/,
+    'senza manifest il telefono non propone di installarla');
+
+  // iOS IGNORA le icone del manifest: guarda solo apple-touch-icon. Senza,
+  // mette uno screenshot della pagina come icona sulla schermata Home.
+  assert.match(HTML, /<link rel="apple-touch-icon" href="[^"]+">/,
+    'su iPhone l icona sarebbe uno screenshot della pagina');
+
+  assert.match(HTML, /<meta name="apple-mobile-web-app-capable" content="yes">/,
+    'senza, su iPhone l app si apre dentro Safari con la barra degli indirizzi');
+
+  const man = JSON.parse(readFileSync(join(root, 'app', 'manifest.json'), 'utf8'));
+  assert.equal(man.display, 'standalone', 'si aprirebbe come una pagina web qualunque');
+  assert.ok(man.icons && man.icons.length, 'niente icone');
+  for (const i of man.icons) {
+    const f = i.src.replace(/^\.\//, '');
+    assert.ok(readFileSync(join(root, 'app', f)).length > 0, 'icona mancante: ' + f);
+  }
+  // Una maskable serve ad Android, che ritaglia l'icona nella forma di sistema:
+  // senza, la ritaglia lo stesso e taglia via i bordi del disegno.
+  assert.ok(man.icons.some(i => String(i.purpose || '').includes('maskable')),
+    'su Android l icona verrebbe ritagliata male');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
