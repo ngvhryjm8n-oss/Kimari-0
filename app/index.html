@@ -1430,7 +1430,9 @@ function vPlan(p){
       ${web && !isOrg && hasVoted ? `<div class="pad" style="margin-top:24px"><button class="btn tint" data-action="tab" data-to="new">Fai lo stesso per il tuo gruppo</button></div><div class="group-foot" style="text-align:center">Crea un piano in 30 secondi, direttamente da qui.</div>` : ''}
       ${isOrg && missing.length ? `<div class="proto"><div class="lab">Prototipo</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? 'Simula i voti del gruppo' : 'Simula 3 amici che votano'}</button></div>` : ''}
     </div>
-    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">Sollecita</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">Invia il mio voto</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
+    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">Sollecita</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>
+    <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? 'Annulla la decisione' : 'Annulla il piano'}</div></button></div>
+    <div class="group-foot">Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">Invia il mio voto</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
   }
   if(decision){
     return `${nav(isOrg ? 'La tua decisione' : (web ? webTitle : 'Decisione'), back)}<div class="view">${head}
@@ -1941,6 +1943,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2009%3A15"></script>
+<script type="module" src="./live.js?v=26%2F08%2009%3A18"></script>
 </body>
 </html>
