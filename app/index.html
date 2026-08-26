@@ -951,6 +951,48 @@ const DIZIONARIO = {
   'Membro eliminato': { en: 'Deleted member', es: 'Miembro eliminado',
                         de: 'Gelöschtes Mitglied', ja: '退会したメンバー' },
 
+  /* ----------------------------------- app: la porta d'ingresso
+     È la prima schermata che vede chi installa. Se resta in italiano, per un
+     tedesco l'app è italiana — qualunque cosa dicano le altre duecento. */
+  'Tutti hanno un’opinione. Kimari la trasforma in un piano.': {
+    en: 'Everyone has an opinion. Kimari turns it into a plan.',
+    es: 'Todo el mundo tiene una opinión. Kimari la convierte en un plan.',
+    de: 'Jeder hat eine Meinung. Kimari macht daraus einen Plan.',
+    ja: 'みんな意見があります。Kimari はそれを予定にします。'
+  },
+  'Ho almeno 16 anni': { en: 'I’m at least 16', es: 'Tengo al menos 16 años',
+                         de: 'Ich bin mindestens 16', ja: '16 歳以上です' },
+  'e accetto Termini e Privacy. Kimari non è per i minori di 16 anni.': {
+    en: 'and I accept the Terms and Privacy Policy. Kimari isn’t for under-16s.',
+    es: 'y acepto los Términos y la Privacidad. Kimari no es para menores de 16 años.',
+    de: 'und ich akzeptiere Nutzungsbedingungen und Datenschutz. Kimari ist nichts für unter 16-Jährige.',
+    ja: '利用規約とプライバシーポリシーに同意します。Kimari は 16 歳未満の方はご利用いただけません。'
+  },
+  'Continua con Apple': { en: 'Continue with Apple', es: 'Continuar con Apple',
+                          de: 'Weiter mit Apple', ja: 'Apple で続ける' },
+  'Con un account ritrovi i tuoi piani da qualsiasi telefono.': {
+    en: 'With an account you find your plans again from any phone.',
+    es: 'Con una cuenta recuperas tus planes desde cualquier teléfono.',
+    de: 'Mit einem Konto findest du deine Pläne von jedem Handy aus wieder.',
+    ja: 'アカウントがあれば、どの端末からでも自分の予定を開けます。'
+  },
+  'Oppure entra con un nome': { en: 'Or just come in with a name',
+    es: 'O entra solo con un nombre', de: 'Oder komm einfach mit einem Namen rein',
+    ja: 'または名前だけで始める' },
+  'Entra': { en: 'Come in', es: 'Entrar', de: 'Rein', ja: 'はじめる' },
+  'Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.': {
+    en: 'You stay on this phone: change device and your plans don’t follow. You can link an account whenever you like.',
+    es: 'Te quedas en este teléfono: si cambias de dispositivo, los planes no te siguen. Podrás vincular una cuenta cuando quieras.',
+    de: 'Du bleibst auf diesem Handy: Beim Gerätewechsel kommen die Pläne nicht mit. Ein Konto kannst du jederzeit verknüpfen.',
+    ja: 'この端末だけに残ります。機種を変えると予定は引き継がれません。アカウントはいつでも連携できます。'
+  },
+  'Niente password, niente rubrica. L’email serve solo a ritrovare i tuoi piani.': {
+    en: 'No password, no address book. The email is only there to find your plans again.',
+    es: 'Sin contraseña, sin agenda. El correo solo sirve para recuperar tus planes.',
+    de: 'Kein Passwort, kein Adressbuch. Die E-Mail ist nur dazu da, deine Pläne wiederzufinden.',
+    ja: 'パスワードも連絡先も不要です。メールは自分の予定を見つけ直すためだけに使います。'
+  },
+
   /* ------------------------------------------- app: parole corte e titoli */
   'Nuovo gruppo': { en: 'New group', es: 'Grupo nuevo', de: 'Neue Gruppe', ja: '新しいグループ' },
   'Icona del gruppo': { en: 'Group icon', es: 'Icono del grupo',
@@ -1969,15 +2011,15 @@ const vInvalid = () => `${nav('Kimari', isWeb() ? '' : 'home')}<div class="view"
 function openSheet(html){ $('#sheet-root').innerHTML = `<div class="overlay" data-action="closeSheet"><div class="sheet" role="dialog" aria-modal="true" data-action="noop"><div class="grab"></div>${html}</div></div>`; const f = $('#sheet-root input'); if(f) setTimeout(() => f.focus(), 80); }
 function closeSheet(){ $('#sheet-root').innerHTML = ''; }
 function sheetWelcome(){
-  return `<div class="center" style="padding:8px 16px 0">${A.icon ? `<img src="${A.icon}" alt="" style="width:92px;height:92px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.18)">` : '<div style="font-size:56px">🐧</div>'}<h2 style="margin:6px 0 2px;font-size:26px;font-family:var(--rounded)">Kimari</h2><p class="sub" style="margin:0 0 14px">Tutti hanno un'opinione. Kimari la trasforma in un piano.</p></div>
-  <div class="group"><div class="row"><div class="grow"><div class="t">Ho almeno 16 anni</div><div class="s">e accetto Termini e Privacy. Kimari non è per i minori di 16 anni.</div></div><button class="sw ${state.ageOk ? 'on' : ''}" data-action="ageOk" aria-label="Ho almeno 16 anni"></button></div></div>
-  <div class="actions stack"><button class="btn sec" style="background:#000;color:#fff" data-action="login" data-p="apple"> Continua con Apple</button><button class="btn tint" data-action="login">Continua con Google</button></div>
-  <div class="group-foot" style="text-align:center;margin:14px 0 8px">Con un account ritrovi i tuoi piani da qualsiasi telefono.</div>
-  <div class="group-title">Oppure entra con un nome</div>
-  <div class="group"><div class="row"><input class="input" id="welcomeName" placeholder="Come ti chiami?" maxlength="40" autocomplete="given-name"></div></div>
-  <div class="actions"><button class="btn primary" data-action="loginName">Entra</button></div>
-  <p class="foot">Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.</p>
-  <p class="foot center" style="margin-top:14px">Niente password, niente rubrica. L'email serve solo a ritrovare i tuoi piani.<br><span style="opacity:.5">v${state.versione || "—"}</span></p>`;
+  return `<div class="center" style="padding:8px 16px 0">${A.icon ? `<img src="${A.icon}" alt="" style="width:92px;height:92px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.18)">` : '<div style="font-size:56px">🐧</div>'}<h2 style="margin:6px 0 2px;font-size:26px;font-family:var(--rounded)">Kimari</h2><p class="sub" style="margin:0 0 14px">${t("Tutti hanno un’opinione. Kimari la trasforma in un piano.")}</p></div>
+  <div class="group"><div class="row"><div class="grow"><div class="t">${t('Ho almeno 16 anni')}</div><div class="s">${t('e accetto Termini e Privacy. Kimari non è per i minori di 16 anni.')}</div></div><button class="sw ${state.ageOk ? 'on' : ''}" data-action="ageOk" aria-label="${t('Ho almeno 16 anni')}"></button></div></div>
+  <div class="actions stack"><button class="btn sec" style="background:#000;color:#fff" data-action="login" data-p="apple"> ${t('Continua con Apple')}</button><button class="btn tint" data-action="login">${t('Continua con Google')}</button></div>
+  <div class="group-foot" style="text-align:center;margin:14px 0 8px">${t('Con un account ritrovi i tuoi piani da qualsiasi telefono.')}</div>
+  <div class="group-title">${t('Oppure entra con un nome')}</div>
+  <div class="group"><div class="row"><input class="input" id="welcomeName" placeholder="${t('Come ti chiami?')}" maxlength="40" autocomplete="given-name"></div></div>
+  <div class="actions"><button class="btn primary" data-action="loginName">${t('Entra')}</button></div>
+  <p class="foot">${t('Resti su questo telefono: cambiando dispositivo i piani non ti seguono. Potrai collegare un account quando vuoi.')}</p>
+  <p class="foot center" style="margin-top:14px">${t("Niente password, niente rubrica. L’email serve solo a ritrovare i tuoi piani.")}<br><span style="opacity:.5">v${state.versione || "—"}</span></p>`;
 }
 function sheetTerms(){ return `<h2>Termini, privacy ed età</h2><p class="sub">In breve, il testo vero lo scrive un avvocato.</p><div class="group"><div class="row col"><div class="t" style="font-size:15px">Età minima 16 anni.</div><div class="s">Chi ha meno di 16 anni non può creare un account. Nei gruppi famiglia i nomi dei minori restano solo come nomi, senza altri dati.</div></div><div class="row col"><div class="t" style="font-size:15px">Cosa raccogliamo</div><div class="s">Nome, email se la dai, voti, risposte, commenti, allegati e foto che carichi. Niente rubrica, niente posizione in background.</div></div><div class="row col"><div class="t" style="font-size:15px">Gruppi privati</div><div class="s">Si entra solo su invito. Chi non è in un piano non ne vede nulla.</div></div><div class="row col"><div class="t" style="font-size:15px">Contenuti</div><div class="s">Gli admin possono rimuovere commenti, allegati e persone. Puoi segnalare un contenuto o bloccare una persona.</div></div><div class="row col"><div class="t" style="font-size:15px">Cancellazione</div><div class="s">Dall'app o dal web. Lo storico condiviso resta come «Membro eliminato».</div></div></div><div class="actions"><button class="btn plain" data-action="closeSheet">Chiudi</button></div>`; }
 function sheetName(p){
@@ -2461,6 +2503,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2015%3A50"></script>
+<script type="module" src="./live.js?v=26%2F08%2016%3A04"></script>
 </body>
 </html>

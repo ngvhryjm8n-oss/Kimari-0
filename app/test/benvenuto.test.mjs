@@ -40,15 +40,18 @@ console.log('\nbenvenuto — si apre solo a chi serve\n');
 
 await test('a chi è già entrato NON viene riproposto', async () => {
   const dom = await avvia(true);
-  const sheet = dom.window.document.getElementById('sheet-root').innerHTML;
-  assert.ok(!sheet.includes('Continua con'),
+  // Si riconosce dal pulsante d'ingresso col nome, non dal testo: da quando
+  // la porta è tradotta, "Continua con" esiste solo in italiano e questa prova
+  // sarebbe passata in inglese per il motivo sbagliato.
+  const sr = dom.window.document.getElementById('sheet-root');
+  assert.equal(sr.querySelector('[data-action="loginName"]'), null,
     'ricomparso a chi ha già un profilo: sembra un login che non ha attaccato');
 });
 
 await test('a chi non è mai entrato si apre', async () => {
   const dom = await avvia(false);
-  const sheet = dom.window.document.getElementById('sheet-root').innerHTML;
-  assert.ok(sheet.includes('Continua con'),
+  const sr = dom.window.document.getElementById('sheet-root');
+  assert.ok(sr.querySelector('[data-action="loginName"]'),
     'senza porta d\'ingresso nell\'app non si entra affatto');
 });
 
@@ -270,6 +273,37 @@ await test('chi non c e piu si chiama "Membro eliminato", non stringa vuota', as
   assert.match(src, /const nameOf = id => state\.people\[id\] \? state\.people\[id\]\.name : \(id \? t\('Membro eliminato'\) : ''\)/,
     'nameOf deve dire chi non c e piu, e restare vuota se l id e vuoto');
 });
+
+// La porta d'ingresso e' la prima schermata che vede chi installa. Se resta in
+// italiano, per un tedesco l'app E' italiana — qualunque cosa dicano le altre
+// duecento stringhe. Per questo ha una prova sua, che guarda cosa finisce
+// davvero a schermo invece di fidarsi che il dizionario sia pieno.
+for (const [lingua, atteso, vietato] of [
+  ['en', 'Continue with Apple', 'Continua con Apple'],
+  ['de', 'Weiter mit Apple',    'Continua con Apple'],
+  ['es', 'Continuar con Apple', 'Continua con Apple'],
+  ['ja', 'Apple で続ける',       'Continua con Apple']
+]) {
+  await test('la porta d ingresso parla ' + lingua, async () => {
+    const dom = await new Promise(resolve => {
+      const d = new JSDOM(HTML, {
+        url: 'https://esempio.test/Kimari-0/app/',
+        runScripts: 'dangerously', pretendToBeVisual: true,
+        beforeParse(w) {
+          Object.defineProperty(w.navigator, 'languages', { value: [lingua + '-XX', lingua] });
+          Object.defineProperty(w.navigator, 'language',  { value: lingua + '-XX' });
+        }
+      });
+      setTimeout(() => resolve(d), 300);
+    });
+    const sr = dom.window.document.getElementById('sheet-root');
+    assert.ok(sr.querySelector('[data-action="loginName"]'), 'la porta non si e aperta');
+    const testo = sr.textContent;
+    assert.ok(testo.includes(atteso), 'manca "' + atteso + '" · a schermo: ' + testo.slice(0, 120));
+    assert.ok(!testo.includes(vietato), 'e rimasto l italiano');
+    assert.equal(dom.window.document.documentElement.lang, lingua);
+  });
+}
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
