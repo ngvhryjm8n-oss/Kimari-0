@@ -254,6 +254,12 @@ const DIZIONARIO = {
   },
 
   /* ---------------------------------------------------------------- errori */
+  'Manca la libreria di Supabase, che arriva da cdn.jsdelivr.net. Quasi sempre è la rete: un blocco pubblicità, un Wi-Fi che chiede il login, o la CDN giù. Riprova, o passa a un’altra rete.': {
+    en: 'The Supabase library, which comes from cdn.jsdelivr.net, is missing. It’s nearly always the network: an ad blocker, a Wi-Fi asking you to sign in, or the CDN being down. Try again, or switch network.',
+    es: 'Falta la librería de Supabase, que viene de cdn.jsdelivr.net. Casi siempre es la red: un bloqueador de anuncios, un wifi que pide iniciar sesión, o la CDN caída. Inténtalo otra vez o cambia de red.',
+    de: 'Die Supabase-Bibliothek von cdn.jsdelivr.net fehlt. Fast immer liegt es am Netz: ein Werbeblocker, ein WLAN, das eine Anmeldung verlangt, oder die CDN ist gerade weg. Versuch es nochmal oder wechsle das Netz.',
+    ja: 'cdn.jsdelivr.net から読み込む Supabase のライブラリがありません。たいていはネットワークが原因です（広告ブロッカー、ログインを求める Wi-Fi、CDN の障害など）。もう一度試すか、別のネットワークでお試しください。'
+  },
   'Kimari non si è caricato': {
     en: 'Kimari didn’t load', es: 'Kimari no se ha cargado',
     de: 'Kimari wurde nicht geladen', ja: 'Kimari を読み込めませんでした'
@@ -282,7 +288,173 @@ const DIZIONARIO = {
                      de: 'Plan erstellen', ja: '予定をつくる' },
   'Continua con Google': { en: 'Continue with Google', es: 'Continuar con Google',
                            de: 'Weiter mit Google', ja: 'Google で続ける' },
-  'Fatto con': { en: 'Made with', es: 'Hecho con', de: 'Gemacht mit', ja: '作成' }
+  'Fatto con': { en: 'Made with', es: 'Hecho con', de: 'Gemacht mit', ja: '作成' },
+
+  /* ------------------------------------------------- sito: dopo aver votato */
+  'Quando {nome} conferma, questa pagina mostrerà data e posto: salvala.': {
+    en: 'When {nome} confirms, this page will show the date and place — save it.',
+    es: 'Cuando {nome} lo confirme, esta página mostrará la fecha y el lugar: guárdala.',
+    de: 'Sobald {nome} bestätigt, zeigt diese Seite Datum und Ort — speichere sie.',
+    ja: '{nome}さんが決めたら、このページに日時と場所が出ます。保存しておいてください。'
+  },
+  'Vedi il piano': { en: 'See the plan', es: 'Ver el plan', de: 'Zum Plan', ja: '予定を見る' },
+  'Vota anche tu': { en: 'Add your vote', es: 'Vota tú también', de: 'Stimm auch ab', ja: 'あなたも投票する' },
+  'Avvisami quando è deciso': {
+    en: 'Tell me when it’s decided', es: 'Avísame cuando se decida',
+    de: 'Sag mir Bescheid, wenn es steht', ja: '決まったら知らせてください'
+  },
+  'La tua email (facoltativa)': {
+    en: 'Your email (optional)', es: 'Tu correo (opcional)',
+    de: 'Deine E-Mail (optional)', ja: 'メールアドレス（任意）'
+  },
+  'Una sola email alla conferma, nessuna newsletter.': {
+    en: 'One email when it’s confirmed. No newsletter.',
+    es: 'Un solo correo al confirmarse. Nada de newsletters.',
+    de: 'Eine E-Mail bei der Bestätigung. Kein Newsletter.',
+    ja: '確定時にメールを一通だけ。宣伝は送りません。'
+  },
+
+  /* ------------------------------------------------------------ sito: home */
+  'I tuoi piani su questo telefono': {
+    en: 'Your plans on this phone', es: 'Tus planes en este teléfono',
+    de: 'Deine Pläne auf diesem Handy', ja: 'この端末にある予定'
+  },
+  'Ai voti': { en: 'Voting', es: 'En votación', de: 'Abstimmung läuft', ja: '投票中' },
+  'Confermati': { en: 'Confirmed', es: 'Confirmados', de: 'Bestätigt', ja: '確定済み' },
+  'Confermato': { en: 'Confirmed', es: 'Confirmado', de: 'Bestätigt', ja: '確定' },
+  'Proponi date e posti, il gruppo vota dal link su WhatsApp senza installare niente, tu confermi. Kimari! ✅': {
+    en: 'Suggest dates and places, the group votes from a WhatsApp link with nothing to install, you confirm. Kimari! ✅',
+    es: 'Propones fechas y sitios, el grupo vota desde un enlace de WhatsApp sin instalar nada, tú confirmas. ¡Kimari! ✅',
+    de: 'Du schlägst Termine und Orte vor, die Gruppe stimmt über einen WhatsApp-Link ab — ohne Installation — und du bestätigst. Kimari! ✅',
+    ja: '日時と場所を出す、みんながWhatsAppのリンクから投票する（インストール不要）、あなたが決める。決まり！ ✅'
+  },
+  'Con Google ritrovi i tuoi piani da qualsiasi telefono.': {
+    en: 'With Google you find your plans again from any phone.',
+    es: 'Con Google recuperas tus planes desde cualquier teléfono.',
+    de: 'Mit Google findest du deine Pläne auf jedem Handy wieder.',
+    ja: 'Google を使うと、どの端末からでも自分の予定を開けます。'
+  },
+
+  /* -------------------------------------------------- sito: creare un piano */
+  'Nuovo piano': { en: 'New plan', es: 'Nuevo plan', de: 'Neuer Plan', ja: '新しい予定' },
+  'Il piano': { en: 'The plan', es: 'El plan', de: 'Der Plan', ja: '予定' },
+  'Il gruppo vota dal link, tu confermi.': {
+    en: 'The group votes from the link, you confirm.',
+    es: 'El grupo vota desde el enlace, tú confirmas.',
+    de: 'Die Gruppe stimmt über den Link ab, du bestätigst.',
+    ja: 'みんながリンクから投票し、あなたが決めます。'
+  },
+  'Il tuo nome (organizzatore)': {
+    en: 'Your name (organiser)', es: 'Tu nombre (organizador)',
+    de: 'Dein Name (Organisator)', ja: 'お名前（幹事）'
+  },
+  'Già deciso': { en: 'Already set', es: 'Ya decidido', de: 'Steht schon fest', ja: '決まっている' },
+  'Nome del posto': { en: 'Name of the place', es: 'Nombre del sitio',
+                      de: 'Name des Orts', ja: '場所の名前' },
+  'Indirizzo (facoltativo)': { en: 'Address (optional)', es: 'Dirección (opcional)',
+                               de: 'Adresse (optional)', ja: '住所（任意）' },
+  'Posto {n}': { en: 'Place {n}', es: 'Sitio {n}', de: 'Ort {n}', ja: '場所 {n}' },
+  'Posto: si decide': { en: 'Place: to be decided', es: 'Sitio: por decidir',
+                        de: 'Ort: wird noch entschieden', ja: '場所：これから決めます' },
+  'Nuovo posto': { en: 'New place', es: 'Nuevo sitio', de: 'Neuer Ort', ja: '新しい場所' },
+  'Facoltativo, è solo un promemoria per il gruppo: la conferma resta tua.': {
+    en: 'Optional — just a nudge for the group. Confirming is still up to you.',
+    es: 'Opcional: solo un recordatorio para el grupo. Confirmar sigue siendo cosa tuya.',
+    de: 'Optional — nur eine Erinnerung für die Gruppe. Bestätigen tust du.',
+    ja: '任意です。みんなへの目安で、決めるのはあなたです。'
+  },
+  'Fatto ✓ — il link del piano': {
+    en: 'Done ✓ — the link to the plan', es: 'Listo ✓ — el enlace del plan',
+    de: 'Fertig ✓ — der Link zum Plan', ja: 'できました ✓ — 予定のリンク'
+  },
+  'Manda su WhatsApp': { en: 'Send on WhatsApp', es: 'Enviar por WhatsApp',
+                         de: 'Auf WhatsApp senden', ja: 'WhatsApp で送る' },
+  'Apri il piano': { en: 'Open the plan', es: 'Abrir el plan',
+                     de: 'Plan öffnen', ja: '予定を開く' },
+
+  /* ------------------------------------------- sito: la vista organizzatore */
+  'Quando — tocca l’opzione da confermare': {
+    en: 'When — tap the option to confirm',
+    es: 'Cuándo — toca la opción que quieres confirmar',
+    de: 'Wann — tippe die Option an, die gelten soll',
+    ja: '日時 — 決めるものを選んでください'
+  },
+  'Dove — tocca l’opzione da confermare': {
+    en: 'Where — tap the option to confirm',
+    es: 'Dónde — toca la opción que quieres confirmar',
+    de: 'Wo — tippe die Option an, die gelten soll',
+    ja: '場所 — 決めるものを選んでください'
+  },
+  'A {chi} non va bene nessuna data.': {
+    en: 'None of the dates work for {chi}.',
+    es: 'A {chi} no le viene bien ninguna fecha.',
+    de: 'Für {chi} passt kein Termin.',
+    ja: '{chi}さんはどの日も都合が合いません。'
+  },
+  'A {chi} non va bene nessun posto.': {
+    en: 'None of the places work for {chi}.',
+    es: 'A {chi} no le viene bien ningún sitio.',
+    de: 'Für {chi} passt kein Ort.',
+    ja: '{chi}さんはどの場所も都合が合いません。'
+  },
+  'nessuno ancora': { en: 'nobody yet', es: 'nadie todavía',
+                      de: 'noch niemand', ja: 'まだいません' },
+  'Non hanno ancora votato': {
+    en: 'Haven’t voted yet', es: 'Aún no han votado',
+    de: 'Haben noch nicht abgestimmt', ja: 'まだ投票していない人'
+  },
+  'Note del gruppo': { en: 'Notes from the group', es: 'Notas del grupo',
+                       de: 'Notizen der Gruppe', ja: 'みんなからのひとこと' },
+  'Conferma il piano': { en: 'Confirm the plan', es: 'Confirmar el plan',
+                         de: 'Plan bestätigen', ja: 'この予定で決める' },
+  'Rimanda il link al gruppo': {
+    en: 'Send the link again', es: 'Reenviar el enlace al grupo',
+    de: 'Link nochmal schicken', ja: 'リンクをもう一度送る'
+  },
+  'Conferma quando ti basta: il link resta lo stesso e diventa la pagina dell’evento.': {
+    en: 'Confirm whenever you have enough: the link stays the same and becomes the event page.',
+    es: 'Confirma cuando te baste: el enlace no cambia y se convierte en la página del evento.',
+    de: 'Bestätige, sobald es dir reicht: Der Link bleibt gleich und wird zur Seite des Treffens.',
+    ja: '十分だと思ったら決めてください。リンクはそのまま、予定のページになります。'
+  },
+
+  /* ----------------------------------------------- sito: dopo la conferma */
+  'Ci sono · {n}': { en: 'Coming · {n}', es: 'Van · {n}',
+                     de: 'Dabei · {n}', ja: '参加 · {n}' },
+  'Non vengono · {n}': { en: 'Not coming · {n}', es: 'No van · {n}',
+                         de: 'Nicht dabei · {n}', ja: '不参加 · {n}' },
+  'Non hanno risposto · {n}': { en: 'No answer · {n}', es: 'Sin responder · {n}',
+                                de: 'Keine Antwort · {n}', ja: '未回答 · {n}' },
+  'Sposta la data': { en: 'Move the date', es: 'Cambiar la fecha',
+                      de: 'Termin verschieben', ja: '日時を変える' },
+  'Cambia posto': { en: 'Change the place', es: 'Cambiar de sitio',
+                    de: 'Ort ändern', ja: '場所を変える' },
+  'Ogni modifica alza la versione (v{a} → v{b}) e resta nella storia: chi ha il link vede sempre l’ultima.': {
+    en: 'Every change bumps the version (v{a} → v{b}) and stays in the history: whoever has the link always sees the latest.',
+    es: 'Cada cambio sube la versión (v{a} → v{b}) y queda en el historial: quien tenga el enlace ve siempre la última.',
+    de: 'Jede Änderung erhöht die Version (v{a} → v{b}) und bleibt in der Historie: Wer den Link hat, sieht immer die neueste.',
+    ja: '変更するたびに版が上がり（v{a} → v{b}）、履歴に残ります。リンクを持っている人にはいつも最新が見えます。'
+  },
+  'Annulla il piano': { en: 'Cancel the plan', es: 'Anular el plan',
+                        de: 'Plan absagen', ja: '予定をとりやめる' },
+  'Questo piano è stato annullato.': {
+    en: 'This plan was cancelled.', es: 'Este plan se ha anulado.',
+    de: 'Dieser Plan wurde abgesagt.', ja: 'この予定はとりやめになりました。'
+  },
+  'Questo piano è stato annullato da {chi}.': {
+    en: 'This plan was cancelled by {chi}.', es: '{chi} ha anulado este plan.',
+    de: 'Dieser Plan wurde von {chi} abgesagt.', ja: 'この予定は{chi}さんがとりやめました。'
+  },
+
+  /* ------------------------------------------------------- sito: non trovato */
+  'Link non valido': { en: 'Link not valid', es: 'Enlace no válido',
+                       de: 'Link ungültig', ja: 'リンクが無効です' },
+  'Questo piano si apre dal suo link (quello che gira su WhatsApp): da questo telefono non risulti dentro.': {
+    en: 'This plan opens from its own link — the one going round on WhatsApp. From this phone you’re not in it.',
+    es: 'Este plan se abre desde su enlace, el que circula por WhatsApp. Desde este teléfono no constas dentro.',
+    de: 'Dieser Plan öffnet sich über seinen Link — den, der auf WhatsApp herumgeht. Von diesem Handy aus bist du nicht dabei.',
+    ja: 'この予定は、WhatsApp で回っているリンクから開きます。この端末では参加者として登録されていません。'
+  }
 };
 
 /* ------------------------------------------------------------------ */
@@ -343,10 +515,8 @@ const ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1
 
 if (!window.supabase || !window.supabase.createClient){
   document.getElementById('app').innerHTML =
-    '<div class="card"><h1>Kimari non si è caricato</h1>' +
-    '<p class="sub">Manca la libreria di Supabase, che arriva da cdn.jsdelivr.net. ' +
-    'Quasi sempre è la rete: un blocco pubblicità, un Wi-Fi che chiede il login, o la CDN giù. ' +
-    'Riprova, o passa a un\'altra rete.</p></div>';
+    `<div class="card"><h1>${t('Kimari non si è caricato')}</h1>` +
+    `<p class="sub">${t('Manca la libreria di Supabase, che arriva da cdn.jsdelivr.net. Quasi sempre è la rete: un blocco pubblicità, un Wi-Fi che chiede il login, o la CDN giù. Riprova, o passa a un’altra rete.')}</p></div>`;
   throw new Error('supabase-js non caricato da cdn.jsdelivr.net');
 }
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -494,7 +664,7 @@ function renderWelcome(){
     ${GBTN(t('Continua con Google'))}
   </div>
   <div class="err" id="err"></div>
-  <p class="foot">Proponi date e posti, il gruppo vota dal link su WhatsApp senza installare niente, tu confermi. Kimari! ✅<br>Con Google ritrovi i tuoi piani da qualsiasi telefono.</p>
+  <p class="foot">${t('Proponi date e posti, il gruppo vota dal link su WhatsApp senza installare niente, tu confermi. Kimari! ✅')}<br>${t('Con Google ritrovi i tuoi piani da qualsiasi telefono.')}</p>
   ${brand}`;
   const gb = $('#gbtn'); if (gb) gb.addEventListener('click', googleAuth);
 }
@@ -521,11 +691,11 @@ function renderHome(plans, parts){
   <div class="card">
     <img src="${ICON}" width="64" style="border-radius:16px" alt="">
     <h1>${esc(ME.display_name || 'Kimari')}</h1>
-    <p class="sub">I tuoi piani su questo telefono</p>
+    <p class="sub">${t('I tuoi piani su questo telefono')}</p>
     <a class="btn" href="?new">${t('Crea un piano')}</a>
   </div>
-  ${open.length ? `<div class="stitle">Ai voti</div><div class="group">${open.map(row).join('')}</div>` : ''}
-  ${conf.length ? `<div class="stitle">Confermati</div><div class="group">${conf.map(row).join('')}</div>` : ''}
+  ${open.length ? `<div class="stitle">${t('Ai voti')}</div><div class="group">${open.map(row).join('')}</div>` : ''}
+  ${conf.length ? `<div class="stitle">${t('Confermati')}</div><div class="group">${conf.map(row).join('')}</div>` : ''}
   ${!plans.length ? `<p class="foot">Nessun piano ancora: creane uno o apri un link d'invito.</p>` : ''}
   ${SESSION && SESSION.user.is_anonymous ? GBTN('Salva l\'account con Google') : `<button class="btn danger" id="signout">Esci</button>`}
   <div class="err" id="err"></div>
@@ -539,26 +709,26 @@ const cdraft = { whenMode:'deciding', whereMode:'deciding' };
 function renderCreate(){
   const wm = cdraft.whenMode, dm = cdraft.whereMode;
   $('#app').innerHTML = `${topbar()}
-  <div class="card"><h1>Nuovo piano</h1><p class="sub">Il gruppo vota dal link, tu confermi.</p></div>
-  <div class="stitle">Il piano</div>
+  <div class="card"><h1>${t('Nuovo piano')}</h1><p class="sub">${t('Il gruppo vota dal link, tu confermi.')}</p></div>
+  <div class="stitle">${t('Il piano')}</div>
   <div class="group">
     <div class="row"><input type="text" id="c-title" placeholder="Es. Pizzata di venerdì" maxlength="80" value="${esc(cdraft.title || '')}"></div>
-    ${ME ? '' : `<div class="row"><input type="text" id="c-name" placeholder="Il tuo nome (organizzatore)" maxlength="40" value="${esc(cdraft.name || '')}"></div>`}
+    ${ME ? '' : `<div class="row"><input type="text" id="c-name" placeholder="${t('Il tuo nome (organizzatore)')}" maxlength="40" value="${esc(cdraft.name || '')}"></div>`}
   </div>
   <div class="stitle">${t('Quando')}</div>
-  <div class="seg"><button data-wm="deciding" class="${wm === 'deciding' ? 'on' : ''}">Ai voti</button><button data-wm="fixed" class="${wm === 'fixed' ? 'on' : ''}">Già deciso</button></div>
+  <div class="seg"><button data-wm="deciding" class="${wm === 'deciding' ? 'on' : ''}">${t('Ai voti')}</button><button data-wm="fixed" class="${wm === 'fixed' ? 'on' : ''}">${t('Già deciso')}</button></div>
   <div class="group">${wm === 'deciding'
     ? [1,2,3,4,5].map(i => `<div class="row"><input type="datetime-local" id="c-w${i}"></div>`).join('')
     : `<div class="row"><input type="datetime-local" id="c-wf"></div>`}</div>
   ${wm === 'deciding' ? '<p class="fnote">Anche una sola: chi vota dice se gli va bene, e potrai aggiungerne altre dopo.</p>' : ''}
   <div class="stitle">${t('Dove')}</div>
-  <div class="seg"><button data-dm="deciding" class="${dm === 'deciding' ? 'on' : ''}">Ai voti</button><button data-dm="fixed" class="${dm === 'fixed' ? 'on' : ''}">Già deciso</button><button data-dm="later" class="${dm === 'later' ? 'on' : ''}">Si vedrà</button></div>
+  <div class="seg"><button data-dm="deciding" class="${dm === 'deciding' ? 'on' : ''}">${t('Ai voti')}</button><button data-dm="fixed" class="${dm === 'fixed' ? 'on' : ''}">${t('Già deciso')}</button><button data-dm="later" class="${dm === 'later' ? 'on' : ''}">Si vedrà</button></div>
   ${dm === 'later' ? '' : `<div class="group">${dm === 'deciding'
-    ? [1,2,3].map(i => `<div class="row"><input type="text" id="c-p${i}" placeholder="Posto ${i}" maxlength="60"></div>`).join('')
-    : `<div class="row"><input type="text" id="c-pf" placeholder="Nome del posto" maxlength="60"></div><div class="row"><input type="text" id="c-pa" placeholder="Indirizzo (facoltativo)" maxlength="80"></div>`}</div>`}
+    ? [1,2,3].map(i => `<div class="row"><input type="text" id="c-p${i}" placeholder="${t('Posto {n}', { n: i })}" maxlength="60"></div>`).join('')
+    : `<div class="row"><input type="text" id="c-pf" placeholder="${t('Nome del posto')}" maxlength="60"></div><div class="row"><input type="text" id="c-pa" placeholder="${t('Indirizzo (facoltativo)')}" maxlength="80"></div>`}</div>`}
   <div class="stitle">Si chiude</div>
   <div class="group"><div class="row"><input type="datetime-local" id="c-dl"></div></div>
-  <p class="fnote">Facoltativo, è solo un promemoria per il gruppo: la conferma resta tua.</p>
+  <p class="fnote">${t('Facoltativo, è solo un promemoria per il gruppo: la conferma resta tua.')}</p>
   <div class="err" id="err"></div>
   <button class="btn" id="create">Crea e dammi il link</button>
   <div id="out"></div>
@@ -606,11 +776,11 @@ async function createPlan(){
     try{ await sb.rpc('log_event', { p_name:'plan_created', p_plan: data.plan_id, p_props:{} }); }catch(_){}
     const link = location.origin + location.pathname + '?t=' + data.token;
     const wa = 'https://wa.me/?text=' + encodeURIComponent(`${title} — vota qui: ${link}`);
-    $('#out').innerHTML = `<div class="stitle">Fatto ✓ — il link del piano</div>
+    $('#out').innerHTML = `<div class="stitle">${t('Fatto ✓ — il link del piano')}</div>
       <div class="linkbox">${esc(link)}</div>
       <button class="btn sec" id="copy">Copia il link</button>
-      <a class="btn" style="text-decoration:none" href="${wa}">Manda su WhatsApp</a>
-      <a class="btn sec" style="text-decoration:none" href="?t=${data.token}">Apri il piano</a>`;
+      <a class="btn" style="text-decoration:none" href="${wa}">${t('Manda su WhatsApp')}</a>
+      <a class="btn sec" style="text-decoration:none" href="?t=${data.token}">${t('Apri il piano')}</a>`;
     $('#copy').addEventListener('click', () => { navigator.clipboard.writeText(link); $('#copy').textContent = 'Copiato ✓'; });
     btn.remove();
   }catch(e){
@@ -717,7 +887,7 @@ function renderBallot(o){
     ${preview.deadline_at ? `<div class="sub" style="margin-top:8px">${t('Si chiude {quando}', { quando: fmtWhen({ starts_at: preview.deadline_at }) })}</div>` : ''}
   </div>
   ${askWhen ? `<div class="stitle">${t('Quando ti va bene? Segna tutte le opzioni ok')}</div><div class="group" id="g-when">${cw.map(c => candRow(c, counts)).join('')}</div>` : ''}
-  ${preview.when_mode === 'fixed' && preview.starts_at ? `<div class="stitle">Quando</div><div class="group"><div class="row"><b>${esc(fmtWhen(preview))}</b></div></div>` : ''}
+  ${preview.when_mode === 'fixed' && preview.starts_at ? `<div class="stitle">${t('Quando')}</div><div class="group"><div class="row"><b>${esc(fmtWhen(preview))}</b></div></div>` : ''}
   ${askWhere ? `<div class="stitle">${t('Dove ti va bene?')}</div><div class="group" id="g-where">${cd.map(c => candRow(c, counts)).join('')}</div>` : ''}
   ${preview.where_mode === 'fixed' && preview.place_name ? `<div class="stitle">Dove</div><div class="group"><div class="row"><b>${esc(preview.place_name)}</b>${preview.place_address ? ` · <span class="s">${esc(preview.place_address)}</span>` : ''}</div></div>` : ''}
   ${o.guest ? `<div class="stitle">${t('Chi sei?')}</div>
@@ -788,15 +958,15 @@ function renderDone(o){
     <span class="mplate"><img src="${PARTY}" width="120" alt=""></span>
     <div class="kimari">Votato ✓</div>
     <h1>${esc(preview.title)}</h1>
-    <p class="sub">Quando ${esc(preview.organizer)} conferma, questa pagina mostrerà data e posto: salvala.</p>
-    <a class="btn sec" style="text-decoration:none" href="${location.href}">Vedi il piano</a>
+    <p class="sub">${t('Quando {nome} conferma, questa pagina mostrerà data e posto: salvala.', { nome: esc(preview.organizer) })}</p>
+    <a class="btn sec" style="text-decoration:none" href="${location.href}">${t('Vedi il piano')}</a>
   </div>
-  ${o && o.guest ? `<div class="stitle">Avvisami quando è deciso</div>
+  ${o && o.guest ? `<div class="stitle">${t('Avvisami quando è deciso')}</div>
   <div class="group"><div class="row" style="display:flex; gap:8px">
-    <input type="email" id="email" placeholder="La tua email (facoltativa)" inputmode="email" autocomplete="email">
+    <input type="email" id="email" placeholder="${t('La tua email (facoltativa)')}" inputmode="email" autocomplete="email">
     <button class="chip" id="saveEmail" style="flex:none">Ok</button>
   </div></div>
-  <p class="foot">Una sola email alla conferma, nessuna newsletter.</p>
+  <p class="foot">${t('Una sola email alla conferma, nessuna newsletter.')}</p>
   ${GBTN('Salva i tuoi piani con Google')}
   <div class="err" id="err"></div>` : ''}
   ${brand}`;
@@ -822,7 +992,7 @@ function orgCandRow(c){
   return `<button class="opt ${on ? 'on' : ''}" data-of="${c.field}" data-oid="${c.id}">
     <span class="chk">${on ? '✓' : ''}</span>
     <span class="grow"><div class="t">${esc(label)} · <span style="color:var(--green)">${n} ok</span></div>
-      ${who.length ? `<div class="s">${esc(who.join(', '))}</div>` : '<div class="s">nessuno ancora</div>'}
+      ${who.length ? `<div class="s">${esc(who.join(', '))}</div>` : `<div class="s">${t('nessuno ancora')}</div>`}
       <div style="height:5px;border-radius:3px;background:var(--fill);margin-top:6px"><div style="height:5px;border-radius:3px;background:var(--green);width:${Math.round(n / tot * 100)}%"></div></div>
     </span></button>`;
 }
@@ -837,29 +1007,29 @@ function renderOrg(){
   const noneOk = f => FULL.ballots.filter(b => b.field === f && b.none_ok).map(b => b.actors ? b.actors.display_name : '?');
   const notes = FULL.ballots.filter(b => b.note).map(b => `${b.actors ? b.actors.display_name : '?'}: ${b.note}`);
   const link = planUrl(preview.plan_id);
-  $('#app').innerHTML = `${topbar(`<a href="#" id="orgvote">Vota anche tu</a>`)}
+  $('#app').innerHTML = `${topbar(`<a href="#" id="orgvote">${t('Vota anche tu')}</a>`)}
   <div class="card">
     <span class="mplate"><img src="${PENSA}" width="86" alt=""></span>
     <h1>${esc(preview.title)}</h1>
     <p class="sub">Sei l'organizzatore · ${votedIds.length} su ${FULL.parts.length} hanno votato</p>
     <span class="badge dec">${t('Ai voti')}</span>
   </div>
-  ${askWhen ? `<div class="stitle">Quando — tocca l'opzione da confermare</div>
+  ${askWhen ? `<div class="stitle">${t('Quando — tocca l\'opzione da confermare')}</div>
   <div class="group">${cw.map(orgCandRow).join('')}</div>
-  ${noneOk('when').length ? `<p class="fnote">A ${esc(noneOk('when').join(', '))} non va bene nessuna data.</p>` : ''}
+  ${noneOk('when').length ? `<p class="fnote">${t('A {chi} non va bene nessuna data.', { chi: esc(noneOk('when').join(', ')) })}</p>` : ''}
   <div class="group" style="margin-top:8px"><div class="row" style="display:flex;gap:8px">
     <input type="datetime-local" id="add-when"><button class="chip" id="btn-add-when" style="flex:none">Aggiungi</button></div></div>` : ''}
-  ${askWhere ? `<div class="stitle">Dove — tocca l'opzione da confermare</div>
+  ${askWhere ? `<div class="stitle">${t('Dove — tocca l\'opzione da confermare')}</div>
   <div class="group">${cd.map(orgCandRow).join('')}</div>
-  ${noneOk('where').length ? `<p class="fnote">A ${esc(noneOk('where').join(', '))} non va bene nessun posto.</p>` : ''}
+  ${noneOk('where').length ? `<p class="fnote">${t('A {chi} non va bene nessun posto.', { chi: esc(noneOk('where').join(', ')) })}</p>` : ''}
   <div class="group" style="margin-top:8px"><div class="row" style="display:flex;gap:8px">
-    <input type="text" id="add-where" placeholder="Nuovo posto" maxlength="60"><button class="chip" id="btn-add-where" style="flex:none">Aggiungi</button></div></div>` : ''}
-  ${missing.length ? `<div class="stitle">Non hanno ancora votato</div><div class="group"><div class="row">${esc(missing.join(', '))}</div></div>` : ''}
-  ${notes.length ? `<div class="stitle">Note del gruppo</div><div class="group">${notes.map(n => `<div class="row" style="font-size:14px">${esc(n)}</div>`).join('')}</div>` : ''}
+    <input type="text" id="add-where" placeholder="${t('Nuovo posto')}" maxlength="60"><button class="chip" id="btn-add-where" style="flex:none">Aggiungi</button></div></div>` : ''}
+  ${missing.length ? `<div class="stitle">${t('Non hanno ancora votato')}</div><div class="group"><div class="row">${esc(missing.join(', '))}</div></div>` : ''}
+  ${notes.length ? `<div class="stitle">${t('Note del gruppo')}</div><div class="group">${notes.map(n => `<div class="row" style="font-size:14px">${esc(n)}</div>`).join('')}</div>` : ''}
   <div class="err" id="err"></div>
-  <button class="btn" id="confirm">Conferma il piano</button>
-  <button class="btn sec" id="share">Rimanda il link al gruppo</button>
-  <p class="foot">Conferma quando ti basta: il link resta lo stesso e diventa la pagina dell'evento.</p>
+  <button class="btn" id="confirm">${t('Conferma il piano')}</button>
+  <button class="btn sec" id="share">${t('Rimanda il link al gruppo')}</button>
+  <p class="foot">${t('Conferma quando ti basta: il link resta lo stesso e diventa la pagina dell\'evento.')}</p>
   ${brand}`;
 
   $('#orgvote').addEventListener('click', (e) => {
@@ -923,8 +1093,8 @@ function confirmedHead(){
     <div class="kimari">Kimari!</div>
     <h1>${esc(preview.title)}</h1>
     ${preview.starts_at ? `<div class="when-big">${esc(fmtWhen(preview))}</div>` : ''}
-    ${preview.place_name ? `<div class="where-big">${esc(preview.place_name)}${preview.place_address ? ` · <a href="${maps}">${esc(preview.place_address)}</a>` : ''}</div>` : '<div class="where-big" style="color:var(--sec)">Posto: si decide</div>'}
-    <span class="badge ok">Confermato</span><span class="badge gray">v${preview.version}</span>
+    ${preview.place_name ? `<div class="where-big">${esc(preview.place_name)}${preview.place_address ? ` · <a href="${maps}">${esc(preview.place_address)}</a>` : ''}</div>` : `<div class="where-big" style="color:var(--sec)">${t('Posto: si decide')}</div>`}
+    <span class="badge ok">${t('Confermato')}</span><span class="badge gray">v${preview.version}</span>
     <p class="sub" style="margin-top:10px">Organizza ${esc(preview.organizer)}</p>
     ${icsHref() ? `<a class="btn sec" style="text-decoration:none" href="${icsHref()}" download="kimari-${(preview.title || 'evento').toLowerCase().replace(/[^a-z0-9]+/g, '-')}.ics">Aggiungi al calendario</a>` : ''}
   </div>`;
@@ -937,7 +1107,7 @@ function renderConfirmedGuest(){
     ${people.length ? `<div class="chips" id="claims">${people.map(x => `<button class="chip" data-claim="${x.actor_id}">${esc(x.name)}</button>`).join('')}</div>` : ''}
     <div class="row"><input type="text" id="name" placeholder="${people.length ? 'Oppure scrivi il tuo nome' : 'Il tuo nome'}" maxlength="40"></div>
     <div class="row"><div class="rseg">
-      <button class="yes" data-r="yes">Ci sono</button><button class="maybe" data-r="maybe">Forse</button><button class="no" data-r="no">Non vengo</button>
+      <button class="yes" data-r="yes">${t('Ci sono')}</button><button class="maybe" data-r="maybe">Forse</button><button class="no" data-r="no">${t('Non vengo')}</button>
     </div></div>
   </div>
   <div class="err" id="err"></div>
@@ -973,14 +1143,14 @@ function renderConfirmedFull(){
   ${confirmedHead()}
   ${FULL.mePart ? `<div class="stitle">Ci sei?</div>
   <div class="group"><div class="row"><div class="rseg">
-    <button class="yes ${my === 'yes' ? 'on' : ''}" data-r="yes">Ci sono</button>
+    <button class="yes ${my === 'yes' ? 'on' : ''}" data-r="yes">${t('Ci sono')}</button>
     <button class="maybe ${my === 'maybe' ? 'on' : ''}" data-r="maybe">Forse</button>
-    <button class="no ${my === 'no' ? 'on' : ''}" data-r="no">Non vengo</button>
+    <button class="no ${my === 'no' ? 'on' : ''}" data-r="no">${t('Non vengo')}</button>
   </div></div></div>` : ''}
-  ${groups.yes.length ? `<div class="stitle">Ci sono · ${groups.yes.length}</div><div class="group"><div class="row">${esc(groups.yes.join(', '))}</div></div>` : ''}
+  ${groups.yes.length ? `<div class="stitle">${t('Ci sono · {n}', { n: groups.yes.length })}</div><div class="group"><div class="row">${esc(groups.yes.join(', '))}</div></div>` : ''}
   ${groups.maybe.length ? `<div class="stitle">Forse · ${groups.maybe.length}</div><div class="group"><div class="row">${esc(groups.maybe.join(', '))}</div></div>` : ''}
-  ${groups.no.length ? `<div class="stitle">Non vengono · ${groups.no.length}</div><div class="group"><div class="row">${esc(groups.no.join(', '))}</div></div>` : ''}
-  ${groups.none.length ? `<div class="stitle">Non hanno risposto · ${groups.none.length}</div><div class="group"><div class="row">${esc(groups.none.join(', '))}</div></div>` : ''}
+  ${groups.no.length ? `<div class="stitle">${t('Non vengono · {n}', { n: groups.no.length })}</div><div class="group"><div class="row">${esc(groups.no.join(', '))}</div></div>` : ''}
+  ${groups.none.length ? `<div class="stitle">${t('Non hanno risposto · {n}', { n: groups.none.length })}</div><div class="group"><div class="row">${esc(groups.none.join(', '))}</div></div>` : ''}
   ${FULL.changes.length > 1 ? `<div class="stitle">Storia</div><div class="group">${FULL.changes.map(ch => `<div class="row" style="font-size:14px"><b>v${ch.version}</b> · ${kindTxt[ch.kind] || ch.kind}${ch.note ? ` · <span class="s">${esc(ch.note)}</span>` : ''}</div>`).join('')}</div>` : ''}
   <div id="tools"></div>
   <div class="err" id="err"></div>
@@ -993,15 +1163,15 @@ function renderConfirmedFull(){
   if (ot) ot.addEventListener('click', (e) => {
     e.preventDefault();
     $('#tools').innerHTML = `
-    <div class="stitle">Sposta la data</div>
+    <div class="stitle">${t('Sposta la data')}</div>
     <div class="group"><div class="row" style="display:flex;gap:8px">
-      <input type="datetime-local" id="nw"><button class="chip" id="nw-go" style="flex:none">Salva</button></div></div>
-    <div class="stitle">Cambia posto</div>
+      <input type="datetime-local" id="nw"><button class="chip" id="nw-go" style="flex:none">${t('Salva')}</button></div></div>
+    <div class="stitle">${t('Cambia posto')}</div>
     <div class="group">
-      <div class="row"><input type="text" id="np" placeholder="Nome del posto" maxlength="60"></div>
-      <div class="row" style="display:flex;gap:8px"><input type="text" id="npa" placeholder="Indirizzo (facoltativo)" maxlength="80"><button class="chip" id="np-go" style="flex:none">Salva</button></div></div>
-    <p class="fnote">Ogni modifica alza la versione (v${preview.version} → v${preview.version + 1}) e resta nella storia: chi ha il link vede sempre l'ultima.</p>
-    <button class="btn danger" id="cancelp">Annulla il piano</button>`;
+      <div class="row"><input type="text" id="np" placeholder="${t('Nome del posto')}" maxlength="60"></div>
+      <div class="row" style="display:flex;gap:8px"><input type="text" id="npa" placeholder="Indirizzo (facoltativo)" maxlength="80"><button class="chip" id="np-go" style="flex:none">${t('Salva')}</button></div></div>
+    <p class="fnote">${t(`Ogni modifica alza la versione (v{a} → v{b}) e resta nella storia: chi ha il link vede sempre l'ultima.`, { a: preview.version, b: preview.version + 1 })}</p>
+    <button class="btn danger" id="cancelp">${t('Annulla il piano')}</button>`;
     $('#nw-go').addEventListener('click', async () => {
       const v = $('#nw').value; if (!v) return;
       try{
@@ -1030,17 +1200,17 @@ function renderConfirmedFull(){
 function renderInvalid(){
   $('#app').innerHTML = `<div class="card">
     <span class="mplate"><img src="${PENSA}" width="86" alt=""></span>
-    <h1>Link non valido</h1>
+    <h1>${t('Link non valido')}</h1>
     <p class="sub">L'invito è scaduto o è stato revocato. Chiedi all'organizzatore un link nuovo.</p>
   </div>${brand}`;
 }
 function renderCancelled(title, org){
   $('#app').innerHTML = `${topbar()}<div class="card"><h1>${esc(title)}</h1>
-    <p class="sub">Questo piano è stato annullato${org ? ' da ' + esc(org) : ''}.</p></div>${brand}`;
+    <p class="sub">${org ? t('Questo piano è stato annullato da {chi}.', { chi: esc(org) }) : t('Questo piano è stato annullato.')}</p></div>${brand}`;
 }
 function renderNeedLink(){
   $('#app').innerHTML = `${topbar()}<div class="card"><h1>${t('Serve il link d’invito')}</h1>
-    <p class="sub">Questo piano si apre dal suo link (quello che gira su WhatsApp): da questo telefono non risulti dentro.</p></div>${brand}`;
+    <p class="sub">${t('Questo piano si apre dal suo link (quello che gira su WhatsApp): da questo telefono non risulti dentro.')}</p></div>${brand}`;
 }
 
 boot();
