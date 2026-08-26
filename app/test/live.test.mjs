@@ -422,7 +422,7 @@ await test('il riscontro arriva prima della ricarica, non dopo', () => {
   // È una proprietà di ORDINE dentro il dispatcher, che le prove sui gestori
   // non possono vedere: loro li chiamano direttamente.
   const src = readFileSync(join(root, 'app', 'live.js'), 'utf8');
-  const iToast  = src.indexOf('if (res.toast && K.toast) K.toast(res.toast);');
+  const iToast  = src.indexOf('if (res.toast && K.toast) K.toast(');
   const iReload = src.indexOf('if (!res.skipReload) await reload(K);');
   const iGo     = src.indexOf('if (res.go && K.go) K.go(res.go);');
   assert.ok(iToast > 0 && iReload > 0 && iGo > 0, 'il dispatcher è cambiato di forma');

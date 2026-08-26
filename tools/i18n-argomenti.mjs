@@ -49,6 +49,19 @@ if (da >= 0 && a > da) {
   script = script.slice(0, da) + dentro.replace(/[^\n]/g, ' ') + script.slice(a);
 }
 
+// Via anche i dati finti della demo: seed() è pieno di nomi e frasi italiane
+// ("Giò", "Amici della 5B", "Sperlonga è pieno quel weekend") che nessuno
+// tradurrà mai, e che sporcano l'elenco al punto da renderlo inutile. Anche
+// qui si sostituisce con spazi, per non spostare i numeri di riga.
+const inizioSeed = script.indexOf('function seed()');
+if (inizioSeed >= 0) {
+  const fineSeed = script.indexOf('\n}', inizioSeed);
+  if (fineSeed > inizioSeed) {
+    const dentro = script.slice(inizioSeed, fineSeed);
+    script = script.slice(0, inizioSeed) + dentro.replace(/[^\n]/g, ' ') + script.slice(fineSeed);
+  }
+}
+
 const trovate = new Map();
 // Stringhe fra apici singoli o doppi, con l'escape rispettato.
 for (const m of script.matchAll(/(?<![\w)\]])(['"])((?:\\.|(?!\1)[^\\\n])*)\1/g)) {

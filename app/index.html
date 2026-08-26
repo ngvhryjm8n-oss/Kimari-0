@@ -993,6 +993,199 @@ const DIZIONARIO = {
     ja: 'パスワードも連絡先も不要です。メールは自分の予定を見つけ直すためだけに使います。'
   },
 
+
+  /* ===================================== i messaggi che l'app risponde
+     Sono i toast di live.js: "Voto registrato", "Scrivi il tuo nome". Non
+     passavano da nessuna traduzione perché live.js non conosceva il
+     dizionario. Adesso li traduce il dispatcher, in un punto solo — sono 76 e
+     passano tutti da lì. */
+
+  /* --------------------------------------------------- fatto, riuscito */
+  'Bentornato': { en: 'Welcome back', es: 'Bienvenido de nuevo',
+                  de: 'Willkommen zurück', ja: 'おかえりなさい' },
+  'Benvenuto, {nome}': { en: 'Welcome, {nome}', es: 'Bienvenido, {nome}',
+                         de: 'Willkommen, {nome}', ja: '{nome} さん、ようこそ' },
+  'Ci sei': { en: 'You’re in', es: 'Ya estás', de: 'Du bist dabei', ja: '参加しました' },
+  'Sei dentro': { en: 'You’re in', es: 'Estás dentro', de: 'Du bist drin', ja: '参加しました' },
+  'Aggiornato': { en: 'Updated', es: 'Actualizado', de: 'Aktualisiert', ja: '更新しました' },
+  'Tolto': { en: 'Removed', es: 'Quitado', de: 'Entfernt', ja: '削除しました' },
+  'Kimari! ✅': { en: 'Kimari! ✅', es: '¡Kimari! ✅', de: 'Kimari! ✅', ja: 'Kimari！✅' },
+  'Voto registrato': { en: 'Vote recorded', es: 'Voto registrado',
+                       de: 'Stimme gespeichert', ja: '投票を記録しました' },
+  'Ti avvisiamo alla conferma': { en: 'We’ll let you know when it’s confirmed',
+    es: 'Te avisamos cuando se confirme', de: 'Wir sagen Bescheid, sobald es bestätigt ist',
+    ja: '確定したらお知らせします' },
+  'Opzione aggiunta: invia il voto per confermarla': {
+    en: 'Option added — send your vote to confirm it',
+    es: 'Opción añadida: envía tu voto para confirmarla',
+    de: 'Option hinzugefügt — schick deine Stimme, um sie zu bestätigen',
+    ja: '候補を追加しました。投票を送ると確定します'
+  },
+  'Piano aggiornato': { en: 'Plan updated', es: 'Plan actualizado',
+                        de: 'Plan aktualisiert', ja: '予定を更新しました' },
+  'Piano annullato': { en: 'Plan called off', es: 'Plan cancelado',
+                       de: 'Plan abgesagt', ja: '予定を中止しました' },
+  'Il gruppo lo sa': { en: 'The group knows', es: 'El grupo ya lo sabe',
+                       de: 'Die Gruppe weiß Bescheid', ja: 'みんなに伝わりました' },
+  'Gruppo salvato': { en: 'Group saved', es: 'Grupo guardado',
+                      de: 'Gruppe gespeichert', ja: 'グループを保存しました' },
+  'Gruppo sciolto': { en: 'Group dissolved', es: 'Grupo disuelto',
+                      de: 'Gruppe aufgelöst', ja: 'グループを解散しました' },
+  'Sei uscito dal gruppo': { en: 'You’ve left the group', es: 'Has salido del grupo',
+                             de: 'Du hast die Gruppe verlassen', ja: 'グループを抜けました' },
+  'Tolto dal gruppo': { en: 'Removed from the group', es: 'Quitado del grupo',
+                        de: 'Aus der Gruppe entfernt', ja: 'グループから削除しました' },
+  'Profilo aggiornato': { en: 'Profile updated', es: 'Perfil actualizado',
+                          de: 'Profil aktualisiert', ja: 'プロフィールを更新しました' },
+  'Commento tolto': { en: 'Comment removed', es: 'Comentario eliminado',
+                      de: 'Kommentar entfernt', ja: 'コメントを削除しました' },
+  'Foto tolta': { en: 'Photo removed', es: 'Foto eliminada',
+                  de: 'Foto entfernt', ja: '写真を削除しました' },
+  'Posto tolto': { en: 'Place removed', es: 'Sitio eliminado',
+                   de: 'Ort entfernt', ja: '場所を削除しました' },
+  'Copertina cambiata': { en: 'Cover changed', es: 'Portada cambiada',
+                          de: 'Titelbild geändert', ja: 'カバー写真を変えました' },
+  'Aggiunto ai tuoi': { en: 'Added to yours', es: 'Añadido a los tuyos',
+                        de: 'Zu deinen hinzugefügt', ja: '自分のリストに追加しました' },
+  'Salvato tra i tuoi posti ★': { en: 'Saved to your places ★',
+    es: 'Guardado en tus sitios ★', de: 'Zu deinen Orten gespeichert ★',
+    ja: '自分の場所に保存しました ★' },
+  'Link aggiunto': { en: 'Link added', es: 'Enlace añadido',
+                     de: 'Link hinzugefügt', ja: 'リンクを追加しました' },
+  'Domanda aggiunta al piano': { en: 'Question added to the plan',
+    es: 'Pregunta añadida al plan', de: 'Frage zum Plan hinzugefügt',
+    ja: '予定に質問を追加しました' },
+  'Domanda tolta': { en: 'Question removed', es: 'Pregunta eliminada',
+                     de: 'Frage entfernt', ja: '質問を削除しました' },
+  'Spesa aggiunta': { en: 'Expense added', es: 'Gasto añadido',
+                      de: 'Ausgabe hinzugefügt', ja: '費用を追加しました' },
+  'Spesa annullata': { en: 'Expense voided', es: 'Gasto anulado',
+                       de: 'Ausgabe storniert', ja: '費用を取り消しました' },
+  'Pagamento registrato': { en: 'Payment recorded', es: 'Pago registrado',
+                            de: 'Zahlung erfasst', ja: '支払いを記録しました' },
+  'Proposta aperta': { en: 'Suggestion opened', es: 'Propuesta abierta',
+                       de: 'Vorschlag eröffnet', ja: '提案を出しました' },
+  'Proposta rifiutata': { en: 'Suggestion turned down', es: 'Propuesta rechazada',
+                          de: 'Vorschlag abgelehnt', ja: '提案を却下しました' },
+  'Proposta ritirata': { en: 'Suggestion withdrawn', es: 'Propuesta retirada',
+                         de: 'Vorschlag zurückgezogen', ja: '提案を取り下げました' },
+  'Ritardo annullato': { en: 'Delay cancelled', es: 'Retraso cancelado',
+                         de: 'Verspätung zurückgenommen', ja: '遅刻の連絡を取り消しました' },
+  'Ricaricato dal server': { en: 'Reloaded from the server',
+    es: 'Recargado desde el servidor', de: 'Vom Server neu geladen',
+    ja: 'サーバーから読み込み直しました' },
+  'Link revocato: chi è già dentro resta': {
+    en: 'Link revoked — anyone already in stays in',
+    es: 'Enlace revocado: quien ya está dentro se queda',
+    de: 'Link widerrufen — wer schon drin ist, bleibt',
+    ja: 'リンクを無効にしました。すでに参加している人はそのままです'
+  },
+  'Link revocato: chi è già entrato resta': {
+    en: 'Link revoked — anyone who already joined stays in',
+    es: 'Enlace revocado: quien ya entró se queda',
+    de: 'Link widerrufen — wer schon beigetreten ist, bleibt',
+    ja: 'リンクを無効にしました。すでに参加した人はそのままです'
+  },
+
+  /* ------------------------------------------- manca qualcosa, riprova */
+  'Scrivi il tuo nome': { en: 'Type your name', es: 'Escribe tu nombre',
+                          de: 'Schreib deinen Namen', ja: 'お名前を入力してください' },
+  'Scrivi un nome': { en: 'Type a name', es: 'Escribe un nombre',
+                      de: 'Schreib einen Namen', ja: '名前を入力してください' },
+  'Il nome serve': { en: 'The name is needed', es: 'Hace falta el nombre',
+                     de: 'Der Name wird gebraucht', ja: '名前が必要です' },
+  'Dai un nome al gruppo': { en: 'Give the group a name', es: 'Ponle un nombre al grupo',
+                             de: 'Gib der Gruppe einen Namen', ja: 'グループに名前をつけてください' },
+  'Scrivi il nome della sezione': { en: 'Type the section name',
+    es: 'Escribe el nombre de la sección', de: 'Schreib den Namen des Bereichs',
+    ja: 'セクション名を入力してください' },
+  'Scrivi il nome del posto': { en: 'Type the name of the place',
+    es: 'Escribe el nombre del sitio', de: 'Schreib den Namen des Ortes',
+    ja: '場所の名前を入力してください' },
+  'Scrivi la domanda': { en: 'Type the question', es: 'Escribe la pregunta',
+                         de: 'Schreib die Frage', ja: '質問を入力してください' },
+  'Scrivi cosa hai pagato': { en: 'Type what you paid for',
+    es: 'Escribe qué has pagado', de: 'Schreib, wofür du bezahlt hast',
+    ja: '何の支払いか入力してください' },
+  'Scrivi l’importo': { en: 'Type the amount', es: 'Escribe el importe',
+                        de: 'Schreib den Betrag', ja: '金額を入力してください' },
+  'Scrivi l’opzione': { en: 'Type the option', es: 'Escribe la opción',
+                        de: 'Schreib die Option', ja: '選択肢を入力してください' },
+  'Importo non valido': { en: 'That amount isn’t valid', es: 'Importe no válido',
+                          de: 'Der Betrag ist ungültig', ja: '金額が正しくありません' },
+  'Incolla un link': { en: 'Paste a link', es: 'Pega un enlace',
+                       de: 'Füg einen Link ein', ja: 'リンクを貼り付けてください' },
+  'Scegli una data': { en: 'Pick a date', es: 'Elige una fecha',
+                       de: 'Wähl ein Datum', ja: '日付を選んでください' },
+  'Scegli data e ora': { en: 'Pick a date and time', es: 'Elige fecha y hora',
+                         de: 'Wähl Datum und Uhrzeit', ja: '日時を選んでください' },
+  'Scegli per chi è la spesa': { en: 'Choose who the expense is for',
+    es: 'Elige para quién es el gasto', de: 'Wähl, für wen die Ausgabe ist',
+    ja: 'だれの費用か選んでください' },
+  'Segna almeno un’opzione per ogni domanda': {
+    en: 'Tick at least one option for every question',
+    es: 'Marca al menos una opción en cada pregunta',
+    de: 'Markier mindestens eine Option pro Frage',
+    ja: '各質問について、少なくとも一つ選んでください'
+  },
+  'Servono almeno 2 opzioni': { en: 'You need at least 2 options',
+    es: 'Hacen falta al menos 2 opciones', de: 'Es braucht mindestens 2 Optionen',
+    ja: '候補が 2 つ以上必要です' },
+  'Di quanto sei in ritardo?': { en: 'How late are you?', es: '¿Cuánto te retrasas?',
+                                 de: 'Wie viel später kommst du?', ja: 'どのくらい遅れますか？' },
+  'Controlla l’email': { en: 'Check the email address', es: 'Revisa el correo',
+                         de: 'Prüf die E-Mail-Adresse', ja: 'メールアドレスを確認してください' },
+  'Conferma prima di avere almeno 16 anni': {
+    en: 'First confirm that you’re at least 16',
+    es: 'Confirma primero que tienes al menos 16 años',
+    de: 'Bestätige zuerst, dass du mindestens 16 bist',
+    ja: 'まず 16 歳以上であることを確認してください'
+  },
+  'Prima conferma di avere almeno 16 anni': {
+    en: 'First confirm that you’re at least 16',
+    es: 'Confirma primero que tienes al menos 16 años',
+    de: 'Bestätige zuerst, dass du mindestens 16 bist',
+    ja: 'まず 16 歳以上であることを確認してください'
+  },
+  'Nessuna modifica': { en: 'Nothing changed', es: 'Sin cambios',
+                        de: 'Nichts geändert', ja: '変更はありません' },
+  'Massimo {n} persone': { en: 'Maximum {n} people', es: 'Máximo {n} personas',
+                           de: 'Höchstens {n} Personen', ja: '最大 {n} 人' },
+  'Nessun limite': { en: 'No limit', es: 'Sin límite', de: 'Kein Limit', ja: '上限なし' },
+  'Annullato: l’account resta': { en: 'Cancelled — your account stays',
+    es: 'Cancelado: tu cuenta se queda', de: 'Abgebrochen — dein Konto bleibt',
+    ja: '取り消しました。アカウントはそのままです' },
+  'Le opzioni delle domande si aggiungono creandole': {
+    en: 'Options for questions are added when you create them',
+    es: 'Las opciones de las preguntas se añaden al crearlas',
+    de: 'Optionen für Fragen werden beim Erstellen hinzugefügt',
+    ja: '質問の選択肢は、質問を作るときに追加します'
+  },
+
+  /* -------------------------------------------------- non trovato, rotto */
+  'Gruppo non trovato': { en: 'Group not found', es: 'Grupo no encontrado',
+                          de: 'Gruppe nicht gefunden', ja: 'グループが見つかりません' },
+  'Piano non trovato': { en: 'Plan not found', es: 'Plan no encontrado',
+                         de: 'Plan nicht gefunden', ja: '予定が見つかりません' },
+  'Proposta non trovata': { en: 'Suggestion not found', es: 'Propuesta no encontrada',
+                            de: 'Vorschlag nicht gefunden', ja: '提案が見つかりません' },
+  '{chi} non è attivo su Supabase': { en: '{chi} isn’t switched on in Supabase',
+    es: '{chi} no está activo en Supabase', de: '{chi} ist in Supabase nicht aktiviert',
+    ja: '{chi} は Supabase で有効になっていません' },
+  'Chiavi passate': { en: 'Keys handed over', es: 'Llaves entregadas',
+                      de: 'Schlüssel übergeben', ja: '権限を引き継ぎました' },
+  'Scrivi come ti chiami': { en: 'Type what you’re called', es: 'Escribe cómo te llamas',
+                             de: 'Schreib, wie du heißt', ja: 'お名前を入力してください' },
+  // Messaggio da configurazione: succede quando l'indirizzo da cui gira l'app
+  // non è fra quelli che Supabase accetta al ritorno da Google o Apple. Va
+  // detto per esteso, con l'indirizzo dentro, o non si capisce cosa aggiungere.
+  'Questo indirizzo non è fra i Redirect URLs di Supabase: {dove}': {
+    en: 'This address isn’t among Supabase’s Redirect URLs: {dove}',
+    es: 'Esta dirección no está entre las Redirect URLs de Supabase: {dove}',
+    de: 'Diese Adresse steht nicht in den Redirect-URLs von Supabase: {dove}',
+    ja: 'このアドレスは Supabase の Redirect URLs に登録されていません：{dove}'
+  },
+
   /* ===================================== app: le etichette dell'interfaccia
      Sono le parole brevi — bottoni, titoletti, segnaposto. Erano rimaste fuori
      da tutti i controlli perché il rilevatore cercava parole italiane comuni
@@ -2865,7 +3058,7 @@ $('#fileInput').addEventListener('change', e => {
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target && e.target.id === 'commentInput'){ e.preventDefault(); const b = $('[data-action="comment"]'); if(b) b.click(); } });
 window.addEventListener('hashchange', render);
 reset();
-window.__kimari = { state, render, aggiorna, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy, msgSheet, sheetName };
+window.__kimari = { state, render, aggiorna, t, LINGUA, reset, createPlan, createDecision, joinPlan, confirmPlan, editPlan, icsFor, msgs, calItems, monthGrid, feedItems, balances, settleSuggestions, mergePersona, newsCount, $, toast, go, closeSheet, openSheet, sheetWelcome, sheetJoinPolicy, msgSheet, sheetName };
 render();
 })();
 </script>
@@ -2876,6 +3069,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2016%3A57"></script>
+<script type="module" src="./live.js?v=26%2F08%2017%3A24"></script>
 </body>
 </html>
