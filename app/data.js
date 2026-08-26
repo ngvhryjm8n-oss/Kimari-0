@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2022%3A35';
+} from './map.js?v=26%2F08%2023%3A19';
 
 let sb = null;
 
@@ -670,7 +670,12 @@ export const setPlaceCover    = id => rpc('set_place_cover', { p_media: id });
 // Foto di un posto: prima nello Storage, poi la riga. Come per i piani, se la
 // riga viene rifiutata il file caricato va tolto.
 export async function uploadPlacePhoto(placeId, file) {
-  const path = `places/${placeId}/${crypto.randomUUID()}`;
+  // Il proprietario sta NEL PERCORSO (0020): la politica dello Storage lo
+  // legge da li' invece di cercarlo in una query, che e' la versione che non
+  // funzionava. Stesso schema degli avatar, che invece funziona.
+  const io = await myActor();
+  if (!io) throw new Error('serve un profilo');
+  const path = `places/${io.id}/${placeId}/${crypto.randomUUID()}`;
   const up = await sb.storage.from(BUCKET).upload(path, file);
   if (up.error) throw new Error('Non riesco a caricare la foto: ' + up.error.message);
   try {
