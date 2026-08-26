@@ -385,6 +385,24 @@ await test('il titolo e l anteprima sono quelli che vede chi riceve il link', ()
   const img = (HTML.match(/property="og:image" content="([^"]*)"/) || [])[1];
   assert.match(img, /^https:\/\//, 'og:image relativa: l anteprima resta senza immagine');
 });
+
+await test('lo schermo d errore non lascia pulsanti che funzionano per finta', async () => {
+  // Se l'avvio fallisce, wire() non viene mai chiamata: live.js non intercetta
+  // niente e i pulsanti rimasti a schermo li gestisce la DEMO. Vincenzo si e'
+  // trovato la porta d'ingresso aperta sopra lo schermo d'errore, ha toccato
+  // "entra", e l'app lo ha salutato "Benvenuto Marco" — un nome finto.
+  //
+  // Uno schermo d'errore con sopra pulsanti che funzionano per finta e' peggio
+  // di un errore e basta: invita a usarli.
+  const live = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  const i = live.indexOf('export function schermoNonCollegato');
+  const corpo = live.slice(i, i + 1400);
+  assert.ok(/sheet-root/.test(corpo) && /innerHTML = ''/.test(corpo),
+    'lo schermo d errore deve chiudere le schermate aperte');
+  // E deve farlo PRIMA di disegnare, o per un istante i pulsanti restano.
+  assert.ok(corpo.indexOf('sheet-root') < corpo.indexOf("getElementById('app')"),
+    'le schermate vanno chiuse prima di disegnare l errore');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);

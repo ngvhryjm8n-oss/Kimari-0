@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2021%3A19';
+} from './map.js?v=26%2F08%2021%3A23';
 
 let sb = null;
 
@@ -29,6 +29,27 @@ async function rpc(name, args) {
     throw e;
   }
   return data;
+}
+
+// L'immagine del profilo arriva con la 0018. Finche' non e' applicata quella
+// colonna non esiste, e chiederla fa fallire la lettura dei nomi — cioe'
+// l'avvio dell'app intera.
+//
+// E' successo il 26/8/2026: ho pubblicato il client prima della migrazione e
+// l'app e' caduta sullo schermo d'errore per tutti. Per apply_proposal avevo
+// scritto una ricaduta apposta, e qui me ne sono dimenticato: una colonna
+// sembra piu' innocua di una funzione, e non lo e'.
+//
+// Si prova una volta sola all'avvio e ci si ricorda la risposta.
+let COLONNE_ATTORE = 'id, display_name, avatar_path';
+
+async function conRicaduta(fn, senza) {
+  try { return await fn(); }
+  catch (e) {
+    if (!/avatar_path.*does not exist|column .*avatar_path/i.test(String(e && e.message))) throw e;
+    COLONNE_ATTORE = 'id, display_name';
+    return await senza();
+  }
 }
 
 async function rows(query, what) {
@@ -213,7 +234,7 @@ export async function myActor() {
   const s = await currentSession();
   if (!s) return null;
   const r = await rows(
-    sb.from('actors').select('id, display_name, email, avatar_path').eq('auth_user_id', s.user.id),
+    sb.from('actors').select('id, display_name, email' + (COLONNE_ATTORE.includes('avatar_path') ? ', avatar_path' : '')).eq('auth_user_id', s.user.id),
     'il tuo profilo');
   return r[0] || null;
 }
@@ -227,6 +248,14 @@ export const deleteMyAccount = () => rpc('delete_my_account');
 // Costruisce l'intero `state` del prototipo. Le query non filtrano per utente:
 // ci pensa la RLS, che è l'unica di cui ci si può fidare.
 export async function loadState() {
+  // Una domanda sola, prima di tutte le altre, per sapere se la 0018 e' stata
+  // applicata. Costa un viaggio in piu' finche' non lo e'; dopo, la risposta
+  // resta in memoria e non si chiede piu'.
+  if (COLONNE_ATTORE.includes('avatar_path')) {
+    try { await rows(sb.from('actors').select('avatar_path').limit(1), 'le immagini'); }
+    catch { COLONNE_ATTORE = 'id, display_name'; }
+  }
+
   // TUTTO in un giro solo. Prima erano quattro ondate in fila — l'attore, poi
   // i piani, poi le righe filtrate per plan_id, poi quelle filtrate per
   // candidate_id — e ogni ondata è un viaggio fino a Francoforte. Misurato su
@@ -276,7 +305,7 @@ export async function loadState() {
     rows(sb.from('extra_approvals').select('*'), 'le preferenze sulle domande'),
     rows(sb.from('proposal_votes').select('*'), 'i voti sulle proposte'),
     rows(sb.from('expense_shares').select('*'), 'le quote delle spese'),
-    rows(sb.from('actors').select('id, display_name, avatar_path'), 'i nomi')
+    rows(sb.from('actors').select(COLONNE_ATTORE), 'i nomi')
   ]);
 
   // Il controllo va DOPO: senza profilo non c'è niente da mostrare, ma le
