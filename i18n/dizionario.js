@@ -674,6 +674,74 @@ export const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* ============================ i messaggi che finiscono su WhatsApp
+     Sono la faccia che Kimari mostra a chi non l'ha mai vista: spesso il primo
+     contatto è questo messaggio inoltrato da un amico, non l'app. Restavano in
+     italiano anche a chi usa l'app in un'altra lingua.
+
+     Tutto da segnaposto, e non per pignoleria: qui l'ordine delle parole
+     cambia parecchio. In giapponese il link va in fondo, dopo il verbo; in
+     tedesco "era X" si costruisce diversamente. Concatenando non si sarebbe
+     potuto tradurre. */
+
+  '❓ {titolo} — ai voti. Vota qui, non serve installare niente 👉 {link}': {
+    en: '❓ {titolo} — up for a vote. Vote here, nothing to install 👉 {link}',
+    es: '❓ {titolo} — a votación. Vota aquí, no hace falta instalar nada 👉 {link}',
+    de: '❓ {titolo} — zur Abstimmung. Hier abstimmen, nichts zu installieren 👉 {link}',
+    ja: '❓ {titolo} — 投票中です。インストール不要、こちらから投票できます 👉 {link}'
+  },
+  '{emoji} {titolo} — {cosa}: ai voti. Vota qui, non serve installare niente 👉 {link}': {
+    en: '{emoji} {titolo} — {cosa}: up for a vote. Vote here, nothing to install 👉 {link}',
+    es: '{emoji} {titolo} — {cosa}: a votación. Vota aquí, no hace falta instalar nada 👉 {link}',
+    de: '{emoji} {titolo} — {cosa}: zur Abstimmung. Hier abstimmen, nichts zu installieren 👉 {link}',
+    ja: '{emoji} {titolo} — {cosa}を決めます。インストール不要、こちらから投票できます 👉 {link}'
+  },
+  'dettagli': { en: 'the details', es: 'los detalles', de: 'die Details', ja: '詳細' },
+  'Mancano {chi}. {quando} 👉 {link}': {
+    en: 'Still missing {chi}. {quando} 👉 {link}',
+    es: 'Faltan {chi}. {quando} 👉 {link}',
+    de: 'Es fehlen noch {chi}. {quando} 👉 {link}',
+    ja: 'まだ {chi} が未回答です。{quando} 👉 {link}'
+  },
+  '✅ Kimari! {titolo}: {esito} 👉 {link}': {
+    en: '✅ Kimari! {titolo}: {esito} 👉 {link}',
+    es: '✅ ¡Kimari! {titolo}: {esito} 👉 {link}',
+    de: '✅ Kimari! {titolo}: {esito} 👉 {link}',
+    ja: '✅ Kimari！{titolo}：{esito} 👉 {link}'
+  },
+  '⚠️ Cambiato: {cosa} 👉 {link}': {
+    en: '⚠️ Changed: {cosa} 👉 {link}',
+    es: '⚠️ Ha cambiado: {cosa} 👉 {link}',
+    de: '⚠️ Geändert: {cosa} 👉 {link}',
+    ja: '⚠️ 変更がありました：{cosa} 👉 {link}'
+  },
+  '{campo} ora {nuovo} (era {vecchio})': {
+    en: '{campo} is now {nuovo} (was {vecchio})',
+    es: '{campo} ahora {nuovo} (antes {vecchio})',
+    de: '{campo} jetzt {nuovo} (vorher {vecchio})',
+    ja: '{campo}は{nuovo}に変更（以前は{vecchio}）'
+  },
+  '{emoji} {titolo}: {esito}. Dimmi se ci sei 👉 {link}': {
+    en: '{emoji} {titolo}: {esito}. Let me know if you’re in 👉 {link}',
+    es: '{emoji} {titolo}: {esito}. Dime si te apuntas 👉 {link}',
+    de: '{emoji} {titolo}: {esito}. Sag Bescheid, ob du dabei bist 👉 {link}',
+    ja: '{emoji} {titolo}：{esito}。参加できるか教えてください 👉 {link}'
+  },
+  '👋 Entra nel gruppo {emoji} {nome} su Kimari: piani e decisioni in un posto solo 👉 {link}': {
+    en: '👋 Join the group {emoji} {nome} on Kimari: plans and decisions all in one place 👉 {link}',
+    es: '👋 Únete al grupo {emoji} {nome} en Kimari: planes y decisiones en un solo sitio 👉 {link}',
+    de: '👋 Komm in die Gruppe {emoji} {nome} auf Kimari: Pläne und Entscheidungen an einem Ort 👉 {link}',
+    ja: '👋 Kimari のグループ {emoji} {nome} に参加しませんか。予定も決めごともひとつの場所に 👉 {link}'
+  },
+  '👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 {link}': {
+    en: '👋 Add me on Kimari, so we can organise without 50 messages 👉 {link}',
+    es: '👋 Agrégame en Kimari, así organizamos sin 50 mensajes 👉 {link}',
+    de: '👋 Füg mich auf Kimari hinzu, dann organisieren wir ohne 50 Nachrichten 👉 {link}',
+    ja: '👋 Kimari で友だちになりませんか。50 通のやりとりなしで予定が決まります 👉 {link}'
+  },
+  'Si chiude {quando}': { en: 'Closes {quando}', es: 'Se cierra {quando}',
+                          de: 'Schließt {quando}', ja: '締切は {quando}' },
+
   /* ------------------------------------------------- sezioni: rinomina e via */
   'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
                           de: 'Bereich umbenannt', ja: 'セクション名を変えました' },

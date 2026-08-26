@@ -1022,6 +1022,74 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* ============================ i messaggi che finiscono su WhatsApp
+     Sono la faccia che Kimari mostra a chi non l'ha mai vista: spesso il primo
+     contatto è questo messaggio inoltrato da un amico, non l'app. Restavano in
+     italiano anche a chi usa l'app in un'altra lingua.
+
+     Tutto da segnaposto, e non per pignoleria: qui l'ordine delle parole
+     cambia parecchio. In giapponese il link va in fondo, dopo il verbo; in
+     tedesco "era X" si costruisce diversamente. Concatenando non si sarebbe
+     potuto tradurre. */
+
+  '❓ {titolo} — ai voti. Vota qui, non serve installare niente 👉 {link}': {
+    en: '❓ {titolo} — up for a vote. Vote here, nothing to install 👉 {link}',
+    es: '❓ {titolo} — a votación. Vota aquí, no hace falta instalar nada 👉 {link}',
+    de: '❓ {titolo} — zur Abstimmung. Hier abstimmen, nichts zu installieren 👉 {link}',
+    ja: '❓ {titolo} — 投票中です。インストール不要、こちらから投票できます 👉 {link}'
+  },
+  '{emoji} {titolo} — {cosa}: ai voti. Vota qui, non serve installare niente 👉 {link}': {
+    en: '{emoji} {titolo} — {cosa}: up for a vote. Vote here, nothing to install 👉 {link}',
+    es: '{emoji} {titolo} — {cosa}: a votación. Vota aquí, no hace falta instalar nada 👉 {link}',
+    de: '{emoji} {titolo} — {cosa}: zur Abstimmung. Hier abstimmen, nichts zu installieren 👉 {link}',
+    ja: '{emoji} {titolo} — {cosa}を決めます。インストール不要、こちらから投票できます 👉 {link}'
+  },
+  'dettagli': { en: 'the details', es: 'los detalles', de: 'die Details', ja: '詳細' },
+  'Mancano {chi}. {quando} 👉 {link}': {
+    en: 'Still missing {chi}. {quando} 👉 {link}',
+    es: 'Faltan {chi}. {quando} 👉 {link}',
+    de: 'Es fehlen noch {chi}. {quando} 👉 {link}',
+    ja: 'まだ {chi} が未回答です。{quando} 👉 {link}'
+  },
+  '✅ Kimari! {titolo}: {esito} 👉 {link}': {
+    en: '✅ Kimari! {titolo}: {esito} 👉 {link}',
+    es: '✅ ¡Kimari! {titolo}: {esito} 👉 {link}',
+    de: '✅ Kimari! {titolo}: {esito} 👉 {link}',
+    ja: '✅ Kimari！{titolo}：{esito} 👉 {link}'
+  },
+  '⚠️ Cambiato: {cosa} 👉 {link}': {
+    en: '⚠️ Changed: {cosa} 👉 {link}',
+    es: '⚠️ Ha cambiado: {cosa} 👉 {link}',
+    de: '⚠️ Geändert: {cosa} 👉 {link}',
+    ja: '⚠️ 変更がありました：{cosa} 👉 {link}'
+  },
+  '{campo} ora {nuovo} (era {vecchio})': {
+    en: '{campo} is now {nuovo} (was {vecchio})',
+    es: '{campo} ahora {nuovo} (antes {vecchio})',
+    de: '{campo} jetzt {nuovo} (vorher {vecchio})',
+    ja: '{campo}は{nuovo}に変更（以前は{vecchio}）'
+  },
+  '{emoji} {titolo}: {esito}. Dimmi se ci sei 👉 {link}': {
+    en: '{emoji} {titolo}: {esito}. Let me know if you’re in 👉 {link}',
+    es: '{emoji} {titolo}: {esito}. Dime si te apuntas 👉 {link}',
+    de: '{emoji} {titolo}: {esito}. Sag Bescheid, ob du dabei bist 👉 {link}',
+    ja: '{emoji} {titolo}：{esito}。参加できるか教えてください 👉 {link}'
+  },
+  '👋 Entra nel gruppo {emoji} {nome} su Kimari: piani e decisioni in un posto solo 👉 {link}': {
+    en: '👋 Join the group {emoji} {nome} on Kimari: plans and decisions all in one place 👉 {link}',
+    es: '👋 Únete al grupo {emoji} {nome} en Kimari: planes y decisiones en un solo sitio 👉 {link}',
+    de: '👋 Komm in die Gruppe {emoji} {nome} auf Kimari: Pläne und Entscheidungen an einem Ort 👉 {link}',
+    ja: '👋 Kimari のグループ {emoji} {nome} に参加しませんか。予定も決めごともひとつの場所に 👉 {link}'
+  },
+  '👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 {link}': {
+    en: '👋 Add me on Kimari, so we can organise without 50 messages 👉 {link}',
+    es: '👋 Agrégame en Kimari, así organizamos sin 50 mensajes 👉 {link}',
+    de: '👋 Füg mich auf Kimari hinzu, dann organisieren wir ohne 50 Nachrichten 👉 {link}',
+    ja: '👋 Kimari で友だちになりませんか。50 通のやりとりなしで予定が決まります 👉 {link}'
+  },
+  'Si chiude {quando}': { en: 'Closes {quando}', es: 'Se cierra {quando}',
+                          de: 'Schließt {quando}', ja: '締切は {quando}' },
+
   /* ------------------------------------------------- sezioni: rinomina e via */
   'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
                           de: 'Bereich umbenannt', ja: 'セクション名を変えました' },
@@ -2428,17 +2496,36 @@ const canModerate = p => p.organizer === state.me || isAdmin(groupOf(p));
 function nextPlanOf(g){ const ps = plansOfGroup(g).filter(p => p.status === 'deciding' || (p.status === 'confirmed' && !isPast(p))); return ps.sort((a,b) => (a.status === 'deciding' || !planStart(a) ? 0 : planStart(a)) - (b.status === 'deciding' || !planStart(b) ? 0 : planStart(b)))[0] || null; }
 const recurLabel = p => !p.recurrence ? '' : p.recurrence.freq === 'monthly' ? t('Ogni mese') : (p.recurrence.freq === 'biweekly' ? t('Ogni 2 settimane, {giorno}', { giorno: cap(fWeekday.format(planStart(p))) }) : t('Ogni {giorno}', { giorno: cap(fWeekday.format(planStart(p))) }));
 const msgs = {
-  open: p => p.kind === 'decision' ? `❓ ${p.title} — ai voti. Vota qui, non serve installare niente 👉 ${linkOf(p)}` : `${p.emoji} ${p.title} — ${decidingFields(p).map(f => fieldLabel(p, f).toLowerCase()).join(' e ') || 'dettagli'}: ai voti. Vota qui, non serve installare niente 👉 ${linkOf(p)}`,
-  nudge: (p, names) => `Mancano ${names.join(', ')}. ${p.deadline ? 'Si chiude ' + fmtDeadline(p.deadline) : t('Vota quando puoi')} 👉 ${linkOf(p)}`,
-  confirm: p => `✅ Kimari! ${p.title}: ${resultText(p)} 👉 ${linkOf(p)}`,
-  change: (p, ch) => `⚠️ Cambiato: ${ch.map(c => `${c.label} ora ${c.newText} (era ${c.oldText})`).join(' · ')} 👉 ${linkOf(p)}`,
-  invite: p => `${p.emoji} ${p.title}: ${resultText(p)}. Dimmi se ci sei 👉 ${linkOf(p)}`,
+  // I messaggi che finiscono su WhatsApp: sono la faccia che Kimari mostra a
+  // chi non l'ha mai visto, e restavano in italiano anche a chi usa l'app in
+  // un'altra lingua. Segnaposto ovunque, perche' qui l'ordine delle parole
+  // cambia parecchio: in giapponese il link va in fondo e il verbo pure.
+  open: p => p.kind === 'decision'
+    ? t('❓ {titolo} — ai voti. Vota qui, non serve installare niente 👉 {link}',
+        { titolo: p.title, link: linkOf(p) })
+    : t('{emoji} {titolo} — {cosa}: ai voti. Vota qui, non serve installare niente 👉 {link}',
+        { emoji: p.emoji, titolo: p.title, link: linkOf(p),
+          cosa: decidingFields(p).map(f => fieldLabel(p, f).toLowerCase()).join(' e ') || t('dettagli') }),
+  nudge: (p, names) => t('Mancano {chi}. {quando} 👉 {link}', {
+    chi: names.join(', '), link: linkOf(p),
+    quando: p.deadline ? t('Si chiude {quando}', { quando: fmtDeadline(p.deadline) })
+                       : t('Vota quando puoi') }),
+  confirm: p => t('✅ Kimari! {titolo}: {esito} 👉 {link}',
+                  { titolo: p.title, esito: resultText(p), link: linkOf(p) }),
+  change: (p, ch) => t('⚠️ Cambiato: {cosa} 👉 {link}', {
+    link: linkOf(p),
+    cosa: ch.map(c => t('{campo} ora {nuovo} (era {vecchio})',
+            { campo: c.label, nuovo: c.newText, vecchio: c.oldText })).join(' · ') }),
+  invite: p => t('{emoji} {titolo}: {esito}. Dimmi se ci sei 👉 {link}',
+                 { emoji: p.emoji, titolo: p.title, esito: resultText(p), link: linkOf(p) }),
   // Il link d'invito a un gruppo NON si compone da un id: serve un token che
   // lo dà create_group_invite. live.js intercetta 'inviteGroup', chiede il
   // token e rimpiazza {link} qui sotto. Se restasse {link} a schermo vuol
   // dire che quel pezzo non è collegato.
-  group: g => `👋 Entra nel gruppo ${g.emoji} ${g.name} su Kimari: piani e decisioni in un posto solo 👉 {link}`,
-  friend: () => `👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 ${SITO}`,
+  group: g => t('👋 Entra nel gruppo {emoji} {nome} su Kimari: piani e decisioni in un posto solo 👉 {link}',
+                { emoji: g.emoji, nome: g.name, link: '{link}' }),
+  friend: () => t('👋 Aggiungimi su Kimari, così organizziamo senza 50 messaggi 👉 {link}',
+                  { link: SITO }),
 };
 function newDraft(groupId){ const p = me(); return { step:1, title:'', emoji:'📌', name: p ? p.name : '', groupId:groupId || '', whenMode:'deciding', whenFixed:{ start:'', end:'', allDay:false }, whenCands:[], whereMode:'deciding', whereFixed:{ name:'', address:'' }, whereCands:[], deadline:'', allowProposals:true, extras:[], recur:{ on:false, freq:'weekly', count:6 } }; }
 function quickWhen(){
@@ -3487,6 +3574,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2019%3A18"></script>
+<script type="module" src="./live.js?v=26%2F08%2020%3A01"></script>
 </body>
 </html>
