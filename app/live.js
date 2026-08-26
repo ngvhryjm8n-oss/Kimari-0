@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2009%3A07';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2009%3A07';
+import * as data from './data.js?v=26%2F08%2009%3A15';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2009%3A15';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 09:07';
+export const VERSIONE = '26/08 09:15';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -625,6 +625,59 @@ export const HANDLERS = {
   async muteGroup(el, K) {
     const ora = await data.toggleGroupMute(el.dataset.g);
     return { toast: ora ? 'Gruppo silenziato' : 'Notifiche riattivate', closeSheet: true };
+  },
+
+  /* ------------------------------------------------------ account */
+
+  // I due bottoni c'erano già nel prototipo, ma erano finti: `data-action="toast"`.
+  // Toccare "Elimina account" mostrava un messaggio e lasciava tutto dov'era.
+  // Peggio che non averlo: Apple dal 2022 pretende che un'app con account
+  // permetta di cancellarlo DENTRO l'app, e un bottone che finge di farlo è
+  // esattamente ciò che fa bocciare una revisione.
+  async signOut(el, K) {
+    await data.signOut();
+    // Senza togliere la marcatura il prossimo avvio non riaprirebbe la porta.
+    try { localStorage.removeItem('kimari_profilo'); } catch { /* niente */ }
+    location.reload();
+    return { skipReload: true };
+  },
+
+  async deleteAccount(el, K) {
+    // Due conferme perché non si torna indietro, e la seconda chiede di
+    // scrivere: un doppio "sì" si tocca per inerzia, una parola no.
+    if (!confirm('Eliminare il tuo account?\n\nProfilo, voti e risposte vengono ' +
+                 'cancellati. Nei piani a cui hai partecipato resti come ' +
+                 '"Membro eliminato", così agli altri non spariscono conti e messaggi.')) {
+      return { skipReload: true };
+    }
+    const risposta = prompt('Non si torna indietro.\n\nScrivi ELIMINA per confermare:');
+    if (String(risposta || '').trim().toUpperCase() !== 'ELIMINA') {
+      return { toast: 'Annullato: l\'account resta', skipReload: true };
+    }
+    await data.deleteMyAccount();
+    await data.signOut();
+    try { localStorage.removeItem('kimari_profilo'); } catch { /* niente */ }
+    location.reload();
+    return { skipReload: true };
+  },
+
+  // Annullare un piano c'era sul sito e nella RPC dal primo giorno, ma
+  // nell'app non c'era il modo di chiederlo: data.cancelPlan restava codice
+  // che nessuno chiamava. Se una cena salta e sei nell'app, l'unica via era
+  // sciogliere il gruppo intero.
+  //
+  // Non si cancella niente: il link resta valido e mostra a tutti che è
+  // saltato, con i messaggi e le spese al loro posto. È il contrario di una
+  // cancellazione — è una notizia.
+  async cancelPlan(el, K) {
+    const p = curPlan(K);
+    if (!p) return { toast: 'Piano non trovato', skipReload: true };
+    if (!confirm('Annullare "' + p.title + '"?\n\nChi ha il link vedrà che è ' +
+                 'saltato. Messaggi e spese restano.')) {
+      return { skipReload: true };
+    }
+    await data.cancelPlan(p.id, null);
+    return { toast: 'Piano annullato', closeSheet: true };
   },
 
   /* ----------------------------------------------------- gruppo */
