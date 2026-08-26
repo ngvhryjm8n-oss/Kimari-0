@@ -3021,7 +3021,57 @@ const DIZIONARIO = {
   'Sì': { en: 'Yes', es: 'Sí', de: 'Ja', ja: 'はい' ,
     fr: 'Oui' },
   'No': { en: 'No', es: 'No', de: 'Nein', ja: 'いいえ' ,
-    fr: 'Non' }
+    fr: 'Non' },
+
+  /* --------------------------------------- Novità e feed, trovati il 27/8
+     Provando l'app in inglese: "Tu created a plan", "1 h fa", "1 cosa da
+     decidere". ago(), i "Tu", e mezzi feedItems erano scolpiti in italiano.
+     La seconda persona ("hai creato") era un replace(/^ha /,'hai ') sul
+     testo GIÀ tradotto: funzionava solo in italiano. Ora è una voce sua. */
+  'adesso': { en: 'now', es: 'ahora', de: 'jetzt', ja: 'たった今', fr: 'à l’instant' },
+  '{n} min fa': { en: '{n} min ago', es: 'hace {n} min', de: 'vor {n} Min.',
+                  ja: '{n}分前', fr: 'il y a {n} min' },
+  '{n} h fa': { en: '{n} h ago', es: 'hace {n} h', de: 'vor {n} Std.',
+                ja: '{n}時間前', fr: 'il y a {n} h' },
+  'ieri': { en: 'yesterday', es: 'ayer', de: 'gestern', ja: '昨日', fr: 'hier' },
+  '{n} g fa': { en: '{n} d ago', es: 'hace {n} días', de: 'vor {n} Tagen',
+                ja: '{n}日前', fr: 'il y a {n} j' },
+  'Tu': { en: 'You', es: 'Tú', de: 'Du', ja: 'あなた', fr: 'Toi' },
+  'nuovo': { en: 'new', es: 'nuevo', de: 'neu', ja: '新着', fr: 'nouveau' },
+  'Creatore': { en: 'Creator', es: 'Creador', de: 'Ersteller', ja: '作成者', fr: 'Créateur' },
+  '1 cosa da decidere': { en: '1 thing to decide', es: '1 cosa por decidir',
+    de: '1 Sache zu entscheiden', ja: '決めることが1件', fr: '1 chose à décider' },
+  '{n} cose da decidere': { en: '{n} things to decide', es: '{n} cosas por decidir',
+    de: '{n} Sachen zu entscheiden', ja: '決めることが{n}件', fr: '{n} choses à décider' },
+  'ha votato': { en: 'voted', es: 'ha votado', de: 'hat abgestimmt',
+                 ja: 'が投票しました', fr: 'a voté' },
+  'hai votato': { en: 'you voted', es: 'has votado', de: 'hast abgestimmt',
+                  ja: 'が投票しました', fr: 'as voté' },
+  'ha confermato': { en: 'confirmed', es: 'ha confirmado', de: 'hat bestätigt',
+                     ja: 'が確定しました', fr: 'a confirmé' },
+  'hai confermato': { en: 'you confirmed', es: 'has confirmado', de: 'hast bestätigt',
+                      ja: 'が確定しました', fr: 'as confirmé' },
+  'ha chiuso la decisione': { en: 'closed the decision', es: 'ha cerrado la decisión',
+    de: 'hat die Entscheidung geschlossen', ja: 'が決定を締め切りました', fr: 'a clos la décision' },
+  'hai chiuso la decisione': { en: 'you closed the decision', es: 'has cerrado la decisión',
+    de: 'hast die Entscheidung geschlossen', ja: 'が決定を締め切りました', fr: 'as clos la décision' },
+  'ha modificato il piano': { en: 'changed the plan', es: 'ha modificado el plan',
+    de: 'hat den Plan geändert', ja: 'が予定を変更しました', fr: 'a modifié le plan' },
+  'hai modificato il piano': { en: 'you changed the plan', es: 'has modificado el plan',
+    de: 'hast den Plan geändert', ja: 'が予定を変更しました', fr: 'as modifié le plan' },
+  'hai creato un piano': { en: 'you created a plan', es: 'has creado un plan',
+    de: 'hast einen Plan erstellt', ja: 'が予定を作りました', fr: 'as créé un plan' },
+  'hai aperto una decisione': { en: 'you opened a decision', es: 'has abierto una decisión',
+    de: 'hast eine Entscheidung eröffnet', ja: 'が決定を開きました', fr: 'as ouvert une décision' },
+  'sei entrato nel gruppo': { en: 'you joined the group', es: 'has entrado en el grupo',
+    de: 'bist der Gruppe beigetreten', ja: 'がグループに参加しました', fr: 'as rejoint le groupe' },
+  'ci sarai': { en: 'you’re in', es: 'estarás', de: 'bist dabei', ja: 'が参加します', fr: 'en es' },
+  'forse ci sarai': { en: 'you might come', es: 'quizá estés', de: 'bist vielleicht dabei',
+                      ja: 'が参加するかもしれません', fr: 'en es peut-être' },
+  'ha commentato: “{testo}”': { en: 'commented: “{testo}”', es: 'ha comentado: «{testo}»',
+    de: 'hat kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'a commenté : « {testo} »' },
+  'hai commentato: “{testo}”': { en: 'you commented: “{testo}”', es: 'has comentado: «{testo}»',
+    de: 'hast kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'as commenté : « {testo} »' }
 };
 
 /* ------------------------------------------------------------------ */
@@ -3149,7 +3199,7 @@ const fmtWhere = p => (p && p.name) ? p.name : t('Luogo da decidere');
 const fmtDeadline = iso => cap(fFull.format(new Date(iso)));
 const fmtEur = c => (c / 100).toLocaleString(LINGUA, { style:'currency', currency:'EUR' });
 const parseEur = s => { const n = parseFloat(String(s).replace(/[^\d,.-]/g, '').replace(',', '.')); return isNaN(n) ? null : Math.round(n * 100); };
-function ago(ts){ const m = Math.round((Date.now() - ts) / 60000); if(m < 1) return 'adesso'; if(m < 60) return `${m} min fa`; const h = Math.round(m / 60); if(h < 24) return `${h} h fa`; const d = Math.round(h / 24); return d === 1 ? 'ieri' : `${d} g fa`; }
+function ago(ts){ const m = Math.round((Date.now() - ts) / 60000); if(m < 1) return t('adesso'); if(m < 60) return t('{n} min fa', { n: m }); const h = Math.round(m / 60); if(h < 24) return t('{n} h fa', { n: h }); const d = Math.round(h / 24); return d === 1 ? t('ieri') : t('{n} g fa', { n: d }); }
 const initials = n => n.trim().split(/\s+/).slice(0,2).map(x => x[0].toUpperCase()).join('');
 const PALETTE = ['#FF9500','#34C759','#5856D6','#FF2D55','#007AFF','#AF52DE','#FF3B30','#00C7BE'];
 const color = n => PALETTE[[...n].reduce((a,c) => a + c.charCodeAt(0), 0) % PALETTE.length];
@@ -3530,15 +3580,18 @@ function feedItems(){
   Object.values(state.groups).forEach(g => {
     (g.entrati || []).forEach(e => {
       if(e.id === state.me) return;           // il proprio ingresso non e' una notizia
-      items.push({ at:e.il, by:e.id, text:t('è entrato nel gruppo'), g, cat:'group' });
+      // text2 = la stessa notizia detta A CHI l'ha fatta ("sei entrato…"):
+      // prima la seconda persona si otteneva con replace(/^ha /,'hai ') sul
+      // testo GIÀ tradotto, che in inglese lasciava "Tu created a plan".
+      items.push({ at:e.il, by:e.id, text:t('è entrato nel gruppo'), text2:t('sei entrato nel gruppo'), g, cat:'group' });
     });
   });
   visiblePlans().forEach(p => {
     const g = groupOf(p);
-    p.changes.forEach(c => { if(c.kind === 'created') items.push({ at:c.at, by:c.by, text: p.kind === 'decision' ? t('ha aperto una decisione') : t('ha creato un piano'), p, g, cat: p.status === 'deciding' ? 'vote' : 'confirm' }); if(c.kind === 'confirmed') items.push({ at:c.at, by:c.by, text:`ha ${p.kind === 'decision' ? 'chiuso la decisione' : 'confermato'}: ${c.text.replace(/^(Confermato|Deciso): /,'')}`, p, g, cat:'confirm' }); if(c.kind === 'changed') items.push({ at:c.at, by:c.by, text:`ha modificato il piano · ${c.text}`, p, g, cat:'change' }); if(c.kind === 'cancelled') items.push({ at:c.at, by:c.by, text: decisioneOPiano(p) + ' · ' + c.text, p, g, cat:'change' }); });
-    Object.entries(p.ballots).forEach(([id, b]) => items.push({ at:b.at || p.createdAt, by:id, text:'ha votato', p, g, cat:'group' }));
-    p.participants.forEach(x => { if(x.rsvp && x.rsvpAt) items.push({ at:x.rsvpAt, by:x.id, text: x.rsvp === 'yes' ? t('ci sarà') : x.rsvp === 'maybe' ? t('forse ci sarà') : t('non viene'), p, g, cat:'group' }); });
-    p.comments.forEach(c => { if(c.system){ const cat = { late:'late', absent:'late', proposal:'proposal', proposal_ok:'proposal', proposal_no:'proposal', candidate:'vote', photo:'media', expense:'expense' }[c.kind]; if(cat) items.push({ at:c.at, by:c.by, text:c.text, p, g, cat, raw:true }); } else items.push({ at:c.at, by:c.by, text:`ha commentato: “${c.text.slice(0, 60)}${c.text.length > 60 ? '…' : ''}”`, p, g, cat:'comment' }); });
+    p.changes.forEach(c => { if(c.kind === 'created') items.push({ at:c.at, by:c.by, text: p.kind === 'decision' ? t('ha aperto una decisione') : t('ha creato un piano'), text2: p.kind === 'decision' ? t('hai aperto una decisione') : t('hai creato un piano'), p, g, cat: p.status === 'deciding' ? 'vote' : 'confirm' }); if(c.kind === 'confirmed'){ const esito = c.text.replace(/^(Confermato|Deciso): /,''); items.push({ at:c.at, by:c.by, text:`${p.kind === 'decision' ? t('ha chiuso la decisione') : t('ha confermato')}: ${esito}`, text2:`${p.kind === 'decision' ? t('hai chiuso la decisione') : t('hai confermato')}: ${esito}`, p, g, cat:'confirm' }); } if(c.kind === 'changed') items.push({ at:c.at, by:c.by, text:`${t('ha modificato il piano')} · ${c.text}`, text2:`${t('hai modificato il piano')} · ${c.text}`, p, g, cat:'change' }); if(c.kind === 'cancelled') items.push({ at:c.at, by:c.by, text: decisioneOPiano(p) + ' · ' + c.text, p, g, cat:'change' }); });
+    Object.entries(p.ballots).forEach(([id, b]) => items.push({ at:b.at || p.createdAt, by:id, text:t('ha votato'), text2:t('hai votato'), p, g, cat:'group' }));
+    p.participants.forEach(x => { if(x.rsvp && x.rsvpAt) items.push({ at:x.rsvpAt, by:x.id, text: x.rsvp === 'yes' ? t('ci sarà') : x.rsvp === 'maybe' ? t('forse ci sarà') : t('non viene'), text2: x.rsvp === 'yes' ? t('ci sarai') : x.rsvp === 'maybe' ? t('forse ci sarai') : t('non vieni'), p, g, cat:'group' }); });
+    p.comments.forEach(c => { if(c.system){ const cat = { late:'late', absent:'late', proposal:'proposal', proposal_ok:'proposal', proposal_no:'proposal', candidate:'vote', photo:'media', expense:'expense' }[c.kind]; if(cat) items.push({ at:c.at, by:c.by, text:c.text, p, g, cat, raw:true }); } else { const corto = `${c.text.slice(0, 60)}${c.text.length > 60 ? '…' : ''}`; items.push({ at:c.at, by:c.by, text:t('ha commentato: “{testo}”', { testo: corto }), text2:t('hai commentato: “{testo}”', { testo: corto }), p, g, cat:'comment' }); } });
   });
   return items.filter(i => state.people[i.by]).sort((a,b) => b.at - a.at).slice(0, 60);
 }
@@ -3686,7 +3739,7 @@ function vHome(){
   <div class="view">
     <div class="pad" style="padding-top:8px;padding-bottom:2px"><div class="greet-b">Kimari</div><div class="greet-d">${oggi.charAt(0).toUpperCase() + oggi.slice(1)}</div></div>
     ${todoC.length ? `<div class="pad" style="padding-bottom:2px"><div class="card todo">
-      <div class="todo-h">${mi('pensa', 32)}<b>${todoC.length === 1 ? '1 cosa da decidere' : todoC.length + ' cose da decidere'}</b></div>
+      <div class="todo-h">${mi('pensa', 32)}<b>${todoC.length === 1 ? t('1 cosa da decidere') : t('{n} cose da decidere', { n: todoC.length })}</b></div>
       ${todoC.slice(0, 4).map(t => `<button class="todo-r" data-action="go" data-to="p/${t.p.id}"><span class="ptile" style="--h:${planHue(t.p)};width:32px;height:32px;font-size:17px;border-radius:9px">${t.p.emoji}</span><span class="grow t" style="text-align:left;font-size:15px">${esc(t.p.title)}</span><span class="tag ${t.act === 'conferma' ? 'okk' : 'amber'}" style="margin:0">${t.act}</span><span class="chev"></span></button>`).join('')}
     </div></div>` : ''}
     ${vCalendar()}${vAgenda()}
@@ -3824,7 +3877,7 @@ function vProposal(p, pr){
 function vComments(p){
   const list = p.comments.slice(-40); const mod = canModerate(p);
   return `<div class="group-title">${t('Commenti')}</div><div class="group">
-    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by), '', c.by)}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? 'Tu' : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
+    ${list.length ? list.map(c => c.system ? `<div class="row sys"><div class="grow s">${esc(c.text)} · ${ago(c.at)}</div></div>` : `<div class="row" style="align-items:flex-start">${avatar(nameOf(c.by), '', c.by)}<div class="grow"><div class="s"><b style="color:var(--label)">${c.by === state.me ? t('Tu') : esc(nameOf(c.by))}</b> · ${ago(c.at)}</div><div class="t" style="font-size:15px">${esc(c.text)}</div></div>${mod || c.by === state.me ? `<button class="x" data-action="delComment" data-id="${c.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('') : `<div class="row"><div class="grow s">${t('Nessun commento. Le cose da decidere passano dai voti; qui solo quello che serve al piano.')}</div></div>`}
     <div class="row"><input class="input" id="commentInput" placeholder="${t('Scrivi un commento')}" maxlength="300" autocomplete="off"><button class="add" data-action="comment">${t('Invia')}</button></div></div>
   ${hint(`<div class="group-foot">${t('Commenti interni al piano, visibili solo a chi è dentro. Per chiacchierare c\'è WhatsApp.')}</div>`)}`;
 }
@@ -3847,7 +3900,7 @@ function vExpenses(p){
   return `<div class="group-title">Spese${total ? ` · ${fmtEur(total)}` : ''}</div><div class="group">
     ${p.expenses.filter(e => !e.voided).map(e => `<div class="row">${mi('euro', 30, '💶')}<div class="grow"><div class="t" style="font-size:15px">${esc(e.desc)}</div><div class="s">ha pagato ${esc(nameOf(e.by))} · ${e.among.length <= 3 && !(e.among.length === 1 && e.among[0] === e.by) && e.among.length < p.participants.length ? t('per {chi}', { chi: e.among.map(id => id === e.by ? t('sé') : esc(nameOf(id))).join(', ') }) : 'diviso tra ' + e.among.length}</div></div><span class="amt">${fmtEur(e.amount)}</span>${mod || e.by === state.me ? `<button class="x" data-action="voidExpense" data-id="${e.id}" aria-label="${t('Annulla')}">×</button>` : ''}</div>`).join('')}
     <button class="row link" data-action="addExpense">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi spesa')}</div></button></div>
-    ${total ? `<div class="group-title">${t('Saldi')}</div><div class="group">${p.participants.map(x => `<div class="row"><div class="grow t" style="font-size:15px">${x.id === state.me ? 'Tu' : esc(nameOf(x.id))}</div><span class="amt ${b[x.id] > 0 ? 'pos' : b[x.id] < 0 ? 'neg' : ''}">${b[x.id] > 0 ? '+' : ''}${fmtEur(b[x.id])}</span></div>`).join('')}
+    ${total ? `<div class="group-title">${t('Saldi')}</div><div class="group">${p.participants.map(x => `<div class="row"><div class="grow t" style="font-size:15px">${x.id === state.me ? t('Tu') : esc(nameOf(x.id))}</div><span class="amt ${b[x.id] > 0 ? 'pos' : b[x.id] < 0 ? 'neg' : ''}">${b[x.id] > 0 ? '+' : ''}${fmtEur(b[x.id])}</span></div>`).join('')}
       ${sug.map(s => `<div class="row"><div class="grow"><div class="t" style="font-size:15px">${esc(nameOf(s.from))} → ${esc(nameOf(s.to))}</div><div class="s">${fmtEur(s.amount)}</div></div>${s.from === state.me || s.to === state.me || mod ? `<button class="add" data-action="settle" data-from="${s.from}" data-to="${s.to}" data-amount="${s.amount}">${t('Segna pagato')}</button>` : ''}</div>`).join('')}
       ${p.settlements.length ? `<div class="row sys"><div class="grow s">Pagamenti registrati: ${p.settlements.map(s => `${esc(nameOf(s.from))} → ${esc(nameOf(s.to))} ${fmtEur(s.amount)}`).join(', ')}</div></div>` : ''}</div>
     ${hint(`<div class="group-foot">${t('Solo registrazione: i soldi passano fuori da Kimari (PayPal, Satispay, contanti). Le voci non si modificano, si annullano.')}</div>`)}` : '<div class="group-foot">Parti uguali, una valuta. I soldi passano fuori da Kimari.</div>'}`;
@@ -3983,7 +4036,7 @@ function vPlan(p){
 function vNews(){
   const items = feedItems(); const unreadFrom = state.lastSeenNews;
   return `${nav(t('Novità'), '')}<div class="view"><h2 class="large">${t('Novità')}</h2><p class="foot" style="margin-top:-6px">${t('Cosa succede nei tuoi gruppi e nei piani in cui sei. Solo lì: chi non è in un piano non ne vede nulla. Le push le scegli tu nel Profilo; qui resta tutto.')}</p>
-  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="${it.p ? 'p/' + it.p.id : 'g/' + it.g.id}">${avatar(n, '', it.by)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? 'Tu' : esc(n)}</b> ${it.by === state.me ? esc(it.text).replace(/^ha /, 'hai ').replace(/^ci sarà$/, 'ci sarai').replace(/^forse ci sarà$/, 'forse ci sarai').replace(/^non viene$/, t('non vieni')) : esc(it.text)}`}</div><div class="s">${it.p ? it.p.emoji + ' ' + esc(it.p.title) : (it.g.emoji || '') + ' ' + esc(it.g.name)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ' · <b style="color:var(--blue)">nuovo</b>' : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
+  ${items.length ? `<div class="group feed">${items.map(it => { const n = nameOf(it.by); const push = pushEnabled(it) && it.by !== state.me; return `<button class="row link" data-action="go" data-to="${it.p ? 'p/' + it.p.id : 'g/' + it.g.id}">${avatar(n, '', it.by)}<div class="grow"><div class="t" style="font-size:15px">${it.raw ? esc(it.text) : `<b>${it.by === state.me ? t('Tu') : esc(n)}</b> ${esc(it.by === state.me ? (it.text2 || it.text) : it.text)}`}</div><div class="s">${it.p ? it.p.emoji + ' ' + esc(it.p.title) : (it.g.emoji || '') + ' ' + esc(it.g.name)}${it.g ? ' · ' + esc(it.g.name) : ''} · ${ago(it.at)}${push ? ' · 🔔' : ''}${it.at > unreadFrom && it.by !== state.me ? ` · <b style="color:var(--blue)">${t('nuovo')}</b>` : ''}</div></div><span class="chev"></span></button>`; }).join('')}</div><p class="foot">${t('🔔 = con le tue impostazioni sarebbe arrivata una notifica.')}</p>` : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('campana', 48)}<div>${t('Ancora niente: quando qualcuno vota, conferma o risponde a un piano, compare qui.')}</div></div>`}</div>`;
 }
 function toggleRow(label, on, action, key){ return `<div class="row"><div class="grow t">${label}</div><button class="sw ${on ? 'on' : ''}" data-action="${action}" data-k="${key}" aria-label="${label}"></button></div>`; }
 function vProfile(){
@@ -4104,7 +4157,7 @@ function sheetManage(g){
   return `<h2>${esc(g.name)}</h2><p class="sub">${t('🔒 Gruppo privato: si entra solo con il link d\'invito.')}</p>
   <div class="group"><div class="row"><div class="grow"><div class="t">${t('Silenzia questo gruppo')}</div><div class="s">${t('Niente push, ma le novità restano')}</div></div><button class="sw ${u.muted.includes(g.id) ? 'on' : ''}" data-action="muteGroup" data-g="${g.id}" aria-label="${t('Silenzia')}"></button></div>
   ${admin ? `<button class="row link" data-action="editGroup" data-g="${g.id}"><div class="grow t">${t('Icona, colore, nome, sezione')}</div><span class="chev"></span></button><button class="row link" data-action="revokeLink" data-g="${g.id}"><div class="grow"><div class="t">${t('Revoca il link d\'invito')}</div><div class="s">${t('Chi l\'ha già usato resta dentro')}</div></div><span class="chev"></span></button>` : ''}</div>
-  <div class="group-title">Persone · ${g.members.length}</div><div class="group">${g.members.map(id => `<div class="row">${avatar(nameOf(id), '', id)}<div class="grow"><div class="t">${id === state.me ? 'Tu' : esc(nameOf(id))}</div>${id === g.createdBy ? '<div class="s">Creatore</div>' : g.admins.includes(id) ? '<div class="s">Admin</div>' : ''}</div>
+  <div class="group-title">${t('Persone')} · ${g.members.length}</div><div class="group">${g.members.map(id => `<div class="row">${avatar(nameOf(id), '', id)}<div class="grow"><div class="t">${id === state.me ? t('Tu') : esc(nameOf(id))}</div>${id === g.createdBy ? `<div class="s">${t('Creatore')}</div>` : g.admins.includes(id) ? '<div class="s">Admin</div>' : ''}</div>
     ${admin && id !== state.me && id !== g.createdBy ? `<button class="add" data-action="toggleAdmin" data-g="${g.id}" data-id="${id}">${g.admins.includes(id) ? 'Togli admin' : 'Admin'}</button><button class="x" data-action="removeMember" data-g="${g.id}" data-id="${id}" aria-label="${t('Rimuovi')}">×</button>` : ''}
     ${creator && id !== state.me ? `<button class="add" data-action="transferOwner" data-g="${g.id}" data-id="${id}">${t('Passa ★')}</button>` : ''}</div>`).join('')}</div>
   <div class="group-foot">${t('Chi entra dopo viene aggiunto solo ai piani ancora ai voti. Chi esce sparisce dai piani futuri e resta in quelli passati.')}</div>

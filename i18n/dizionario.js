@@ -2641,7 +2641,57 @@ export const DIZIONARIO = {
   'Sì': { en: 'Yes', es: 'Sí', de: 'Ja', ja: 'はい' ,
     fr: 'Oui' },
   'No': { en: 'No', es: 'No', de: 'Nein', ja: 'いいえ' ,
-    fr: 'Non' }
+    fr: 'Non' },
+
+  /* --------------------------------------- Novità e feed, trovati il 27/8
+     Provando l'app in inglese: "Tu created a plan", "1 h fa", "1 cosa da
+     decidere". ago(), i "Tu", e mezzi feedItems erano scolpiti in italiano.
+     La seconda persona ("hai creato") era un replace(/^ha /,'hai ') sul
+     testo GIÀ tradotto: funzionava solo in italiano. Ora è una voce sua. */
+  'adesso': { en: 'now', es: 'ahora', de: 'jetzt', ja: 'たった今', fr: 'à l’instant' },
+  '{n} min fa': { en: '{n} min ago', es: 'hace {n} min', de: 'vor {n} Min.',
+                  ja: '{n}分前', fr: 'il y a {n} min' },
+  '{n} h fa': { en: '{n} h ago', es: 'hace {n} h', de: 'vor {n} Std.',
+                ja: '{n}時間前', fr: 'il y a {n} h' },
+  'ieri': { en: 'yesterday', es: 'ayer', de: 'gestern', ja: '昨日', fr: 'hier' },
+  '{n} g fa': { en: '{n} d ago', es: 'hace {n} días', de: 'vor {n} Tagen',
+                ja: '{n}日前', fr: 'il y a {n} j' },
+  'Tu': { en: 'You', es: 'Tú', de: 'Du', ja: 'あなた', fr: 'Toi' },
+  'nuovo': { en: 'new', es: 'nuevo', de: 'neu', ja: '新着', fr: 'nouveau' },
+  'Creatore': { en: 'Creator', es: 'Creador', de: 'Ersteller', ja: '作成者', fr: 'Créateur' },
+  '1 cosa da decidere': { en: '1 thing to decide', es: '1 cosa por decidir',
+    de: '1 Sache zu entscheiden', ja: '決めることが1件', fr: '1 chose à décider' },
+  '{n} cose da decidere': { en: '{n} things to decide', es: '{n} cosas por decidir',
+    de: '{n} Sachen zu entscheiden', ja: '決めることが{n}件', fr: '{n} choses à décider' },
+  'ha votato': { en: 'voted', es: 'ha votado', de: 'hat abgestimmt',
+                 ja: 'が投票しました', fr: 'a voté' },
+  'hai votato': { en: 'you voted', es: 'has votado', de: 'hast abgestimmt',
+                  ja: 'が投票しました', fr: 'as voté' },
+  'ha confermato': { en: 'confirmed', es: 'ha confirmado', de: 'hat bestätigt',
+                     ja: 'が確定しました', fr: 'a confirmé' },
+  'hai confermato': { en: 'you confirmed', es: 'has confirmado', de: 'hast bestätigt',
+                      ja: 'が確定しました', fr: 'as confirmé' },
+  'ha chiuso la decisione': { en: 'closed the decision', es: 'ha cerrado la decisión',
+    de: 'hat die Entscheidung geschlossen', ja: 'が決定を締め切りました', fr: 'a clos la décision' },
+  'hai chiuso la decisione': { en: 'you closed the decision', es: 'has cerrado la decisión',
+    de: 'hast die Entscheidung geschlossen', ja: 'が決定を締め切りました', fr: 'as clos la décision' },
+  'ha modificato il piano': { en: 'changed the plan', es: 'ha modificado el plan',
+    de: 'hat den Plan geändert', ja: 'が予定を変更しました', fr: 'a modifié le plan' },
+  'hai modificato il piano': { en: 'you changed the plan', es: 'has modificado el plan',
+    de: 'hast den Plan geändert', ja: 'が予定を変更しました', fr: 'as modifié le plan' },
+  'hai creato un piano': { en: 'you created a plan', es: 'has creado un plan',
+    de: 'hast einen Plan erstellt', ja: 'が予定を作りました', fr: 'as créé un plan' },
+  'hai aperto una decisione': { en: 'you opened a decision', es: 'has abierto una decisión',
+    de: 'hast eine Entscheidung eröffnet', ja: 'が決定を開きました', fr: 'as ouvert une décision' },
+  'sei entrato nel gruppo': { en: 'you joined the group', es: 'has entrado en el grupo',
+    de: 'bist der Gruppe beigetreten', ja: 'がグループに参加しました', fr: 'as rejoint le groupe' },
+  'ci sarai': { en: 'you’re in', es: 'estarás', de: 'bist dabei', ja: 'が参加します', fr: 'en es' },
+  'forse ci sarai': { en: 'you might come', es: 'quizá estés', de: 'bist vielleicht dabei',
+                      ja: 'が参加するかもしれません', fr: 'en es peut-être' },
+  'ha commentato: “{testo}”': { en: 'commented: “{testo}”', es: 'ha comentado: «{testo}»',
+    de: 'hat kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'a commenté : « {testo} »' },
+  'hai commentato: “{testo}”': { en: 'you commented: “{testo}”', es: 'has comentado: «{testo}»',
+    de: 'hast kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'as commenté : « {testo} »' }
 };
 
 /* ------------------------------------------------------------------ */
