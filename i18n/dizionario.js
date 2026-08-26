@@ -697,6 +697,15 @@ export const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
+                      de: 'Daten exportiert', ja: 'データを書き出しました' },
+  'Non ancora acquistabile: arriva con la versione negli store.': {
+    en: 'Not on sale yet — it arrives with the version in the stores.',
+    es: 'Todavía no está a la venta: llega con la versión de las tiendas.',
+    de: 'Noch nicht käuflich — kommt mit der Version in den Stores.',
+    ja: 'まだ購入できません。ストア版と一緒に登場します。'
+  },
+
   /* --------------------------------------------- immagine del profilo */
   'Aggiungi la tua immagine': { en: 'Add your picture', es: 'Añade tu imagen',
                                 de: 'Dein Bild hinzufügen', ja: '写真を追加' },

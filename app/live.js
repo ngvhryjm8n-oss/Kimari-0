@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2021%3A43';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2021%3A43';
+import * as data from './data.js?v=26%2F08%2022%3A35';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2022%3A35';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 21:43';
+export const VERSIONE = '26/08 22:35';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -684,6 +684,22 @@ export const HANDLERS = {
   async togliFoto(el, K) {
     await data.togliAvatar();
     return { toast: 'Immagine tolta', closeSheet: true };
+  },
+
+  // "Esporta i miei dati" mostrava "Esportazione in arrivo". PRIVACY.md
+  // promette di poterli ricevere in un formato leggibile da una macchina: una
+  // promessa scritta in una policy e disattesa da un pulsante.
+  async esporta(el, K) {
+    const dati = await data.esportaMieiDati();
+    const testo = JSON.stringify(dati, null, 2);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([testo], { type: 'application/json' }));
+    // La data nel nome: chi ne esporta due a distanza di mesi deve poterli
+    // distinguere senza aprirli.
+    a.download = 'kimari-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    return { toast: 'Dati esportati', skipReload: true };
   },
 
   /* ---------------------------------------------------- notifiche */

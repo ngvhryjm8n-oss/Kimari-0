@@ -69,7 +69,7 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount',
                  'renameSection','deleteSection','planBalances','createInviteLink','tokenFor',
                  'attivaPush','spegniPush','pushAttive','pushPossibili',
-                 'uploadAvatar','togliAvatar'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'uploadAvatar','togliAvatar','esportaMieiDati'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);

@@ -403,6 +403,38 @@ await test('lo schermo d errore non lascia pulsanti che funzionano per finta', a
   assert.ok(corpo.indexOf('sheet-root') < corpo.indexOf("getElementById('app')"),
     'le schermate vanno chiuse prima di disegnare l errore');
 });
+
+await test('nessun comando promette cose che l app non fa', () => {
+  // Vincenzo ha chiesto a che servissero due righe del Profilo. La risposta
+  // era: a niente. Erano segnaposto del prototipo che mostravano un messaggio
+  // e basta — "Lingua · Italiano" anche a un tedesco, e un calendario a
+  // pagamento che non esiste.
+  //
+  // I comandi che mostrano solo un messaggio sono leciti: spiegare come
+  // funziona una cosa e' utile. Quello che NON e' lecito e' promettere.
+  const promesse = /\b(presto|in arrivo|prossimamente|a breve|coming soon|demo|prototipo)\b/i;
+  const morti = [];
+  for (const m of HTML.matchAll(/data-action="toast"[^>]*data-msg="([^"]*)"/g)) {
+    if (promesse.test(m[1])) morti.push(m[1].slice(0, 70));
+  }
+  assert.deepEqual(morti, [],
+    'un comando che promette e non fa e un debito verso chi lo tocca');
+});
+
+await test('esportare i propri dati funziona davvero', () => {
+  // PRIVACY.md promette di poterli "ricevere in un formato leggibile da una
+  // macchina". Il bottone c'era e diceva "Esportazione in arrivo": una
+  // promessa scritta in una policy e disattesa da un pulsante.
+  assert.ok(HTML.includes('data-action="esporta"'),
+    'il bottone deve chiamare qualcosa, non mostrare un messaggio');
+  const live = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  assert.match(live, /async esporta\(/, 'manca il gestore');
+  assert.match(live, /esportaMieiDati/, 'non legge i dati veri');
+
+  const policy = readFileSync(join(root, 'PRIVACY.md'), 'utf8');
+  assert.match(policy, /leggibile da una macchina/,
+    'se la policy non lo promette piu, questa prova va ripensata, non cancellata');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
