@@ -98,9 +98,22 @@ giusto per il suo telefono.
 **L'app negli store.** `nativa/` è pronta e `CAPACITOR.md` spiega tutto.
 Android si fa da Windows; **iOS richiede macOS**, e non è aggirabile.
 
-Al 27/8 sera il progetto Android è **generato** (`npx cap add android` fatto,
-Capacitor 8.5; la cartella è gitignorata e si rigenera). Il muro successivo è
-Android Studio: non è installato, sono ~8 GB, e serve per compilare l'APK.
+Nella notte del 27/8 l'**APK di debug è stato compilato senza Android
+Studio**: JDK 21 + SDK a riga di comando stanno in `D:\Kimari\strumenti\`
+(~2 GB), il come è in CAPACITOR.md. L'APK ha l'icona giusta (da
+`store/icona.svg`, il vettoriale), lo splash, e l'intent-filter dei **deep
+link**: quando `/.well-known/assetlinks.json` sarà online (va con la
+prossima pubblicazione su main, insieme a `.nojekyll`), i link di
+kimariapp.com apriranno l'app invece del browser su Android. Per iPhone
+serve la build sul Mac. La PWA non può intercettare i link: limite della
+piattaforma.
+
+Sempre quella notte: **sesta lingua, il francese** (611 voci), e il giro di
+prova in inglese ha stanato una rete di italiano scampato a `t()` (il feed
+di Novità, `ago()`, i "Tu", la pagina gruppo) più il trovato serio: i
+bottoni "Simula 3 amici che votano" e "Apri come nuovo ospite" erano vivi
+in produzione — la lezione 1, quarto e quinto punto. Ora spariscono quando
+l'app è collegata, e le azioni sono comunque intercettate.
 
 Gli asset per le schede degli store sono in `store/`: icone 512/1024 a tutto
 quadro, feature graphic 1024×500, screenshot chiari/IT/EN presi dalla

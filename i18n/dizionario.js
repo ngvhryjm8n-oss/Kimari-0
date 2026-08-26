@@ -2729,7 +2729,31 @@ export const DIZIONARIO = {
     es: 'Te han invitado · {n} personas', de: 'Du bist eingeladen · {n} Personen',
     ja: '招待されています · {n}人', fr: 'On t’a invité · {n} personnes' },
   'Serve solo al prototipo': { en: 'Prototype only', es: 'Solo para el prototipo',
-    de: 'Nur für den Prototyp', ja: 'プロトタイプ専用です', fr: 'Réservé au prototype' }
+    de: 'Nur für den Prototyp', ja: 'プロトタイプ専用です', fr: 'Réservé au prototype' },
+  'Hai votato ✓ Ora tocca a te: conferma quando vuoi, anche prima che abbiano votato tutti.': {
+    en: 'You voted ✓ Now it’s on you: confirm whenever you like, even before everyone has voted.',
+    es: 'Has votado ✓ Ahora te toca a ti: confirma cuando quieras, incluso antes de que voten todos.',
+    de: 'Du hast abgestimmt ✓ Jetzt bist du dran: bestätige, wann du willst — auch bevor alle abgestimmt haben.',
+    ja: '投票しました ✓ 次はあなたの番：全員の投票を待たずに、いつでも確定できます。',
+    fr: 'Tu as voté ✓ À toi de jouer : confirme quand tu veux, même avant que tout le monde ait voté.' },
+  'Hai votato ✓ Ora tocca a te: chiudi quando vuoi, anche prima che abbiano votato tutti.': {
+    en: 'You voted ✓ Now it’s on you: close whenever you like, even before everyone has voted.',
+    es: 'Has votado ✓ Ahora te toca a ti: cierra cuando quieras, incluso antes de que voten todos.',
+    de: 'Du hast abgestimmt ✓ Jetzt bist du dran: schließe ab, wann du willst — auch bevor alle abgestimmt haben.',
+    ja: '投票しました ✓ 次はあなたの番：全員の投票を待たずに、いつでも締め切れます。',
+    fr: 'Tu as voté ✓ À toi de jouer : clos quand tu veux, même avant que tout le monde ait voté.' },
+  'Hai votato ✓ Il piano si aggiorna qui: quando {nome} conferma, lo vedi in questa pagina.': {
+    en: 'You voted ✓ The plan updates here: when {nome} confirms, you’ll see it on this page.',
+    es: 'Has votado ✓ El plan se actualiza aquí: cuando {nome} confirme, lo verás en esta página.',
+    de: 'Du hast abgestimmt ✓ Der Plan aktualisiert sich hier: wenn {nome} bestätigt, siehst du es auf dieser Seite.',
+    ja: '投票しました ✓ 予定はここで更新されます。{nome} が確定したら、このページに表示されます。',
+    fr: 'Tu as voté ✓ Le plan se met à jour ici : quand {nome} confirmera, tu le verras sur cette page.' },
+  'Hai votato ✓ Il risultato si aggiorna qui: quando {nome} chiude, lo vedi in questa pagina.': {
+    en: 'You voted ✓ The result updates here: when {nome} closes it, you’ll see it on this page.',
+    es: 'Has votado ✓ El resultado se actualiza aquí: cuando {nome} cierre, lo verás en esta página.',
+    de: 'Du hast abgestimmt ✓ Das Ergebnis aktualisiert sich hier: wenn {nome} schließt, siehst du es auf dieser Seite.',
+    ja: '投票しました ✓ 結果はここで更新されます。{nome} が締め切ったら、このページに表示されます。',
+    fr: 'Tu as voté ✓ Le résultat se met à jour ici : quand {nome} clora, tu le verras sur cette page.' }
 };
 
 /* ------------------------------------------------------------------ */
