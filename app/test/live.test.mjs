@@ -535,6 +535,22 @@ await test('togliere qualcuno da un piano passa dal server', async () => {
   assert.deepEqual(calls.at(-1).args, ['p1', 'a-2']);
 });
 
+await test("il cartellino del gruppo si scrive DOPO la porta d'ingresso", () => {
+  // Provato mandando il link a un familiare: chi arriva dall'invito a un
+  // gruppo vedeva la presentazione generica di Kimari, senza sapere dove
+  // stesse entrando. Il cartellino veniva scritto, e un attimo dopo l'avvio
+  // riapriva la porta SOPRA, cancellandolo.
+  //
+  // E' una proprieta' di ORDINE dentro boot(), che nessuna prova sui gestori
+  // puo' vedere: loro non attraversano l'avvio.
+  const src = readFileSync(join(root, 'app', 'live.js'), 'utf8');
+  const apre = src.indexOf('K.openSheet(K.sheetWelcome());');
+  const scrive = src.indexOf('await mostraInvitoGruppo(K);', apre);
+  assert.ok(apre > 0, 'boot non riapre piu la porta: la prova va ripensata');
+  assert.ok(scrive > apre,
+    'il cartellino va riscritto DOPO la porta, o la porta lo cancella');
+});
+
 await test('logEvent ingoia i suoi errori: è lei a doverlo fare', () => {
   // La prova qui sopra gira col finto, quindi non può vedere il vero
   // data.logEvent. Ma è lì che sta la protezione: senza .catch la promessa
