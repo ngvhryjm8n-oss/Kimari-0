@@ -127,5 +127,74 @@ await test("l'import di live.js porta la versione giusta", () => {
 // profilo l'app sia inutilizzabile — niente barra, nessuna azione — è stato
 // verificato in un browser vero contro la produzione, non qui.
 
+await test('ridisegnare non ricostruisce quello che non cambia', async () => {
+  // Il motivo per cui l'app sfarfallava sul telefono di Vincenzo: ogni azione
+  // che salva ridisegna, e il prototipo rifaceva tutto il DOM. Misurando un
+  // tocco su "Forse": 719 ms d'attesa e poi 40.073 caratteri sostituiti per
+  // cambiarne 2, con le 7 immagini buttate e ricreate.
+  //
+  // Qui si prova la cosa che conta davvero: gli STESSI nodi restano vivi.
+  // Un'immagine che sopravvive non lampeggia.
+  const dom = await avvia(true);
+  const D = dom.window.document;
+  const W = dom.window;
+
+  const app = D.getElementById('app');
+  assert.ok(typeof W.__kimari.aggiorna === 'function', 'manca aggiorna()');
+
+  const primaImg = [...D.querySelectorAll('img')];
+  const primoScreen = D.getElementById('screen');
+  assert.ok(primaImg.length > 0, 'senza immagini questa prova non misura niente');
+
+  // Stesso contenuto: non deve cambiare un solo nodo.
+  W.__kimari.render();
+  assert.equal(D.getElementById('screen'), primoScreen, 'lo schermo e stato ricreato');
+  const dopoImg = [...D.querySelectorAll('img')];
+  assert.equal(dopoImg.length, primaImg.length);
+  primaImg.forEach((im, i) => assert.equal(dopoImg[i], im,
+    'immagine ' + i + ' ricreata: e lei che lampeggia'));
+});
+
+await test('ridisegnare applica comunque i cambiamenti', async () => {
+  // Un ridisegno che non ricostruisce e inutile se non aggiorna: questa prova
+  // esiste perche' la precedente da sola si accontenterebbe di non fare niente.
+  const dom = await avvia(true);
+  const D = dom.window.document, W = dom.window;
+  const bersaglio = D.createElement('div');
+  bersaglio.innerHTML = '<p class="x" data-a="1">uno</p><span>due</span>';
+  const p = bersaglio.querySelector('p');
+
+  W.__kimari.aggiorna(bersaglio, '<p class="y" data-a="2">tre</p><span>due</span><b>nuovo</b>');
+
+  assert.equal(bersaglio.querySelector('p'), p, 'il paragrafo doveva restare lo stesso nodo');
+  assert.equal(p.textContent, 'tre', 'il testo non e stato aggiornato');
+  assert.equal(p.className, 'y', 'la classe non e stata aggiornata');
+  assert.equal(p.dataset.a, '2', 'l attributo non e stato aggiornato');
+  assert.ok(bersaglio.querySelector('b'), 'il nodo nuovo non e stato aggiunto');
+});
+
+await test('ridisegnare toglie quello che non c e piu', async () => {
+  const dom = await avvia(true);
+  const W = dom.window, D = dom.window.document;
+  const b = D.createElement('div');
+  b.innerHTML = '<i>a</i><i>b</i><i>c</i>';
+  W.__kimari.aggiorna(b, '<i>a</i>');
+  assert.equal(b.querySelectorAll('i').length, 1, 'i nodi in eccesso restano');
+  assert.equal(b.textContent, 'a');
+});
+
+await test('ridisegnare svuota una casella quando deve', async () => {
+  // Il valore di un campo vive nella proprieta', non nell'attributo: senza
+  // sincronizzarlo, svuotare la casella dei commenti dopo l'invio non
+  // funzionerebbe piu' e il testo resterebbe li' come se non fosse partito.
+  const dom = await avvia(true);
+  const W = dom.window, D = dom.window.document;
+  const b = D.createElement('div');
+  b.innerHTML = '<input value="">';
+  b.querySelector('input').value = 'scritto a mano';
+  W.__kimari.aggiorna(b, '<input value="">');
+  assert.equal(b.querySelector('input').value, '', 'la casella non si e svuotata');
+});
+
 console.log(`\n${passed} passati, ${failed} falliti\n`);
 process.exit(failed ? 1 : 0);

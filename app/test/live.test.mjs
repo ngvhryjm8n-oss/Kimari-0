@@ -5,7 +5,11 @@
 //   node app/test/live.test.mjs
 import assert from 'node:assert/strict';
 import { register } from 'node:module';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 /* Sostituisce ./data.js con un finto, prima che live.js lo importi. */
 const calls = [];
@@ -350,9 +354,16 @@ await test('se la misurazione cade, l\'azione riesce lo stesso', async () => {
   // cade, la persona deve comunque avere il suo piano. Misurare non deve poter
   // far fallire ciò che misura — per questo data.logEvent ingoia già i suoi
   // errori, e questa prova impedisce che qualcuno tolga quel .catch().
-  const vero = globalThis.__fakeData.logEvent;
-  let tentato = false;
-  globalThis.__fakeData.logEvent = () => { tentato = true; throw new Error('funnel giù'); };
+  // Il finto è un Proxy: riassegnargli una funzione non ha effetto, il trap
+  // `get` la rigenera ogni volta. Si usa `guasti`, che è l'interruttore che
+  // questo file ha già per i percorsi d'errore.
+  guasti.logEvent = { alla: 1, messaggio: 'funnel giù' };
+  // La chiamata non viene attesa: la promessa rifiutata resterebbe orfana e
+  // Node la segnalerebbe. In produzione la ingoia il .catch dentro
+  // data.logEvent — qui data.js è sostituito, quindi la si raccoglie a mano.
+  const orfane = [];
+  const raccogli = e => orfane.push(e);
+  process.on('unhandledRejection', raccogli);
   try {
     const K = { state: { draft: {
       step: 4, title: 'Pizza', emoji: '🍕', groupId: 'g1', allowProposals: true,
@@ -361,12 +372,26 @@ await test('se la misurazione cade, l\'azione riesce lo stesso', async () => {
       deadline: '', extras: []
     } } };
     const res = await live.HANDLERS.next.run(null, K);
-    assert.ok(tentato, 'la misurazione non è stata nemmeno tentata: questa prova non misura niente');
+    assert.ok(calls.some(c => c.name === 'logEvent'),
+      'la misurazione non è stata nemmeno tentata: questa prova non misurerebbe niente');
     assert.ok(res && res.go, 'il piano deve esserci anche col funnel caduto');
     assert.equal(K.state.draft, null);
   } finally {
-    globalThis.__fakeData.logEvent = vero;
+    delete guasti.logEvent;
+    process.off('unhandledRejection', raccogli);
   }
+});
+
+await test('logEvent ingoia i suoi errori: è lei a doverlo fare', () => {
+  // La prova qui sopra gira col finto, quindi non può vedere il vero
+  // data.logEvent. Ma è lì che sta la protezione: senza .catch la promessa
+  // rifiutata resta orfana a ogni evento, e in un browser diventa un errore
+  // in console per una cosa che all'utente non interessa.
+  const src = readFileSync(join(root, 'app', 'data.js'), 'utf8');
+  const riga = src.split('\n').find(r => r.includes("rpc('log_event'"));
+  assert.ok(riga, 'logEvent non chiama più log_event');
+  assert.ok(/\.catch\(/.test(riga),
+    'logEvent deve ingoiare i suoi errori: misurare non può disturbare chi usa l\'app');
 });
 
 await test('next ai passi 1-3 non crea niente: è navigazione', () => {
