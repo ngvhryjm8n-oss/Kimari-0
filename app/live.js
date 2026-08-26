@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=26%2F08%2015%3A05';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A05';
+import * as data from './data.js?v=26%2F08%2015%3A13';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=26%2F08%2015%3A13';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '26/08 15:05';
+export const VERSIONE = '26/08 15:13';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -931,6 +931,14 @@ function wire(K) {
       .then(async res => {
         res = res || {};
         if (res.closeSheet && K.closeSheet) K.closeSheet();
+
+        // Il messaggio va dato ADESSO, non dopo la ricarica. Quando l'RPC ha
+        // risposto la cosa è fatta: il resto è solo rileggere. Prima il toast
+        // stava in fondo, e fra il tocco e qualunque segno passavano ~700 ms
+        // in cui non succedeva niente — misurati: 114 ms l'RPC, il resto
+        // l'attesa delle 27 letture. Sembrava che il tocco non fosse arrivato.
+        if (res.toast && K.toast) K.toast(res.toast);
+
         if (!res.skipReload) await reload(K);
         // Alcune schermate si modificano mentre le si usa: scegliere "elenco
         // chiuso" fa comparire l'elenco da riempire lì sotto. Chiuderle
@@ -938,7 +946,9 @@ function wire(K) {
         if (res.riapriSheet === 'joinPolicy' && K.openSheet && K.sheetJoinPolicy) {
           K.openSheet(K.sheetJoinPolicy(curPlan(K)));
         }
-        if (res.toast && K.toast) K.toast(res.toast);
+        // `go` invece resta DOPO: porta spesso a un piano appena creato o
+        // appena raggiunto, che in locale non c'è ancora. Anticiparlo farebbe
+        // comparire "piano non trovato" per mezzo secondo.
         if (res.go && K.go) K.go(res.go);
       })
       .catch(err => {
