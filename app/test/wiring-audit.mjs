@@ -141,11 +141,22 @@ const NON_DA_BOTTONE = new Set([
 // che fallisce sempre smette di dire qualcosa, quindi queste si elencano e
 // basta; fallisce solo quello che è scollegato per distrazione.
 const DA_OFFRIRE = {
-  logEvent: "il funnel del gate dei 10 gruppi resta vuoto finché non si chiama",
-  removeParticipant: "togliere qualcuno da un PIANO (dal gruppo si può già)",
-  renameSection: "le sezioni si creano ma non si rinominano",
-  deleteSection: "né si cancellano",
-  planBalances: "i conti li fa il prototipo in locale; il server ha la sua vista",
+  // planBalances resta scollegata di proposito, non per dimenticanza.
+  //
+  // Il prototipo calcola i saldi in locale e li disegna senza aspettare la
+  // rete: chiamare il server a ogni ridisegno aggiungerebbe un viaggio per
+  // mostrare numeri che si hanno già. Il rischio di due implementazioni della
+  // stessa regola è che divergano, quindi il 26/8/2026 le ho confrontate
+  // contro la produzione sul caso che le fa divergere davvero — qualcuno che
+  // cancella l'account lasciando una quota nelle spese:
+  //
+  //   A paga 30 divisi fra A e B, poi B cancella l'account
+  //   server:  A +1500, B -1500   (invariati dopo la cancellazione)
+  //   locale:  A +1500, B -1500   (prova in app/test/benvenuto.test.mjs)
+  //
+  // Entrambe seguono la stessa regola: chi compare NEI CONTI, non chi è nel
+  // piano. Se una delle due cambia, quella prova lo dice.
+  planBalances: "i conti li fa il prototipo in locale; il server concorda (verificato 26/8)",
   mediaUrl: "usata solo indirettamente, dentro loadState"
 };
 
