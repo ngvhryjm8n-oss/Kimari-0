@@ -994,6 +994,191 @@ const DIZIONARIO = {
   },
 
 
+
+  /* ================================ app: quello che passa dagli argomenti
+     Testo che viaggia come argomento di funzione invece che come markup.
+     Finisce a schermo uguale, ma nessuno strumento poteva vederlo. */
+
+  /* ------------------------------------------------------ ricorrenze */
+  'Ogni settimana': { en: 'Every week', es: 'Cada semana', de: 'Jede Woche', ja: '毎週' },
+  'Ogni 2 settimane': { en: 'Every 2 weeks', es: 'Cada 2 semanas',
+                        de: 'Alle 2 Wochen', ja: '隔週' },
+  'Ogni mese': { en: 'Every month', es: 'Cada mes', de: 'Jeden Monat', ja: '毎月' },
+  // Il giorno va da segnaposto: in tedesco segue il verbo, in giapponese la
+  // frase si ribalta del tutto.
+  'Ogni {giorno}': { en: 'Every {giorno}', es: 'Cada {giorno}',
+                     de: 'Jeden {giorno}', ja: '毎週{giorno}' },
+  'Ogni 2 settimane, {giorno}': { en: 'Every 2 weeks, {giorno}',
+    es: 'Cada 2 semanas, {giorno}', de: 'Alle 2 Wochen, {giorno}',
+    ja: '隔週{giorno}' },
+  'Più giorni': { en: 'Several days', es: 'Varios días', de: 'Mehrere Tage', ja: '複数日' },
+
+  /* --------------------------------------------------- notifiche push */
+  'Devo votare: nuovi piani e opzioni': { en: 'I need to vote: new plans and options',
+    es: 'Tengo que votar: planes y opciones nuevos',
+    de: 'Ich muss abstimmen: neue Pläne und Optionen',
+    ja: '投票が必要：新しい予定と候補' },
+  'Piano confermato': { en: 'Plan confirmed', es: 'Plan confirmado',
+                        de: 'Plan bestätigt', ja: '予定が確定' },
+  'Modifiche al piano': { en: 'Changes to the plan', es: 'Cambios en el plan',
+                          de: 'Änderungen am Plan', ja: '予定の変更' },
+  'Proposte di cambio': { en: 'Suggested changes', es: 'Propuestas de cambio',
+                          de: 'Änderungsvorschläge', ja: '変更の提案' },
+  'Ritardi e assenze': { en: 'Delays and no-shows', es: 'Retrasos y ausencias',
+                         de: 'Verspätungen und Absagen', ja: '遅刻と欠席' },
+  'Promemoria il giorno prima': { en: 'Reminder the day before',
+    es: 'Recordatorio el día antes', de: 'Erinnerung am Tag davor', ja: '前日のリマインド' },
+  'Risposte e attività minori': { en: 'Replies and smaller activity',
+    es: 'Respuestas y actividad menor', de: 'Antworten und Kleinigkeiten',
+    ja: '返信やこまかな動き' },
+
+  /* ------------------------------------------------- il feed: chi fa cosa */
+  'ci sarà': { en: 'is coming', es: 'va', de: 'kommt', ja: '参加します' },
+  'forse ci sarà': { en: 'might come', es: 'quizá vaya', de: 'kommt vielleicht',
+                     ja: 'たぶん参加します' },
+  'non viene': { en: 'isn’t coming', es: 'no va', de: 'kommt nicht', ja: '行けません' },
+  'ha creato un piano': { en: 'created a plan', es: 'ha creado un plan',
+                          de: 'hat einen Plan erstellt', ja: '予定をつくりました' },
+  'ha aperto una decisione': { en: 'opened a decision', es: 'ha abierto una decisión',
+                               de: 'hat eine Entscheidung eröffnet', ja: '決めごとを出しました' },
+  'ha annullato il piano': { en: 'called off the plan', es: 'ha cancelado el plan',
+                             de: 'hat den Plan abgesagt', ja: '予定を中止しました' },
+  'ha annullato la decisione': { en: 'called off the decision',
+    es: 'ha cancelado la decisión', de: 'hat die Entscheidung abgesagt',
+    ja: '決めごとを取り下げました' },
+  'ha prenotato': { en: 'has booked', es: 'ha reservado', de: 'hat reserviert', ja: '予約しました' },
+  'è a meno di {ore} ore dall’inizio': {
+    en: 'is less than {ore} hours from the start',
+    es: 'faltan menos de {ore} horas para empezar',
+    de: 'es sind weniger als {ore} Stunden bis zum Beginn',
+    ja: '開始まで {ore} 時間を切っています'
+  },
+  ' (non sa quanto)': { en: ' (doesn’t know how much)', es: ' (no sabe cuánto)',
+                        de: ' (weiß nicht, wie lange)', ja: '（どのくらいかは未定）' },
+  'Sì: {chi}': { en: 'Yes: {chi}', es: 'Sí: {chi}', de: 'Ja: {chi}', ja: 'はい：{chi}' },
+  'Nessuno ancora': { en: 'Nobody yet', es: 'Nadie todavía', de: 'Noch niemand', ja: 'まだ誰もいません' },
+  'Non vengono': { en: 'Not coming', es: 'No van', de: 'Kommen nicht', ja: '行けない人' },
+  'Non hanno risposto': { en: 'Haven’t replied', es: 'No han respondido',
+                          de: 'Haben nicht geantwortet', ja: '未回答' },
+
+  /* ------------------------------------------------- creare e modificare */
+  'Crea il piano': { en: 'Create the plan', es: 'Crear el plan',
+                     de: 'Plan erstellen', ja: '予定をつくる' },
+  'Crea gruppo': { en: 'Create group', es: 'Crear grupo',
+                   de: 'Gruppe erstellen', ja: 'グループをつくる' },
+  'Modifica gruppo': { en: 'Edit group', es: 'Editar grupo',
+                       de: 'Gruppe bearbeiten', ja: 'グループを編集' },
+  'Icona, colore, nome e la sezione in cui lo tieni tu.': {
+    en: 'Icon, colour, name, and the section where you keep it.',
+    es: 'Icono, color, nombre y la sección en la que lo guardas.',
+    de: 'Symbol, Farbe, Name und der Bereich, in dem du sie ablegst.',
+    ja: 'アイコン、色、名前、そしてあなたが置いておくセクション。'
+  },
+  'Una cerchia che userai più volte. Privata: si entra solo su invito.': {
+    en: 'A circle you’ll use more than once. Private: you get in by invitation only.',
+    es: 'Un círculo que usarás más de una vez. Privado: solo se entra por invitación.',
+    de: 'Ein Kreis, den du öfter nutzen wirst. Privat: Zutritt nur auf Einladung.',
+    ja: '何度も使うことになる集まりです。非公開で、招待からのみ参加できます。'
+  },
+  'Gruppo aggiornato': { en: 'Group updated', es: 'Grupo actualizado',
+                         de: 'Gruppe aktualisiert', ja: 'グループを更新しました' },
+  'Gruppo creato · privato, solo su invito': {
+    en: 'Group created · private, invitation only',
+    es: 'Grupo creado · privado, solo por invitación',
+    de: 'Gruppe erstellt · privat, nur auf Einladung',
+    ja: 'グループをつくりました · 非公開、招待制'
+  },
+  'Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c’era prima.': {
+    en: 'Every change makes a new version: everyone sees what changed and what was there before.',
+    es: 'Cada cambio crea una versión nueva: todos ven qué ha cambiado y qué había antes.',
+    de: 'Jede Änderung erzeugt eine neue Fassung: Alle sehen, was sich geändert hat und was vorher da war.',
+    ja: '変更するたびに新しい版ができます。何がどう変わったか、みんなが見られます。'
+  },
+  'Vale solo per questa data.': { en: 'It only applies to this date.',
+    es: 'Vale solo para esta fecha.', de: 'Gilt nur für dieses Datum.',
+    ja: 'この日付にだけ適用されます。' },
+  'Data da decidere': { en: 'Date to be decided', es: 'Fecha por decidir',
+                        de: 'Datum noch offen', ja: '日付は未定' },
+  'Luogo da decidere': { en: 'Place to be decided', es: 'Sitio por decidir',
+                         de: 'Ort noch offen', ja: '場所は未定' },
+  'Decidiamo dopo': { en: 'We’ll decide later', es: 'Lo decidimos después',
+                      de: 'Entscheiden wir später', ja: 'あとで決める' },
+  'Il piano è pronto': { en: 'The plan is ready', es: 'El plan está listo',
+                         de: 'Der Plan steht', ja: '予定ができました' },
+  'Piano creato': { en: 'Plan created', es: 'Plan creado',
+                    de: 'Plan erstellt', ja: '予定をつくりました' },
+  'Nessun piano in programma': { en: 'No plans on', es: 'Ningún plan previsto',
+                                 de: 'Keine Pläne', ja: '予定はありません' },
+  'Vota quando puoi': { en: 'Vote when you can', es: 'Vota cuando puedas',
+                        de: 'Stimm ab, wenn du kannst', ja: '都合のいいときに投票を' },
+  'Vota qui · non serve installare niente': {
+    en: 'Vote here · nothing to install', es: 'Vota aquí · no hace falta instalar nada',
+    de: 'Hier abstimmen · nichts zu installieren', ja: 'ここで投票 · インストール不要' },
+  'Il tuo voto è registrato: tocca l’altro per cambiarlo.': {
+    en: 'Your vote is in — tap the other one to change it.',
+    es: 'Tu voto está registrado: toca el otro para cambiarlo.',
+    de: 'Deine Stimme ist da — tipp die andere an, um sie zu ändern.',
+    ja: '投票を受け付けました。もう一方を押せば変更できます。'
+  },
+  'Tocca per votare: vale subito.': { en: 'Tap to vote — it counts straight away.',
+    es: 'Toca para votar: cuenta al momento.', de: 'Tippen zum Abstimmen — zählt sofort.',
+    ja: '押すと投票できます。すぐ反映されます。' },
+  'Tocca Sì o No.': { en: 'Tap Yes or No.', es: 'Toca Sí o No.',
+                      de: 'Tipp auf Ja oder Nein.', ja: 'はい か いいえ を押してください。' },
+  'Con link': { en: 'By link', es: 'Con enlace', de: 'Per Link', ja: 'リンクで' },
+  'Tutti': { en: 'Everyone', es: 'Todos', de: 'Alle', ja: '全員' },
+  'Conferma': { en: 'Confirm', es: 'Confirmar', de: 'Bestätigen', ja: '確定' },
+  'Chiudi la decisione': { en: 'Close the decision', es: 'Cerrar la decisión',
+                           de: 'Entscheidung schließen', ja: '決めごとを締める' },
+  'Annulla la decisione': { en: 'Call off the decision', es: 'Cancelar la decisión',
+                            de: 'Entscheidung absagen', ja: '決めごとを取り下げる' },
+  'Tutti hanno risposto · Chiudi': { en: 'Everyone has replied · Close',
+    es: 'Todos han respondido · Cerrar', de: 'Alle haben geantwortet · Schließen',
+    ja: '全員が回答 · 締める' },
+  'Tutti hanno votato · Conferma': { en: 'Everyone has voted · Confirm',
+    es: 'Todos han votado · Confirmar', de: 'Alle haben abgestimmt · Bestätigen',
+    ja: '全員が投票 · 確定' },
+  'Elimina qualcosa per fare spazio.': { en: 'Delete something to make room.',
+    es: 'Elimina algo para hacer sitio.', de: 'Lösch etwas, um Platz zu schaffen.',
+    ja: '空きを作るには何か削除してください。' },
+  'Conferma di avere almeno 16 anni': { en: 'Confirm that you’re at least 16',
+    es: 'Confirma que tienes al menos 16 años', de: 'Bestätige, dass du mindestens 16 bist',
+    ja: '16 歳以上であることを確認してください' },
+  'Solo il nome': { en: 'Just the name', es: 'Solo el nombre',
+                    de: 'Nur der Name', ja: '名前だけ' },
+  'Simula i voti del gruppo': { en: 'Simulate the group’s votes',
+    es: 'Simular los votos del grupo', de: 'Die Stimmen der Gruppe simulieren',
+    ja: 'みんなの投票をシミュレート' },
+  'Simula 3 amici che votano': { en: 'Simulate 3 friends voting',
+    es: 'Simular 3 amigos votando', de: '3 Freunde abstimmen lassen',
+    ja: '友だち 3 人の投票をシミュレート' },
+
+  /* ------------------------------------------------- chi può votare */
+  'Chiunque abbia il link': { en: 'Anyone with the link', es: 'Cualquiera con el enlace',
+                              de: 'Alle mit dem Link', ja: 'リンクを持つ人なら誰でも' },
+  'Solo chi è nell’elenco': { en: 'Only those on the list', es: 'Solo quien esté en la lista',
+                              de: 'Nur wer auf der Liste steht', ja: 'リストにある人だけ' },
+  'Solo con un account': { en: 'Only with an account', es: 'Solo con una cuenta',
+                           de: 'Nur mit Konto', ja: 'アカウントがある人だけ' },
+  'Scrive il suo nome ed entra. Vedi sempre chi ha votato': {
+    en: 'They type their name and come in. You always see who voted',
+    es: 'Escribe su nombre y entra. Siempre ves quién ha votado',
+    de: 'Sie schreiben ihren Namen und kommen rein. Du siehst immer, wer abgestimmt hat',
+    ja: '名前を書いて参加します。だれが投票したかは常に分かります'
+  },
+  'Scrivi tu i nomi: chi apre il link sceglie il suo, e quel nome è preso': {
+    en: 'You write the names: whoever opens the link picks theirs, and that name is taken',
+    es: 'Escribes tú los nombres: quien abra el enlace elige el suyo, y ese nombre queda ocupado',
+    de: 'Du schreibst die Namen: Wer den Link öffnet, wählt seinen, und der Name ist dann vergeben',
+    ja: '名前はあなたが書きます。リンクを開いた人が自分の名前を選び、その名前は埋まります'
+  },
+  'Serve entrare con Google o Apple. Il più chiuso, ma qualcuno non voterà': {
+    en: 'They must sign in with Google or Apple. The tightest, but some people won’t vote',
+    es: 'Hay que entrar con Google o Apple. El más cerrado, pero alguien no votará',
+    de: 'Man muss sich mit Google oder Apple anmelden. Am dichtesten, aber manche stimmen dann nicht ab',
+    ja: 'Google か Apple でのログインが必要です。いちばん厳しく、その分だけ投票しない人も出ます'
+  },
+
   /* ===================================== i messaggi che l'app risponde
      Sono i toast di live.js: "Voto registrato", "Scrivi il tuo nome". Non
      passavano da nessuna traduzione perché live.js non conosceva il
@@ -1828,12 +2013,12 @@ const INIZIALI_GIORNI = (() => {
   return Array.from({ length: 7 }, (_, i) => f.format(new Date(2026, 0, 5 + i)));
 })();
 function fmtWhen(w){
-  if(!w || !w.start) return 'Data da decidere';
+  if(!w || !w.start) return t('Data da decidere');
   const s = new Date(w.start), e = w.end ? new Date(w.end) : null;
   if(w.allDay){ if(e && e.toDateString() !== s.toDateString()) return `${cap(fDay.format(s))} – ${cap(fDay.format(e))}`; return cap(fDay.format(s)); }
   let out = `${cap(fDay.format(s))} · ${fTime.format(s)}`; if(e) out += `–${fTime.format(e)}`; return out;
 }
-const fmtWhere = p => (p && p.name) ? p.name : 'Luogo da decidere';
+const fmtWhere = p => (p && p.name) ? p.name : t('Luogo da decidere');
 const fmtDeadline = iso => cap(fFull.format(new Date(iso)));
 const fmtEur = c => (c / 100).toLocaleString(LINGUA, { style:'currency', currency:'EUR' });
 const parseEur = s => { const n = parseFloat(String(s).replace(/[^\d,.-]/g, '').replace(',', '.')); return isNaN(n) ? null : Math.round(n * 100); };
@@ -1883,8 +2068,8 @@ const GROUP_COLORS = ['#FF9500','#34C759','#5856D6','#FF2D55','#007AFF','#AF52DE
 const TITLE_PRESETS = [{ e:'🍕', t:'Cena sabato' }, { e:'🏖', t:'Weekend al mare' }, { e:'⚽', t:'Calcetto' }, { e:'🎂', t:'Compleanno di Anna' }, { e:'✈️', t:'Giappone 2027' }];
 const WHERE_PRESETS = [{ name:'Pizzeria da Gino', address:'Via Roma 12' }, { name:'Sushi Zen', address:'Corso Italia 4' }, { name:'Trattoria La Vela', address:'Lungomare 1' }, { name:'Da me', address:'' }];
 const FRIENDS = ['Sara', 'Luca', 'Giò'];
-const FREQ = { weekly:{ label:'Ogni settimana', days:7 }, biweekly:{ label:'Ogni 2 settimane', days:14 }, monthly:{ label:'Ogni mese', days:0 } };
-const PUSH = [['vote','Devo votare: nuovi piani e opzioni'],['confirm','Piano confermato'],['change','Modifiche al piano'],['proposal','Proposte di cambio'],['late','Ritardi e assenze'],['comment','Commenti'],['media','Allegati e foto'],['expense','Spese'],['reminder','Promemoria il giorno prima'],['group','Risposte e attività minori']];
+const FREQ = { weekly:{ label:t('Ogni settimana'), days:7 }, biweekly:{ label:t('Ogni 2 settimane'), days:14 }, monthly:{ label:t('Ogni mese'), days:0 } };
+const PUSH = [['vote',t('Devo votare: nuovi piani e opzioni')],['confirm',t('Piano confermato')],['change',t('Modifiche al piano')],['proposal',t('Proposte di cambio')],['late',t('Ritardi e assenze')],['comment',t('Commenti')],['media',t('Allegati e foto')],['expense',t('Spese')],['reminder',t('Promemoria il giorno prima')],['group',t('Risposte e attività minori')]];
 const LOCK_HOURS = 2;
 const LIMITS = { free:{ photos:20, attach:25e6, file:10e6, places:10, placePhotos:5 }, unlimited:{ photos:100, attach:100e6, file:25e6, places:1/0, placePhotos:20 } };
 const planLim = p => (state.people[p.organizer] && state.people[p.organizer].unlimited) ? LIMITS.unlimited : LIMITS.free;
@@ -1925,7 +2110,7 @@ function seed(){
     const p = { id:o.id, token:o.id + uid() + uid(), kind:o.kind || 'plan', title:o.title, emoji:o.emoji, organizer:org, groupId:o.groupId, status:o.status, version:o.status === 'confirmed' ? 1 : 0,
       deadline:o.deadline || null, createdAt:o.createdAt, when:o.when, where:o.where, extras:o.extras || [],
       participants: state.groups[o.groupId].members.map(id => ({ id, role: id === org ? 'organizer' : 'member', rsvp:(o.rsvp && o.rsvp[id]) || null, rsvpAt:(o.rsvp && o.rsvp[id]) ? o.createdAt + 2*H : null, late:null, joinedAt:o.createdAt })),
-      ballots:o.ballots || {}, changes:[{ version:0, kind:'created', by:org, at:o.createdAt, text:'Piano creato' }],
+      ballots:o.ballots || {}, changes:[{ version:0, kind:'created', by:org, at:o.createdAt, text:t('Piano creato') }],
       allowProposals:true, booked:!!o.booked, comments:[], photos:[], files:[], proposals:[], expenses:[], settlements:[],
       seriesId:o.seriesId || null, occurrence:o.occurrence || null, of:o.of || null, recurrence:o.recurrence || null };
     if(p.status === 'confirmed') p.changes.push({ version:1, kind:'confirmed', by:org, at:o.createdAt + H, text:confirmText(p) });
@@ -2027,10 +2212,10 @@ const isSoon = p => { const s = planStart(p); return !!s && !isPast(p) && s - Da
 const isLocked = p => { const s = planStart(p); return !!s && !isPast(p) && s - Date.now() < LOCK_HOURS*3600e3; };
 const canModerate = p => p.organizer === state.me || isAdmin(groupOf(p));
 function nextPlanOf(g){ const ps = plansOfGroup(g).filter(p => p.status === 'deciding' || (p.status === 'confirmed' && !isPast(p))); return ps.sort((a,b) => (a.status === 'deciding' || !planStart(a) ? 0 : planStart(a)) - (b.status === 'deciding' || !planStart(b) ? 0 : planStart(b)))[0] || null; }
-const recurLabel = p => !p.recurrence ? '' : p.recurrence.freq === 'monthly' ? 'Ogni mese' : `${p.recurrence.freq === 'biweekly' ? 'Ogni 2 settimane, ' : 'Ogni '}${cap(fWeekday.format(planStart(p)))}`;
+const recurLabel = p => !p.recurrence ? '' : p.recurrence.freq === 'monthly' ? t('Ogni mese') : (p.recurrence.freq === 'biweekly' ? t('Ogni 2 settimane, {giorno}', { giorno: cap(fWeekday.format(planStart(p))) }) : t('Ogni {giorno}', { giorno: cap(fWeekday.format(planStart(p))) }));
 const msgs = {
   open: p => p.kind === 'decision' ? `❓ ${p.title} — ai voti. Vota qui, non serve installare niente 👉 ${linkOf(p)}` : `${p.emoji} ${p.title} — ${decidingFields(p).map(f => fieldLabel(p, f).toLowerCase()).join(' e ') || 'dettagli'}: ai voti. Vota qui, non serve installare niente 👉 ${linkOf(p)}`,
-  nudge: (p, names) => `Mancano ${names.join(', ')}. ${p.deadline ? 'Si chiude ' + fmtDeadline(p.deadline) : 'Vota quando puoi'} 👉 ${linkOf(p)}`,
+  nudge: (p, names) => `Mancano ${names.join(', ')}. ${p.deadline ? 'Si chiude ' + fmtDeadline(p.deadline) : t('Vota quando puoi')} 👉 ${linkOf(p)}`,
   confirm: p => `✅ Kimari! ${p.title}: ${resultText(p)} 👉 ${linkOf(p)}`,
   change: (p, ch) => `⚠️ Cambiato: ${ch.map(c => `${c.label} ora ${c.newText} (era ${c.oldText})`).join(' · ')} 👉 ${linkOf(p)}`,
   invite: p => `${p.emoji} ${p.title}: ${resultText(p)}. Dimmi se ci sei 👉 ${linkOf(p)}`,
@@ -2165,14 +2350,14 @@ function mergePersona(webId, appId){
 /* novità e push (simulate) */
 // Annullare era l'unica notizia che il feed non sapeva dare, ed è quella
 // più urgente: se la cena salta, saperlo domani non serve a niente.
-const decisioneOPiano = p => p.kind === 'decision' ? 'ha annullato la decisione' : 'ha annullato il piano';
+const decisioneOPiano = p => p.kind === 'decision' ? t('ha annullato la decisione') : t('ha annullato il piano');
 function feedItems(){
   const items = [];
   visiblePlans().forEach(p => {
     const g = groupOf(p);
-    p.changes.forEach(c => { if(c.kind === 'created') items.push({ at:c.at, by:c.by, text: p.kind === 'decision' ? 'ha aperto una decisione' : 'ha creato un piano', p, g, cat: p.status === 'deciding' ? 'vote' : 'confirm' }); if(c.kind === 'confirmed') items.push({ at:c.at, by:c.by, text:`ha ${p.kind === 'decision' ? 'chiuso la decisione' : 'confermato'}: ${c.text.replace(/^(Confermato|Deciso): /,'')}`, p, g, cat:'confirm' }); if(c.kind === 'changed') items.push({ at:c.at, by:c.by, text:`ha modificato il piano · ${c.text}`, p, g, cat:'change' }); if(c.kind === 'cancelled') items.push({ at:c.at, by:c.by, text: decisioneOPiano(p) + ' · ' + c.text, p, g, cat:'change' }); });
+    p.changes.forEach(c => { if(c.kind === 'created') items.push({ at:c.at, by:c.by, text: p.kind === 'decision' ? t('ha aperto una decisione') : t('ha creato un piano'), p, g, cat: p.status === 'deciding' ? 'vote' : 'confirm' }); if(c.kind === 'confirmed') items.push({ at:c.at, by:c.by, text:`ha ${p.kind === 'decision' ? 'chiuso la decisione' : 'confermato'}: ${c.text.replace(/^(Confermato|Deciso): /,'')}`, p, g, cat:'confirm' }); if(c.kind === 'changed') items.push({ at:c.at, by:c.by, text:`ha modificato il piano · ${c.text}`, p, g, cat:'change' }); if(c.kind === 'cancelled') items.push({ at:c.at, by:c.by, text: decisioneOPiano(p) + ' · ' + c.text, p, g, cat:'change' }); });
     Object.entries(p.ballots).forEach(([id, b]) => items.push({ at:b.at || p.createdAt, by:id, text:'ha votato', p, g, cat:'group' }));
-    p.participants.forEach(x => { if(x.rsvp && x.rsvpAt) items.push({ at:x.rsvpAt, by:x.id, text: x.rsvp === 'yes' ? 'ci sarà' : x.rsvp === 'maybe' ? 'forse ci sarà' : 'non viene', p, g, cat:'group' }); });
+    p.participants.forEach(x => { if(x.rsvp && x.rsvpAt) items.push({ at:x.rsvpAt, by:x.id, text: x.rsvp === 'yes' ? t('ci sarà') : x.rsvp === 'maybe' ? t('forse ci sarà') : t('non viene'), p, g, cat:'group' }); });
     p.comments.forEach(c => { if(c.system){ const cat = { late:'late', absent:'late', proposal:'proposal', proposal_ok:'proposal', proposal_no:'proposal', candidate:'vote', photo:'media', expense:'expense' }[c.kind]; if(cat) items.push({ at:c.at, by:c.by, text:c.text, p, g, cat, raw:true }); } else items.push({ at:c.at, by:c.by, text:`ha commentato: “${c.text.slice(0, 60)}${c.text.length > 60 ? '…' : ''}”`, p, g, cat:'comment' }); });
   });
   return items.filter(i => state.people[i.by]).sort((a,b) => b.at - a.at).slice(0, 60);
@@ -2192,7 +2377,7 @@ function calItems(){
     const g = groupOf(p); const col = g ? g.color : '#007AFF';
     if(p.status === 'confirmed' && p.when.value && p.when.value.start){
       const s = dayStart(new Date(p.when.value.start)); const e = p.when.value.end ? dayStart(new Date(p.when.value.end)) : s;
-      if(dayDiff(s, e) > 0) bars.push({ p, from:s, to:e, color:col, time: p.when.value.allDay ? 'Più giorni' : fTime.format(new Date(p.when.value.start)) });
+      if(dayDiff(s, e) > 0) bars.push({ p, from:s, to:e, color:col, time: p.when.value.allDay ? t('Più giorni') : fTime.format(new Date(p.when.value.start)) });
       else push(dkey(s), { p, kind:'dot', color:col, time: p.when.value.allDay ? 'Tutto il giorno' : fTime.format(new Date(p.when.value.start)) });
     } else if(p.status === 'deciding'){ p.when.candidates.forEach(c => push(dkey(new Date(c.start)), { p, kind:'ring', color:'#FF9500', time: c.allDay ? 'Opzione' : fTime.format(new Date(c.start)) })); }
   });
@@ -2217,7 +2402,7 @@ function vAgenda(){
   const list = [...(items.byDay[k] || []), ...items.bars.filter(b => dkey(b.from) <= k && dkey(b.to) >= k).map(b => ({ p:b.p, kind:'bar', color:b.color, time:b.time }))];
   const label = k === dkey(new Date()) ? 'Oggi' : cap(fDay.format(sel));
   return `<div class="agenda"><div class="group-title" style="margin:14px 16px 6px">${label}</div>
-    ${list.length ? `<div class="group" style="margin:0">${list.map(it => `<button class="row link" data-action="go" data-to="p/${it.p.id}"><span class="time">${esc(it.time)}</span><span class="cdot ${it.kind === 'ring' ? 'ring' : ''}" style="${it.kind === 'ring' ? '' : 'background:' + it.color}"></span><div class="grow"><div class="t">${it.p.emoji} ${esc(it.p.title)}${it.kind === 'ring' ? '<span class="tag amber">ai voti</span>' : ''}${it.p.seriesId ? ` <span class="s">· ${it.p.occurrence} di ${it.p.of}</span>` : ''}</div><div class="s">${groupOf(it.p) ? esc(groupOf(it.p).name) : 'Con link'}${it.p.status === 'confirmed' && it.p.where.value ? ' · ' + esc(fmtWhere(it.p.where.value)) : ''}</div></div><span class="chev"></span></button>`).join('')}</div>` : `<div class="group" style="margin:0"><div class="row">${mi('shrug', 40)}<div class="grow s">${t('Niente in programma')}</div></div></div>`}</div>`;
+    ${list.length ? `<div class="group" style="margin:0">${list.map(it => `<button class="row link" data-action="go" data-to="p/${it.p.id}"><span class="time">${esc(it.time)}</span><span class="cdot ${it.kind === 'ring' ? 'ring' : ''}" style="${it.kind === 'ring' ? '' : 'background:' + it.color}"></span><div class="grow"><div class="t">${it.p.emoji} ${esc(it.p.title)}${it.kind === 'ring' ? '<span class="tag amber">ai voti</span>' : ''}${it.p.seriesId ? ` <span class="s">· ${it.p.occurrence} di ${it.p.of}</span>` : ''}</div><div class="s">${groupOf(it.p) ? esc(groupOf(it.p).name) : t('Con link')}${it.p.status === 'confirmed' && it.p.where.value ? ' · ' + esc(fmtWhere(it.p.where.value)) : ''}</div></div><span class="chev"></span></button>`).join('')}</div>` : `<div class="group" style="margin:0"><div class="row">${mi('shrug', 40)}<div class="grow s">${t('Niente in programma')}</div></div></div>`}</div>`;
 }
 
 /* =============================== viste =============================== */
@@ -2228,7 +2413,7 @@ function tabbar(active){
 }
 function groupRow(g){
   const next = nextPlanOf(g);
-  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? 'ai voti' : fmtWhen(next.when.value)}` : 'Nessun piano in programma'}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id))).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
+  return `<button class="row link" data-action="go" data-to="g/${g.id}"><span class="gicon" style="background:${g.color}26">${g.emoji}</span><div class="grow"><div class="t">${esc(g.name)}${me().muted.includes(g.id) ? ' <span class="s">🔕</span>' : ''}</div><div class="s">${next ? `${next.emoji} ${esc(next.title)} · ${next.status === 'deciding' ? 'ai voti' : fmtWhen(next.when.value)}` : t('Nessun piano in programma')}</div></div><div class="avatars">${g.members.slice(0, 3).map(id => avatar(nameOf(id))).join('')}</div><span class="count">${g.members.length}</span><span class="chev"></span></button>`;
 }
 function vHome(){
   if(isWeb()) return vWebHome();
@@ -2248,7 +2433,7 @@ function vHome(){
     ${vCalendar()}${vAgenda()}
     <div class="list-head"><h2>${t('Gruppi')}</h2><span class="s">${mine.length} ${mine.length === 1 ? 'gruppo' : 'gruppi'}</span></div>
     ${secs.map(s => `<div class="group-title">${esc(s.name)}</div><div class="group">${mine.filter(g => u.groupSections[g.id] === s.id).map(groupRow).join('')}</div>`).join('')}
-    ${loose.length ? `<div class="group-title">${secs.length ? 'Altri' : 'Tutti'}</div><div class="group">${loose.map(groupRow).join('')}</div>` : ''}
+    ${loose.length ? `<div class="group-title">${secs.length ? 'Altri' : t('Tutti')}</div><div class="group">${loose.map(groupRow).join('')}</div>` : ''}
     ${mine.length ? '' : `<div class="intro">${t('Nessun gruppo ancora. Creane uno per la famiglia, gli amici o il prossimo viaggio.')}</div>`}
     <p class="foot">${t('Le sezioni (Roma, Bari…) sono tue e solo tue: servono a ordinare le cerchie, non le vedono gli altri. Ogni gruppo è privato: si entra solo su invito.')}</p>
   </div>`;
@@ -2318,7 +2503,7 @@ function vNew(){
       ${d.whereCands.length < 5 ? `<div class="chips">${myPlaces().map(x => `<button class="chip" data-action="quickWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">★ ${esc(x.name)}</button>`).join('')}${WHERE_PRESETS.filter(x => !savedPlace(x.name)).map(x => `<button class="chip" data-action="quickWhere" data-name="${esc(x.name)}" data-address="${esc(x.address)}">${esc(x.name)}</button>`).join('')}</div>` : ''}` :
     `<div class="intro">${t('Il luogo lo decidete dopo. Il piano si può confermare anche senza: sulla pagina comparirà "Luogo da decidere".')}</div>`}`;
   } else {
-    const whenSum = d.whenMode === 'fixed' ? fmtWhen(d.whenFixed) + (d.recur.on ? ` · ${FREQ[d.recur.freq].label.toLowerCase()}, ${d.recur.count} volte` : '') : `${d.whenCands.length} opzioni ai voti`; const whereSum = d.whereMode === 'fixed' ? (d.whereFixed.name || '—') : d.whereMode === 'deciding' ? `${d.whereCands.length} opzioni ai voti` : 'Decidiamo dopo';
+    const whenSum = d.whenMode === 'fixed' ? fmtWhen(d.whenFixed) + (d.recur.on ? ` · ${FREQ[d.recur.freq].label.toLowerCase()}, ${d.recur.count} volte` : '') : `${d.whenCands.length} opzioni ai voti`; const whereSum = d.whereMode === 'fixed' ? (d.whereFixed.name || '—') : d.whereMode === 'deciding' ? `${d.whereCands.length} opzioni ai voti` : t('Decidiamo dopo');
     const dl = new Date(); dl.setDate(dl.getDate() + 2); dl.setHours(18,0,0,0); const g = d.groupId ? state.groups[d.groupId] : null; const anyDeciding = d.whenMode === 'deciding' || d.whereMode === 'deciding' || d.extras.length;
     body = `<h2 class="large">${t('Tutto pronto')}</h2>
     <div class="group"><div class="row"><span class="emoji">${d.emoji}</span><div class="grow t">${esc(d.title)}</div><div class="s">${g ? g.emoji + ' ' + esc(g.name) : 'con link'}</div></div><div class="row"><div class="grow"><div class="s">${t('Quando')}</div><div class="t">${whenSum}</div></div></div><div class="row"><div class="grow"><div class="s">Dove</div><div class="t">${esc(whereSum)}</div></div></div></div>
@@ -2332,15 +2517,15 @@ function vNew(){
   }
   return `${nav('Nuovo piano', d.step === 1 ? 'cancel' : '', `<span>${d.step} di 4</span>`, d.step === 1 ? 'Annulla' : 'Indietro')}
   <div class="view">${body}</div>
-  <div class="cta">${d.step > 1 ? `<button class="btn tint" style="flex:0 0 120px" data-action="prev">${t('Indietro')}</button>` : ''}<button class="btn primary" data-action="next">${d.step === 4 ? 'Crea il piano' : 'Continua'}</button></div>`;
+  <div class="cta">${d.step > 1 ? `<button class="btn tint" style="flex:0 0 120px" data-action="prev">${t('Indietro')}</button>` : ''}<button class="btn primary" data-action="next">${d.step === 4 ? t('Crea il piano') : 'Continua'}</button></div>`;
 }
 function waBlock(text, p, sub){ return `<div class="wa-bg"><div class="wa-bubble">${esc(text)}<div class="wa-preview"><div class="pt">${p.emoji} ${esc(p.title)}</div><div class="ps">${esc(sub)}</div><div class="ph">${SITO.replace(/^https?:\/\//,"").replace(/\/$/,"")}</div></div><div class="wa-time">${fTime.format(new Date())} ✓✓</div></div></div>`; }
 function vShare(p){
   const confirmed = p.status === 'confirmed'; const text = confirmed ? msgs.invite(p) : msgs.open(p); const g = groupOf(p);
   return `${nav('Condividi', 'p/' + p.id)}
   <div class="view">
-    <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : 'Il piano è pronto'}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? 'gli altri rispondono dal link.' : 'chi non ha l\'app vota dal link, senza installare niente.'}</p></div>
-    ${waBlock(text, p, confirmed ? 'Dimmi se ci sei' : 'Vota qui · non serve installare niente')}
+    <div class="center pad" style="padding-top:28px"><div class="hero"><div class="bigcheck">${ICON.check}</div></div><h2 style="margin:0;font-size:24px">${p.seriesId ? `${p.of} date create` : t('Il piano è pronto')}</h2><p class="sec" style="margin:6px 8px 0;font-size:15px">${g ? `I membri di ${esc(g.name)} lo vedono già in app. ` : ''}Incolla il messaggio nel gruppo WhatsApp: ${confirmed ? 'gli altri rispondono dal link.' : 'chi non ha l\'app vota dal link, senza installare niente.'}</p></div>
+    ${waBlock(text, p, confirmed ? 'Dimmi se ci sei' : t('Vota qui · non serve installare niente'))}
     <div class="pad stack" style="margin-top:16px"><button class="btn wa" data-action="share" data-text="${esc(text)}">${t('Condividi')}</button><button class="btn tint" data-action="copy" data-text="${esc(text)}">${t('Copia messaggio')}</button><button class="btn plain" data-action="copy" data-text="${esc(linkOf(p))}">${t('Copia solo il link')}</button></div>
     <div class="pad" style="margin-top:6px"><button class="btn plain" data-action="go" data-to="p/${p.id}">${t('Vai al piano')}</button></div>
     <div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="asGuest" data-plan="${p.id}">${t('Apri il link come nuovo ospite (web)')}</button></div>
@@ -2354,7 +2539,7 @@ function ensureBallotDraft(p){
 function vBallot(p, interactive){
   const bd = interactive ? ensureBallotDraft(p) : null;
   return decidingFields(p).map(f => { const fo = fieldObj(p, f);
-    if(fo.binary){ const selId = bd ? [...bd[f].approved][0] : null; const [y, n] = fo.candidates; return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="pad"><div class="yn"><button class="yn-btn yes ${selId === y.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${y.id}">${t('👍 Sì')}</button><button class="yn-btn no ${selId === n.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${n.id}">${t('👎 No')}</button></div></div>${interactive && p.kind === 'decision' ? `<div class="group-foot center">${selId ? 'Il tuo voto è registrato: tocca l\'altro per cambiarlo.' : 'Tocca per votare: vale subito.'}</div>` : ''}`; }
+    if(fo.binary){ const selId = bd ? [...bd[f].approved][0] : null; const [y, n] = fo.candidates; return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="pad"><div class="yn"><button class="yn-btn yes ${selId === y.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${y.id}">${t('👍 Sì')}</button><button class="yn-btn no ${selId === n.id ? 'on' : ''}" data-action="${interactive ? 'ynVote' : 'guestTap'}" data-field="${f}" data-id="${n.id}">${t('👎 No')}</button></div></div>${interactive && p.kind === 'decision' ? `<div class="group-foot center">${selId ? t('Il tuo voto è registrato: tocca l\'altro per cambiarlo.') : t('Tocca per votare: vale subito.')}</div>` : ''}`; }
     return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group">
       ${fo.candidates.map(c => { const sub = [f === 'where' && c.address ? esc(c.address) : '', c.proposedBy && c.proposedBy !== p.organizer ? 'proposta da ' + esc(nameOf(c.proposedBy)) : ''].filter(Boolean).join(' · '); return `<button class="row ${bd && bd[f].approved.has(c.id) ? 'on' : ''}" data-action="${interactive ? 'tog' : 'guestTap'}" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}</div>${sub ? `<div class="s">${sub}</div>` : ''}</div></button>`; }).join('')}
       <button class="row ${bd && bd[f].noneOk ? 'on' : ''}" data-action="${interactive ? 'none' : 'guestTap'}" data-field="${f}"><span class="chk"></span><div class="grow t sec">${t('Nessuna mi va bene')}</div></button>
@@ -2363,7 +2548,7 @@ function vBallot(p, interactive){
 function vResults(p){
   const n = p.participants.length;
   return decidingFields(p).map(f => { const r = results(p, f); const fo = fieldObj(p, f);
-    if(fo.binary){ const [y, nn] = r.counts; const tot = y.voters.length + nn.voters.length; const miss = n - tot; return `<div class="group-title">${esc(fieldLabel(p, f))} · risultati</div><div class="group"><div class="row col"><div class="line"><div class="grow t"><b>Sì ${y.voters.length}</b> · No ${nn.voters.length}${miss > 0 ? ` · <span class="s">${miss} senza risposta</span>` : ''}</div></div><div class="bar" style="display:flex;background:var(--fill)">${tot ? `<i style="width:${Math.round(y.voters.length / tot * 100)}%;background:var(--green);border-radius:3px 0 0 3px"></i><i style="width:${Math.round(nn.voters.length / tot * 100)}%;background:var(--red);border-radius:0 3px 3px 0"></i>` : ''}</div><div class="s">${y.voters.length ? 'Sì: ' + y.voters.map(v => esc(nameOf(v))).join(', ') : ''}${y.voters.length && nn.voters.length ? ' · ' : ''}${nn.voters.length ? 'No: ' + nn.voters.map(v => esc(nameOf(v))).join(', ') : ''}${tot ? '' : 'Nessuno ancora'}</div></div></div>`; }
+    if(fo.binary){ const [y, nn] = r.counts; const tot = y.voters.length + nn.voters.length; const miss = n - tot; return `<div class="group-title">${esc(fieldLabel(p, f))} · risultati</div><div class="group"><div class="row col"><div class="line"><div class="grow t"><b>Sì ${y.voters.length}</b> · No ${nn.voters.length}${miss > 0 ? ` · <span class="s">${miss} senza risposta</span>` : ''}</div></div><div class="bar" style="display:flex;background:var(--fill)">${tot ? `<i style="width:${Math.round(y.voters.length / tot * 100)}%;background:var(--green);border-radius:3px 0 0 3px"></i><i style="width:${Math.round(nn.voters.length / tot * 100)}%;background:var(--red);border-radius:0 3px 3px 0"></i>` : ''}</div><div class="s">${y.voters.length ? t('Sì: {chi}', { chi: y.voters.map(v => esc(nameOf(v))).join(', ') }) : ''}${y.voters.length && nn.voters.length ? ' · ' : ''}${nn.voters.length ? 'No: ' + nn.voters.map(v => esc(nameOf(v))).join(', ') : ''}${tot ? '' : t(t('Nessuno ancora'))}</div></div></div>`; }
     return `<div class="group-title">${esc(fieldLabel(p, f))} · risultati</div><div class="group">
       ${r.counts.map(({ c, voters }) => `<div class="row col"><div class="line"><div class="grow t">${esc(candText(f, c))}${r.suggested === c.id ? '<span class="tag">più compatibile</span>' : ''}</div><div class="n">${voters.length}</div></div><div class="bar"><i style="width:${n ? Math.round(voters.length / n * 100) : 0}%"></i></div><div class="s">${voters.length ? voters.map(v => esc(nameOf(v))).join(', ') : 'Nessuno ancora'}</div></div>`).join('')}
       ${r.noneOk.length ? `<div class="row"><div class="grow s">Nessuna opzione va bene a ${r.noneOk.map(v => esc(nameOf(v))).join(', ')}</div></div>` : ''}</div>`; }).join('');
@@ -2389,7 +2574,7 @@ function vMedia(p){
   if(!p.photos.length && !p.files.length && !state.uiOpen['m' + p.id]) return `<div class="group" style="margin-top:16px"><button class="row link" data-action="secOpen" data-k="m${p.id}">${mi('clip', 26, '📎')}<div class="grow t">${t('Allegati e foto')}</div><span class="s">${t('aggiungi')}</span><span class="chev"></span></button></div>`;
   const L = planLim(p); const ab = attachBytes(p); const full = p.photos.length >= L.photos || ab >= L.attach;
   return `<div class="group-title">${t('Allegati')} <span style="text-transform:none">· foto ${p.photos.length}/${L.photos} · ${(ab / 1e6).toFixed(1)}/${Math.round(L.attach / 1e6)} MB</span></div>
-    ${full ? `<div class="intro" style="background:var(--amber-bg);color:var(--amber-fg)">Limite del piano ${L === LIMITS.free ? 'gratuito' : ''} raggiunto. ${L === LIMITS.free ? `Con Kimari Unlimited dell'organizzatore: ${LIMITS.unlimited.photos} foto e ${Math.round(LIMITS.unlimited.attach / 1e6)} MB.` : 'Elimina qualcosa per fare spazio.'}</div>` : ''}
+    ${full ? `<div class="intro" style="background:var(--amber-bg);color:var(--amber-fg)">Limite del piano ${L === LIMITS.free ? 'gratuito' : ''} raggiunto. ${L === LIMITS.free ? `Con Kimari Unlimited dell'organizzatore: ${LIMITS.unlimited.photos} foto e ${Math.round(LIMITS.unlimited.attach / 1e6)} MB.` : t('Elimina qualcosa per fare spazio.')}</div>` : ''}
     <div class="group">
       ${p.files.map(f => `<div class="row">${f.url ? mi('link', 28, '🔗') : mi('clip', 28, '📎')}<div class="grow"><div class="t" style="font-size:15px">${esc(f.name)}</div><div class="s">${f.url ? esc(f.url.replace(/^https?:\/\//, '').slice(0, 40)) : fmtSize(f.size)} · ${esc(nameOf(f.by))}</div></div>${f.url ? `<a class="add" href="${esc(f.url)}" target="_blank" rel="noopener">Apri</a>` : ''}${canModerate(p) || f.by === state.me ? `<button class="x" data-action="delFile" data-id="${f.id}" aria-label="${t('Elimina')}">×</button>` : ''}</div>`).join('')}
       <div class="row" style="gap:18px"><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addFile">${mi('clip', 20, '📎')} Allegato</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addLink">${mi('link', 20, '🔗')} Link</button><button class="add" style="display:inline-flex;align-items:center;gap:6px" data-action="addPhoto">${mi('foto', 20, '📷')} Foto</button></div></div>
@@ -2413,9 +2598,9 @@ const optionsBlock = (p, isOrg) => `<div class="group-title">${t('Opzioni del pi
   ${isOrg && p.status === 'deciding' ? `<button class="row link" data-action="joinPolicy"><div class="grow"><div class="t">${t('Chi può votare')}</div><div class="s">${POLICY_LABEL[p.joinPolicy || 'open']}</div></div><span class="chev">›</span></button>` : ''}</div>`;
 
 const POLICY_LABEL = {
-  open:    'Chiunque abbia il link',
-  roster:  "Solo chi è nell'elenco",
-  account: 'Solo con un account'
+  open:    t(t('Chiunque abbia il link')),
+  roster:  t("Solo chi è nell'elenco"),
+  account: t(t('Solo con un account'))
 };
 
 // Quanto è chiuso il piano. Aperto va bene per la pizza del sabato; l'elenco
@@ -2430,9 +2615,9 @@ function sheetJoinPolicy(p){
   return `<h2>${t('Chi può votare')}</h2>
   <p class="sub">${t('Con un link aperto la stessa persona può votare più volte da finestre diverse. Se conta, stringi.')}</p>
   <div class="group">
-    ${scelta('open', 'Chiunque abbia il link', 'Scrive il suo nome ed entra. Vedi sempre chi ha votato')}
-    ${scelta('roster', "Solo chi è nell'elenco", 'Scrivi tu i nomi: chi apre il link sceglie il suo, e quel nome è preso')}
-    ${scelta('account', 'Solo con un account', 'Serve entrare con Google o Apple. Il più chiuso, ma qualcuno non voterà')}
+    ${scelta('open', 'Chiunque abbia il link', t('Scrive il suo nome ed entra. Vedi sempre chi ha votato'))}
+    ${scelta('roster', t("Solo chi è nell'elenco"), t('Scrivi tu i nomi: chi apre il link sceglie il suo, e quel nome è preso'))}
+    ${scelta('account', 'Solo con un account', t('Serve entrare con Google o Apple. Il più chiuso, ma qualcuno non voterà'))}
   </div>
   ${pol === 'roster' ? `
     <div class="group-title">L'elenco · ${segnaposto.length} ${segnaposto.length === 1 ? 'nome' : 'nomi'}</div>
@@ -2485,7 +2670,7 @@ function vPlan(p){
     ${p.status === 'deciding' ? `<div class="s" style="margin-top:10px">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}</div>` : ''}
   </div></div>`;
   if(p.status === 'deciding'){
-    if(!isP) return `${nav(webTitle, '')}<div class="view">${head}<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? 'Tocca Sì o No.' : 'Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone.'}</div></div>${vBallot(p, false)}<p class="foot">${t('Tocca per entrare. Ti chiederemo solo il nome.')}</p></div>`;
+    if(!isP) return `${nav(webTitle, '')}<div class="view">${head}<div class="intro" style="display:flex;gap:12px;align-items:center"><div>${decision && p.extras[0].binary ? t('Tocca Sì o No.') : 'Segna tutte le opzioni che ti vanno bene. Vince quella compatibile con più persone.'}</div></div>${vBallot(p, false)}<p class="foot">${t('Tocca per entrare. Ti chiederemo solo il nome.')}</p></div>`;
     const hasVoted = !!p.ballots[mine]; const missing = missingIds(p).map(id => nameOf(id)); const bd = ensureBallotDraft(p);
     const noteField = `<div class="group-title">${t('Nota per il gruppo · facoltativa')}</div><div class="group"><div class="row"><textarea class="input" rows="2" placeholder="${t('Es. per me va bene tutto ma non troppo tardi')}" data-bind-note="1" maxlength="200">${esc(Object.values(bd)[0] ? Object.values(bd)[0].note : '')}</textarea></div></div>`;
     return `${nav(isOrg ? (decision ? t('La tua decisione') : t('Il tuo piano')) : (web ? webTitle : (decision ? 'Decisione' : 'Piano')), back, isOrg ? `<button class="textbtn" data-action="go" data-to="share/${p.id}">${t('Condividi')}</button>` : '')}
@@ -2499,11 +2684,11 @@ function vPlan(p){
       ${missing.length ? `<div class="group-title">${t('Non hanno ancora votato')}</div><div class="group"><div class="row">${mi('aspetta', 42)}<div class="avatars">${missing.slice(0, 5).map(n => avatar(n)).join('')}</div><div class="grow t">${missing.map(esc).join(', ')}</div></div></div>` : ''}
       ${isOrg ? optionsBlock(p, isOrg) : ''}${decision ? '' : vMedia(p)}${vComments(p)}
       ${web && !isOrg && hasVoted ? `<div class="pad" style="margin-top:24px"><button class="btn tint" data-action="tab" data-to="new">${t('Fai lo stesso per il tuo gruppo')}</button></div><div class="group-foot" style="text-align:center">${t('Crea un piano in 30 secondi, direttamente da qui.')}</div>` : ''}
-      ${isOrg && missing.length ? `<div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? 'Simula i voti del gruppo' : 'Simula 3 amici che votano'}</button></div>` : ''}
+      ${isOrg && missing.length ? `<div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? t('Simula i voti del gruppo') : t('Simula 3 amici che votano')}</button></div>` : ''}
     </div>
-    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? 'Chiudi la decisione' : 'Conferma il piano'}</button></div>
-    <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? 'Annulla la decisione' : 'Annulla il piano'}</div></button></div>
-    <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t(t('Invia il mio voto'))}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? 'Tutti hanno risposto · Chiudi' : 'Tutti hanno votato · Conferma'}</button></div>` : ''}`;
+    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? t('Chiudi la decisione') : 'Conferma il piano'}</button></div>
+    <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? t('Annulla la decisione') : 'Annulla il piano'}</div></button></div>
+    <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t(t('Invia il mio voto'))}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? t('Tutti hanno risposto · Chiudi') : t('Tutti hanno votato · Conferma')}</button></div>` : ''}`;
   }
   if(decision){
     return `${nav(isOrg ? t('La tua decisione') : (web ? webTitle : 'Decisione'), back)}<div class="view">${head}
@@ -2526,8 +2711,8 @@ function vPlan(p){
       ${canPropose ? `<button class="row link" data-action="proposeChange">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Orario o luogo: il gruppo vota${p.booked ? ', ' + esc(orgName) + ' applica' : ', il piano si aggiorna da solo'}</div></div><span class="chev"></span></button>` : locked && isP && !isOrg ? `<div class="row lock">${mi('cambio', 32, '🔁')}<div class="grow"><div class="t">${t('Proponi un cambio')}</div><div class="s">Mancano meno di ${LOCK_HOURS} ore: ora può cambiare solo ${esc(orgName)}</div></div></div>` : ''}</div>`}
     ${isOrg ? optionsBlock(p, isOrg) : ''}` :
     `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">${t('Forse')}</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
-    <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no','Non vengono'],['none','Non hanno risposto']].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
-      ${late.length ? `<div class="row">${mi('ritardo', 30, '⏰')}<div class="grow"><div class="t">${late.map(x => esc(nameOf(x.id)) + (x.late.minutes ? ` +${x.late.minutes} min` : ' (non sa quanto)')).join(', ')}</div><div class="s">In ritardo${late.some(x => x.late.note) ? ' · ' + late.filter(x => x.late.note).map(x => '“' + esc(x.late.note) + '”').join(', ') : ''}</div></div></div>` : ''}</div>
+    <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no',t('Non vengono')],['none',t('Non hanno risposto')]].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
+      ${late.length ? `<div class="row">${mi('ritardo', 30, '⏰')}<div class="grow"><div class="t">${late.map(x => esc(nameOf(x.id)) + (x.late.minutes ? ` +${x.late.minutes} min` : t(' (non sa quanto)'))).join(', ')}</div><div class="s">In ritardo${late.some(x => x.late.note) ? ' · ' + late.filter(x => x.late.note).map(x => '“' + esc(x.late.note) + '”').join(', ') : ''}</div></div></div>` : ''}</div>
     ${siblings.length ? `<div class="group-title">${t('Le altre date')}</div><div class="group">${siblings.map(x => `<button class="row link" data-action="go" data-to="p/${x.id}"><div class="grow"><div class="t" style="font-size:15px">${fmtWhen(x.when.value)} <span class="s">· ${x.occurrence} di ${x.of}</span></div><div class="s">${x.participants.filter(y => y.rsvp === 'yes').length} ci sono</div></div><span class="chev"></span></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.')}</div>`)}` : ''}
     <div class="pad stack" style="margin-top:24px"><button class="btn tint" data-action="ics">${t('Aggiungi al calendario')}</button>${p.where.value && p.where.value.name ? `<a class="btn tint" href="https://maps.apple.com/?q=${mapsQ}" target="_blank" rel="noopener">${t('Apri in Mappe')}</a>` : ''}${isP ? `<a class="btn wa" href="${waHref(msgs.confirm(p))}" target="_blank" rel="noopener">${t('Condividi su WhatsApp')}</a>` : ''}${isP && !web && p.where.value && p.where.value.name ? (savedPlace(p.where.value.name) ? `<button class="btn plain" data-action="openPlace" data-id="${savedPlace(p.where.value.name).id}">${t('★ Posto salvato · apri scheda')}</button>` : `<button class="btn plain" data-action="savePlaceFromPlan">☆ Salva "${esc(p.where.value.name)}" nei miei posti</button>`) : ''}${isP && !web ? `<button class="btn plain" data-action="repeatPlan">${t('Ripeti questo piano')}</button>` : ''}</div>
     ${isP ? vExpenses(p) + vMedia(p) + vComments(p) : ''}
@@ -2548,7 +2733,7 @@ function vProfile(){
       <div class="stats"><div><b>${myG.length}</b><span>${t('gruppi')}</span></div><div><b>${organized}</b><span>${t('organizzati')}</span></div><div><b>${visiblePlans().length}</b><span>${t('piani')}</span></div><div><b>${u.friends.length}</b><span>${t('amici')}</span></div></div>
       <button class="btn plain sm" data-action="editName">${t('Modifica profilo')}</button></div></div>
     <div class="group-title">${t('I miei posti')}</div><div class="group">
-      ${myPlaces().map(x => `<button class="row link" data-action="openPlace" data-id="${x.id}">${x.photos.length ? `<img class="thumb" src="${x.photos[0].dataUrl}" alt="">` : mi('pin', 34, '📍')}<div class="grow"><div class="t">${esc(x.name)}</div><div class="s">${[x.address ? esc(x.address) : '', x.photos.length ? x.photos.length + ' foto' : '', x.files.length ? x.files.length + ' allegati' : '', x.used ? 'usato ' + x.used + ' volte' : ''].filter(Boolean).join(' · ') || 'Solo il nome'}</div></div><span class="chev"></span></button>`).join('')}
+      ${myPlaces().map(x => `<button class="row link" data-action="openPlace" data-id="${x.id}">${x.photos.length ? `<img class="thumb" src="${x.photos[0].dataUrl}" alt="">` : mi('pin', 34, '📍')}<div class="grow"><div class="t">${esc(x.name)}</div><div class="s">${[x.address ? esc(x.address) : '', x.photos.length ? x.photos.length + ' foto' : '', x.files.length ? x.files.length + ' allegati' : '', x.used ? 'usato ' + x.used + ' volte' : ''].filter(Boolean).join(' · ') || t('Solo il nome')}</div></div><span class="chev"></span></button>`).join('')}
       <button class="row link" data-action="newPlace">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi un posto')}</div></button></div>
     ${hint(`<div class="group-foot">${t('Il ristorante di sempre, il campo, la casa al mare: nome, indirizzo e allegati tuoi (il menu fotografato). Quando lo usi in un piano, gli altri vedono solo nome e indirizzo.')}</div>`)}
     <div class="group-title">${t('Amici')}</div><div class="group">
@@ -2599,7 +2784,7 @@ function sheetConfirm(p, fresh){
   const fields = decidingFields(p); if(fresh || !state.picks){ state.picks = {}; fields.forEach(f => { state.picks[f] = results(p, f).suggested || fieldObj(p, f).candidates[0].id; }); }
   return `<h2>${p.kind === 'decision' ? 'Chiudi la decisione' : 'Conferma il piano'}</h2><p class="sub">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}. Il suggerimento è l'opzione compatibile con più persone; la scelta finale è tua.</p>
   ${fields.map(f => { const r = results(p, f); return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group radio">${r.counts.map(({ c, voters }) => `<button class="row ${state.picks[f] === c.id ? 'on' : ''}" data-action="pick" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}${r.suggested === c.id ? '<span class="tag">più compatibile</span>' : ''}</div><div class="s">${voters.length} ${voters.length === 1 ? 'persona' : 'persone'}</div></div></button>`).join('')}</div>`; }).join('')}
-  <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? 'Chiudi' : 'Conferma'}</button></div>`;
+  <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? 'Chiudi' : t('Conferma')}</button></div>`;
 }
 function sheetMessage(title, sub, text, p, previewSub){
   return `<h2>${esc(title)}</h2><p class="sub">${esc(sub)}</p>${waBlock(text, p, previewSub)}
@@ -2607,7 +2792,7 @@ function sheetMessage(title, sub, text, p, previewSub){
 }
 function sheetEdit(p){
   const w = p.when.value, pl = p.where.value || { name:'', address:'' };
-  return `<h2>${t('Modifica il piano')}</h2><p class="sub">Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c'era prima.${p.seriesId ? ' Vale solo per questa data.' : ''}</p>
+  return `<h2>${t('Modifica il piano')}</h2><p class="sub">Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c'era prima.${p.seriesId ? ' ' + t('Vale solo per questa data.') : ''}</p>
   <div class="group-title">${t('Quando')}</div><div class="group"><div class="row"><div class="grow t">${t('Inizio')}</div><input type="datetime-local" class="input right" id="editStart" value="${esc(w.start)}"></div><div class="row"><div class="grow t">Fine</div><input type="datetime-local" class="input right" id="editEnd" value="${esc(w.end || '')}"></div><div class="row"><div class="grow t">${t('Tutto il giorno')}</div><button class="sw ${w.allDay ? 'on' : ''}" id="editAllDay" data-action="swLocal" aria-label="${t('Tutto il giorno')}"></button></div></div>
   <div class="group-title">Dove</div><div class="group"><div class="row"><input class="input" id="editPlace" placeholder="${t('Nome del posto')}" value="${esc(pl.name)}" maxlength="60"></div><div class="row"><input class="input" id="editAddr" placeholder="${t('Indirizzo')}" value="${esc(pl.address)}" maxlength="120"></div></div>
   <div class="actions stack"><button class="btn primary" data-action="saveEdit">${t('Salva e avvisa il gruppo')}</button><button class="btn plain" data-action="closeSheet">${t('Annulla')}</button></div>
@@ -2616,7 +2801,7 @@ function sheetEdit(p){
 }
 function sheetGroup(){
   const d = state.gdraft; const u = me(); const pool = new Set([...u.friends, ...myGroups().flatMap(g => g.members)]); const people = [...pool].filter(id => id !== state.me && state.people[id] && !state.people[id].web).map(id => state.people[id]);
-  return `<h2>${d.id ? 'Modifica gruppo' : 'Nuovo gruppo'}</h2><p class="sub">${d.id ? 'Icona, colore, nome e la sezione in cui lo tieni tu.' : 'Una cerchia che userai più volte. Privata: si entra solo su invito.'}</p>
+  return `<h2>${d.id ? t('Modifica gruppo') : 'Nuovo gruppo'}</h2><p class="sub">${d.id ? t('Icona, colore, nome e la sezione in cui lo tieni tu.') : t('Una cerchia che userai più volte. Privata: si entra solo su invito.')}</p>
   <div class="group"><div class="row"><span class="gicon" style="background:${d.color}26">${d.emoji}</span><input class="input" id="gname" placeholder="${t('Nome del gruppo')}" value="${esc(d.name)}" maxlength="40" autocomplete="off" data-gbind="name"></div></div>
   <div class="group-title">${t('Icona')}</div><div class="emoji-grid">${GROUP_EMOJIS.map(e => `<button class="${d.emoji === e ? 'on' : ''}" data-action="gEmoji" data-v="${e}">${e}</button>`).join('')}</div>
   <div class="group-title">${t('Colore')}</div><div class="swatches">${GROUP_COLORS.map(c => `<button class="${d.color === c ? 'on' : ''}" style="background:${c}" data-action="gColor" data-v="${c}" aria-label="${c}"></button>`).join('')}</div>
@@ -2624,7 +2809,7 @@ function sheetGroup(){
   ${d.sectionId === 'new' ? `<div class="group" style="margin-top:10px"><div class="row"><input class="input" placeholder="${t('Nome della sezione, es. Milano')}" value="${esc(d.newSection)}" data-gbind="newSection" maxlength="30"></div></div>` : ''}
   <div class="group-foot">${t('Le sezioni sono solo tue: gli altri membri ordinano i gruppi a modo loro.')}</div>
   ${d.id ? '' : `<div class="group-title">${t('Persone')}</div><div class="chips" style="padding-top:0">${people.map(x => `<button class="chip ${d.members.has(x.id) ? 'on' : ''}" data-action="gMember" data-v="${x.id}">${esc(x.name)}${u.friends.includes(x.id) ? ' ★' : ''}</button>`).join('')}</div><div class="group-foot">${t('★ amici. Gli altri si aggiungono anche dopo, con il link d\'invito.')}</div>`}
-  <div class="actions stack"><button class="btn primary" data-action="saveGroup">${d.id ? 'Salva' : 'Crea gruppo'}</button></div>`;
+  <div class="actions stack"><button class="btn primary" data-action="saveGroup">${d.id ? 'Salva' : t('Crea gruppo')}</button></div>`;
 }
 function sheetManage(g){
   const admin = isAdmin(g); const creator = g.createdBy === state.me; const u = me();
@@ -2826,7 +3011,7 @@ document.addEventListener('click', e => {
 
     /* benvenuto / termini */
     case 'ageOk': state.ageOk = !state.ageOk; openSheet(sheetWelcome()); break;
-    case 'login': if(!state.ageOk){ toast('Conferma di avere almeno 16 anni'); break; } state.consented = true; closeSheet(); toast(`Benvenuto, ${nameOf(state.me)}`); break;
+    case 'login': if(!state.ageOk){ toast(t('Conferma di avere almeno 16 anni')); break; } state.consented = true; closeSheet(); toast(`Benvenuto, ${nameOf(state.me)}`); break;
     case 'termsSheet': openSheet(sheetTerms()); break;
 
     /* calendario */
@@ -2845,8 +3030,8 @@ document.addEventListener('click', e => {
     case 'saveGroup': {
       if(!gd.name.trim()){ toast('Dai un nome al gruppo'); break; } const u = me(); let sectionId = gd.sectionId;
       if(sectionId === 'new'){ if(!gd.newSection.trim()){ toast('Scrivi il nome della sezione'); break; } const s = { id:uid(), name:gd.newSection.trim() }; u.sections.push(s); sectionId = s.id; }
-      if(gd.id){ Object.assign(state.groups[gd.id], { name:gd.name.trim(), emoji:gd.emoji, color:gd.color }); if(sectionId) u.groupSections[gd.id] = sectionId; else delete u.groupSections[gd.id]; closeSheet(); toast('Gruppo aggiornato'); render(); }
-      else { const id = uid(); state.groups[id] = { id, name:gd.name.trim(), emoji:gd.emoji, color:gd.color, members:[state.me, ...gd.members], createdBy:state.me, admins:[state.me], createdAt:Date.now() }; if(sectionId) u.groupSections[id] = sectionId; closeSheet(); toast('Gruppo creato · privato, solo su invito'); go(`g/${id}`); }
+      if(gd.id){ Object.assign(state.groups[gd.id], { name:gd.name.trim(), emoji:gd.emoji, color:gd.color }); if(sectionId) u.groupSections[gd.id] = sectionId; else delete u.groupSections[gd.id]; closeSheet(); toast(t('Gruppo aggiornato')); render(); }
+      else { const id = uid(); state.groups[id] = { id, name:gd.name.trim(), emoji:gd.emoji, color:gd.color, members:[state.me, ...gd.members], createdBy:state.me, admins:[state.me], createdAt:Date.now() }; if(sectionId) u.groupSections[id] = sectionId; closeSheet(); toast(t('Gruppo creato · privato, solo su invito')); go(`g/${id}`); }
       break;
     }
     case 'manageGroup': openSheet(sheetManage(state.groups[el.dataset.g])); break;
@@ -3069,6 +3254,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2017%3A24"></script>
+<script type="module" src="./live.js?v=26%2F08%2017%3A36"></script>
 </body>
 </html>
