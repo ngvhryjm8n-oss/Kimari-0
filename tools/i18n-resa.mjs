@@ -64,7 +64,28 @@ const DEMO = new Set();
 }
 const contieneDemo = r => [...DEMO].some(d => r.includes(d));
 
+// IL METODO MIGLIORE, e ci sono arrivato tardi: invece di cercare parole
+// italiane a occhio, si rende la stessa schermata in italiano e in un'altra
+// lingua e si confronta. Quello che resta IDENTICO non è tradotto.
+//
+// Serviva perché la ricerca per parole-spia ha un punto cieco strutturale: le
+// etichette corte. "Oggi" nel calendario è rimasta in italiano sotto
+// un'interfaccia inglese, e lo strumento diceva "nessuna traccia di italiano".
+// L'ha trovata Vincenzo guardando lo schermo — di nuovo.
+const parole = testo => testo.split('\n').map(r => r.trim())
+  .filter(r => r.length > 1 && /[a-zà-ù]/i.test(r));
+
+// Cose che DEVONO restare uguali: il nome del prodotto, i numeri, le date
+// (le fa toLocaleString, non il dizionario), i nomi propri della demo.
+const uguali = /^(kimari|kimari!|\d|[+\-·✓×★✦🔔📷⏰🎉👍👎]|[A-Z]{1,3}$)/i;
+
 let problemi = 0;
+
+// Prima l'italiano, che è il metro di paragone.
+const domIT = await rendi('it');
+const testoIT = new Set(parole(
+  (domIT.window.document.getElementById('app')?.textContent || '') + '\n' +
+  (domIT.window.document.getElementById('sheet-root')?.textContent || '')));
 
 for (const lingua of ['en', 'es', 'de', 'ja']) {
   const dom = await rendi(lingua);
@@ -76,8 +97,16 @@ for (const lingua of ['en', 'es', 'de', 'ja']) {
                 (D.getElementById('sheet-root')?.textContent || '');
 
   const righe = testo.split('\n').map(r => r.trim()).filter(r => r.length > 2);
-  const sospette = righe.filter(r =>
+  // Due reti, non una. La prima cerca parole italiane: prende le frasi.
+  const perParole = righe.filter(r =>
     SPIE.test(r) && !AMBIGUE[lingua].test(r) && !contieneDemo(r));
+
+  // La seconda confronta con l'italiano: prende anche le etichette corte, che
+  // la prima non puo' vedere perche' non contengono nessuna parola-spia.
+  const identiche = parole(testo).filter(r =>
+    testoIT.has(r) && !uguali.test(r) && !contieneDemo(r) && !AMBIGUE[lingua].test(r));
+
+  const sospette = [...new Set([...perParole, ...identiche])];
 
   console.log('\n' + lingua + ': ' + righe.length + ' righe a schermo');
   if (!sospette.length) { console.log('  niente italiano'); continue; }

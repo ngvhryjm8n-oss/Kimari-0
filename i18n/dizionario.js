@@ -697,6 +697,18 @@ export const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  // "Oggi" nel calendario: due lettere sfuggite a tutti i controlli, perche'
+  // sono troppo corte per contenere una parola-spia. Trovata guardando lo
+  // schermo, non misurandolo.
+  // La barra delle schede: la parte piu' visibile dell'app, e la piu'
+  // guardata, ed era in italiano in tutte le lingue. Trovata dal confronto fra
+  // la resa italiana e quella inglese — la ricerca per parole-spia non poteva
+  // vederla, sono tutte parole corte senza indizi.
+  'Gruppi': { en: 'Groups', es: 'Grupos', de: 'Gruppen', ja: 'グループ' },
+  'Crea': { en: 'Create', es: 'Crear', de: 'Neu', ja: 'つくる' },
+  'Novità': { en: 'News', es: 'Novedades', de: 'Neues', ja: '新着' },
+  'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
+  'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
 
