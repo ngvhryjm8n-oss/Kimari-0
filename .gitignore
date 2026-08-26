@@ -9,3 +9,4 @@ nativa/www/
 nativa/ios/
 nativa/android/
 nativa/node_modules/
+nativa/package-lock.json
