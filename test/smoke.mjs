@@ -78,11 +78,25 @@ await test('la libreria Supabase è fissata a una versione con SRI', () => {
 });
 
 await test('senza la libreria dalla CDN mostra un messaggio, non una pagina bianca', () => {
-  const dom = new JSDOM(HTML, { url: 'https://example.test/', runScripts: 'outside-only' });
-  assert.throws(() => dom.window.eval(SCRIPT), /supabase-js non caricato/);
-  const txt = dom.window.document.getElementById('app').textContent;
-  assert.match(txt, /non si è caricato/i);
-  assert.doesNotMatch(txt, /Carico…/, 'deve sostituire il segnaposto di caricamento');
+  // Nella lingua di chi legge: questa schermata la vede chi ha una rete che
+  // blocca la CDN, e dirgli in italiano cosa fare non gli serve a niente.
+  // La prova girava con un browser inglese e cercava l'italiano: quando la
+  // traduzione ha cominciato a funzionare, è stata la prova a rompersi.
+  for (const [lingua, atteso] of [['it', /non si è caricato/i],
+                                  ['en', /didn’t load/i],
+                                  ['ja', /読み込め|Kimari/]]) {
+    const dom = new JSDOM(HTML, { url: 'https://example.test/', runScripts: 'outside-only' });
+    Object.defineProperty(dom.window.navigator, 'languages', { value: [lingua] });
+    assert.throws(() => dom.window.eval(SCRIPT), /supabase-js non caricato/);
+    const txt = dom.window.document.getElementById('app').textContent;
+    assert.match(txt, atteso, `messaggio mancante in ${lingua}: ${txt.slice(0, 70)}`);
+    assert.doesNotMatch(txt, /Carico…/, 'deve sostituire il segnaposto di caricamento');
+    // E il consiglio pratico — cosa fare — non deve restare indietro in italiano.
+    if (lingua !== 'it') {
+      assert.doesNotMatch(txt, /Quasi sempre è la rete/,
+        `in ${lingua} il testo lungo è rimasto italiano`);
+    }
+  }
 });
 
 // Il caso che rompeva il dato: piano con when_mode 'deciding' ma nessuna data

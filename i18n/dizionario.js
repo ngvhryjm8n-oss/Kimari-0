@@ -165,6 +165,12 @@ export const DIZIONARIO = {
   },
 
   /* ---------------------------------------------------------------- errori */
+  'Manca la libreria di Supabase, che arriva da cdn.jsdelivr.net. Quasi sempre è la rete: un blocco pubblicità, un Wi-Fi che chiede il login, o la CDN giù. Riprova, o passa a un’altra rete.': {
+    en: 'The Supabase library, which comes from cdn.jsdelivr.net, is missing. It’s nearly always the network: an ad blocker, a Wi-Fi asking you to sign in, or the CDN being down. Try again, or switch network.',
+    es: 'Falta la librería de Supabase, que viene de cdn.jsdelivr.net. Casi siempre es la red: un bloqueador de anuncios, un wifi que pide iniciar sesión, o la CDN caída. Inténtalo otra vez o cambia de red.',
+    de: 'Die Supabase-Bibliothek von cdn.jsdelivr.net fehlt. Fast immer liegt es am Netz: ein Werbeblocker, ein WLAN, das eine Anmeldung verlangt, oder die CDN ist gerade weg. Versuch es nochmal oder wechsle das Netz.',
+    ja: 'cdn.jsdelivr.net から読み込む Supabase のライブラリがありません。たいていはネットワークが原因です（広告ブロッカー、ログインを求める Wi-Fi、CDN の障害など）。もう一度試すか、別のネットワークでお試しください。'
+  },
   'Kimari non si è caricato': {
     en: 'Kimari didn’t load', es: 'Kimari no se ha cargado',
     de: 'Kimari wurde nicht geladen', ja: 'Kimari を読み込めませんでした'
@@ -193,7 +199,173 @@ export const DIZIONARIO = {
                      de: 'Plan erstellen', ja: '予定をつくる' },
   'Continua con Google': { en: 'Continue with Google', es: 'Continuar con Google',
                            de: 'Weiter mit Google', ja: 'Google で続ける' },
-  'Fatto con': { en: 'Made with', es: 'Hecho con', de: 'Gemacht mit', ja: '作成' }
+  'Fatto con': { en: 'Made with', es: 'Hecho con', de: 'Gemacht mit', ja: '作成' },
+
+  /* ------------------------------------------------- sito: dopo aver votato */
+  'Quando {nome} conferma, questa pagina mostrerà data e posto: salvala.': {
+    en: 'When {nome} confirms, this page will show the date and place — save it.',
+    es: 'Cuando {nome} lo confirme, esta página mostrará la fecha y el lugar: guárdala.',
+    de: 'Sobald {nome} bestätigt, zeigt diese Seite Datum und Ort — speichere sie.',
+    ja: '{nome}さんが決めたら、このページに日時と場所が出ます。保存しておいてください。'
+  },
+  'Vedi il piano': { en: 'See the plan', es: 'Ver el plan', de: 'Zum Plan', ja: '予定を見る' },
+  'Vota anche tu': { en: 'Add your vote', es: 'Vota tú también', de: 'Stimm auch ab', ja: 'あなたも投票する' },
+  'Avvisami quando è deciso': {
+    en: 'Tell me when it’s decided', es: 'Avísame cuando se decida',
+    de: 'Sag mir Bescheid, wenn es steht', ja: '決まったら知らせてください'
+  },
+  'La tua email (facoltativa)': {
+    en: 'Your email (optional)', es: 'Tu correo (opcional)',
+    de: 'Deine E-Mail (optional)', ja: 'メールアドレス（任意）'
+  },
+  'Una sola email alla conferma, nessuna newsletter.': {
+    en: 'One email when it’s confirmed. No newsletter.',
+    es: 'Un solo correo al confirmarse. Nada de newsletters.',
+    de: 'Eine E-Mail bei der Bestätigung. Kein Newsletter.',
+    ja: '確定時にメールを一通だけ。宣伝は送りません。'
+  },
+
+  /* ------------------------------------------------------------ sito: home */
+  'I tuoi piani su questo telefono': {
+    en: 'Your plans on this phone', es: 'Tus planes en este teléfono',
+    de: 'Deine Pläne auf diesem Handy', ja: 'この端末にある予定'
+  },
+  'Ai voti': { en: 'Voting', es: 'En votación', de: 'Abstimmung läuft', ja: '投票中' },
+  'Confermati': { en: 'Confirmed', es: 'Confirmados', de: 'Bestätigt', ja: '確定済み' },
+  'Confermato': { en: 'Confirmed', es: 'Confirmado', de: 'Bestätigt', ja: '確定' },
+  'Proponi date e posti, il gruppo vota dal link su WhatsApp senza installare niente, tu confermi. Kimari! ✅': {
+    en: 'Suggest dates and places, the group votes from a WhatsApp link with nothing to install, you confirm. Kimari! ✅',
+    es: 'Propones fechas y sitios, el grupo vota desde un enlace de WhatsApp sin instalar nada, tú confirmas. ¡Kimari! ✅',
+    de: 'Du schlägst Termine und Orte vor, die Gruppe stimmt über einen WhatsApp-Link ab — ohne Installation — und du bestätigst. Kimari! ✅',
+    ja: '日時と場所を出す、みんながWhatsAppのリンクから投票する（インストール不要）、あなたが決める。決まり！ ✅'
+  },
+  'Con Google ritrovi i tuoi piani da qualsiasi telefono.': {
+    en: 'With Google you find your plans again from any phone.',
+    es: 'Con Google recuperas tus planes desde cualquier teléfono.',
+    de: 'Mit Google findest du deine Pläne auf jedem Handy wieder.',
+    ja: 'Google を使うと、どの端末からでも自分の予定を開けます。'
+  },
+
+  /* -------------------------------------------------- sito: creare un piano */
+  'Nuovo piano': { en: 'New plan', es: 'Nuevo plan', de: 'Neuer Plan', ja: '新しい予定' },
+  'Il piano': { en: 'The plan', es: 'El plan', de: 'Der Plan', ja: '予定' },
+  'Il gruppo vota dal link, tu confermi.': {
+    en: 'The group votes from the link, you confirm.',
+    es: 'El grupo vota desde el enlace, tú confirmas.',
+    de: 'Die Gruppe stimmt über den Link ab, du bestätigst.',
+    ja: 'みんながリンクから投票し、あなたが決めます。'
+  },
+  'Il tuo nome (organizzatore)': {
+    en: 'Your name (organiser)', es: 'Tu nombre (organizador)',
+    de: 'Dein Name (Organisator)', ja: 'お名前（幹事）'
+  },
+  'Già deciso': { en: 'Already set', es: 'Ya decidido', de: 'Steht schon fest', ja: '決まっている' },
+  'Nome del posto': { en: 'Name of the place', es: 'Nombre del sitio',
+                      de: 'Name des Orts', ja: '場所の名前' },
+  'Indirizzo (facoltativo)': { en: 'Address (optional)', es: 'Dirección (opcional)',
+                               de: 'Adresse (optional)', ja: '住所（任意）' },
+  'Posto {n}': { en: 'Place {n}', es: 'Sitio {n}', de: 'Ort {n}', ja: '場所 {n}' },
+  'Posto: si decide': { en: 'Place: to be decided', es: 'Sitio: por decidir',
+                        de: 'Ort: wird noch entschieden', ja: '場所：これから決めます' },
+  'Nuovo posto': { en: 'New place', es: 'Nuevo sitio', de: 'Neuer Ort', ja: '新しい場所' },
+  'Facoltativo, è solo un promemoria per il gruppo: la conferma resta tua.': {
+    en: 'Optional — just a nudge for the group. Confirming is still up to you.',
+    es: 'Opcional: solo un recordatorio para el grupo. Confirmar sigue siendo cosa tuya.',
+    de: 'Optional — nur eine Erinnerung für die Gruppe. Bestätigen tust du.',
+    ja: '任意です。みんなへの目安で、決めるのはあなたです。'
+  },
+  'Fatto ✓ — il link del piano': {
+    en: 'Done ✓ — the link to the plan', es: 'Listo ✓ — el enlace del plan',
+    de: 'Fertig ✓ — der Link zum Plan', ja: 'できました ✓ — 予定のリンク'
+  },
+  'Manda su WhatsApp': { en: 'Send on WhatsApp', es: 'Enviar por WhatsApp',
+                         de: 'Auf WhatsApp senden', ja: 'WhatsApp で送る' },
+  'Apri il piano': { en: 'Open the plan', es: 'Abrir el plan',
+                     de: 'Plan öffnen', ja: '予定を開く' },
+
+  /* ------------------------------------------- sito: la vista organizzatore */
+  'Quando — tocca l’opzione da confermare': {
+    en: 'When — tap the option to confirm',
+    es: 'Cuándo — toca la opción que quieres confirmar',
+    de: 'Wann — tippe die Option an, die gelten soll',
+    ja: '日時 — 決めるものを選んでください'
+  },
+  'Dove — tocca l’opzione da confermare': {
+    en: 'Where — tap the option to confirm',
+    es: 'Dónde — toca la opción que quieres confirmar',
+    de: 'Wo — tippe die Option an, die gelten soll',
+    ja: '場所 — 決めるものを選んでください'
+  },
+  'A {chi} non va bene nessuna data.': {
+    en: 'None of the dates work for {chi}.',
+    es: 'A {chi} no le viene bien ninguna fecha.',
+    de: 'Für {chi} passt kein Termin.',
+    ja: '{chi}さんはどの日も都合が合いません。'
+  },
+  'A {chi} non va bene nessun posto.': {
+    en: 'None of the places work for {chi}.',
+    es: 'A {chi} no le viene bien ningún sitio.',
+    de: 'Für {chi} passt kein Ort.',
+    ja: '{chi}さんはどの場所も都合が合いません。'
+  },
+  'nessuno ancora': { en: 'nobody yet', es: 'nadie todavía',
+                      de: 'noch niemand', ja: 'まだいません' },
+  'Non hanno ancora votato': {
+    en: 'Haven’t voted yet', es: 'Aún no han votado',
+    de: 'Haben noch nicht abgestimmt', ja: 'まだ投票していない人'
+  },
+  'Note del gruppo': { en: 'Notes from the group', es: 'Notas del grupo',
+                       de: 'Notizen der Gruppe', ja: 'みんなからのひとこと' },
+  'Conferma il piano': { en: 'Confirm the plan', es: 'Confirmar el plan',
+                         de: 'Plan bestätigen', ja: 'この予定で決める' },
+  'Rimanda il link al gruppo': {
+    en: 'Send the link again', es: 'Reenviar el enlace al grupo',
+    de: 'Link nochmal schicken', ja: 'リンクをもう一度送る'
+  },
+  'Conferma quando ti basta: il link resta lo stesso e diventa la pagina dell’evento.': {
+    en: 'Confirm whenever you have enough: the link stays the same and becomes the event page.',
+    es: 'Confirma cuando te baste: el enlace no cambia y se convierte en la página del evento.',
+    de: 'Bestätige, sobald es dir reicht: Der Link bleibt gleich und wird zur Seite des Treffens.',
+    ja: '十分だと思ったら決めてください。リンクはそのまま、予定のページになります。'
+  },
+
+  /* ----------------------------------------------- sito: dopo la conferma */
+  'Ci sono · {n}': { en: 'Coming · {n}', es: 'Van · {n}',
+                     de: 'Dabei · {n}', ja: '参加 · {n}' },
+  'Non vengono · {n}': { en: 'Not coming · {n}', es: 'No van · {n}',
+                         de: 'Nicht dabei · {n}', ja: '不参加 · {n}' },
+  'Non hanno risposto · {n}': { en: 'No answer · {n}', es: 'Sin responder · {n}',
+                                de: 'Keine Antwort · {n}', ja: '未回答 · {n}' },
+  'Sposta la data': { en: 'Move the date', es: 'Cambiar la fecha',
+                      de: 'Termin verschieben', ja: '日時を変える' },
+  'Cambia posto': { en: 'Change the place', es: 'Cambiar de sitio',
+                    de: 'Ort ändern', ja: '場所を変える' },
+  'Ogni modifica alza la versione (v{a} → v{b}) e resta nella storia: chi ha il link vede sempre l’ultima.': {
+    en: 'Every change bumps the version (v{a} → v{b}) and stays in the history: whoever has the link always sees the latest.',
+    es: 'Cada cambio sube la versión (v{a} → v{b}) y queda en el historial: quien tenga el enlace ve siempre la última.',
+    de: 'Jede Änderung erhöht die Version (v{a} → v{b}) und bleibt in der Historie: Wer den Link hat, sieht immer die neueste.',
+    ja: '変更するたびに版が上がり（v{a} → v{b}）、履歴に残ります。リンクを持っている人にはいつも最新が見えます。'
+  },
+  'Annulla il piano': { en: 'Cancel the plan', es: 'Anular el plan',
+                        de: 'Plan absagen', ja: '予定をとりやめる' },
+  'Questo piano è stato annullato.': {
+    en: 'This plan was cancelled.', es: 'Este plan se ha anulado.',
+    de: 'Dieser Plan wurde abgesagt.', ja: 'この予定はとりやめになりました。'
+  },
+  'Questo piano è stato annullato da {chi}.': {
+    en: 'This plan was cancelled by {chi}.', es: '{chi} ha anulado este plan.',
+    de: 'Dieser Plan wurde von {chi} abgesagt.', ja: 'この予定は{chi}さんがとりやめました。'
+  },
+
+  /* ------------------------------------------------------- sito: non trovato */
+  'Link non valido': { en: 'Link not valid', es: 'Enlace no válido',
+                       de: 'Link ungültig', ja: 'リンクが無効です' },
+  'Questo piano si apre dal suo link (quello che gira su WhatsApp): da questo telefono non risulti dentro.': {
+    en: 'This plan opens from its own link — the one going round on WhatsApp. From this phone you’re not in it.',
+    es: 'Este plan se abre desde su enlace, el que circula por WhatsApp. Desde este teléfono no constas dentro.',
+    de: 'Dieser Plan öffnet sich über seinen Link — den, der auf WhatsApp herumgeht. Von diesem Handy aus bist du nicht dabei.',
+    ja: 'この予定は、WhatsApp で回っているリンクから開きます。この端末では参加者として登録されていません。'
+  }
 };
 
 /* ------------------------------------------------------------------ */

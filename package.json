@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Solo test. Il sito resta il singolo file index.html: qui non si builda niente.",
   "scripts": {
-    "test": "npm run test:site && npm run test:map && npm run test:data && npm run test:rpc && npm run test:live && npm run test:benvenuto && npm run test:i18n && npm run test:i18n-mancanti && npm run test:campi && npm run test:wiring",
+    "test": "npm run test:site && npm run test:map && npm run test:data && npm run test:rpc && npm run test:live && npm run test:benvenuto && npm run test:i18n && npm run test:i18n-mancanti && npm run test:i18n-non-avvolte && npm run test:campi && npm run test:wiring",
     "test:site": "node test/smoke.mjs",
     "test:map": "node app/test/map.test.mjs",
     "test:rpc": "node app/test/rpc-contract.test.mjs",
@@ -16,7 +16,8 @@
     "timbra": "node tools/timbra-versione.mjs",
     "pubblica": "node tools/pubblica.mjs && npm test",
     "test:campi": "node app/test/campi-audit.mjs",
-    "test:i18n-mancanti": "node tools/i18n-mancanti.mjs"
+    "test:i18n-mancanti": "node tools/i18n-mancanti.mjs",
+    "test:i18n-non-avvolte": "node tools/i18n-non-avvolte.mjs"
   },
   "devDependencies": {
     "jsdom": "^27.0.0"
