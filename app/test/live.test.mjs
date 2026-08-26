@@ -132,6 +132,32 @@ await test('un ospite vero il benvenuto lo deve vedere', () => {
   assert.equal(state.consented, false, 'senza profilo la porta va mostrata');
 });
 
+await test('entrando col proprio nome l\'invito al gruppo non si perde', () => {
+  // Provato in produzione: si apre il link di un gruppo ricevuto su WhatsApp,
+  // si entra col proprio nome, e si finisce in un'app vuota. Il gruppo non
+  // c'è, e l'invito non torna più.
+  //
+  // Il motivo: chi arriva da un invito non ha ancora un'identità, quindi al
+  // primo avvio mostraInvitoGruppo segna il token come "già mostrato" e poi la
+  // schermata di benvenuto gli finisce sopra. Dopo il login la guardia era
+  // ancora alzata. Cambiare identità la deve azzerare: è un'altra persona.
+  const state = { people: {}, groups: {}, plans: {}, me: 'guest',
+                  _invitoGruppo: 'tok-abc' };
+
+  live.applyState(state, { me: 'a-1', people: { 'a-1': { name: 'Luca' } },
+                           groups: {}, plans: {} });
+  assert.equal(state._invitoGruppo, undefined,
+    'la guardia è rimasta alzata: l\'invito non verrà più riproposto');
+
+  // Ma senza cambio d'identità va tenuta, o l\'invito ricomparirebbe a ogni
+  // ricarica anche a chi ha già risposto "non adesso".
+  state._invitoGruppo = 'tok-abc';
+  live.applyState(state, { me: 'a-1', people: { 'a-1': { name: 'Luca' } },
+                           groups: {}, plans: {} });
+  assert.equal(state._invitoGruppo, 'tok-abc',
+    'senza cambio d\'identità l\'invito non va riproposto');
+});
+
 await test('applyState muta l\'oggetto invece di riassegnarlo', () => {
   const state = { people: {}, groups: {}, plans: {} };
   const ref = state.groups;
