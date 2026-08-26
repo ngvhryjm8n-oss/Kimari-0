@@ -1022,6 +1022,20 @@ const DIZIONARIO = {
   },
   'Riprova': { en: 'Try again', es: 'Reintentar', de: 'Nochmal', ja: 'もう一度' },
 
+  /* ------------------------------------------------- sezioni: rinomina e via */
+  'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
+                          de: 'Bereich umbenannt', ja: 'セクション名を変えました' },
+  'Sezione eliminata': { en: 'Section deleted', es: 'Sección eliminada',
+                         de: 'Bereich gelöscht', ja: 'セクションを削除しました' },
+  'I gruppi non si cancellano: tornano fuori dalle sezioni.': {
+    en: 'The groups aren’t deleted: they just move out of the sections.',
+    es: 'Los grupos no se borran: simplemente salen de las secciones.',
+    de: 'Die Gruppen werden nicht gelöscht: Sie rutschen nur aus den Bereichen heraus.',
+    ja: 'グループは消えません。セクションの外に出るだけです。'
+  },
+  'Tolto dal piano': { en: 'Removed from the plan', es: 'Quitado del plan',
+                       de: 'Aus dem Plan entfernt', ja: '予定から外しました' },
+
   'Piano': { en: 'Plan', es: 'Plan', de: 'Plan', ja: '予定' },
   // Singolare e plurale come voci separate: in giapponese il plurale non
   // esiste, e una regola automatica costringerebbe a inventarne uno.
@@ -2632,7 +2646,7 @@ function vHome(){
     </div></div>` : ''}
     ${vCalendar()}${vAgenda()}
     <div class="list-head"><h2>${t('Gruppi')}</h2><span class="s">${mine.length === 1 ? t('{n} gruppo', { n: mine.length }) : t('{n} gruppi', { n: mine.length })}</span></div>
-    ${secs.map(s => `<div class="group-title">${esc(s.name)}</div><div class="group">${mine.filter(g => u.groupSections[g.id] === s.id).map(groupRow).join('')}</div>`).join('')}
+    ${secs.map(s => `<div class="group-title" style="display:flex;align-items:center;justify-content:space-between"><span>${esc(s.name)}</span><button class="textbtn" data-action="editSection" data-s="${s.id}" style="font-weight:600">${t('Modifica')}</button></div><div class="group">${mine.filter(g => u.groupSections[g.id] === s.id).map(groupRow).join('')}</div>`).join('')}
     ${loose.length ? `<div class="group-title">${secs.length ? 'Altri' : t('Tutti')}</div><div class="group">${loose.map(groupRow).join('')}</div>` : ''}
     ${mine.length ? '' : `<div class="intro">${t('Nessun gruppo ancora. Creane uno per la famiglia, gli amici o il prossimo viaggio.')}</div>`}
     <p class="foot">${t('Le sezioni (Roma, Bari…) sono tue e solo tue: servono a ordinare le cerchie, non le vedono gli altri. Ogni gruppo è privato: si entra solo su invito.')}</p>
@@ -2912,6 +2926,7 @@ function vPlan(p){
     ${isOrg ? optionsBlock(p, isOrg) : ''}` :
     `<div class="intro">${t('Tocca "Ci sono" per rispondere: ti chiederemo solo il nome.')}</div><div class="pad"><div class="seg"><button data-action="guestTap" data-field="rsvp">${t('Ci sono')}</button><button data-action="guestTap" data-field="rsvp">${t('Forse')}</button><button data-action="guestTap" data-field="rsvp">${t('Non vengo')}</button></div></div>`}
     <div class="group-title">${t('Chi viene')}</div><div class="group">${[['yes','Ci sono'],['maybe','Forse'],['no',t('Non vengono')],['none',t('Non hanno risposto')]].filter(([k]) => groups[k].length).map(([k, lab]) => `<div class="row"><div class="avatars">${groups[k].slice(0, 4).map(n => avatar(n)).join('')}</div><div class="grow"><div class="t">${groups[k].map(esc).join(', ')}</div><div class="s">${lab}</div></div></div>`).join('')}
+      ${isOrg && p.participants.length > 1 ? p.participants.filter(x => x.id !== p.organizer).map(x => `<div class="row">${avatar(nameOf(x.id))}<div class="grow t" style="font-size:15px">${esc(nameOf(x.id))}</div><button class="x" data-action="rmFromPlan" data-id="${x.id}" aria-label="${t('Togli')}">×</button></div>`).join('') : ''}
       ${late.length ? `<div class="row">${mi('ritardo', 30, '⏰')}<div class="grow"><div class="t">${late.map(x => esc(nameOf(x.id)) + (x.late.minutes ? ` +${x.late.minutes} min` : t(' (non sa quanto)'))).join(', ')}</div><div class="s">In ritardo${late.some(x => x.late.note) ? ' · ' + late.filter(x => x.late.note).map(x => '“' + esc(x.late.note) + '”').join(', ') : ''}</div></div></div>` : ''}</div>
     ${siblings.length ? `<div class="group-title">${t('Le altre date')}</div><div class="group">${siblings.map(x => `<button class="row link" data-action="go" data-to="p/${x.id}"><div class="grow"><div class="t" style="font-size:15px">${fmtWhen(x.when.value)} <span class="s">· ${x.occurrence} di ${x.of}</span></div><div class="s">${x.participants.filter(y => y.rsvp === 'yes').length} ci sono</div></div><span class="chev"></span></button>`).join('')}</div>${hint(`<div class="group-foot">${t('Ogni data ha il suo "ci sono". Modifiche e proposte valgono per una data sola.')}</div>`)}` : ''}
     <div class="pad stack" style="margin-top:24px"><button class="btn tint" data-action="ics">${t('Aggiungi al calendario')}</button>${p.where.value && p.where.value.name ? `<a class="btn tint" href="https://maps.apple.com/?q=${mapsQ}" target="_blank" rel="noopener">${t('Apri in Mappe')}</a>` : ''}${isP ? `<a class="btn wa" href="${waHref(msgs.confirm(p))}" target="_blank" rel="noopener">${t('Condividi su WhatsApp')}</a>` : ''}${isP && !web && p.where.value && p.where.value.name ? (savedPlace(p.where.value.name) ? `<button class="btn plain" data-action="openPlace" data-id="${savedPlace(p.where.value.name).id}">${t('★ Posto salvato · apri scheda')}</button>` : `<button class="btn plain" data-action="savePlaceFromPlan">☆ Salva "${esc(p.where.value.name)}" nei miei posti</button>`) : ''}${isP && !web ? `<button class="btn plain" data-action="repeatPlan">${t('Ripeti questo piano')}</button>` : ''}</div>
@@ -2973,6 +2988,21 @@ function sheetWelcome(){
   <p class="foot center" style="margin-top:14px">${t("Niente password, niente rubrica. L’email serve solo a ritrovare i tuoi piani.")}<br><span style="opacity:.5">v${state.versione || "—"}</span></p>`;
 }
 function sheetTerms(){ return `<h2>${t('Termini, privacy ed età')}</h2><p class="sub">${t('In breve, il testo vero lo scrive un avvocato.')}</p><div class="group"><div class="row col"><div class="t" style="font-size:15px">${t('Età minima 16 anni.')}</div><div class="s">${t('Chi ha meno di 16 anni non può creare un account. Nei gruppi famiglia i nomi dei minori restano solo come nomi, senza altri dati.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Cosa raccogliamo')}</div><div class="s">${t('Nome, email se la dai, voti, risposte, commenti, allegati e foto che carichi. Niente rubrica, niente posizione in background.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Gruppi privati')}</div><div class="s">${t('Si entra solo su invito. Chi non è in un piano non ne vede nulla.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Contenuti')}</div><div class="s">${t('Gli admin possono rimuovere commenti, allegati e persone. Puoi segnalare un contenuto o bloccare una persona.')}</div></div><div class="row col"><div class="t" style="font-size:15px">${t('Cancellazione')}</div><div class="s">${t('Dall\'app o dal web. Lo storico condiviso resta come «Membro eliminato».')}</div></div></div><div class="actions"><button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button></div>`; }
+// Le sezioni si creavano e basta: non si potevano ne' rinominare ne'
+// cancellare, e le due funzioni per farlo erano gia' pronte in data.js senza
+// un bottone sopra. Chi sbagliava a scrivere "Roma" se la teneva sbagliata.
+function sheetSection(sec){
+  return `<h2>${t('La tua sezione')}</h2>
+  <p class="sub">${t('Le sezioni sono solo tue: gli altri membri ordinano i gruppi a modo loro.')}</p>
+  <div class="group"><div class="row"><input class="input" id="secName" value="${esc(sec.name)}" placeholder="${t('Nome della sezione, es. Milano')}" maxlength="40"></div></div>
+  <div class="actions stack">
+    <button class="btn primary" data-action="saveSection" data-s="${sec.id}">${t('Salva')}</button>
+    <button class="btn danger" data-action="delSection" data-s="${sec.id}">${t('Elimina')}</button>
+    <button class="btn plain" data-action="closeSheet">${t('Chiudi')}</button>
+  </div>
+  <p class="foot">${t('I gruppi non si cancellano: tornano fuori dalle sezioni.')}</p>`;
+}
+
 function sheetName(p){
   const others = p.participants.filter(x => x.id !== p.organizer);
   return `<h2>${t('Come ti chiami?')}</h2><p class="sub">${t('Niente account: il nome serve solo agli amici per sapere chi ha risposto.')}</p>
@@ -3221,6 +3251,9 @@ document.addEventListener('click', e => {
     case 'selDay': state.selDay = el.dataset.d; render(); break;
 
     /* gruppi */
+    case 'editSection': { const sec = me().sections.find(x => x.id === el.dataset.s); if(sec) openSheet(sheetSection(sec)); break; }
+    case 'saveSection': { const v = $('#secName').value.trim(); if(!v){ toast(t('Scrivi il nome della sezione')); break; } const sec = me().sections.find(x => x.id === el.dataset.s); if(sec) sec.name = v; closeSheet(); render(); toast(t('Sezione rinominata')); break; }
+    case 'delSection': { const u = me(); u.sections = u.sections.filter(x => x.id !== el.dataset.s); Object.keys(u.groupSections).forEach(g => { if(u.groupSections[g] === el.dataset.s) delete u.groupSections[g]; }); closeSheet(); render(); toast(t('Sezione eliminata')); break; }
     case 'newGroup': state.gdraft = { id:null, name:'', emoji:'🎉', color:'#007AFF', sectionId: me().sections[0] ? me().sections[0].id : '', newSection:'', members:new Set() }; openSheet(sheetGroup()); break;
     case 'editGroup': { const g = state.groups[el.dataset.g]; state.gdraft = { id:g.id, name:g.name, emoji:g.emoji, color:g.color, sectionId: me().groupSections[g.id] || '', newSection:'', members:new Set() }; openSheet(sheetGroup()); break; }
     case 'gEmoji': gd.emoji = el.dataset.v; openSheet(sheetGroup()); break;
@@ -3454,6 +3487,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=26%2F08%2017%3A56"></script>
+<script type="module" src="./live.js?v=26%2F08%2018%3A01"></script>
 </body>
 </html>
