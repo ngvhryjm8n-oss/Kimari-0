@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2020%3A09';
+} from './map.js?v=26%2F08%2020%3A22';
 
 let sb = null;
 
@@ -446,9 +446,28 @@ export const closeProposal = (id, status) =>
 // Applicare una proposta è in due tempi apposta: prima si cambia il piano con
 // update_plan_field, che tiene aggiornati version e storia, poi si chiude la
 // proposta. Se il primo passo fallisce, la proposta resta aperta.
+// Applicare una proposta erano DUE transazioni: cambia il piano, poi chiudi la
+// proposta. Se la seconda non arriva — rete che cade, app chiusa nel mezzo — il
+// piano è cambiato e la proposta resta aperta: il gruppo vede in attesa una
+// modifica già fatta, e riapplicandola il piano fa una versione identica alla
+// precedente con una voce di storia che dice "cambiato" senza che sia cambiato
+// niente. La stessa struttura, sulla creazione, ha lasciato un piano a metà in
+// produzione il 25/8/2026.
+//
+// La 0016 la fa diventare un passo solo. Finché non è applicata si ricade sulle
+// due chiamate: così non esiste un momento in cui l'app è pubblicata e la
+// funzione non c'è ancora — che sarebbe un difetto peggiore di quello che si
+// sta togliendo.
 export async function applyProposal(plan, proposal, field, value, reason) {
-  await updatePlanField(plan, field, value, reason);
-  await closeProposal(proposal, 'applied');
+  try {
+    return await rpc('apply_proposal', { p_proposal: proposal });
+  } catch (e) {
+    const manca = /apply_proposal.*(schema cache|does not exist)|PGRST202/i
+                    .test(String(e && e.message));
+    if (!manca) throw e;                    // un rifiuto vero va riportato
+    await updatePlanField(plan, field, value, reason);
+    await closeProposal(proposal, 'applied');
+  }
 }
 
 /* =============================== spese =============================== */

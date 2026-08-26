@@ -18,7 +18,7 @@ globalThis.localStorage = {
 };
 
 const { tornandoDaLogin, pulisciUrlDopoLogin, haIdentitaVera,
-        init, signInWithProvider } = await import('../data.js');
+        init, signInWithProvider, applyProposal } = await import('../data.js');
 
 let passed = 0, failed = 0;
 const test = (nome, fn) => {
@@ -153,6 +153,50 @@ await test('il provider si ricorda, per poter riprovare al ritorno', async () =>
   await signInWithProvider('apple', 'https://esempio.test/');
   assert.equal(localStorage.getItem('kimari_provider'), 'apple');
 });
+
+/* ---------------------------------------------------------------------- */
+/* applicare una proposta: un passo solo, con la ricaduta                  */
+
+function finge(rpcRisponde) {
+  const fatte = [];
+  init({
+    auth: { getSession: async () => ({ data: { session: null }, error: null }) },
+    rpc: async (nome, args) => { fatte.push(nome); return rpcRisponde(nome, args); }
+  });
+  return fatte;
+}
+
+await test('applicare una proposta e una chiamata sola', async () => {
+  const fatte = finge(() => ({ data: null, error: null }));
+  await applyProposal('p1', 'pr1', 'where', { place_name: 'X' }, null);
+  assert.deepEqual(fatte, ['apply_proposal'],
+    'due transazioni separate lasciano il piano cambiato e la proposta aperta');
+});
+
+await test('se la 0016 non e ancora applicata si ricade sulle due chiamate', async () => {
+  // Senza questa ricaduta ci sarebbe un momento in cui l app e pubblicata e la
+  // funzione nel database non c e ancora: un difetto peggiore di quello che si
+  // sta togliendo.
+  const fatte = finge(nome => nome === 'apply_proposal'
+    ? { data: null, error: { message: "Could not find the function public.apply_proposal(p_proposal) in the schema cache" } }
+    : { data: null, error: null });
+  await applyProposal('p1', 'pr1', 'where', { place_name: 'X' }, null);
+  assert.deepEqual(fatte, ['apply_proposal', 'update_plan_field', 'close_proposal']);
+});
+
+await test('un rifiuto vero non si nasconde dietro la ricaduta', async () => {
+  // Se il server dice "non sei tu che organizzi", riprovare con le due
+  // chiamate significherebbe ignorare un no e riproporlo in altra forma.
+  const fatte = finge(nome => nome === 'apply_proposal'
+    ? { data: null, error: { message: 'solo chi organizza puo applicare una proposta' } }
+    : { data: null, error: null });
+  let scoppiato = false;
+  try { await applyProposal('p1', 'pr1', 'where', { place_name: 'X' }, null); }
+  catch (e) { scoppiato = true; assert.match(e.message, /organizza/); }
+  assert.ok(scoppiato, 'il rifiuto e stato ingoiato');
+  assert.deepEqual(fatte, ['apply_proposal'], 'non deve riprovare per altra strada');
+});
+
 
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
