@@ -1106,6 +1106,41 @@ const DIZIONARIO = {
   'Profilo': { en: 'Profile', es: 'Perfil', de: 'Profil', ja: 'プロフィール' },
   'è entrato nel gruppo': { en: 'joined the group', es: 'se ha unido al grupo',
                               de: 'ist der Gruppe beigetreten', ja: 'がグループに参加しました' },
+  /* ------------------------------- aggiungere alla schermata Home
+     Per chi è entrato col solo nome non è un consiglio estetico: la sua
+     sessione vive in quel browser, e senza un account non c'è modo di
+     recuperarla. È anche l'unico modo di ricevere notifiche su iPhone. */
+  'Tieni Kimari a portata di mano': {
+    en: 'Keep Kimari within reach', es: 'Ten Kimari a mano',
+    de: 'Kimari griffbereit halten', ja: 'Kimari をすぐ開けるように'
+  },
+  'Aggiungila alla schermata Home: ricevi le notifiche dei piani nuovi, e non perdi i tuoi piani se cambi browser.': {
+    en: 'Add it to your Home Screen: you’ll get notified about new plans, and you won’t lose your plans if you change browser.',
+    es: 'Añádela a la pantalla de inicio: recibirás avisos de los planes nuevos y no perderás los tuyos si cambias de navegador.',
+    de: 'Leg sie auf den Home-Bildschirm: Du bekommst Bescheid über neue Pläne und verlierst deine nicht, wenn du den Browser wechselst.',
+    ja: 'ホーム画面に追加しておくと、新しい予定の通知が届き、ブラウザを変えても予定が消えません。'
+  },
+  'Installa': { en: 'Install', es: 'Instalar', de: 'Installieren', ja: 'インストール' },
+  'Ho capito': { en: 'Got it', es: 'Entendido', de: 'Verstanden', ja: 'わかりました' },
+  'Tocca Condividi in basso, poi "Aggiungi a Home".': {
+    en: 'Tap Share at the bottom, then “Add to Home Screen”.',
+    es: 'Toca Compartir abajo y luego «Añadir a pantalla de inicio».',
+    de: 'Tippe unten auf Teilen, dann „Zum Home-Bildschirm“.',
+    ja: '下の「共有」をタップして、「ホーム画面に追加」を選びます。'
+  },
+  'Apri il menu del browser, poi "Installa app".': {
+    en: 'Open the browser menu, then “Install app”.',
+    es: 'Abre el menú del navegador y luego «Instalar aplicación».',
+    de: 'Öffne das Browser-Menü, dann „App installieren“.',
+    ja: 'ブラウザのメニューから「アプリをインストール」を選びます。'
+  },
+  'Su iPhone serve Safari: apri kimariapp.com con Safari, poi Condividi e "Aggiungi a Home".': {
+    en: 'On iPhone you need Safari: open kimariapp.com in Safari, then Share and “Add to Home Screen”.',
+    es: 'En iPhone hace falta Safari: abre kimariapp.com con Safari, luego Compartir y «Añadir a pantalla de inicio».',
+    de: 'Auf dem iPhone brauchst du Safari: Öffne kimariapp.com in Safari, dann Teilen und „Zum Home-Bildschirm“.',
+    ja: 'iPhone では Safari が必要です。Safari で kimariapp.com を開き、「共有」から「ホーム画面に追加」を選んでください。'
+  },
+
   'Oggi': { en: 'Today', es: 'Hoy', de: 'Heute', ja: '今日' },
   'Dati esportati': { en: 'Data exported', es: 'Datos exportados',
                       de: 'Daten exportiert', ja: 'データを書き出しました' },
@@ -2529,6 +2564,9 @@ function reset(){
     // "non hai ancora niente" da "non lo so ancora": la prima e' una notizia,
     // la seconda una bugia.
     caricando: document.body.dataset.demo !== '1',
+    // Chi ha gia' detto "ho capito" non lo rivede: un avviso che torna dopo
+    // essere stato chiuso e' una molestia, non un promemoria.
+    tipHomeChiuso: (() => { try { return localStorage.getItem('kimari_tip_home') === '1'; } catch(_) { return false; } })(),
   });
   // I dati finti SOLO con ?demo=1. Senza, l'app partiva con Marco, Sara e i
   // loro piani inventati — e da li' si poteva votare, condividere e confermare
@@ -2901,10 +2939,75 @@ function vAttesa(){
   </div></div>`;
 }
 
+// Chi e' entrato col solo nome vive in QUESTO browser: niente account a cui
+// riagganciarsi. Se svuota i dati o cambia telefono, perde i piani e non c'e'
+// modo di recuperarli. Aggiungere alla schermata Home non e' un consiglio
+// estetico — e' l'unica protezione che ha. E' anche l'unico modo di ricevere
+// notifiche su iPhone.
+//
+// Si mostra DOPO che ha fatto qualcosa (ha un gruppo o un piano), non subito:
+// al primo ingresso uno vuole entrare, non leggere consigli. E si puo'
+// chiudere: un avviso che non si chiude e' una molestia, e chi lo chiude ha
+// gia' capito.
+// Sa gia' se e' installata, e come installarla. Le due piattaforme sono
+// diverse in modo che conta:
+//   Android  il browser puo' aprire una VERA finestra di installazione, con un
+//            tocco. Basta averne conservato l'invito (beforeinstallprompt).
+//   iPhone   quell'API non esiste. Si possono solo dare istruzioni, e solo
+//            Safari sa farlo: da Chrome su iPhone "Aggiungi a Home" non c'e'
+//            proprio, e dare istruzioni che non si possono seguire e' peggio
+//            che tacere.
+let invitoInstalla = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();          // niente banner del browser: lo chiediamo noi, al momento giusto
+  invitoInstalla = e;
+  if(typeof render === 'function') render();
+});
+
+// matchMedia non esiste ovunque — in jsdom no, e su qualche browser vecchio
+// nemmeno. Chiamarlo senza rete di sicurezza faceva morire render(), e con lui
+// l'app intera: schermata bianca. Nel dubbio si risponde "non installata",
+// che al massimo mostra un suggerimento di troppo.
+const installata = () => {
+  try {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+        || navigator.standalone === true;
+  } catch(_) { return false; }
+};
+
+function suggerimentoHome(){
+  if(state.tipHomeChiuso) return '';
+  if(installata()) return '';
+  if(state.me === 'guest' || !me()) return '';
+  if(!Object.keys(state.groups).length && !Object.keys(state.plans).length) return '';
+
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  // Su iPhone solo Safari sa aggiungere alla schermata Home. Da Chrome o
+  // Firefox quel comando non esiste, e dare istruzioni che non si possono
+  // seguire fa sembrare rotta l'app invece del browser.
+  const safariIOS = iOS && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent);
+
+  const come = invitoInstalla
+    ? `<div class="actions" style="margin-top:10px"><button class="btn primary" data-action="installa">${t('Installa')}</button></div>`
+    : `<div class="s" style="margin-top:8px;opacity:.75">${
+        iOS ? (safariIOS
+                ? t('Tocca Condividi in basso, poi "Aggiungi a Home".')
+                : t('Su iPhone serve Safari: apri kimariapp.com con Safari, poi Condividi e "Aggiungi a Home".'))
+            : t('Apri il menu del browser, poi "Installa app".')}</div>`;
+
+  return `<div class="pad" style="padding-top:12px"><div class="card" style="padding:14px">
+    <div style="font-weight:600">${t('Tieni Kimari a portata di mano')}</div>
+    <div class="s" style="margin-top:4px">${t('Aggiungila alla schermata Home: ricevi le notifiche dei piani nuovi, e non perdi i tuoi piani se cambi browser.')}</div>
+    ${come}
+    <div class="actions" style="margin-top:6px"><button class="btn plain sm" data-action="chiudiTipHome">${t('Ho capito')}</button></div>
+  </div></div>`;
+}
+
 function vHome(){
   if(isWeb()) return vWebHome();
   // Finche' non si sa, non si inventa: ne' piani finti ne' "non hai niente".
   if(state.caricando) return vAttesa();
+  const tip = suggerimentoHome();
   const mine = myGroups(); const u = me(); const secs = u.sections.filter(s => mine.some(g => u.groupSections[g.id] === s.id)); const loose = mine.filter(g => !u.groupSections[g.id] || !u.sections.find(s => s.id === u.groupSections[g.id]));
   const todoC = []; Object.values(state.plans).forEach(p => { if(p.status !== 'deciding' || !p.participants.some(x => x.id === u.id)) return;
     if(p.organizer === u.id && votedIds(p).length && !missingIds(p).length) todoC.push({ p, act:t('conferma') });
@@ -3497,7 +3600,11 @@ function render(){
          <div class="s" style="opacity:.7">${state.copiaDel ? t('Aggiornata {quando}', { quando: new Date(state.copiaDel).toLocaleString(LINGUA) }) : ''}</div>
        </div></div>`
     : '';
-  aggiorna($('#app'), `<div class="screen" id="screen">${avviso}${html}</div>${showTab ? tabbar(tab) : ''}`);
+  // Il suggerimento di installare sta QUI e non dentro vHome: cosi' compare
+  // sopra a qualunque schermata, ma sotto la barra in alto e sotto l'avviso di
+  // "senza rete", che e' piu' urgente.
+  const tipHome = (r.name !== 'new' && !isWeb()) ? suggerimentoHome() : '';
+  aggiorna($('#app'), `<div class="screen" id="screen">${avviso}${tipHome}${html}</div>${showTab ? tabbar(tab) : ''}`);
   if(!stessaRotta) $('#app').querySelectorAll('.view').forEach(v => v.classList.add('entra'));
   $('#screen').scrollTop = keep; state.lastRoute = location.hash; renderDevbar();
   // giaEntrato() legge una marcatura lasciata da live.js: senza, questo render
@@ -3559,6 +3666,9 @@ document.addEventListener('click', e => {
     case 'editSection': { const sec = me().sections.find(x => x.id === el.dataset.s); if(sec) openSheet(sheetSection(sec)); break; }
     case 'saveSection': { const v = $('#secName').value.trim(); if(!v){ toast(t('Scrivi il nome della sezione')); break; } const sec = me().sections.find(x => x.id === el.dataset.s); if(sec) sec.name = v; closeSheet(); render(); toast(t('Sezione rinominata')); break; }
     case 'delSection': { const u = me(); u.sections = u.sections.filter(x => x.id !== el.dataset.s); Object.keys(u.groupSections).forEach(g => { if(u.groupSections[g] === el.dataset.s) delete u.groupSections[g]; }); closeSheet(); render(); toast(t('Sezione eliminata')); break; }
+    case 'chiudiTipHome': state.tipHomeChiuso = true; try{ localStorage.setItem('kimari_tip_home','1'); }catch(_){} render(); break;
+    // L'invito si puo' usare UNA volta sola: dopo, il browser non lo ridà.
+    case 'installa': if(invitoInstalla){ const inv = invitoInstalla; invitoInstalla = null; inv.prompt(); inv.userChoice.then(() => render()); } break;
     case 'newGroup': state.gdraft = { id:null, name:'', emoji:'🎉', color:'#007AFF', sectionId: me().sections[0] ? me().sections[0].id : '', newSection:'', members:new Set() }; openSheet(sheetGroup()); break;
     case 'editGroup': { const g = state.groups[el.dataset.g]; state.gdraft = { id:g.id, name:g.name, emoji:g.emoji, color:g.color, sectionId: me().groupSections[g.id] || '', newSection:'', members:new Set() }; openSheet(sheetGroup()); break; }
     case 'gEmoji': gd.emoji = el.dataset.v; openSheet(sheetGroup()); break;
@@ -3795,6 +3905,6 @@ render();
         integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script type="module" src="./live.js?v=27%2F08%2001%3A20"></script>
+<script type="module" src="./live.js?v=27%2F08%2001%3A51"></script>
 </body>
 </html>

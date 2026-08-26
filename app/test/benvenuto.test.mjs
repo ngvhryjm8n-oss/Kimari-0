@@ -495,6 +495,38 @@ await test('con ?demo=1 i dati finti tornano', async () => {
   assert.ok(Object.keys(dom.window.__kimari.state.plans).length > 0,
     'in modalita demo i piani di esempio devono esserci');
 });
+
+await test('il suggerimento di installare distingue iPhone e Android', () => {
+  // Vincenzo: "Android e Apple sono diversi, devi distinguere?". Si, e piu di
+  // quanto sembri: su Android il browser puo aprire una VERA finestra di
+  // installazione con un tocco; su iPhone quell API non esiste e si possono
+  // solo dare istruzioni — che per giunta valgono SOLO per Safari.
+  //
+  // Dare istruzioni che non si possono seguire fa sembrare rotta l app invece
+  // del browser.
+  const src = HTML;
+  assert.match(src, /beforeinstallprompt/, 'senza, su Android si danno istruzioni invece di installare');
+  assert.match(src, /CriOS|FxiOS/, 'su iPhone fuori da Safari le istruzioni non si possono seguire');
+  assert.match(src, /data-action="installa"/, 'manca il bottone che apre la finestra vera');
+
+  // L invito del browser si puo usare UNA volta sola: riusarlo non fa niente,
+  // e lasciare il bottone li dopo il primo tocco sembra rotto.
+  assert.match(src, /invitoInstalla = null;\s*inv\.prompt\(\)/,
+    'l invito va consumato, non riproposto');
+});
+
+await test('matchMedia mancante non deve far morire il render', async () => {
+  // Ha fatto schermata bianca in jsdom, e avrebbe fatto lo stesso su un
+  // browser vecchio: installata() chiamava matchMedia senza rete di sicurezza,
+  // render() moriva, e con lui l app intera.
+  assert.match(HTML, /try \{\s*return \(window\.matchMedia && window\.matchMedia/,
+    'installata() deve reggere anche senza matchMedia');
+
+  // E la prova che conta: l app si disegna lo stesso.
+  const dom = await avvia(true);
+  assert.ok(dom.window.document.getElementById('app').textContent.length > 0,
+    'schermata vuota');
+});
 });
 
 console.log(`\n${passed} passati, ${failed} falliti\n`);
