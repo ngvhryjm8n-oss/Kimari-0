@@ -90,7 +90,21 @@ const pulito = t => !/[$`{}<>]/.test(t) && t.trim().length >= 5 && SPIE.test(t);
 const dentro = t => "t('" + t.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "')";
 const rigaDi = (s, i) => s.slice(0, i).split('\n').length;
 
-const regioni = regioniTemplate(src);
+// Il riconoscitore scende nei template annidati e li aggiunge PRIMA di
+// chiudere quello che li contiene: l'elenco esce disordinato e con regioni
+// che si accavallano. Chi ricompone il file piu' sotto si fida dell'ordine —
+// se non lo si mette a posto qui, il risultato puo' perdere pezzi in
+// silenzio, con la sintassi ancora valida.
+// (tools/i18n-verifica-avvolgi.mjs e' la prova che non succede.)
+const regioni = regioniTemplate(src)
+  .filter(([a, b]) => b > a)
+  .sort((x, y) => x[0] - y[0])
+  .reduce((acc, r) => {
+    const ultima = acc[acc.length - 1];
+    if (ultima && r[0] < ultima[1]) return acc;      // dentro la precedente
+    acc.push(r);
+    return acc;
+  }, []);
 const avvolte = [];
 const pezzi = [];
 let ultimo = 0;
