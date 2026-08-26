@@ -59,7 +59,8 @@ register('data:text/javascript,' + encodeURIComponent(`
                  'revokeInviteLinks','removeParticipant','createGroupInvite',
                  'previewGroupInvite','joinGroup','currentSession','haIdentitaVera',
                  'adottaIdentitaGoogle','pulisciUrlDopoLogin','signOut','myActor',
-                 'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
+                 'voteProposal','applyProposal','closeProposal','addPlanExtra','removePlanExtra',
+                 'logEvent','addPlanLink','addPlaceLink','cancelPlan','deleteMyAccount'].map(n => `export const ${n} = (...a) => f.${n}(...a);`).join('')
               )}
     };
     return next(url, ctx);
@@ -232,7 +233,10 @@ await test('vote manda un ballot per ogni campo in votazione', async () => {
 
   // when → submit_ballot; la domanda extra → submit_extra_ballot; where e la
   // domanda già decisa non si toccano.
-  assert.deepEqual(calls.map(c => c.name), ['submitBallot', 'submitExtraBallot']);
+  // logEvent in coda: il funnel del gate dei 10 gruppi (CLAUDE.md) restava
+  // vuoto perché nell'app non lo chiamava nessuno. Sta IN FONDO e non si
+  // aspetta: misurare non deve poter far fallire ciò che misura.
+  assert.deepEqual(calls.map(c => c.name), ['submitBallot', 'submitExtraBallot', 'logEvent']);
   assert.deepEqual([...calls[0].args[2]].sort(), ['c1', 'c2']);
   assert.equal(calls[0].args[3], 'non tardi');
   assert.equal(calls[1].args[0], 'e1');
@@ -269,7 +273,7 @@ await test('confirm conferma le domande extra a parte da quando/dove', async () 
     plans: { p1: { id: 'p1', when: { mode: 'deciding' }, where: { mode: 'fixed' } } },
     picks: { when: 'c1', e1: 'x2' } } };
   await live.HANDLERS.confirm(null, K);
-  assert.deepEqual(calls.map(c => c.name), ['confirmExtra', 'confirmPlan']);
+  assert.deepEqual(calls.map(c => c.name), ['confirmExtra', 'confirmPlan', 'logEvent']);
   assert.deepEqual(calls[0].args, ['e1', 'x2']);
   assert.deepEqual(calls[1].args, ['p1', 'c1', null]);
 });
@@ -328,7 +332,7 @@ await test('la creazione passa da una sola chiamata, non da tre', async () => {
 
   // Tre chiamate sarebbero tre transazioni: se la seconda fallisce resta un
   // piano a metà. È successo davvero in produzione il 25/8/2026.
-  assert.deepEqual(calls.map(c => c.name), ['createPlanFull']);
+  assert.deepEqual(calls.map(c => c.name), ['createPlanFull', 'logEvent']);
   const [payload, opts] = calls[0].args;
   assert.equal(payload.title, 'Pizza');
   assert.equal(payload.when_mode, 'deciding');
@@ -338,6 +342,31 @@ await test('la creazione passa da una sola chiamata, non da tre', async () => {
   assert.equal(opts.group, 'g1');
   assert.equal(opts.extras[0].binary, true);
   assert.equal(K.state.draft, null, 'la bozza va buttata dopo la creazione');
+});
+
+await test('se la misurazione cade, l\'azione riesce lo stesso', async () => {
+  // logEvent scrive nel funnel del gate dei 10 gruppi. È la cosa meno
+  // importante che succede in quel momento: se il server la rifiuta, o la rete
+  // cade, la persona deve comunque avere il suo piano. Misurare non deve poter
+  // far fallire ciò che misura — per questo data.logEvent ingoia già i suoi
+  // errori, e questa prova impedisce che qualcuno tolga quel .catch().
+  const vero = globalThis.__fakeData.logEvent;
+  let tentato = false;
+  globalThis.__fakeData.logEvent = () => { tentato = true; throw new Error('funnel giù'); };
+  try {
+    const K = { state: { draft: {
+      step: 4, title: 'Pizza', emoji: '🍕', groupId: 'g1', allowProposals: true,
+      whenMode: 'deciding', whenCands: [{ start: '2026-09-10T20:00', end: '', allDay: false }],
+      whereMode: 'fixed', whereFixed: { name: 'Da Gino', address: '' }, whereCands: [],
+      deadline: '', extras: []
+    } } };
+    const res = await live.HANDLERS.next.run(null, K);
+    assert.ok(tentato, 'la misurazione non è stata nemmeno tentata: questa prova non misura niente');
+    assert.ok(res && res.go, 'il piano deve esserci anche col funnel caduto');
+    assert.equal(K.state.draft, null);
+  } finally {
+    globalThis.__fakeData.logEvent = vero;
+  }
 });
 
 await test('next ai passi 1-3 non crea niente: è navigazione', () => {

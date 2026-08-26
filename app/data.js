@@ -11,7 +11,7 @@
 
 import {
   mapPerson, mapSection, mapPlace, mapGroup, mapPlan
-} from './map.js?v=26%2F08%2009%3A24';
+} from './map.js?v=26%2F08%2014%3A15';
 
 let sb = null;
 
@@ -471,6 +471,11 @@ export async function uploadMedia(planId, file, kind) {
     throw e;
   }
 }
+
+// Un link non e' un file: niente bucket, niente contabilita' dello spazio.
+// Prima "Aggiungi link" scriveva solo in memoria e spariva al ricaricamento.
+export const addPlanLink = (plan, name, url) =>
+  rpc('add_plan_link', { p_plan: plan, p_name: name, p_url: url });
 
 export async function deleteMedia(id) {
   const path = await rpc('delete_media', { p_media: id });

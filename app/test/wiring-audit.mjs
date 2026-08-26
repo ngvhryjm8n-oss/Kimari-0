@@ -146,7 +146,6 @@ const DA_OFFRIRE = {
   renameSection: "le sezioni si creano ma non si rinominano",
   deleteSection: "né si cancellano",
   planBalances: "i conti li fa il prototipo in locale; il server ha la sua vista",
-  addPlaceLink: "link a un posto salvato",
   mediaUrl: "usata solo indirettamente, dentro loadState"
 };
 
