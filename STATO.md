@@ -54,10 +54,15 @@ che va ricordata: funzionano **solo dentro un'app nativa**, quindi vengono dopo
 Capacitor, che viene dopo un Mac. Commissione 15% col Small Business Program
 (da richiedere, non è automatico), 30% senza.
 
-**Le notifiche non partono ancora.** C'è tutto — coda, quattro momenti scelti,
-testi in cinque lingue, funzione che consegna. Manca distribuire le due
-funzioni su Supabase e pianificare `pg_cron`. Le istruzioni stanno in fondo a
-`supabase/functions/svuota-coda/index.ts`.
+**Le notifiche funzionano** (27/8/2026). Catena verificata dall'inizio alla
+fine: qualcuno vota → il database mette in coda → `pg_cron` chiama ogni minuto
+→ la funzione consegna, nella lingua del dispositivo di chi riceve. Il cron
+gira: `succeeded` a ogni minuto in `cron.job_run_details`.
+
+Quello che NON è stato verificato: una notifica arrivata su un telefono vero.
+La prova è stata fatta con un dispositivo finto, che ha fallito come doveva
+(tre tentativi e poi basta). Perché arrivi davvero servono due cose da chi la
+riceve: l'app aggiunta alla schermata Home, e il permesso concesso dal Profilo.
 
 **L'app negli store.** `nativa/` è pronta e `CAPACITOR.md` spiega tutto.
 Android si fa da Windows; **iOS richiede macOS**, e non è aggirabile.
