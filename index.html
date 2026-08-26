@@ -735,6 +735,191 @@ const DIZIONARIO = {
   },
 
 
+
+  /* ================================ app: quello che passa dagli argomenti
+     Testo che viaggia come argomento di funzione invece che come markup.
+     Finisce a schermo uguale, ma nessuno strumento poteva vederlo. */
+
+  /* ------------------------------------------------------ ricorrenze */
+  'Ogni settimana': { en: 'Every week', es: 'Cada semana', de: 'Jede Woche', ja: '毎週' },
+  'Ogni 2 settimane': { en: 'Every 2 weeks', es: 'Cada 2 semanas',
+                        de: 'Alle 2 Wochen', ja: '隔週' },
+  'Ogni mese': { en: 'Every month', es: 'Cada mes', de: 'Jeden Monat', ja: '毎月' },
+  // Il giorno va da segnaposto: in tedesco segue il verbo, in giapponese la
+  // frase si ribalta del tutto.
+  'Ogni {giorno}': { en: 'Every {giorno}', es: 'Cada {giorno}',
+                     de: 'Jeden {giorno}', ja: '毎週{giorno}' },
+  'Ogni 2 settimane, {giorno}': { en: 'Every 2 weeks, {giorno}',
+    es: 'Cada 2 semanas, {giorno}', de: 'Alle 2 Wochen, {giorno}',
+    ja: '隔週{giorno}' },
+  'Più giorni': { en: 'Several days', es: 'Varios días', de: 'Mehrere Tage', ja: '複数日' },
+
+  /* --------------------------------------------------- notifiche push */
+  'Devo votare: nuovi piani e opzioni': { en: 'I need to vote: new plans and options',
+    es: 'Tengo que votar: planes y opciones nuevos',
+    de: 'Ich muss abstimmen: neue Pläne und Optionen',
+    ja: '投票が必要：新しい予定と候補' },
+  'Piano confermato': { en: 'Plan confirmed', es: 'Plan confirmado',
+                        de: 'Plan bestätigt', ja: '予定が確定' },
+  'Modifiche al piano': { en: 'Changes to the plan', es: 'Cambios en el plan',
+                          de: 'Änderungen am Plan', ja: '予定の変更' },
+  'Proposte di cambio': { en: 'Suggested changes', es: 'Propuestas de cambio',
+                          de: 'Änderungsvorschläge', ja: '変更の提案' },
+  'Ritardi e assenze': { en: 'Delays and no-shows', es: 'Retrasos y ausencias',
+                         de: 'Verspätungen und Absagen', ja: '遅刻と欠席' },
+  'Promemoria il giorno prima': { en: 'Reminder the day before',
+    es: 'Recordatorio el día antes', de: 'Erinnerung am Tag davor', ja: '前日のリマインド' },
+  'Risposte e attività minori': { en: 'Replies and smaller activity',
+    es: 'Respuestas y actividad menor', de: 'Antworten und Kleinigkeiten',
+    ja: '返信やこまかな動き' },
+
+  /* ------------------------------------------------- il feed: chi fa cosa */
+  'ci sarà': { en: 'is coming', es: 'va', de: 'kommt', ja: '参加します' },
+  'forse ci sarà': { en: 'might come', es: 'quizá vaya', de: 'kommt vielleicht',
+                     ja: 'たぶん参加します' },
+  'non viene': { en: 'isn’t coming', es: 'no va', de: 'kommt nicht', ja: '行けません' },
+  'ha creato un piano': { en: 'created a plan', es: 'ha creado un plan',
+                          de: 'hat einen Plan erstellt', ja: '予定をつくりました' },
+  'ha aperto una decisione': { en: 'opened a decision', es: 'ha abierto una decisión',
+                               de: 'hat eine Entscheidung eröffnet', ja: '決めごとを出しました' },
+  'ha annullato il piano': { en: 'called off the plan', es: 'ha cancelado el plan',
+                             de: 'hat den Plan abgesagt', ja: '予定を中止しました' },
+  'ha annullato la decisione': { en: 'called off the decision',
+    es: 'ha cancelado la decisión', de: 'hat die Entscheidung abgesagt',
+    ja: '決めごとを取り下げました' },
+  'ha prenotato': { en: 'has booked', es: 'ha reservado', de: 'hat reserviert', ja: '予約しました' },
+  'è a meno di {ore} ore dall’inizio': {
+    en: 'is less than {ore} hours from the start',
+    es: 'faltan menos de {ore} horas para empezar',
+    de: 'es sind weniger als {ore} Stunden bis zum Beginn',
+    ja: '開始まで {ore} 時間を切っています'
+  },
+  ' (non sa quanto)': { en: ' (doesn’t know how much)', es: ' (no sabe cuánto)',
+                        de: ' (weiß nicht, wie lange)', ja: '（どのくらいかは未定）' },
+  'Sì: {chi}': { en: 'Yes: {chi}', es: 'Sí: {chi}', de: 'Ja: {chi}', ja: 'はい：{chi}' },
+  'Nessuno ancora': { en: 'Nobody yet', es: 'Nadie todavía', de: 'Noch niemand', ja: 'まだ誰もいません' },
+  'Non vengono': { en: 'Not coming', es: 'No van', de: 'Kommen nicht', ja: '行けない人' },
+  'Non hanno risposto': { en: 'Haven’t replied', es: 'No han respondido',
+                          de: 'Haben nicht geantwortet', ja: '未回答' },
+
+  /* ------------------------------------------------- creare e modificare */
+  'Crea il piano': { en: 'Create the plan', es: 'Crear el plan',
+                     de: 'Plan erstellen', ja: '予定をつくる' },
+  'Crea gruppo': { en: 'Create group', es: 'Crear grupo',
+                   de: 'Gruppe erstellen', ja: 'グループをつくる' },
+  'Modifica gruppo': { en: 'Edit group', es: 'Editar grupo',
+                       de: 'Gruppe bearbeiten', ja: 'グループを編集' },
+  'Icona, colore, nome e la sezione in cui lo tieni tu.': {
+    en: 'Icon, colour, name, and the section where you keep it.',
+    es: 'Icono, color, nombre y la sección en la que lo guardas.',
+    de: 'Symbol, Farbe, Name und der Bereich, in dem du sie ablegst.',
+    ja: 'アイコン、色、名前、そしてあなたが置いておくセクション。'
+  },
+  'Una cerchia che userai più volte. Privata: si entra solo su invito.': {
+    en: 'A circle you’ll use more than once. Private: you get in by invitation only.',
+    es: 'Un círculo que usarás más de una vez. Privado: solo se entra por invitación.',
+    de: 'Ein Kreis, den du öfter nutzen wirst. Privat: Zutritt nur auf Einladung.',
+    ja: '何度も使うことになる集まりです。非公開で、招待からのみ参加できます。'
+  },
+  'Gruppo aggiornato': { en: 'Group updated', es: 'Grupo actualizado',
+                         de: 'Gruppe aktualisiert', ja: 'グループを更新しました' },
+  'Gruppo creato · privato, solo su invito': {
+    en: 'Group created · private, invitation only',
+    es: 'Grupo creado · privado, solo por invitación',
+    de: 'Gruppe erstellt · privat, nur auf Einladung',
+    ja: 'グループをつくりました · 非公開、招待制'
+  },
+  'Ogni modifica crea una nuova versione: tutti vedono cosa è cambiato e cosa c’era prima.': {
+    en: 'Every change makes a new version: everyone sees what changed and what was there before.',
+    es: 'Cada cambio crea una versión nueva: todos ven qué ha cambiado y qué había antes.',
+    de: 'Jede Änderung erzeugt eine neue Fassung: Alle sehen, was sich geändert hat und was vorher da war.',
+    ja: '変更するたびに新しい版ができます。何がどう変わったか、みんなが見られます。'
+  },
+  'Vale solo per questa data.': { en: 'It only applies to this date.',
+    es: 'Vale solo para esta fecha.', de: 'Gilt nur für dieses Datum.',
+    ja: 'この日付にだけ適用されます。' },
+  'Data da decidere': { en: 'Date to be decided', es: 'Fecha por decidir',
+                        de: 'Datum noch offen', ja: '日付は未定' },
+  'Luogo da decidere': { en: 'Place to be decided', es: 'Sitio por decidir',
+                         de: 'Ort noch offen', ja: '場所は未定' },
+  'Decidiamo dopo': { en: 'We’ll decide later', es: 'Lo decidimos después',
+                      de: 'Entscheiden wir später', ja: 'あとで決める' },
+  'Il piano è pronto': { en: 'The plan is ready', es: 'El plan está listo',
+                         de: 'Der Plan steht', ja: '予定ができました' },
+  'Piano creato': { en: 'Plan created', es: 'Plan creado',
+                    de: 'Plan erstellt', ja: '予定をつくりました' },
+  'Nessun piano in programma': { en: 'No plans on', es: 'Ningún plan previsto',
+                                 de: 'Keine Pläne', ja: '予定はありません' },
+  'Vota quando puoi': { en: 'Vote when you can', es: 'Vota cuando puedas',
+                        de: 'Stimm ab, wenn du kannst', ja: '都合のいいときに投票を' },
+  'Vota qui · non serve installare niente': {
+    en: 'Vote here · nothing to install', es: 'Vota aquí · no hace falta instalar nada',
+    de: 'Hier abstimmen · nichts zu installieren', ja: 'ここで投票 · インストール不要' },
+  'Il tuo voto è registrato: tocca l’altro per cambiarlo.': {
+    en: 'Your vote is in — tap the other one to change it.',
+    es: 'Tu voto está registrado: toca el otro para cambiarlo.',
+    de: 'Deine Stimme ist da — tipp die andere an, um sie zu ändern.',
+    ja: '投票を受け付けました。もう一方を押せば変更できます。'
+  },
+  'Tocca per votare: vale subito.': { en: 'Tap to vote — it counts straight away.',
+    es: 'Toca para votar: cuenta al momento.', de: 'Tippen zum Abstimmen — zählt sofort.',
+    ja: '押すと投票できます。すぐ反映されます。' },
+  'Tocca Sì o No.': { en: 'Tap Yes or No.', es: 'Toca Sí o No.',
+                      de: 'Tipp auf Ja oder Nein.', ja: 'はい か いいえ を押してください。' },
+  'Con link': { en: 'By link', es: 'Con enlace', de: 'Per Link', ja: 'リンクで' },
+  'Tutti': { en: 'Everyone', es: 'Todos', de: 'Alle', ja: '全員' },
+  'Conferma': { en: 'Confirm', es: 'Confirmar', de: 'Bestätigen', ja: '確定' },
+  'Chiudi la decisione': { en: 'Close the decision', es: 'Cerrar la decisión',
+                           de: 'Entscheidung schließen', ja: '決めごとを締める' },
+  'Annulla la decisione': { en: 'Call off the decision', es: 'Cancelar la decisión',
+                            de: 'Entscheidung absagen', ja: '決めごとを取り下げる' },
+  'Tutti hanno risposto · Chiudi': { en: 'Everyone has replied · Close',
+    es: 'Todos han respondido · Cerrar', de: 'Alle haben geantwortet · Schließen',
+    ja: '全員が回答 · 締める' },
+  'Tutti hanno votato · Conferma': { en: 'Everyone has voted · Confirm',
+    es: 'Todos han votado · Confirmar', de: 'Alle haben abgestimmt · Bestätigen',
+    ja: '全員が投票 · 確定' },
+  'Elimina qualcosa per fare spazio.': { en: 'Delete something to make room.',
+    es: 'Elimina algo para hacer sitio.', de: 'Lösch etwas, um Platz zu schaffen.',
+    ja: '空きを作るには何か削除してください。' },
+  'Conferma di avere almeno 16 anni': { en: 'Confirm that you’re at least 16',
+    es: 'Confirma que tienes al menos 16 años', de: 'Bestätige, dass du mindestens 16 bist',
+    ja: '16 歳以上であることを確認してください' },
+  'Solo il nome': { en: 'Just the name', es: 'Solo el nombre',
+                    de: 'Nur der Name', ja: '名前だけ' },
+  'Simula i voti del gruppo': { en: 'Simulate the group’s votes',
+    es: 'Simular los votos del grupo', de: 'Die Stimmen der Gruppe simulieren',
+    ja: 'みんなの投票をシミュレート' },
+  'Simula 3 amici che votano': { en: 'Simulate 3 friends voting',
+    es: 'Simular 3 amigos votando', de: '3 Freunde abstimmen lassen',
+    ja: '友だち 3 人の投票をシミュレート' },
+
+  /* ------------------------------------------------- chi può votare */
+  'Chiunque abbia il link': { en: 'Anyone with the link', es: 'Cualquiera con el enlace',
+                              de: 'Alle mit dem Link', ja: 'リンクを持つ人なら誰でも' },
+  'Solo chi è nell’elenco': { en: 'Only those on the list', es: 'Solo quien esté en la lista',
+                              de: 'Nur wer auf der Liste steht', ja: 'リストにある人だけ' },
+  'Solo con un account': { en: 'Only with an account', es: 'Solo con una cuenta',
+                           de: 'Nur mit Konto', ja: 'アカウントがある人だけ' },
+  'Scrive il suo nome ed entra. Vedi sempre chi ha votato': {
+    en: 'They type their name and come in. You always see who voted',
+    es: 'Escribe su nombre y entra. Siempre ves quién ha votado',
+    de: 'Sie schreiben ihren Namen und kommen rein. Du siehst immer, wer abgestimmt hat',
+    ja: '名前を書いて参加します。だれが投票したかは常に分かります'
+  },
+  'Scrivi tu i nomi: chi apre il link sceglie il suo, e quel nome è preso': {
+    en: 'You write the names: whoever opens the link picks theirs, and that name is taken',
+    es: 'Escribes tú los nombres: quien abra el enlace elige el suyo, y ese nombre queda ocupado',
+    de: 'Du schreibst die Namen: Wer den Link öffnet, wählt seinen, und der Name ist dann vergeben',
+    ja: '名前はあなたが書きます。リンクを開いた人が自分の名前を選び、その名前は埋まります'
+  },
+  'Serve entrare con Google o Apple. Il più chiuso, ma qualcuno non voterà': {
+    en: 'They must sign in with Google or Apple. The tightest, but some people won’t vote',
+    es: 'Hay que entrar con Google o Apple. El más cerrado, pero alguien no votará',
+    de: 'Man muss sich mit Google oder Apple anmelden. Am dichtesten, aber manche stimmen dann nicht ab',
+    ja: 'Google か Apple でのログインが必要です。いちばん厳しく、その分だけ投票しない人も出ます'
+  },
+
   /* ===================================== i messaggi che l'app risponde
      Sono i toast di live.js: "Voto registrato", "Scrivi il tuo nome". Non
      passavano da nessuna traduzione perché live.js non conosceva il

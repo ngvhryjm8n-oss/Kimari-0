@@ -35,8 +35,16 @@ const file = process.argv[2] || 'app/index.html';
 const src = readFileSync(join(root, file), 'utf8');
 
 // Solo dentro <script>: fuori c'è il CSS, dove "per" compare in mille regole.
-let script = [...src.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/g)]
-  .map(m => m[1]).join('\n');
+//
+// Si CANCELLA il resto invece di estrarre i blocchi: unendo gli <script> con
+// un a capo i numeri di riga si sfasano rispetto al file, e un elenco di righe
+// sbagliate è peggio di nessun elenco — ci si va a guardare il punto e non c'è
+// niente. Sostituendo con spazi, ogni riga resta dov'era.
+let script = src.replace(/[^\n]/g, ' ');
+for (const m of src.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/g)) {
+  const inizio = m.index + m[0].indexOf(m[1]);
+  script = script.slice(0, inizio) + m[1] + script.slice(inizio + m[1].length);
+}
 
 // Via il dizionario, che è iniettato dentro la pagina: dentro ci sono TUTTE le
 // traduzioni, e senza questo lo strumento le segnalava come testo da tradurre.
