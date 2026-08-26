@@ -73,6 +73,32 @@ await test('la porta offre tutte e tre le strade', async () => {
   assert.ok(!D.querySelector('details #welcomeName'), 'il campo non deve essere nascosto');
 });
 
+await test('entrare col nome si vede, non si intuisce', async () => {
+  // Una persona vera ha guardato questa schermata e ha detto "non ho Google o
+  // Apple", concludendo di non poter entrare. La strada c'era, scritta come un
+  // titoletto grigio in mezzo: si leggeva come un'intestazione.
+  //
+  // È la SECONDA volta che questo ingresso si perde. La prima era finito
+  // dentro un menu a scomparsa, e quando il login si è rotto è rimasto l'unico
+  // funzionante — nascosto.
+  const dom = await avvia(false);
+  const sr = dom.window.document.getElementById('sheet-root');
+
+  assert.ok(sr.querySelector('[data-action="loginName"]'), 'manca il bottone');
+  assert.ok(sr.querySelector('#welcomeName'), 'manca il campo del nome');
+  assert.ok(!sr.querySelector('details #welcomeName, [hidden] #welcomeName'),
+    'il campo non deve stare dentro qualcosa da aprire');
+
+  // La domanda che quella persona si è fatta dev'essere scritta a schermo.
+  // Si cerca una RIGA che nomini entrambi e finisca con un punto interrogativo,
+  // in qualunque lingua: cercare le parole italiane renderebbe la prova verde
+  // in inglese per il motivo sbagliato — errore che ho già fatto oggi.
+  const domanda = sr.textContent.split('\n').map(r => r.trim()).some(r =>
+    /google/i.test(r) && /apple/i.test(r) && /[?？]\s*$/.test(r));
+  assert.ok(domanda,
+    'la schermata deve rispondere a "non ho Google o Apple", non lasciarlo intuire');
+});
+
 await test('la marcatura si legge prima che parta il render', async () => {
   // È il punto di tutta la faccenda: il prototipo decide se programmare il
   // benvenuto DURANTE il caricamento, quando live.js non esiste ancora.
