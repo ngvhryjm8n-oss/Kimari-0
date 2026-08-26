@@ -31,9 +31,17 @@ const pulito = sql.replace(/--[^\n]*/g, ' ').replace(/\/\*[\s\S]*?\*\//g, ' ');
 // hanno create altre che questa usa a sua volta. Segnalarle come inesistenti
 // è gridare al lupo, e un controllo che grida al lupo viene ignorato: è
 // successo oggi con questo stesso strumento sulla 0017 e sulla 0019.
+//
+// Ma questo sconto vale SOLO per i file che stanno in supabase/migrations.
+// Il 27/8/2026 lo strumento, lanciato su pulizia_prove.sql, controllava 10
+// tabelle su 19: il confronto "migrazioni fino a questa" era alfabetico, e
+// '0021_...' < 'pulizia_prove.sql', quindi OGNI tabella nata in una migrazione
+// del repo veniva saltata. Proprio il difetto che pulizia_prove.sql descrive
+// al suo fondo: un controllo che guarda meno di quello che il file cancella.
 const nascono = new Set();
 const dir = join(root, 'supabase', 'migrations');
-try {
+const eMigrazione = /[\\/]migrations[\\/][^\\/]+$/.test(join(root, file));
+if (eMigrazione) try {
   const qui = file.split(/[\\/]/).pop();
   for (const f of readdirSync(dir).sort()) {
     // Solo le migrazioni FINO a questa: se una tabella nasce dopo, usarla
@@ -44,7 +52,7 @@ try {
       nascono.add(m[1].toLowerCase());
     }
   }
-} catch { /* fuori da supabase/migrations non c'è niente da sapere */ }
+} catch { /* senza la cartella delle migrazioni non c'è niente da sapere */ }
 
 const nomi = [...new Set(
   [...pulito.matchAll(/\b(?:from|into|update|join)\s+public\.([a-z_][a-z0-9_]*)/gi)]
