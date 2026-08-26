@@ -679,6 +679,18 @@ export const HANDLERS = {
     return { toast: 'Ricaricato dal server' };
   },
 
+  // Gli altri due bottoni "Prototipo": simulare voti e aprire il link come
+  // ospite finto inventano dati, e su un piano vero sono la lezione 1 di
+  // STATO.md. Il CSS li nasconde quando l'app e' collegata; qui si spegne
+  // anche l'azione, perche' nascondere un pulsante non e' impedirgli di
+  // partire (gia' visto con Reset).
+  async simulate() {
+    return { toast: 'Serve solo al prototipo', skipReload: true };
+  },
+  async asGuest() {
+    return { toast: 'Serve solo al prototipo', skipReload: true };
+  },
+
   // Togliere la propria immagine: si torna alle iniziali, che restano il caso
   // normale per la maggior parte delle persone.
   async togliFoto(el, K) {
@@ -1016,7 +1028,9 @@ function scriviDoveStaEntrando(prev) {
   t.textContent = (prev.emoji || '👥') + ' ' + prev.name;
   const s = document.createElement('div');
   s.className = 'sub';
-  s.textContent = 'Ti hanno invitato · ' + quanti + (quanti === 1 ? ' persona' : ' persone');
+  s.textContent = K.t ? (quanti === 1 ? K.t('Ti hanno invitato · 1 persona')
+                                      : K.t('Ti hanno invitato · {n} persone', { n: quanti }))
+                      : 'Ti hanno invitato · ' + quanti + (quanti === 1 ? ' persona' : ' persone');
   d.append(t, s);
 
   const primo = sr.querySelector('.sheet > *') || sr.firstElementChild;

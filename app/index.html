@@ -347,6 +347,10 @@
   #toast.show{opacity:1; transform:translate(-50%, 0)}
   .proto{margin:24px 16px 0; padding:14px; border:1px dashed var(--ter); border-radius:12px}
   .proto .lab{font-size:12px; font-weight:700; color:var(--sec); text-transform:uppercase; letter-spacing:.4px; margin-bottom:8px}
+  /* Collegata al database vero (live/copia/errore), la finzione del prototipo
+     sparisce: "Simula 3 amici che votano" su un piano vero è la lezione 1.
+     live.js intercetta comunque le azioni: nascondere non è impedire. */
+  body[data-kimari] .proto{display:none}
   .history .v{font-size:12px; font-weight:700; color:var(--sec); background:var(--fill); border-radius:6px; padding:2px 6px; flex:none}
   .feed .row{align-items:flex-start}
   .feed .avatar{margin-top:2px}
@@ -3071,7 +3075,45 @@ const DIZIONARIO = {
   'ha commentato: “{testo}”': { en: 'commented: “{testo}”', es: 'ha comentado: «{testo}»',
     de: 'hat kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'a commenté : « {testo} »' },
   'hai commentato: “{testo}”': { en: 'you commented: “{testo}”', es: 'has comentado: «{testo}»',
-    de: 'hast kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'as commenté : « {testo} »' }
+    de: 'hast kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'as commenté : « {testo} »' },
+
+  /* ------------------------------ pagina gruppo e risultati, stessa notte */
+  'Gestisci': { en: 'Manage', es: 'Gestionar', de: 'Verwalten', ja: '管理', fr: 'Gérer' },
+  'Info': { en: 'Info', es: 'Info', de: 'Infos', ja: '情報', fr: 'Infos' },
+  'Privato, solo su invito · 1 persona': { en: 'Private, invite only · 1 person',
+    es: 'Privado, solo por invitación · 1 persona', de: 'Privat, nur auf Einladung · 1 Person',
+    ja: '招待制の非公開グループ · 1人', fr: 'Privé, sur invitation · 1 personne' },
+  'Privato, solo su invito · {n} persone': { en: 'Private, invite only · {n} people',
+    es: 'Privado, solo por invitación · {n} personas', de: 'Privat, nur auf Einladung · {n} Personen',
+    ja: '招待制の非公開グループ · {n}人', fr: 'Privé, sur invitation · {n} personnes' },
+  'Decidi qualcosa': { en: 'Decide something', es: 'Decide algo',
+    de: 'Entscheidet etwas', ja: '何かを決める', fr: 'Décidez un truc' },
+  'Invita con link': { en: 'Invite with a link', es: 'Invitar con enlace',
+    de: 'Per Link einladen', ja: 'リンクで招待', fr: 'Inviter par lien' },
+  'Una domanda secca per {nome}. Tu chiudi.': {
+    en: 'One straight question for {nome}. You close it.',
+    es: 'Una pregunta directa para {nome}. Tú la cierras.',
+    de: 'Eine klare Frage an {nome}. Du schließt ab.',
+    ja: '{nome} へのシンプルな質問。締めるのはあなた。',
+    fr: 'Une question directe pour {nome}. C’est toi qui clos.' },
+  'Es. Invitiamo anche Paolo?': { en: 'E.g. Should we invite Paolo too?',
+    es: 'Ej. ¿Invitamos también a Paolo?', de: 'Z. B. Laden wir auch Paolo ein?',
+    ja: '例：パオロも誘う？', fr: 'Ex. On invite aussi Paolo ?' },
+  'Es. Cosa regaliamo a papà?': { en: 'E.g. What do we get dad?',
+    es: 'Ej. ¿Qué le regalamos a papá?', de: 'Z. B. Was schenken wir Papa?',
+    ja: '例：パパに何をあげる？', fr: 'Ex. Qu’est-ce qu’on offre à papa ?' },
+  'più compatibile': { en: 'best fit', es: 'más compatible', de: 'passt am besten',
+    ja: '最有力', fr: 'la plus compatible' },
+  'persona': { en: 'person', es: 'persona', de: 'Person', ja: '人', fr: 'personne' },
+  'persone': { en: 'people', es: 'personas', de: 'Personen', ja: '人', fr: 'personnes' },
+  'Ti hanno invitato · 1 persona': { en: 'You’ve been invited · 1 person',
+    es: 'Te han invitado · 1 persona', de: 'Du bist eingeladen · 1 Person',
+    ja: '招待されています · 1人', fr: 'On t’a invité · 1 personne' },
+  'Ti hanno invitato · {n} persone': { en: 'You’ve been invited · {n} people',
+    es: 'Te han invitado · {n} personas', de: 'Du bist eingeladen · {n} Personen',
+    ja: '招待されています · {n}人', fr: 'On t’a invité · {n} personnes' },
+  'Serve solo al prototipo': { en: 'Prototype only', es: 'Solo para el prototipo',
+    de: 'Nur für den Prototyp', ja: 'プロトタイプ専用です', fr: 'Réservé au prototype' }
 };
 
 /* ------------------------------------------------------------------ */
@@ -3763,16 +3805,16 @@ function vGroup(g){
   const ps = plansOfGroup(g); const deciding = ps.filter(p => p.status === 'deciding'); const upcoming = ps.filter(p => p.status === 'confirmed' && p.kind === 'plan' && !isPast(p)).sort((a,b) => planStart(a) - planStart(b)); const decided = ps.filter(p => p.status === 'confirmed' && p.kind === 'decision'); const past = ps.filter(isPast);
   const u = me(); const sec = u.sections.find(s => s.id === u.groupSections[g.id]); const admin = isAdmin(g);
   const block = (title, list) => list.length ? `<div class="group-title">${title}</div><div class="group">${list.map(planRow).join('')}</div>` : '';
-  return `${nav(g.name, 'home', `<button class="textbtn" data-action="manageGroup" data-g="${g.id}">${admin ? 'Gestisci' : 'Info'}</button>`)}
+  return `${nav(g.name, 'home', `<button class="textbtn" data-action="manageGroup" data-g="${g.id}">${admin ? t('Gestisci') : t('Info')}</button>`)}
   <div class="view">
     <div class="pad" style="padding-top:12px"><div class="card tinted" style="--h:${hueOf(g.id)}">
       <button class="gicon xl" style="background:${g.color}26" data-action="${admin ? 'editGroup' : 'noop'}" data-g="${g.id}" aria-label="${t('Icona del gruppo')}">${g.emoji}</button>
       <h1 class="title">${esc(g.name)}</h1>
-      <div class="s" style="display:flex;align-items:center;justify-content:center;gap:5px">${mi('lucchetto', 17, '🔒')} Privato, solo su invito · ${g.members.length} persone${sec ? ' · ' + esc(sec.name) : ''}</div>
+      <div class="s" style="display:flex;align-items:center;justify-content:center;gap:5px">${mi('lucchetto', 17, '🔒')} ${g.members.length === 1 ? t('Privato, solo su invito · 1 persona') : t('Privato, solo su invito · {n} persone', { n: g.members.length })}${sec ? ' · ' + esc(sec.name) : ''}</div>
       <div class="avatars" style="justify-content:center;margin-top:12px">${g.members.slice(0, 8).map(id => avatar(nameOf(id), '', id)).join('')}${g.members.length > 8 ? `<span class="count">+${g.members.length - 8}</span>` : ''}</div>
       <div class="s" style="margin-top:6px">${g.members.map(id => esc(nameOf(id)) + (id === g.createdBy ? ' ★' : g.admins.includes(id) ? ' ✦' : '')).join(', ')}</div>
     </div></div>
-    <div class="pad stack" style="margin-top:12px"><button class="btn primary" data-action="newInGroup" data-g="${g.id}">${t('Nuovo piano')}</button><div style="display:flex;gap:10px"><button class="btn tint" data-action="newDecision" data-g="${g.id}">${mi('domanda', 24, '❓')} Decidi qualcosa</button><button class="btn tint" data-action="inviteGroup" data-g="${g.id}">${mi('invito', 24)} Invita con link</button></div></div>
+    <div class="pad stack" style="margin-top:12px"><button class="btn primary" data-action="newInGroup" data-g="${g.id}">${t('Nuovo piano')}</button><div style="display:flex;gap:10px"><button class="btn tint" data-action="newDecision" data-g="${g.id}">${mi('domanda', 24, '❓')} ${t('Decidi qualcosa')}</button><button class="btn tint" data-action="inviteGroup" data-g="${g.id}">${mi('invito', 24)} ${t('Invita con link')}</button></div></div>
     ${block('Da decidere', deciding)}${block('In programma', upcoming)}${block('Decise', decided)}${block('Passati', past)}
     ${ps.length ? '' : `<div class="intro" style="display:flex;gap:12px;align-items:center">${mi('shrug', 46)}<div>${t('Nessun piano ancora. Il primo lo crei tu: cena, weekend, partita. Oppure "Decidi qualcosa" per una domanda secca.')}</div></div>`}
     <p class="foot">${t('★ creatore · ✦ admin. Gli admin possono rimuovere persone e cancellare commenti.')}</p>
@@ -3998,8 +4040,8 @@ function vPlan(p){
       ${web && !isOrg && hasVoted ? `<div class="pad" style="margin-top:24px"><button class="btn tint" data-action="tab" data-to="new">${t('Fai lo stesso per il tuo gruppo')}</button></div><div class="group-foot" style="text-align:center">${t('Crea un piano in 30 secondi, direttamente da qui.')}</div>` : ''}
       ${isOrg && missing.length ? `<div class="proto"><div class="lab">${t('Prototipo')}</div><button class="btn tint sm" data-action="simulate" data-plan="${p.id}">${g ? t('Simula i voti del gruppo') : t('Simula 3 amici che votano')}</button></div>` : ''}
     </div>
-    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? t('Chiudi la decisione') : 'Conferma il piano'}</button></div>
-    <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? t('Annulla la decisione') : 'Annulla il piano'}</div></button></div>
+    ${isOrg ? `<div class="cta">${missing.length ? `<button class="btn tint" style="flex:0 0 46%" data-action="nudge">${t('Sollecita')}</button>` : ''}<button class="btn primary" data-action="openConfirm">${decision ? t('Chiudi la decisione') : t('Conferma il piano')}</button></div>
+    <div class="group" style="margin-top:14px"><button class="row link" data-action="cancelPlan"><div class="grow t" style="color:var(--red)">${decision ? t('Annulla la decisione') : t('Annulla il piano')}</div></button></div>
     <div class="group-foot">${t('Se salta, dirlo qui è meglio che sparire: chi ha il link lo vede, e messaggi e spese restano.')}</div>` : ''}${!web && !isOrg && !hasVoted && !(decision && p.extras[0].binary) ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="vote">${t(t('Invia il mio voto'))}</button></div>` : ''}${!web && isOrg && votedIds(p).length && !missing.length ? `<div style="height:92px"></div><div class="ctabar"><button class="btn primary" data-action="openConfirm">${decision ? t('Tutti hanno risposto · Chiudi') : t('Tutti hanno votato · Conferma')}</button></div>` : ''}`;
   }
   if(decision){
@@ -4124,7 +4166,7 @@ function sheetName(p){
 function sheetConfirm(p, fresh){
   const fields = decidingFields(p); if(fresh || !state.picks){ state.picks = {}; fields.forEach(f => { state.picks[f] = results(p, f).suggested || fieldObj(p, f).candidates[0].id; }); }
   return `<h2>${p.kind === 'decision' ? 'Chiudi la decisione' : 'Conferma il piano'}</h2><p class="sub">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}. Il suggerimento è l'opzione compatibile con più persone; la scelta finale è tua.</p>
-  ${fields.map(f => { const r = results(p, f); return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group radio">${r.counts.map(({ c, voters }) => `<button class="row ${state.picks[f] === c.id ? 'on' : ''}" data-action="pick" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}${r.suggested === c.id ? '<span class="tag">più compatibile</span>' : ''}</div><div class="s">${voters.length} ${voters.length === 1 ? 'persona' : 'persone'}</div></div></button>`).join('')}</div>`; }).join('')}
+  ${fields.map(f => { const r = results(p, f); return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group radio">${r.counts.map(({ c, voters }) => `<button class="row ${state.picks[f] === c.id ? 'on' : ''}" data-action="pick" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}${r.suggested === c.id ? `<span class="tag">${t('più compatibile')}</span>` : ''}</div><div class="s">${voters.length} ${voters.length === 1 ? t('persona') : t('persone')}</div></div></button>`).join('')}</div>`; }).join('')}
   <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? 'Chiudi' : t('Conferma')}</button></div>`;
 }
 function sheetMessage(title, sub, text, p, previewSub){
@@ -4217,9 +4259,9 @@ function sheetExpense(p){
 }
 function sheetDecision(g){
   const d = state.ddraft;
-  return `<h2 style="display:flex;align-items:center;gap:9px">${mi('domanda', 30)} Decidi qualcosa</h2><p class="sub">Una domanda secca per ${esc(g.name)}. Tu chiudi.</p>
+  return `<h2 style="display:flex;align-items:center;gap:9px">${mi('domanda', 30)} ${t('Decidi qualcosa')}</h2><p class="sub">${t('Una domanda secca per {nome}. Tu chiudi.', { nome: esc(g.name) })}</p>
   <div class="pad" style="margin-bottom:12px"><div class="seg"><button class="${d.binary ? 'on' : ''}" data-action="dBinary" data-v="1">${t('Sì o No')}</button><button class="${d.binary ? '' : 'on'}" data-action="dBinary" data-v="0">${t('Scelta tra opzioni')}</button></div></div>
-  <div class="group"><div class="row"><input class="input" id="dq" placeholder="${d.binary ? 'Es. Invitiamo anche Paolo?' : 'Es. Cosa regaliamo a papà?'}" value="${esc(d.question)}" data-dbind="question" maxlength="80"></div></div>
+  <div class="group"><div class="row"><input class="input" id="dq" placeholder="${d.binary ? t('Es. Invitiamo anche Paolo?') : t('Es. Cosa regaliamo a papà?')}" value="${esc(d.question)}" data-dbind="question" maxlength="80"></div></div>
   ${d.binary ? `<div class="group-foot">${t('Due bottoni, 👍 Sì e 👎 No. Il voto vale subito, vince la maggioranza di chi risponde.')}</div>` : `<div class="group-title">Opzioni · ${d.options.length} di 5</div><div class="group">${d.options.map((o, i) => `<div class="row"><span class="chk on" style="background:var(--fill);border-color:var(--fill)"></span><div class="grow t">${esc(o)}</div><button class="x" data-action="rmDOpt" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}${d.options.length < 5 ? `<div class="row"><input class="input" id="dopt" placeholder="${t('Un\'opzione')}" maxlength="40"><button class="add" data-action="addDOpt">${t('Aggiungi')}</button></div>` : ''}</div>
   <div class="chips"><button class="chip" data-action="dPreset" data-v="Pizza|Sushi|Carne">${t('Pizza / Sushi / Carne')}</button><button class="chip" data-action="dPreset" data-v="${t('Mare|Montagna|Città')}">${t('Mare / Montagna / Città')}</button></div>`}
   <div class="actions"><button class="btn primary" data-action="saveDecision" data-g="${g.id}">${t('Apri la decisione')}</button></div>`;
