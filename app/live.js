@@ -1410,6 +1410,38 @@ export function schermoNonCollegato(K, e) {
   app.appendChild(card);
 }
 
+// ------------------------------------------------------------ deep link
+// Dentro l'app nativa i link di kimariapp.com arrivano qui (Android App
+// Links / iOS Universal Links) invece di aprire il browser. L'URL del sito
+// diventa la rotta interna che l'app sa già gestire:
+//   https://kimariapp.com/?t=TOKEN       → #/i/TOKEN   (invito a un piano)
+//   https://kimariapp.com/app/#/gi/TOKEN → #/gi/TOKEN  (invito a un gruppo)
+//   qualsiasi altro URL del dominio      → si apre l'app e basta
+// Il reload è voluto: boot() legge la rotta all'avvio, e ripartire da lì è
+// l'unico percorso già provato — un secondo percorso "a caldo" sarebbe da
+// mantenere e da provare a parte.
+export function rottaDaUrlNativo(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname !== 'kimariapp.com') return null;
+    const t = u.searchParams.get('t');
+    if (t) return '#/i/' + encodeURIComponent(t);
+    const g = String(u.hash || '').match(/^#\/?gi\/([^/?#]+)/);
+    if (g) return '#/gi/' + g[1];
+    return null;
+  } catch { return null; }
+}
+
+if (typeof window !== 'undefined' && window.Capacitor
+    && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener('appUrlOpen', ({ url }) => {
+    const rotta = rottaDaUrlNativo(url);
+    if (!rotta) return;
+    location.hash = rotta;
+    location.reload();
+  });
+}
+
 if (typeof window !== 'undefined' && window.document) {
   if (document.readyState === 'complete') boot();
   else window.addEventListener('load', boot);

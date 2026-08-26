@@ -71,6 +71,42 @@ telefono con `adb install` o copiandolo e aprendolo. Per l'App Bundle firmato
 da caricare sul Play Store (`bundleRelease` + chiave di firma) Android Studio
 resta la strada più comoda, ma anche quello si può fare da qui.
 
+### 2 quater. I link che aprono l'app (fatto il 27/8/2026, lato Android)
+
+La domanda di Vincenzo: «se ho l'app e mi mandano un link, voglio che si apra
+l'app, non il browser». Si chiama **App Links** su Android, **Universal
+Links** su iPhone, e ha tre pezzi:
+
+1. **L'intent-filter nel manifest** — lo mette `node tools/android-deeplink.mjs`
+   (già nella catena di `npm run android`). Va rilanciato dopo ogni
+   `npx cap add android`, perché la cartella è generata.
+2. **`/.well-known/assetlinks.json` sul dominio** — è nel repo e va online
+   con la prossima pubblicazione (insieme a `.nojekyll`, senza il quale
+   GitHub Pages nasconde le cartelle che iniziano col punto). Contiene
+   l'impronta SHA-256 del certificato di firma: ora c'è quella di **debug**;
+   quando nascerà la chiave del Play Store, la sua impronta va **aggiunta**
+   all'elenco, altrimenti l'APK dello store aprirà il browser.
+   Senza questo file verificato, Android 12+ ignora l'intent-filter.
+3. **Il listener `appUrlOpen`** in `app/live.js` (plugin `@capacitor/app`):
+   trasforma l'URL del sito nella rotta interna — `?t=TOKEN` → `#/i/TOKEN`
+   (piano), `/app/#/gi/TOKEN` → `#/gi/TOKEN` (gruppo), il resto apre l'app
+   e basta.
+
+Per **iPhone** la metà lato sito è `/.well-known/apple-app-site-association`
+(serve il TEAM_ID, che sta in `D:\Kimari\segreti`) e la metà lato app è
+l'entitlement Associated Domains — si fanno **con la build iOS sul Mac**.
+
+**La PWA (aggiungi a Home) non può intercettare i link**: è un limite della
+piattaforma, non un difetto nostro. Chi ha la PWA continuerà ad aprire i
+link nel browser; solo l'app nativa li cattura.
+
+Per provare dal PC, col telefono collegato via USB:
+
+```bash
+adb shell pm verify-app-links --re-verify it.kimari.app
+adb shell am start -a android.intent.action.VIEW -d "https://kimariapp.com/?t=PROVA"
+```
+
 ### 3. Provarla sul telefono
 
 Attiva le **Opzioni sviluppatore** sul telefono (Impostazioni → Info →

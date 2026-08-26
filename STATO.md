@@ -104,7 +104,7 @@ Android Studio: non è installato, sono ~8 GB, e serve per compilare l'APK.
 
 Gli asset per le schede degli store sono in `store/`: icone 512/1024 a tutto
 quadro, feature graphic 1024×500, screenshot chiari/IT/EN presi dalla
-produzione, e `store/LISTING.md` con i testi in cinque lingue e le avvertenze
+produzione, e `store/LISTING.md` con i testi in sei lingue e le avvertenze
 (l'icona grande è un ingrandimento della 192px: prima dell'App Store va
 ridisegnata vettoriale; gli screenshot vanno rifatti con un piano dal nome
 presentabile, non PROVA-CLAUDE).

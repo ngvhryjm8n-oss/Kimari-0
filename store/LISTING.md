@@ -46,6 +46,7 @@ poi ritaglio simmetrico dei margini.
 | es | El grupo vota desde el enlace, tú confirmas. Fechas, sitios y gastos juntos. |
 | de | Die Gruppe stimmt per Link ab, du bestätigst. Termine, Orte, Kosten gemeinsam. |
 | ja | みんながリンクから投票し、あなたが決めます。日程も場所も割り勘も一緒に。 |
+| fr | Le groupe vote depuis un lien, tu confirmes. Dates, lieux et frais, ensemble. |
 
 **Descrizione completa** (max 4000 — versione italiana; le altre si traducono
 da questa quando serve):
@@ -64,7 +65,7 @@ da questa quando serve):
 > • Spese e conti: chi ha pagato cosa, chi deve quanto, senza fogli di calcolo
 > • Proposte di modifica: se il piano cambia, il gruppo lo vede e approva
 > • Notifiche quando qualcuno vota o il piano si conferma
-> • In cinque lingue, messaggi WhatsApp compresi
+> • In sei lingue, messaggi WhatsApp compresi
 >
 > Kimari (決まり, "deciso") fa una cosa sola: trasforma le opinioni del gruppo
 > in una decisione. Il resto — le chiacchiere — resta su WhatsApp, dov'è giusto
@@ -87,6 +88,7 @@ richiedono 16+ (dichiararlo nel questionario contenuti)
 | es | El grupo vota, tú confirmas (27) |
 | de | Die Gruppe wählt, du bestätigst (30) |
 | ja | みんなで投票、あなたが決定 (14) |
+| fr | Le groupe vote, tu confirmes (28) |
 
 **Parole chiave** (max 100, separate da virgola, senza spazi dopo la virgola):
 

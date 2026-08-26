@@ -691,6 +691,16 @@ await test('la rotta di un invito a un gruppo si riconosce', () => {
   assert.equal(live.tokenGruppoDaRotta('#/g/abc123'), null, 'aprire un gruppo non è un invito');
 });
 
+await test('un deep link nativo diventa la rotta interna giusta', () => {
+  // Dentro l'app nativa i link di kimariapp.com arrivano da appUrlOpen:
+  // l'URL del sito deve diventare la rotta che l'app sa già gestire.
+  assert.equal(live.rottaDaUrlNativo('https://kimariapp.com/?t=vyNvw92m'), '#/i/vyNvw92m');
+  assert.equal(live.rottaDaUrlNativo('https://kimariapp.com/app/#/gi/abc123'), '#/gi/abc123');
+  assert.equal(live.rottaDaUrlNativo('https://kimariapp.com/'), null, 'la home apre l\'app e basta');
+  assert.equal(live.rottaDaUrlNativo('https://altrodominio.com/?t=x'), null, 'altri domini non sono nostri');
+  assert.equal(live.rottaDaUrlNativo('roba non-url'), null, 'un URL rotto non deve far cadere niente');
+});
+
 await test('ogni azione intercettata sa davvero scrivere', () => {
   // Se un'azione finisce nella tabella ma non ha un gestore valido, il
   // prototipo non la gestisce più e il bottone smette di funzionare in

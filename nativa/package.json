@@ -5,11 +5,12 @@
   "description": "L'app web di Kimari dentro una scatola nativa. I file di www/ NON si modificano: si generano con `node ../tools/prepara-nativa.mjs`.",
   "scripts": {
     "prepara": "node ../tools/prepara-nativa.mjs",
-    "android": "npm run prepara && npx cap sync android && npx cap open android",
+    "android": "npm run prepara && node ../tools/android-deeplink.mjs && npx cap sync android && npx cap open android",
     "ios": "npm run prepara && npx cap sync ios && npx cap open ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0"
   }
