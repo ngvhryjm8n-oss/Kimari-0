@@ -234,6 +234,10 @@ export async function adottaIdentitaGoogle() {
             || (s.user.email || '').split('@')[0] || 'Io';
   await ensureActor(nome);
   if (s.user.email) { try { await setMyEmail(s.user.email); } catch { /* non blocca */ } }
+  // Il passo che chiude il giro virale: qualcuno e' arrivato da un link,
+  // ha votato da ospite, e adesso ha un account suo. `inCorso` distingue chi
+  // e' passato per il collegamento (era ospite) da chi entra la prima volta.
+  logEvent(inCorso ? 'guest_to_account' : 'signup', null);
   return true;
 }
 

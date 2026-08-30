@@ -120,6 +120,10 @@ export const HANDLERS = {
     const p = curPlan(K) || Object.values(K.state.plans)[0];
     await data.joinPlan(p.token, null, el.dataset.id);
     data.saveToken(p.id, p.token);
+    // Il passo che misura la viralita': quanti, ricevuto il link, entrano.
+    // Senza, il funnel si ferma a "ha aperto l'invito" e non si sa quanti si
+    // fermano davanti al nome da scrivere.
+    data.logEvent('guest_joined', p.id);
     return { toast: 'Bentornato', closeSheet: true, go: 'p/' + p.id };
   },
 
@@ -129,6 +133,7 @@ export const HANDLERS = {
     const p = curPlan(K) || Object.values(K.state.plans)[0];
     await data.joinPlan(p.token, nome, null);
     data.saveToken(p.id, p.token);
+    data.logEvent('guest_joined', p.id);
     return { toast: 'Ci sei', closeSheet: true, go: 'p/' + p.id };
   },
 
@@ -359,7 +364,11 @@ export const HANDLERS = {
   },
 
   async rsvp(el, K) {
-    await data.setRsvp(curPlan(K).id, el.dataset.v);
+    const p = curPlan(K);
+    await data.setRsvp(p.id, el.dataset.v);
+    // Su un piano gia' deciso il "ci sono" e' l'unica risposta che si chiede:
+    // e' li' che si vede se il gruppo usa Kimari o torna su WhatsApp.
+    data.logEvent('rsvp_submitted', p.id);
     return {};
   },
 
@@ -511,8 +520,12 @@ export const HANDLERS = {
     const gd = K.state.gdraft;
     if (!gd || !gd.name.trim()) return { toast: 'Dai un nome al gruppo', skipReload: true };
 
+    const eraNuovo = !gd.id;
     if (gd.id) await data.updateGroup(gd.id, gd.name.trim(), gd.emoji, gd.color);
     else gd.id = await data.createGroup(gd.name.trim(), gd.emoji, gd.color);
+    // Solo la creazione: rinominare un gruppo non e' un gruppo nuovo, e
+    // contarlo gonfierebbe l'unica metrica che dice se Kimari mette radici.
+    if (eraNuovo) data.logEvent('group_created', null);
 
     // Le sezioni sono private: vivono in tabelle a parte, non nel gruppo.
     let sectionId = gd.sectionId;
@@ -1141,6 +1154,18 @@ function wire(K) {
   document.addEventListener('click', e => {
     const el = e.target.closest('[data-action]');
     if (!el) return;
+
+    // Condividere e copiare li gestisce il PROTOTIPO (condivi/copy in
+    // index.html), e devono continuare a farlo: metterli fra gli HANDLERS
+    // vorrebbe dire intercettarli, e da qui in giu' si chiama
+    // stopPropagation — la condivisione, che e' il gesto che fa vivere il
+    // prodotto, smetterebbe di funzionare. Qui si registra soltanto, senza
+    // toccare il corso delle cose: nessun return, nessun preventDefault.
+    if (el.dataset.action === 'share' || el.dataset.action === 'copy') {
+      const p = curPlan(K);
+      data.logEvent('share_clicked', p ? p.id : null);
+    }
+
     const h = HANDLERS[el.dataset.action];
     if (!h) return;                                   // non nostra
 

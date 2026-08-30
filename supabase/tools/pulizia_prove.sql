@@ -78,6 +78,14 @@ delete from public.plan_changes
 delete from public.funnel_events
  where plan_id in (select id from public.plans where title like 'PROVA-CLAUDE%');
 
+-- AGGIUNTO IL 28/8. Provando che log_event risponda anche a un ospite senza
+-- profilo (serve per guest_joined) ho lasciato una riga con actor_id E plan_id
+-- a null. Un ospite VERO non puo' produrla: quando entra in un piano ha gia'
+-- un profilo, perche' glielo crea join_plan. La condizione e' stretta apposta
+-- — senza il doppio null cancellerebbe eventi buoni.
+delete from public.funnel_events
+ where actor_id is null and plan_id is null;
+
 delete from public.plans where title like 'PROVA-CLAUDE%';
 delete from public.groups where name like 'PROVA-CLAUDE%';
 

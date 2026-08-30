@@ -179,9 +179,14 @@ await test('saveGroup crea il gruppo e gli attacca la sezione', async () => {
                                  color: '#34C759', sectionId: 's1', members: new Set() } } };
   const res = await live.HANDLERS.saveGroup(null, K);
 
-  assert.deepEqual(calls.map(c => c.name), ['createGroup', 'setGroupSection']);
-  assert.deepEqual(calls[0].args, ['Padel', '🎾', '#34C759'], 'il nome va ripulito');
-  assert.deepEqual(calls[1].args, ['g-nuovo', 's1'], 'la sezione va sull\'id appena creato');
+  assert.deepEqual(calls.map(c => c.name), ['createGroup', 'logEvent', 'setGroupSection']);
+  // Per NOME e non per posizione: infilare una misurazione in mezzo non deve
+  // far cadere una prova che parla di tutt'altro. E' successo il 28/8/2026
+  // aggiungendo group_created.
+  const arg = n => (calls.find(c => c.name === n) || {}).args;
+  assert.deepEqual(arg('createGroup'), ['Padel', '🎾', '#34C759'], 'il nome va ripulito');
+  assert.deepEqual(arg('setGroupSection'), ['g-nuovo', 's1'], 'la sezione va sull\'id appena creato');
+  assert.deepEqual(arg('logEvent'), ['group_created', null], 'il gruppo nuovo si conta');
   assert.equal(res.closeSheet, true);
 });
 
@@ -197,9 +202,10 @@ await test('saveGroup crea prima la sezione nuova, poi ci mette il gruppo', asyn
   const K = { state: { gdraft: { id: null, name: 'Amici', emoji: '🎉', color: '#007AFF',
                                  sectionId: 'new', newSection: ' Roma ', members: new Set() } } };
   await live.HANDLERS.saveGroup(null, K);
-  assert.deepEqual(calls.map(c => c.name), ['createGroup', 'createSection', 'setGroupSection']);
-  assert.deepEqual(calls[1].args, ['Roma']);
-  assert.deepEqual(calls[2].args, ['g-nuovo', 's-nuova']);
+  assert.deepEqual(calls.map(c => c.name), ['createGroup', 'logEvent', 'createSection', 'setGroupSection']);
+  const arg = n => (calls.find(c => c.name === n) || {}).args;
+  assert.deepEqual(arg('createSection'), ['Roma']);
+  assert.deepEqual(arg('setGroupSection'), ['g-nuovo', 's-nuova']);
 });
 
 await test('saveGroup senza nome non tocca il database', async () => {
