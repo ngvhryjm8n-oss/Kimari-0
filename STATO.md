@@ -182,6 +182,33 @@ sembra giusto.
 
 ---
 
+## La notte del 28 agosto: la roadmap V1 contro il codice
+
+Arrivata `ROADMAP-V1.md`, l'ho confrontata col repo prima di eseguirla. Il
+confronto è nel documento stesso; qui le tre cose che contano.
+
+**P0.5 sicurezza: verificata, non creduta.** `tools/controlla-rls.mjs` e
+`tools/controlla-scritture.mjs` attaccano la produzione da fuori con una
+sessione anonima nuova. 27 tabelle chiuse in lettura, 11 tentativi di
+scrittura respinti — e le RPC su un piano altrui rispondono `P0001 not
+organizer`, cioè il controllo sta nel database e non nell'interfaccia.
+
+**Un buco vero, trovato dov'era scritto "impostazioni".** I dieci
+interruttori delle notifiche nel Profilo erano finti in tre modi insieme
+(memoria volatile, niente sul server, consegna che non li guardava), e
+silenziare un gruppo non fermava le push. Chiuso con la **0022**, che va
+applicata a mano.
+
+**Il giro completo si riprova da solo.** `tools/giro-completo.mjs`: dodici
+passi, venti secondi, contro la produzione. Un controllo che costa dieci
+minuti di clic non lo si fa a ogni modifica; uno che ne costa venti sì.
+
+Tre volte, scrivendo questi strumenti, la prima versione ha accusato il
+codice giusto perché sbagliavo io a chiamare (nomi di colonna, firme di RPC,
+un `from` dentro `is not distinct from` letto come tabella). È la lezione 3
+che si ripresenta ogni volta che si scrive uno strumento nuovo: la prima
+domanda da farsi non è «cosa ha trovato» ma «ha davvero guardato».
+
 ## La prossima cosa da fare
 
 Non è tecnica.

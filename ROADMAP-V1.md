@@ -154,7 +154,7 @@ Serve a non rifare il fatto e a non dare per fatto il mancante.
 | punto | stato reale | come lo so |
 |---|---|---|
 | P0.1 persistenza | **quasi tutto fatto**, un buco vero trovato e chiuso | `npm test` conta 40 azioni su 43 che scrivono; le preferenze notifiche erano finte (sotto) |
-| P0.2 giro ospite | **fatto e riprovato** il 27/8 contro la produzione | crea → invito → voto da ospite → revoca, tutto verificato a mano |
+| P0.2 giro ospite | **fatto, e ora si riprova da solo**: 12 passi su 12 | `node tools/giro-completo.mjs`, contro la produzione |
 | P0.3 token | **fatto**: `gen_random_bytes(12)` base64url, hash sha256 nel database | `supabase/schema/funzioni_v0_ESTRATTE_non_applicare.sql` |
 | P0.3 link corti `/i/{t}` | **non fatto, e da decidere** — vedi sotto | GitHub Pages non riscrive le rotte |
 | P0.4 preview WhatsApp | **non fatto, e da decidere** — vedi sotto | serve un server, e il sito è statico per regola 1 |
