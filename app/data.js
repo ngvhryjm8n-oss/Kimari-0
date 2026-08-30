@@ -284,7 +284,7 @@ export async function loadState() {
   // le camminava dietro ripetendo quello che aveva già fatto.
   const [actor,
          groupRows, memberRows, sectionRows, groupSectionRows,
-         placeRows, entRows, friendRows, muteRows, placeMediaRows,
+         placeRows, entRows, friendRows, muteRows, pushPrefRows, placeMediaRows,
          planRows,
          cands, parts, ballots, changes, extras, comments,
          proposals, expenses, settlements, media,
@@ -299,6 +299,12 @@ export async function loadState() {
     rows(sb.from('entitlements').select('*'), 'il tuo piano'),
     rows(sb.from('friendships').select('friend_id'), 'i tuoi amici'),
     rows(sb.from('mutes').select('group_id'), 'i gruppi silenziati'),
+    // Le preferenze delle notifiche (0022). Tollerante di proposito: se la
+    // migrazione non e' ancora applicata la tabella non c'e', e l'app deve
+    // partire lo stesso con i valori di partenza invece di cadere per tutti —
+    // e' successo il 26/8 con actors.avatar_path (lezione 4 di STATO.md).
+    rows(sb.from('push_prefs').select('genere, attiva'), 'le preferenze delle notifiche')
+      .catch(() => []),
     rows(sb.from('place_media').select('*'), 'le foto dei posti'),
     rows(sb.from('plans').select('*'), 'i piani'),
 
@@ -388,7 +394,18 @@ export async function loadState() {
     });
   }
 
-  const stato = { me: actor.id, people, groups, plans };
+  // Le preferenze delle notifiche: nel database ci sono solo le DIFFERENZE dal
+  // valore di partenza (0022), quindi qui si parte dai valori di partenza e si
+  // sovrascrive quello che la persona ha cambiato. L'elenco deve dire le stesse
+  // cose di push_default() in 0022 e di `settings:{ push:` in app/index.html.
+  const settings = { push: { vote: true, confirm: true, change: true, proposal: true,
+                             late: true, comment: false, media: false, expense: true,
+                             reminder: true, group: false } };
+  for (const r of pushPrefRows) {
+    if (r && r.genere in settings.push) settings.push[r.genere] = !!r.attiva;
+  }
+
+  const stato = { me: actor.id, people, groups, plans, settings };
   salvaCopia(stato);
   return stato;
 }
@@ -617,6 +634,10 @@ export const previewInvite = t => rpc('preview_invite', { p_token: t });
 /* --------------- quanto è chiuso un piano (0012) --------------- */
 export const setJoinPolicy = (plan, policy) =>
   rpc('set_join_policy', { p_plan: plan, p_policy: policy });
+// Una preferenza di notifica (0022). Il database salva solo le differenze dal
+// valore di partenza, quindi qui non serve mandarle tutte e dieci.
+export const setPushPref = (genere, attiva) =>
+  rpc('set_push_pref', { p_genere: genere, p_attiva: !!attiva });
 export const addPlanPlaceholder = (plan, name) =>
   rpc('add_plan_placeholder', { p_plan: plan, p_name: name });
 export const removePlanPlaceholder = (actor, plan) =>

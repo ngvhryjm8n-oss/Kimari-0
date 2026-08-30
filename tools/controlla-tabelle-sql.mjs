@@ -55,7 +55,15 @@ if (eMigrazione) try {
 } catch { /* senza la cartella delle migrazioni non c'è niente da sapere */ }
 
 const nomi = [...new Set(
-  [...pulito.matchAll(/\b(?:from|into|update|join)\s+public\.([a-z_][a-z0-9_]*)/gi)]
+  // Il (?!\s*\() esclude le chiamate a funzione. Senza, "is not distinct FROM
+  // public.push_default(p_genere)" veniva letto come una tabella inesistente:
+  // il 28/8/2026 lo strumento ha bocciato la 0022 per questo. Un controllo che
+  // grida al lupo viene ignorato (lezione 3 di STATO.md).
+  // Il \b prima del (?!\s*\() non e' decorativo: senza, il motore torna
+  // indietro dentro il nome pur di far fallire la lookahead, e "push_coda("
+  // diventava la tabella inesistente "push_cod". Prima versione sbagliata
+  // scritta e corretta nella stessa mezz'ora, il 28/8/2026.
+  [...pulito.matchAll(/\b(?:from|into|update|join)\s+public\.([a-z_][a-z0-9_]*)\b(?!\s*\()/gi)]
     .map(m => m[1].toLowerCase())
 )].filter(t => !nascono.has(t)).sort();
 

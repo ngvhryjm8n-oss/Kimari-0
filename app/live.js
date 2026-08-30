@@ -36,6 +36,15 @@ export function applyState(state, loaded) {
   Object.assign(state.groups, loaded.groups);
   Object.assign(state.plans, loaded.plans);
 
+  // Le preferenze delle notifiche arrivano dal server (0022). Prima vivevano
+  // solo qui in memoria: ricaricare la pagina le riazzerava, e la funzione di
+  // consegna non le ha mai guardate — i dieci interruttori del Profilo erano
+  // finti. Se il server non le manda (migrazione non ancora applicata) si
+  // lascia quello che c'e', invece di azzerarlo.
+  if (loaded.settings && loaded.settings.push) {
+    Object.assign(state.settings.push, loaded.settings.push);
+  }
+
   // Chi arriva da un invito a un gruppo non ha ancora un'identità: al primo
   // avvio mostraInvitoGruppo segna il token come "già mostrato", poi la
   // schermata di benvenuto gli finisce sopra. Dopo il login la guardia era
@@ -640,6 +649,25 @@ export const HANDLERS = {
   async muteGroup(el, K) {
     const ora = await data.toggleGroupMute(el.dataset.g);
     return { toast: ora ? 'Gruppo silenziato' : 'Notifiche riattivate', closeSheet: true };
+  },
+
+  // I dieci interruttori delle notifiche nel Profilo. Il prototipo li teneva
+  // in memoria e basta: ricaricare la pagina li riazzerava, e la funzione di
+  // consegna non li ha mai guardati — erano finti. Ora la scelta va sul
+  // server (0022), che e' anche l'unico posto dove puo' servire a qualcosa:
+  // chi decide se mandare la notifica e' il database, non questo telefono.
+  async push(el, K) {
+    const genere = el.dataset.k;
+    const ora = !K.state.settings.push[genere];
+    // Prima si scrive, poi si mostra. Al contrario, un errore di rete
+    // lascerebbe l'interruttore acceso e la notifica spenta.
+    await data.setPushPref(genere, ora);
+    K.state.settings.push[genere] = ora;
+    // skipReload: rileggere tutto per un interruttore sono 27 letture per
+    // niente. Ma allora il ridisegno tocca a noi, se no l'interruttore resta
+    // dov'era e sembra che il tocco non sia arrivato.
+    if (K.render) K.render();
+    return { skipReload: true };
   },
 
   // "Aggiungi link" scriveva solo in memoria: il link compariva, arrivava il

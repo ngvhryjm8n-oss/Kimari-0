@@ -150,3 +150,51 @@ tutto il resto può permettersi di essere solo buono.
 Questa parte non è nella roadmap originale: è il confronto fra quello che il
 documento chiede e quello che il repo ha davvero, fatto prima di eseguire.
 Serve a non rifare il fatto e a non dare per fatto il mancante.
+
+| punto | stato reale | come lo so |
+|---|---|---|
+| P0.1 persistenza | **quasi tutto fatto**, un buco vero trovato e chiuso | `npm test` conta 40 azioni su 43 che scrivono; le preferenze notifiche erano finte (sotto) |
+| P0.2 giro ospite | **fatto e riprovato** il 27/8 contro la produzione | crea → invito → voto da ospite → revoca, tutto verificato a mano |
+| P0.3 token | **fatto**: `gen_random_bytes(12)` base64url, hash sha256 nel database | `supabase/schema/funzioni_v0_ESTRATTE_non_applicare.sql` |
+| P0.3 link corti `/i/{t}` | **non fatto, e da decidere** — vedi sotto | GitHub Pages non riscrive le rotte |
+| P0.4 preview WhatsApp | **non fatto, e da decidere** — vedi sotto | serve un server, e il sito è statico per regola 1 |
+| P0.5 sicurezza | **verificata sul campo**, 0 fughe | `node tools/controlla-rls.mjs` e `tools/controlla-scritture.mjs` |
+| P0.6 login | **fatto** (Google + Apple, niente password) | attivi dal 25/8 |
+| P1 micro-copy | in corso | |
+| analytics | **parziale**: `log_event` e `funnel_events` esistono | da confrontare con l'elenco della roadmap |
+
+### Il buco di P0.1 che c'era davvero
+
+I dieci interruttori delle notifiche nel Profilo **erano finti**, in tre modi
+insieme: il client li teneva in memoria (bastava ricaricare per riazzerarli),
+non finivano da nessuna parte sul server, e la funzione di consegna non li ha
+mai guardati. Peggio: **silenziare un gruppo non fermava le push** — il
+silenzio era salvato per davvero e la schermata Novità lo rispettava, ma
+`push_accoda` non lo consultava.
+
+Chiuso con la migrazione **0022** (+ `supabase/tests/smoke_0022.sql`), il lato
+client e una prova che tiene allineati i valori di partenza nei tre posti in
+cui vivono. **La migrazione non è ancora applicata**: va incollata nel SQL
+Editor prima di pubblicare (il client regge lo stesso se non c'è, ma gli
+interruttori restano senza effetto finché non la si applica).
+
+### Le due decisioni che non prendo io
+
+**P0.3 link corti `/i/{token}`.** Oggi sono `?t={token}` e `#/gi/{token}`.
+Passare a rotte con percorso significa che il server deve rispondere qualcosa
+su `/i/qualsiasi-cosa`: GitHub Pages non riscrive le rotte, quindi o si usa il
+trucco della `404.html`, o si cambia hosting. In più la **regola 2 di
+CLAUDE.md** dice che i link `?t=` esistenti non devono mai rompersi: qualunque
+strada si prenda, il vecchio formato va tenuto vivo per sempre. Il guadagno è
+estetico; il costo tocca l'architettura.
+
+**P0.4 preview WhatsApp dinamiche.** È il punto con più valore commerciale
+della roadmap e quello che confligge di più col repo. Il crawler non esegue
+JavaScript, quindi servono meta tag serviti da un server — cioè il contrario
+della **regola 1** (un file solo, nessun build step, trascinabile ovunque), che
+CLAUDE.md chiama «il cuore del prodotto: non si tocca». Il backlog di CLAUDE.md
+lo prevede già come punto 2 e ci mette una nota che vale più della feature:
+*farebbe passare i token d'invito per un terzo*. Da valutare: chi apre un link
+Kimari su WhatsApp fa già arrivare il token ai server di Meta, quindi la
+domanda vera non è «il token esce» ma «chi altro lo vede e per quanto». Serve
+una decisione di Vincenzo, non una riga di codice.

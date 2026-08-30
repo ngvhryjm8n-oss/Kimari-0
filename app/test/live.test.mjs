@@ -716,5 +716,46 @@ await test('ogni azione intercettata sa davvero scrivere', () => {
   assert.ok(Object.keys(live.HANDLERS).length >= 20);
 });
 
+await test('i valori di partenza delle notifiche dicono la stessa cosa in tre posti', () => {
+  // Vivono in tre file diversi, e devono coincidere:
+  //   app/index.html            quello che vede chi non e' ancora collegato
+  //   app/data.js               quello che si applica alle righe del server
+  //   supabase/migrations/0022  quello che decide se la notifica parte
+  // Se divergono, l'interruttore mostra una cosa e il server ne fa un'altra —
+  // e il difetto e' invisibile, perche' nessuna delle tre e' "sbagliata".
+  const leggi = f => readFileSync(join(root, f), 'utf8');
+
+  const daHtml = leggi('app/index.html').match(/settings:\s*\{\s*push:\s*\{([^}]*)\}/);
+  assert.ok(daHtml, 'non trovo i valori di partenza in app/index.html');
+  const daJs = leggi('app/data.js').match(/const settings = \{ push: \{([\s\S]*?)\} \};/);
+  assert.ok(daJs, 'non trovo i valori di partenza in app/data.js');
+
+  const coppie = testo => Object.fromEntries(
+    [...testo.matchAll(/([a-z]+)\s*:\s*(true|false)/g)].map(m => [m[1], m[2] === 'true']));
+  const html = coppie(daHtml[1]);
+  const js = coppie(daJs[1]);
+  assert.deepEqual(js, html, 'app/data.js e app/index.html non concordano');
+
+  // Nella migrazione i valori di partenza sono un CASE: si legge quali generi
+  // sono elencati come spenti, tutti gli altri sono accesi.
+  const sql = leggi('supabase/migrations/0022_le_preferenze_delle_notifiche_contano.sql');
+  const corpo = sql.match(/function public\.push_default[\s\S]*?\$\$([\s\S]*?)\$\$/);
+  assert.ok(corpo, 'non trovo push_default nella 0022');
+  const spentiSql = new Set(
+    [...corpo[1].matchAll(/when\s+'([a-z]+)'\s+then\s+false/g)].map(m => m[1]));
+  const spentiJs = new Set(Object.entries(js).filter(([, v]) => !v).map(([k]) => k));
+  assert.deepEqual([...spentiSql].sort(), [...spentiJs].sort(),
+    'la 0022 e il client non concordano su quali notifiche partono spente');
+
+  // E i generi devono essere gli stessi che il vincolo del database ammette:
+  // un genere nel client che il database rifiuta e' una RPC che fallisce solo
+  // quando qualcuno tocca proprio quell'interruttore.
+  const ammessi = sql.match(/genere\s+text\s+not null check \(genere in\s*\(([\s\S]*?)\)\)/);
+  assert.ok(ammessi, 'non trovo il vincolo sui generi nella 0022');
+  const listaSql = [...ammessi[1].matchAll(/'([a-z]+)'/g)].map(m => m[1]).sort();
+  assert.deepEqual(Object.keys(js).sort(), listaSql,
+    'i generi del client non sono quelli che il database ammette');
+});
+
 console.log(`\n${passed} passati, ${failed} falliti\n`);
 process.exit(failed ? 1 : 0);
