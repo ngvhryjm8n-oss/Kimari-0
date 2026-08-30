@@ -502,6 +502,25 @@ const inBytes = b64 => {
 // Su iPhone le notifiche arrivano SOLO all'app aggiunta alla schermata Home, e
 // solo da iOS 16.4. In Safari normale l'API non c'è proprio: chiederle
 // darebbe un errore incomprensibile invece di una spiegazione.
+//
+// ────────────────────────────────────────────────────────────────────────
+// NON C'È NIENTE DA AGGIUSTARE QUI. Se stai leggendo perché "le notifiche
+// su iPhone non funzionano", fermati: NON è un difetto di Kimari.
+//
+// Apple consegna le push web solo a un sito aggiunto alla schermata Home.
+// Da una scheda di Safari non esiste proprio l'API — nessuna libreria,
+// nessun permesso, nessun trucco la fa comparire. È una regola del
+// telefono, e vale per ogni sito al mondo, non per il nostro.
+//
+// La conseguenza di prodotto, decisa e non da rimettere in discussione
+// (kimari-work-order-fix.md, fix 3): per la V1 web il centro notifiche è
+// **Novità dentro l'app**, e chi organizza avvisa il gruppo su WhatsApp
+// col messaggio già pronto. Chi riceve un link e vota da ospite NON avrà
+// mai una push: non ha installato niente, ed è il caso normale.
+//
+// Il tempo speso qui è tempo tolto a qualcosa che si può cambiare.
+// L'unica strada vera è l'app nativa (Capacitor), e sta in CAPACITOR.md.
+// ────────────────────────────────────────────────────────────────────────
 export function pushPossibili() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     return { si: false, perche: 'Questo browser non sa ricevere notifiche' };
