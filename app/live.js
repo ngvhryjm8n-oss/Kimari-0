@@ -463,11 +463,21 @@ export const HANDLERS = {
     for (const [f, candId] of Object.entries(picks)) {
       if (f !== 'when' && f !== 'where' && candId) await data.confirmExtra(f, candId);
     }
-    if (p.when.mode === 'deciding' || p.where.mode === 'deciding') {
-      await data.confirmPlan(p.id, picks.when || null, picks.where || null);
-    }
+    // QUI stava il difetto peggiore trovato nel test con persone vere. C'era
+    // un `if (when === 'deciding' || where === 'deciding')` attorno a questa
+    // riga: su un piano dove non c'era niente da votare la RPC non veniva
+    // chiamata AFFATTO, il piano restava 'deciding' per sempre, non entrava in
+    // calendario — e sotto usciva lo stesso "Kimari! ✅".
+    //
+    // Il server sapeva gia' fare la cosa giusta (confirm_plan su un piano
+    // tutto fisso funziona): mancava solo chi lo chiamasse. Adesso si chiama
+    // sempre, e i null per i campi gia' fissi il server li ignora da se'.
+    await data.confirmPlan(p.id, picks.when || null, picks.where || null);
     data.logEvent('plan_confirmed', p.id);
-    return { toast: 'Kimari! ✅', closeSheet: true };
+    // go: porta alla vista del piano confermato senza che si debba ricaricare
+    // a mano (fix 2). Nel giro di wire() `go` viene DOPO la rilettura, quindi
+    // la schermata che si apre ha gia' data e luogo scritti nei campi veri.
+    return { toast: 'Kimari! ✅', closeSheet: true, go: 'p/' + p.id };
   },
 
   /* -------------------------------------------------- proposte */

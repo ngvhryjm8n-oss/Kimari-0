@@ -319,6 +319,26 @@ await test('confirm conferma le domande extra a parte da quando/dove', async () 
   assert.deepEqual(calls[1].args, ['p1', 'c1', null]);
 });
 
+await test('confermare un piano con TUTTO già fisso chiama comunque il server', async () => {
+  // IL DIFETTO del primo test con persone vere. C'era un
+  //   if (when === 'deciding' || where === 'deciding')
+  // attorno alla chiamata: con data e luogo entrambi fissi la RPC non partiva,
+  // il piano restava 'deciding' per sempre e non entrava mai in calendario —
+  // ma l'app diceva "Kimari! ✅" lo stesso. Uno schermo che mente.
+  //
+  // Questa prova esiste per non farlo tornare: se qualcuno rimette una
+  // scorciatoia "tanto non c'è niente da confermare", qui cade.
+  const K = { state: { currentPlan: 'p1',
+    plans: { p1: { id: 'p1', when: { mode: 'fixed' }, where: { mode: 'fixed' } } },
+    picks: {} } };
+  const res = await live.HANDLERS.confirm(null, K);
+  assert.ok(calls.some(c => c.name === 'confirmPlan'),
+    'con tutto già fisso confirmPlan non è stata chiamata: il piano resterebbe in decisione');
+  assert.deepEqual((calls.find(c => c.name === 'confirmPlan') || {}).args, ['p1', null, null]);
+  // E si va alla vista del piano confermato senza ricaricare a mano (fix 2).
+  assert.equal(res.go, 'p/p1');
+});
+
 await test('saveExtra su un piano avviato scrive, in creazione no', async () => {
   const inCreazione = { state: { draft: { extras: [] }, currentPlan: null, plans: {} } };
   assert.equal(live.HANDLERS.saveExtra.when(null, inCreazione), false,

@@ -3107,6 +3107,14 @@ const DIZIONARIO = {
     ja: 'またはアカウントで入ると、どの端末からでも予定を見つけられます。',
     fr: 'Ou connecte-toi, comme ça tu retrouves tes plans depuis n’importe quel téléphone.' },
 
+  /* --------------------------------- conferma senza niente da votare (fix 1) */
+  'Non c’è niente da votare: data e luogo li hai già scelti tu. Confermando, il piano entra in calendario e chi ha il link vede che è deciso.': {
+    en: 'There’s nothing to vote on: you already picked the date and the place. Confirm and the plan goes in your calendar, and whoever has the link sees it’s settled.',
+    es: 'No hay nada que votar: la fecha y el sitio ya los has elegido tú. Al confirmar, el plan entra en el calendario y quien tenga el enlace ve que está decidido.',
+    de: 'Es gibt nichts abzustimmen: Termin und Ort hast du schon festgelegt. Mit dem Bestätigen kommt der Plan in den Kalender, und wer den Link hat, sieht, dass er steht.',
+    ja: '投票することはありません。日時も場所もすでにあなたが決めています。確定するとカレンダーに入り、リンクを持つ人には決定済みと表示されます。',
+    fr: 'Il n’y a rien à voter : la date et le lieu, tu les as déjà choisis. En confirmant, le plan entre dans le calendrier et ceux qui ont le lien voient que c’est décidé.' },
+
   /* ---------------------------------------- link personali (0024, fix 4) */
   'Genera link': { en: 'Create link', es: 'Generar enlace', de: 'Link erzeugen',
                    ja: 'リンクを作る', fr: 'Générer le lien' },
@@ -4262,6 +4270,13 @@ function sheetName(p){
 }
 function sheetConfirm(p, fresh){
   const fields = decidingFields(p); if(fresh || !state.picks){ state.picks = {}; fields.forEach(f => { state.picks[f] = results(p, f).suggested || fieldObj(p, f).candidates[0].id; }); }
+  // Niente da spuntare: succede col luogo "decidiamo dopo", e sui piani creati
+  // prima della 0025. Prima usciva una schermata vuota con un bottone in
+  // fondo, e sembrava rotta. Dalla 0025 i piani con tutto fisso nascono già
+  // decisi, quindi qui non ci arrivano proprio.
+  if (!fields.length) return `<h2>${p.kind === 'decision' ? t('Chiudi la decisione') : t('Conferma il piano')}</h2>
+  <p class="sub">${t('Non c’è niente da votare: data e luogo li hai già scelti tu. Confermando, il piano entra in calendario e chi ha il link vede che è deciso.')}</p>
+  <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? t('Chiudi') : t('Conferma')}</button></div>`;
   return `<h2>${p.kind === 'decision' ? 'Chiudi la decisione' : 'Conferma il piano'}</h2><p class="sub">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}. Il suggerimento è l'opzione compatibile con più persone; la scelta finale è tua.</p>
   ${fields.map(f => { const r = results(p, f); return `<div class="group-title">${esc(fieldLabel(p, f))}</div><div class="group radio">${r.counts.map(({ c, voters }) => `<button class="row ${state.picks[f] === c.id ? 'on' : ''}" data-action="pick" data-field="${f}" data-id="${c.id}"><span class="chk"></span><div class="grow"><div class="t">${esc(candText(f, c))}${r.suggested === c.id ? `<span class="tag">${t('più compatibile')}</span>` : ''}</div><div class="s">${voters.length} ${voters.length === 1 ? t('persona') : t('persone')}</div></div></button>`).join('')}</div>`; }).join('')}
   <div class="actions"><button class="btn primary" data-action="confirm">${p.kind === 'decision' ? 'Chiudi' : t('Conferma')}</button></div>`;
