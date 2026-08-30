@@ -22,8 +22,20 @@ if [ "$RAMO" = "main" ]; then
 fi
 
 # Tutto ciò che finisce servito. Se si aggiunge un file all'app, va aggiunto qui.
+#
+# .well-known/assetlinks.json e .nojekyll aggiunti il 28/8/2026, e per un pelo
+# non ci finivano: sono i due file che fanno aprire i link dentro l'app invece
+# che nel browser (Android App Links), e stavo per annunciare i deep link
+# lasciando a terra proprio il file che li attiva. È la stessa forma del
+# pasticcio del 26/8 che ha fatto nascere questo script — pubblicare il
+# sottoinsieme che si è appena toccato e dimenticarne uno.
+#
+# .nojekyll serve perché GitHub Pages, senza, non serve le cartelle che
+# iniziano con un punto: /.well-known/ sarebbe un 404 e la verifica di Android
+# fallirebbe in silenzio.
 FILE=(index.html app/index.html app/live.js app/data.js app/map.js
-      i18n/dizionario.js manifest.json app/manifest.json)
+      i18n/dizionario.js manifest.json app/manifest.json
+      .well-known/assetlinks.json .nojekyll)
 
 echo "Prove prima di pubblicare…"
 npm test >/dev/null

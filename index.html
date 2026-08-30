@@ -3143,7 +3143,7 @@ function renderCreate(){
   ${dm === 'later' ? '' : `<div class="group">${dm === 'deciding'
     ? [1,2,3].map(i => `<div class="row"><input type="text" id="c-p${i}" placeholder="${t('Posto {n}', { n: i })}" maxlength="60"></div>`).join('')
     : `<div class="row"><input type="text" id="c-pf" placeholder="${t('Nome del posto')}" maxlength="60"></div><div class="row"><input type="text" id="c-pa" placeholder="${t('Indirizzo (facoltativo)')}" maxlength="80"></div>`}</div>`}
-  <div class="stitle">Si chiude</div>
+  <div class="stitle">${t('Vota entro')}</div>
   <div class="group"><div class="row"><input type="datetime-local" id="c-dl"></div></div>
   <p class="fnote">${t('Facoltativo, è solo un promemoria per il gruppo: la conferma resta tua.')}</p>
   <div class="err" id="err"></div>
@@ -3301,7 +3301,7 @@ function renderBallot(o){
     <h1>${esc(preview.title)}</h1>
     <p class="sub">${t('{nome} chiede al gruppo', { nome: esc(preview.organizer) })} · ${t('{n} hanno già votato', { n: preview.voters })}</p>
     <span class="badge dec">${t('Ai voti')}</span>
-    ${preview.deadline_at ? `<div class="sub" style="margin-top:8px">${t('Si chiude {quando}', { quando: fmtWhen({ starts_at: preview.deadline_at }) })}</div>` : ''}
+    ${preview.deadline_at ? `<div class="sub" style="margin-top:8px">${t('Vota entro {quando}', { quando: fmtWhen({ starts_at: preview.deadline_at }) })}</div>` : ''}
   </div>
   ${askWhen ? `<div class="stitle">${t('Quando ti va bene? Segna tutte le opzioni ok')}</div><div class="group" id="g-when">${cw.map(c => candRow(c, counts)).join('')}</div>` : ''}
   ${preview.when_mode === 'fixed' && preview.starts_at ? `<div class="stitle">${t('Quando')}</div><div class="group"><div class="row"><b>${esc(fmtWhen(preview))}</b></div></div>` : ''}
