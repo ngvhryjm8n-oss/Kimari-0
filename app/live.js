@@ -10,13 +10,13 @@
 // nel database non esiste ancora; su un piano già avviato invece è una scrittura
 // vera. Senza `when` si romperebbe la creazione.
 
-import * as data from './data.js?v=27%2F08%2003%3A15';
-import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=27%2F08%2003%3A15';
+import * as data from './data.js?v=30%2F08%2017%3A08';
+import { toDbWhen, toDbWhere, toDbCandidate, draftToCreatePlan, mapPreview } from './map.js?v=30%2F08%2017%3A08';
 
 // Marcatura della versione: le app installate tengono la cache a lungo, e
 // senza un numero visibile non c'e' modo di sapere se quello che si sta
 // guardando e' l'ultima correzione o una copia di tre ore fa.
-export const VERSIONE = '27/08 03:15';
+export const VERSIONE = '30/08 17:08';
 
 const SB_URL = 'https://fnafzokgkbhhjircrogy.supabase.co';
 const SB_KEY = 'sb_publishable_f-CLx2j5Ht-ydkoh7iC-qQ_iacbBYW_';
@@ -35,6 +35,15 @@ export function applyState(state, loaded) {
   Object.assign(state.people, loaded.people);
   Object.assign(state.groups, loaded.groups);
   Object.assign(state.plans, loaded.plans);
+
+  // Le preferenze delle notifiche arrivano dal server (0022). Prima vivevano
+  // solo qui in memoria: ricaricare la pagina le riazzerava, e la funzione di
+  // consegna non le ha mai guardate — i dieci interruttori del Profilo erano
+  // finti. Se il server non le manda (migrazione non ancora applicata) si
+  // lascia quello che c'e', invece di azzerarlo.
+  if (loaded.settings && loaded.settings.push) {
+    Object.assign(state.settings.push, loaded.settings.push);
+  }
 
   // Chi arriva da un invito a un gruppo non ha ancora un'identità: al primo
   // avvio mostraInvitoGruppo segna il token come "già mostrato", poi la
@@ -111,6 +120,10 @@ export const HANDLERS = {
     const p = curPlan(K) || Object.values(K.state.plans)[0];
     await data.joinPlan(p.token, null, el.dataset.id);
     data.saveToken(p.id, p.token);
+    // Il passo che misura la viralita': quanti, ricevuto il link, entrano.
+    // Senza, il funnel si ferma a "ha aperto l'invito" e non si sa quanti si
+    // fermano davanti al nome da scrivere.
+    data.logEvent('guest_joined', p.id);
     return { toast: 'Bentornato', closeSheet: true, go: 'p/' + p.id };
   },
 
@@ -120,6 +133,7 @@ export const HANDLERS = {
     const p = curPlan(K) || Object.values(K.state.plans)[0];
     await data.joinPlan(p.token, nome, null);
     data.saveToken(p.id, p.token);
+    data.logEvent('guest_joined', p.id);
     return { toast: 'Ci sei', closeSheet: true, go: 'p/' + p.id };
   },
 
@@ -350,7 +364,11 @@ export const HANDLERS = {
   },
 
   async rsvp(el, K) {
-    await data.setRsvp(curPlan(K).id, el.dataset.v);
+    const p = curPlan(K);
+    await data.setRsvp(p.id, el.dataset.v);
+    // Su un piano gia' deciso il "ci sono" e' l'unica risposta che si chiede:
+    // e' li' che si vede se il gruppo usa Kimari o torna su WhatsApp.
+    data.logEvent('rsvp_submitted', p.id);
     return {};
   },
 
@@ -502,8 +520,12 @@ export const HANDLERS = {
     const gd = K.state.gdraft;
     if (!gd || !gd.name.trim()) return { toast: 'Dai un nome al gruppo', skipReload: true };
 
+    const eraNuovo = !gd.id;
     if (gd.id) await data.updateGroup(gd.id, gd.name.trim(), gd.emoji, gd.color);
     else gd.id = await data.createGroup(gd.name.trim(), gd.emoji, gd.color);
+    // Solo la creazione: rinominare un gruppo non e' un gruppo nuovo, e
+    // contarlo gonfierebbe l'unica metrica che dice se Kimari mette radici.
+    if (eraNuovo) data.logEvent('group_created', null);
 
     // Le sezioni sono private: vivono in tabelle a parte, non nel gruppo.
     let sectionId = gd.sectionId;
@@ -642,6 +664,25 @@ export const HANDLERS = {
     return { toast: ora ? 'Gruppo silenziato' : 'Notifiche riattivate', closeSheet: true };
   },
 
+  // I dieci interruttori delle notifiche nel Profilo. Il prototipo li teneva
+  // in memoria e basta: ricaricare la pagina li riazzerava, e la funzione di
+  // consegna non li ha mai guardati — erano finti. Ora la scelta va sul
+  // server (0022), che e' anche l'unico posto dove puo' servire a qualcosa:
+  // chi decide se mandare la notifica e' il database, non questo telefono.
+  async push(el, K) {
+    const genere = el.dataset.k;
+    const ora = !K.state.settings.push[genere];
+    // Prima si scrive, poi si mostra. Al contrario, un errore di rete
+    // lascerebbe l'interruttore acceso e la notifica spenta.
+    await data.setPushPref(genere, ora);
+    K.state.settings.push[genere] = ora;
+    // skipReload: rileggere tutto per un interruttore sono 27 letture per
+    // niente. Ma allora il ridisegno tocca a noi, se no l'interruttore resta
+    // dov'era e sembra che il tocco non sia arrivato.
+    if (K.render) K.render();
+    return { skipReload: true };
+  },
+
   // "Aggiungi link" scriveva solo in memoria: il link compariva, arrivava il
   // "Link aggiunto", e al ricaricamento non c'era più. Sotto non c'era dove
   // metterlo — media.kind ammetteva solo 'photo' e 'file', e path era
@@ -677,6 +718,18 @@ export const HANDLERS = {
   // vera — rileggere dal server, non inventare.
   async reset(el, K) {
     return { toast: 'Ricaricato dal server' };
+  },
+
+  // Gli altri due bottoni "Prototipo": simulare voti e aprire il link come
+  // ospite finto inventano dati, e su un piano vero sono la lezione 1 di
+  // STATO.md. Il CSS li nasconde quando l'app e' collegata; qui si spegne
+  // anche l'azione, perche' nascondere un pulsante non e' impedirgli di
+  // partire (gia' visto con Reset).
+  async simulate() {
+    return { toast: 'Serve solo al prototipo', skipReload: true };
+  },
+  async asGuest() {
+    return { toast: 'Serve solo al prototipo', skipReload: true };
   },
 
   // Togliere la propria immagine: si torna alle iniziali, che restano il caso
@@ -987,11 +1040,12 @@ function disegna(K) {
     try { giaProvato = sessionStorage.getItem(SEGNO) === '1'; } catch { /* niente */ }
     if (giaProvato) {
       // Ricaricare non è servito: meglio dirlo che riprovare all'infinito.
-      K.toast && K.toast('La schermata non si aggiorna: ' + (err.message || err));
+      K.toast && K.toast(K.t ? K.t('La schermata non si aggiorna: {errore}', { errore: err.message || err })
+                             : 'La schermata non si aggiorna: ' + (err.message || err));
       return;
     }
     try { sessionStorage.setItem(SEGNO, '1'); } catch { /* niente */ }
-    K.toast && K.toast('Salvato. Ricarico la schermata…');
+    K.toast && K.toast(K.t ? K.t('Salvato. Ricarico la schermata…') : 'Salvato. Ricarico la schermata…');
     setTimeout(() => location.reload(), 600);
   }
 }
@@ -1015,7 +1069,9 @@ function scriviDoveStaEntrando(prev) {
   t.textContent = (prev.emoji || '👥') + ' ' + prev.name;
   const s = document.createElement('div');
   s.className = 'sub';
-  s.textContent = 'Ti hanno invitato · ' + quanti + (quanti === 1 ? ' persona' : ' persone');
+  s.textContent = K.t ? (quanti === 1 ? K.t('Ti hanno invitato · 1 persona')
+                                      : K.t('Ti hanno invitato · {n} persone', { n: quanti }))
+                      : 'Ti hanno invitato · ' + quanti + (quanti === 1 ? ' persona' : ' persone');
   d.append(t, s);
 
   const primo = sr.querySelector('.sheet > *') || sr.firstElementChild;
@@ -1035,7 +1091,7 @@ export async function mostraInvitoGruppo(K) {
   try {
     const prev = await data.previewGroupInvite(token);
     if (!prev || !prev.ok) {
-      K.toast && K.toast('Questo invito non è più valido');
+      K.toast && K.toast(K.t ? K.t('Questo invito non è più valido') : 'Questo invito non è più valido');
       return false;
     }
     // Già dentro: non si chiede niente, si va e basta.
@@ -1098,6 +1154,18 @@ function wire(K) {
   document.addEventListener('click', e => {
     const el = e.target.closest('[data-action]');
     if (!el) return;
+
+    // Condividere e copiare li gestisce il PROTOTIPO (condivi/copy in
+    // index.html), e devono continuare a farlo: metterli fra gli HANDLERS
+    // vorrebbe dire intercettarli, e da qui in giu' si chiama
+    // stopPropagation — la condivisione, che e' il gesto che fa vivere il
+    // prodotto, smetterebbe di funzionare. Qui si registra soltanto, senza
+    // toccare il corso delle cose: nessun return, nessun preventDefault.
+    if (el.dataset.action === 'share' || el.dataset.action === 'copy') {
+      const p = curPlan(K);
+      data.logEvent('share_clicked', p ? p.id : null);
+    }
+
     const h = HANDLERS[el.dataset.action];
     if (!h) return;                                   // non nostra
 
@@ -1243,7 +1311,8 @@ export async function caricaFile(K, files, tipo, target) {
     if (fatti) e.message = fatti + ' di ' + files.length + ' caricate. ' + e.message;
     throw e;
   }
-  if (K.toast) K.toast(fatti === 1 ? 'Caricata' : fatti + ' caricate');
+  if (K.toast) K.toast(fatti === 1 ? (K.t ? K.t('Caricata') : 'Caricata')
+                                   : (K.t ? K.t('{n} caricate', { n: fatti }) : fatti + ' caricate'));
 }
 
 export async function boot() {
@@ -1251,7 +1320,8 @@ export async function boot() {
   if (!K) { console.error('live.js caricato prima del prototipo'); return; }
 
   if (!window.supabase || !window.supabase.createClient) {
-    K.toast && K.toast('Libreria Supabase non caricata: resto in modalità demo');
+    K.toast && K.toast(K.t ? K.t('Libreria Supabase non caricata: resto in modalità demo')
+                           : 'Libreria Supabase non caricata: resto in modalità demo');
     return;
   }
 
@@ -1286,7 +1356,8 @@ export async function boot() {
     if (K.state.me === 'guest') {
       const s = await data.currentSession();
       if (s && data.haIdentitaVera(s.user)) {
-        K.toast && K.toast('Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.');
+        K.toast && K.toast(K.t ? K.t('Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.')
+                               : 'Sei entrato ma non riesco a creare il tuo profilo. Riprova, o scrivimi.');
         console.error('sessione con identità vera ma nessun actor', s.user.id);
       } else if (K.openSheet && K.sheetWelcome) {
         K.state.welcomeShown = true;
@@ -1404,6 +1475,38 @@ export function schermoNonCollegato(K, e) {
 
   card.append(h, p, b, d);
   app.appendChild(card);
+}
+
+// ------------------------------------------------------------ deep link
+// Dentro l'app nativa i link di kimariapp.com arrivano qui (Android App
+// Links / iOS Universal Links) invece di aprire il browser. L'URL del sito
+// diventa la rotta interna che l'app sa già gestire:
+//   https://kimariapp.com/?t=TOKEN       → #/i/TOKEN   (invito a un piano)
+//   https://kimariapp.com/app/#/gi/TOKEN → #/gi/TOKEN  (invito a un gruppo)
+//   qualsiasi altro URL del dominio      → si apre l'app e basta
+// Il reload è voluto: boot() legge la rotta all'avvio, e ripartire da lì è
+// l'unico percorso già provato — un secondo percorso "a caldo" sarebbe da
+// mantenere e da provare a parte.
+export function rottaDaUrlNativo(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname !== 'kimariapp.com') return null;
+    const t = u.searchParams.get('t');
+    if (t) return '#/i/' + encodeURIComponent(t);
+    const g = String(u.hash || '').match(/^#\/?gi\/([^/?#]+)/);
+    if (g) return '#/gi/' + g[1];
+    return null;
+  } catch { return null; }
+}
+
+if (typeof window !== 'undefined' && window.Capacitor
+    && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener('appUrlOpen', ({ url }) => {
+    const rotta = rottaDaUrlNativo(url);
+    if (!rotta) return;
+    location.hash = rotta;
+    location.reload();
+  });
 }
 
 if (typeof window !== 'undefined' && window.document) {

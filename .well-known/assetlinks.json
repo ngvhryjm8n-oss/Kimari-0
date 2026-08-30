@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "it.kimari.app",
+      "sha256_cert_fingerprints": [
+        "CB:F3:0C:1B:54:CB:E0:BA:A9:0B:38:B1:54:7B:D8:DE:A5:E2:E7:B9:76:E4:DB:AD:5F:0A:27:D1:F0:B4:DA:76"
+      ]
+    }
+  }
+]
