@@ -43,6 +43,17 @@ const RICADUTE = {
   'persone_visibili': /ELENCO_NOMI = 'actors'/
 };
 
+// Una ricaduta salva l'AVVIO, non per forza la funzione. push_prefs ne e'
+// l'esempio: senza la 0022 l'app parte lo stesso (le preferenze tornano ai
+// valori di partenza), ma toccare un interruttore chiama set_push_pref, che
+// non esiste, e chi tocca si prende un errore in faccia. Pubblicare cosi'
+// sarebbe peggio di prima: prima l'interruttore mentiva in silenzio, dopo
+// urla. Quindi: la lettura e' coperta, e lo si dice; la pubblicazione si
+// ferma lo stesso, e si dice perche'.
+const SERVE_COMUNQUE_LA_MIGRAZIONE = {
+  'push_prefs': 'la 0022 — senza, gli interruttori delle notifiche danno errore'
+};
+
 console.log('\ncolonne che il client legge, contro il database vero\n');
 
 let mancanti = 0;
@@ -88,7 +99,15 @@ for (const [tabella, campi] of [...letture].sort()) {
              || (/PGRST205|Could not find the table/.test(messaggio) ? tabella : null);
   const ricaduta = quale && RICADUTE[quale];
 
-  if (ricaduta && ricaduta.test(src)) {
+  const serve = quale && SERVE_COMUNQUE_LA_MIGRAZIONE[quale];
+
+  if (ricaduta && ricaduta.test(src) && serve) {
+    console.log('  NO   ' + tabella + ' → l\'avvio regge, ma serve ' + serve);
+    mancanti++;
+  } else if (serve) {
+    console.log('  NO   ' + tabella + ' → serve ' + serve);
+    mancanti++;
+  } else if (ricaduta && ricaduta.test(src)) {
     console.log('  ~    ' + tabella + ' → ' + quale + ' non c\'è ancora, ma il client regge');
     coperte++;
   } else if (ricaduta) {
@@ -112,7 +131,13 @@ if (irraggiungibili) {
   process.exit(2);
 }
 
+// "Romperebbero l'avvio" non e' sempre vero: da quando esiste
+// SERVE_COMUNQUE_LA_MIGRAZIONE, una riga NO puo' anche voler dire "l'app parte
+// ma una funzione non c'e'". Dire la cosa sbagliata farebbe cercare un guasto
+// che non esiste — e in fondo e' lo stesso difetto che questi strumenti
+// dovrebbero prevenire.
 console.log('\n' + (mancanti
-  ? mancanti + ' letture che romperebbero l\'avvio: NON pubblicare'
+  ? mancanti + ' letture che il database non regge: NON pubblicare\n' +
+    '(sopra c\'è scritto per ognuna se rompe l\'avvio o se aspetta una migrazione)'
   : 'niente che possa rompere l\'avvio') + '\n');
 process.exit(mancanti ? 1 : 0);
