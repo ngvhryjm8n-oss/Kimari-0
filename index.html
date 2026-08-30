@@ -187,11 +187,13 @@ const DIZIONARIO = {
   'Dove': { en: 'Where', es: 'Dónde', de: 'Wo', ja: '場所' ,
     fr: 'Où' },
   // La data la formatta toLocaleString (regola 4): qui passa già scritta.
-  'Si chiude {quando}': {
-    en: 'Closes {quando}', es: 'Se cierra {quando}',
-    de: 'Schließt {quando}', ja: '締切 {quando}'
-  ,
-    fr: 'Se ferme {quando}' },
+  // "Si chiude" diceva cosa fa il piano; "Vota entro" dice cosa devi fare tu.
+  // E' il micro-copy chiesto dalla ROADMAP-V1: rivedere le etichette dove non
+  // descrivono l'azione.
+  'Vota entro {quando}': {
+    en: 'Vote by {quando}', es: 'Vota antes del {quando}',
+    de: 'Stimm ab bis {quando}', ja: '{quando} までに投票',
+    fr: 'Vote avant {quando}' },
   'Nota per il gruppo · facoltativa': {
     en: 'A note for the group · optional',
     es: 'Una nota para el grupo · opcional',
@@ -252,8 +254,8 @@ const DIZIONARIO = {
     de: '{n} Personen haben schon abgestimmt', ja: '{n}人が投票済み'
   ,
     fr: '{n} ont déjà voté' },
-  'Si chiude': { en: 'Closes', es: 'Se cierra', de: 'Endet', ja: '締切' ,
-    fr: 'Se ferme' },
+  'Vota entro': { en: 'Vote by', es: 'Vota antes del', de: 'Stimm ab bis', ja: '投票締切' ,
+    fr: 'Vote avant' },
 
   /* ------------------------------------------------------ ospite: dopo il voto */
   'Voto inviato': { en: 'Vote sent', es: 'Voto enviado', de: 'Stimme gesendet', ja: '投票しました' ,
@@ -1199,9 +1201,11 @@ const DIZIONARIO = {
     ja: '👋 Kimari で友だちになりませんか。50 通のやりとりなしで予定が決まります 👉 {link}'
   ,
     fr: '👋 Ajoute-moi sur Kimari, on s’organise sans 50 messages 👉 {link}' },
-  'Si chiude {quando}': { en: 'Closes {quando}', es: 'Se cierra {quando}',
-                          de: 'Schließt {quando}', ja: '締切は {quando}' ,
-    fr: 'Se ferme {quando}' },
+  // La seconda definizione della stessa chiave: e' quella che vince a runtime
+  // (l'indice si costruisce in ordine), quindi va cambiata anche qui.
+  'Vota entro {quando}': { en: 'Vote by {quando}', es: 'Vota antes del {quando}',
+                           de: 'Stimm ab bis {quando}', ja: '{quando} までに投票' ,
+    fr: 'Vote avant {quando}' },
 
   /* ------------------------------------------------- sezioni: rinomina e via */
   'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
@@ -2852,6 +2856,16 @@ const DIZIONARIO = {
     de: 'Du hast abgestimmt ✓ Der Plan aktualisiert sich hier: wenn {nome} bestätigt, siehst du es auf dieser Seite.',
     ja: '投票しました ✓ 予定はここで更新されます。{nome} が確定したら、このページに表示されます。',
     fr: 'Tu as voté ✓ Le plan se met à jour ici : quand {nome} confirmera, tu le verras sur cette page.' },
+  /* ---------------- i cartellini in cima al piano, trovati il 28/8/2026
+     Erano scolpiti sulla stessa riga di 'Si chiude': un cartellino e' corto
+     e passa inosservato, ma sta in cima alla schermata piu' vista di tutte. */
+  'Deciso': { en: 'Decided', es: 'Decidido', de: 'Entschieden', ja: '決定', fr: 'Décidé' },
+  'prenotato': { en: 'booked', es: 'reservado', de: 'reserviert', ja: '予約済み', fr: 'réservé' },
+  'Scaduto · in attesa di {chi}': {
+    en: 'Expired · waiting for {chi}', es: 'Vencido · esperando a {chi}',
+    de: 'Abgelaufen · wartet auf {chi}', ja: '締切 · {chi} 待ち',
+    fr: 'Échu · en attente de {chi}' },
+
   'Hai votato ✓ Il risultato si aggiorna qui: quando {nome} chiude, lo vedi in questa pagina.': {
     en: 'You voted ✓ The result updates here: when {nome} closes it, you’ll see it on this page.',
     es: 'Has votado ✓ El resultado se actualiza aquí: cuando {nome} cierre, lo verás en esta página.',

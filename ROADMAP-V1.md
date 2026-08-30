@@ -160,8 +160,8 @@ Serve a non rifare il fatto e a non dare per fatto il mancante.
 | P0.4 preview WhatsApp | **non fatto, e da decidere** — vedi sotto | serve un server, e il sito è statico per regola 1 |
 | P0.5 sicurezza | **verificata sul campo**, 0 fughe | `node tools/controlla-rls.mjs` e `tools/controlla-scritture.mjs` |
 | P0.6 login | **fatto** (Google + Apple, niente password) | attivi dal 25/8 |
-| P1 micro-copy | in corso | |
-| analytics | **parziale**: `log_event` e `funnel_events` esistono | da confrontare con l'elenco della roadmap |
+| P1 micro-copy | «Si chiude» → «Vota entro» **fatto**, in sei lingue | insieme a quattro cartellini che erano rimasti italiani |
+| analytics | **10 eventi su 14**, gli altri 4 rimandati con un motivo | `node tools/controlla-eventi.mjs`; le metriche in `supabase/tools/metriche.sql` |
 
 ### Il buco di P0.1 che c'era davvero
 

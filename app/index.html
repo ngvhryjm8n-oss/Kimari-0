@@ -467,11 +467,13 @@ const DIZIONARIO = {
   'Dove': { en: 'Where', es: 'Dónde', de: 'Wo', ja: '場所' ,
     fr: 'Où' },
   // La data la formatta toLocaleString (regola 4): qui passa già scritta.
-  'Si chiude {quando}': {
-    en: 'Closes {quando}', es: 'Se cierra {quando}',
-    de: 'Schließt {quando}', ja: '締切 {quando}'
-  ,
-    fr: 'Se ferme {quando}' },
+  // "Si chiude" diceva cosa fa il piano; "Vota entro" dice cosa devi fare tu.
+  // E' il micro-copy chiesto dalla ROADMAP-V1: rivedere le etichette dove non
+  // descrivono l'azione.
+  'Vota entro {quando}': {
+    en: 'Vote by {quando}', es: 'Vota antes del {quando}',
+    de: 'Stimm ab bis {quando}', ja: '{quando} までに投票',
+    fr: 'Vote avant {quando}' },
   'Nota per il gruppo · facoltativa': {
     en: 'A note for the group · optional',
     es: 'Una nota para el grupo · opcional',
@@ -532,8 +534,8 @@ const DIZIONARIO = {
     de: '{n} Personen haben schon abgestimmt', ja: '{n}人が投票済み'
   ,
     fr: '{n} ont déjà voté' },
-  'Si chiude': { en: 'Closes', es: 'Se cierra', de: 'Endet', ja: '締切' ,
-    fr: 'Se ferme' },
+  'Vota entro': { en: 'Vote by', es: 'Vota antes del', de: 'Stimm ab bis', ja: '投票締切' ,
+    fr: 'Vote avant' },
 
   /* ------------------------------------------------------ ospite: dopo il voto */
   'Voto inviato': { en: 'Vote sent', es: 'Voto enviado', de: 'Stimme gesendet', ja: '投票しました' ,
@@ -1479,9 +1481,11 @@ const DIZIONARIO = {
     ja: '👋 Kimari で友だちになりませんか。50 通のやりとりなしで予定が決まります 👉 {link}'
   ,
     fr: '👋 Ajoute-moi sur Kimari, on s’organise sans 50 messages 👉 {link}' },
-  'Si chiude {quando}': { en: 'Closes {quando}', es: 'Se cierra {quando}',
-                          de: 'Schließt {quando}', ja: '締切は {quando}' ,
-    fr: 'Se ferme {quando}' },
+  // La seconda definizione della stessa chiave: e' quella che vince a runtime
+  // (l'indice si costruisce in ordine), quindi va cambiata anche qui.
+  'Vota entro {quando}': { en: 'Vote by {quando}', es: 'Vota antes del {quando}',
+                           de: 'Stimm ab bis {quando}', ja: '{quando} までに投票' ,
+    fr: 'Vote avant {quando}' },
 
   /* ------------------------------------------------- sezioni: rinomina e via */
   'Sezione rinominata': { en: 'Section renamed', es: 'Sección renombrada',
@@ -3132,6 +3136,16 @@ const DIZIONARIO = {
     de: 'Du hast abgestimmt ✓ Der Plan aktualisiert sich hier: wenn {nome} bestätigt, siehst du es auf dieser Seite.',
     ja: '投票しました ✓ 予定はここで更新されます。{nome} が確定したら、このページに表示されます。',
     fr: 'Tu as voté ✓ Le plan se met à jour ici : quand {nome} confirmera, tu le verras sur cette page.' },
+  /* ---------------- i cartellini in cima al piano, trovati il 28/8/2026
+     Erano scolpiti sulla stessa riga di 'Si chiude': un cartellino e' corto
+     e passa inosservato, ma sta in cima alla schermata piu' vista di tutte. */
+  'Deciso': { en: 'Decided', es: 'Decidido', de: 'Entschieden', ja: '決定', fr: 'Décidé' },
+  'prenotato': { en: 'booked', es: 'reservado', de: 'reserviert', ja: '予約済み', fr: 'réservé' },
+  'Scaduto · in attesa di {chi}': {
+    en: 'Expired · waiting for {chi}', es: 'Vencido · esperando a {chi}',
+    de: 'Abgelaufen · wartet auf {chi}', ja: '締切 · {chi} 待ち',
+    fr: 'Échu · en attente de {chi}' },
+
   'Hai votato ✓ Il risultato si aggiorna qui: quando {nome} chiude, lo vedi in questa pagina.': {
     en: 'You voted ✓ The result updates here: when {nome} closes it, you’ll see it on this page.',
     es: 'Has votado ✓ El resultado se actualiza aquí: cuando {nome} cierre, lo verás en esta página.',
@@ -3492,7 +3506,7 @@ const msgs = {
           cosa: decidingFields(p).map(f => fieldLabel(p, f).toLowerCase()).join(' e ') || t('dettagli') }),
   nudge: (p, names) => t('Mancano {chi}. {quando} 👉 {link}', {
     chi: names.join(', '), link: linkOf(p),
-    quando: p.deadline ? t('Si chiude {quando}', { quando: fmtDeadline(p.deadline) })
+    quando: p.deadline ? t('Vota entro {quando}', { quando: fmtDeadline(p.deadline) })
                        : t('Vota quando puoi') }),
   confirm: p => t('✅ Kimari! {titolo}: {esito} 👉 {link}',
                   { titolo: p.title, esito: resultText(p), link: linkOf(p) }),
@@ -3888,7 +3902,7 @@ function vNew(){
     <div class="group-title">${t('Altro da decidere insieme?')}</div><div class="group">
       ${d.extras.map((x, i) => `<div class="row">${mi('domanda', 30, '❓')}<div class="grow"><div class="t">${esc(x.question)}</div><div class="s">${x.binary ? t('👍 Sì / 👎 No') : x.options.map(esc).join(' · ')}</div></div><button class="x" data-action="rmExtra" data-i="${i}" aria-label="${t('Rimuovi')}">×</button></div>`).join('')}
       <button class="row link" data-action="addExtra">${mi('piu', 26, '＋')}<div class="grow t" style="color:var(--blue)">${t('Aggiungi una domanda')}</div><div class="s">${t('es. "Cosa portiamo?"')}</div></button></div>
-    ${anyDeciding ? `<div class="group-title">${t('Scadenza del voto · facoltativa')}</div><div class="group"><div class="row"><div class="grow t">${t('Si chiude')}</div><input type="datetime-local" class="input right" value="${esc(d.deadline)}" data-bind="deadline"></div></div>
+    ${anyDeciding ? `<div class="group-title">${t('Scadenza del voto · facoltativa')}</div><div class="group"><div class="row"><div class="grow t">${t('Vota entro')}</div><input type="datetime-local" class="input right" value="${esc(d.deadline)}" data-bind="deadline"></div></div>
     <div class="chips"><button class="chip" data-action="quickDeadline" data-v="${toLocalInput(dl)}">${t('Fra 2 giorni alle 18:00')}</button>${d.deadline ? `<button class="chip" data-action="quickDeadline" data-v="">${t('Nessuna')}</button>` : ''}</div>
     <div class="group-foot">${t('La scadenza è un promemoria per il gruppo. Il piano si chiude quando lo confermi tu.')}</div>` : `<div class="intro">${t('Sai già quando e dove: il piano nasce confermato e gli invitati rispondono solo "ci sono / forse / no".')}</div>`}
     <div class="group-title">${t('Opzioni')}</div><div class="group"><div class="row"><div class="grow"><div class="t">${t('Gli altri possono proporre')}</div><div class="s">${t('Altre date o luoghi ai voti, e cambi dopo la conferma')}</div></div><button class="sw ${d.allowProposals ? 'on' : ''}" data-action="allowDraft" aria-label="${t('Gli altri possono proporre')}"></button></div></div>`;
@@ -4044,7 +4058,7 @@ function vPlan(p){
     <h1 class="title">${p.status === 'confirmed' || p.kind === 'decision' ? '' : p.emoji + ' '}${esc(p.title)}</h1>
     ${p.status === 'confirmed' ? (decision ? `<div class="when">${esc(resultText(p))}</div>` : `<div class="when">${fmtWhen(p.when.value)}</div><div class="where">${esc(fmtWhere(p.where.value))}${p.where.value && p.where.value.address ? `<div class="s">${esc(p.where.value.address)}</div>` : ''}</div>${p.where.value && p.where.value.photo ? `<img class="where-photo" src="${p.where.value.photo}" alt="">` : ''}${(p.extras || []).filter(x => x.value).map(x => `<div class="where">${esc(x.question)} <b>${esc(x.value.name)}</b></div>`).join('')}`) : `<div class="sec">${decision ? 'Domanda di' : 'Organizza'} ${esc(orgName)}</div>`}
     ${g ? `<div class="s" style="margin-top:6px">${g.emoji} ${esc(g.name)}${p.seriesId ? ` · 🔁 ${recurLabel(p)} · ${p.occurrence} di ${p.of}` : ''}</div>` : ''}
-    <div class="badges">${p.status === 'confirmed' ? `<span class="badge confirmed">${decision ? 'Deciso' : 'Confermato'}</span><span class="badge gray">v${p.version}</span>${p.booked ? '<span class="badge gray">📌 prenotato</span>' : ''}` : `<span class="badge deciding">${t('In decisione')}</span>${p.deadline ? `<span class="badge gray">${deadlinePast ? 'Scaduto · in attesa di ' + esc(orgName) : 'Si chiude ' + fmtDeadline(p.deadline)}</span>` : ''}`}</div>
+    <div class="badges">${p.status === 'confirmed' ? `<span class="badge confirmed">${decision ? t('Deciso') : t('Confermato')}</span><span class="badge gray">v${p.version}</span>${p.booked ? `<span class="badge gray">📌 ${t('prenotato')}</span>` : ''}` : `<span class="badge deciding">${t('In decisione')}</span>${p.deadline ? `<span class="badge gray">${deadlinePast ? t('Scaduto · in attesa di {chi}', { chi: esc(orgName) }) : t('Vota entro {quando}', { quando: fmtDeadline(p.deadline) })}</span>` : ''}`}</div>
     ${p.status === 'deciding' ? `<div class="s" style="margin-top:10px">${t('{n} su {tot} hanno votato', { n: votedIds(p).length, tot: p.participants.length })}</div>` : ''}
   </div></div>`;
   if(p.status === 'deciding'){
