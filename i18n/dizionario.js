@@ -2723,6 +2723,37 @@ export const DIZIONARIO = {
     ja: 'またはアカウントで入ると、どの端末からでも予定を見つけられます。',
     fr: 'Ou connecte-toi, comme ça tu retrouves tes plans depuis n’importe quel téléphone.' },
 
+  /* ---------------------------------------- link personali (0024, fix 4) */
+  'Genera link': { en: 'Create link', es: 'Generar enlace', de: 'Link erzeugen',
+                   ja: 'リンクを作る', fr: 'Générer le lien' },
+  'Copia': { en: 'Copy', es: 'Copiar', de: 'Kopieren', ja: 'コピー', fr: 'Copier' },
+  'link generato': { en: 'link created', es: 'enlace generado', de: 'Link erzeugt',
+                     ja: 'リンク作成済み', fr: 'lien généré' },
+  'Link copiato: mandalo solo a {chi}': {
+    en: 'Link copied: send it only to {chi}',
+    es: 'Enlace copiado: mándaselo solo a {chi}',
+    de: 'Link kopiert: schick ihn nur an {chi}',
+    ja: 'リンクをコピーしました。{chi} だけに送ってください。',
+    fr: 'Lien copié : envoie-le seulement à {chi}' },
+  'Quel link è stato generato da un altro telefono: rigeneralo': {
+    en: 'That link was created on another phone: create it again',
+    es: 'Ese enlace se generó en otro teléfono: vuelve a generarlo',
+    de: 'Dieser Link wurde auf einem anderen Handy erzeugt: erzeug ihn neu',
+    ja: 'そのリンクは別の端末で作られました。作り直してください。',
+    fr: 'Ce lien a été généré sur un autre téléphone : régénère-le' },
+  'Un link per ognuno: chi lo apre entra con quel nome, e solo con quello. Mandalo alla persona giusta, non nel gruppo.': {
+    en: 'One link each: whoever opens it joins with that name, and only that one. Send it to the right person, not to the group.',
+    es: 'Un enlace para cada uno: quien lo abra entra con ese nombre, y solo con ese. Mándaselo a la persona correcta, no al grupo.',
+    de: 'Ein Link pro Person: wer ihn öffnet, tritt mit diesem Namen bei, und nur mit diesem. Schick ihn der richtigen Person, nicht in die Gruppe.',
+    ja: '一人にひとつのリンク。開いた人はその名前で参加します。グループではなく、本人に送ってください。',
+    fr: 'Un lien par personne : qui l’ouvre entre avec ce nom, et seulement celui-là. Envoie-le à la bonne personne, pas au groupe.' },
+  'Questo link è tuo: chi organizza l’ha mandato a te. Non girarlo.': {
+    en: 'This link is yours: the organiser sent it to you. Don’t pass it on.',
+    es: 'Este enlace es tuyo: quien organiza te lo ha mandado a ti. No lo reenvíes.',
+    de: 'Dieser Link gehört dir: die Organisatorin hat ihn dir geschickt. Gib ihn nicht weiter.',
+    ja: 'このリンクはあなた専用です。主催者があなたに送りました。転送しないでください。',
+    fr: 'Ce lien est le tien : la personne qui organise te l’a envoyé. Ne le transfère pas.' },
+
   /* ------------------------------ pagina gruppo e risultati, stessa notte */
   'Gestisci': { en: 'Manage', es: 'Gestionar', de: 'Verwalten', ja: '管理', fr: 'Gérer' },
   'Info': { en: 'Info', es: 'Info', de: 'Infos', ja: '情報', fr: 'Infos' },

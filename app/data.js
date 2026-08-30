@@ -642,6 +642,35 @@ export const setJoinPolicy = (plan, policy) =>
 // valore di partenza, quindi qui non serve mandarle tutte e dieci.
 export const setPushPref = (genere, attiva) =>
   rpc('set_push_pref', { p_genere: genere, p_attiva: !!attiva });
+
+/* ------------------------- link personali (0024) -------------------------
+   Un link per ogni nome dell'elenco: chi lo apre entra COME quel nome, e come
+   nessun altro. Il token torna una volta sola — nel database resta solo il suo
+   hash — quindi lo si tiene qui sul telefono di chi organizza, per poterlo
+   ricopiare senza rigenerarlo. Da un altro dispositivo non c'e', e l'app lo
+   dice invece di offrire un "Copia" che incolla il vuoto. */
+const TOKEN_PERSONE = 'kimari_link_persone';
+
+const leggiTokenPersone = () => {
+  try { return JSON.parse(localStorage.getItem(TOKEN_PERSONE) || '{}'); }
+  catch { return {}; }
+};
+
+export const tokenPersona = (plan, actor) => leggiTokenPersone()[plan + '|' + actor] || null;
+
+export async function createPersonInvite(plan, actor) {
+  const token = await rpc('create_person_invite', { p_plan: plan, p_actor: actor });
+  try {
+    const tutti = leggiTokenPersone();
+    tutti[plan + '|' + actor] = token;
+    localStorage.setItem(TOKEN_PERSONE, JSON.stringify(tutti));
+  } catch { /* senza memoria locale il link vale lo stesso: solo, non si ricopia */ }
+  return token;
+}
+
+// Quali nomi hanno già un link vivo. Il token non torna (è hashato): torna il
+// fatto che esista, che è quello che serve per scrivere "generato".
+export const personInvites = plan => rpc('person_invites', { p_plan: plan });
 export const addPlanPlaceholder = (plan, name) =>
   rpc('add_plan_placeholder', { p_plan: plan, p_name: name });
 export const removePlanPlaceholder = (actor, plan) =>

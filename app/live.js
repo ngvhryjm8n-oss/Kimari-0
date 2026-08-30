@@ -91,6 +91,25 @@ const inCents = s => {
 const curPlan = K => K.state.plans[K.state.currentPlan];
 const val = (K, sel) => { const e = K.$(sel); return e ? e.value.trim() : ''; };
 const on  = (K, sel) => { const e = K.$(sel); return !!e && e.classList.contains('on'); };
+const nomeDi = (K, id) => (K.state.people[id] && K.state.people[id].name) || '';
+
+// L'indirizzo del sito, non quello dell'app: i link vanno aperti da chi
+// l'app non ce l'ha. Stessa formula del prototipo (index.html, const SITO).
+const SITO = typeof location === 'undefined' ? ''
+  : location.origin + location.pathname.replace(/app\/?(index\.html)?$/, '');
+
+// navigator.clipboard non c'è ovunque (e su http nudo nemmeno): la ricaduta
+// col textarea è quella che usa già il prototipo.
+async function copiaNegliAppunti(testo) {
+  try { await navigator.clipboard.writeText(testo); return true; }
+  catch { /* si prova sotto */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = testo; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+    return true;
+  } catch { return false; }
+}
 
 /* ------------------------------------------------------------------ */
 /* le azioni che sanno arrivare al database                            */
@@ -296,6 +315,50 @@ export const HANDLERS = {
     if (!nome) return { toast: 'Scrivi un nome', skipReload: true };
     await data.addPlanPlaceholder(curPlan(K).id, nome);
     return { riapriSheet: 'joinPolicy' };
+  },
+
+  // La scheda "Chi può votare" la aprirebbe il prototipo da solo, ma prima
+  // serve sapere quali nomi hanno GIA' un link: senza, ogni bottone direbbe
+  // "Genera" e si rigenererebbe (revocando il link gia' mandato) solo per
+  // guardarlo. Il token non torna — è hashato — torna il fatto che esista.
+  async joinPolicy(el, K) {
+    const p = curPlan(K);
+    try {
+      const righe = await data.personInvites(p.id);
+      K.state.linkPersone = Object.fromEntries((righe || []).map(r => [r.actor_id, true]));
+    } catch {
+      // Migrazione 0024 non ancora applicata, o rete: la scheda si apre lo
+      // stesso e i bottoni dicono "Genera". Meglio che non aprirla.
+      K.state.linkPersone = {};
+    }
+    return { riapriSheet: 'joinPolicy', skipReload: true };
+  },
+
+  // Il link personale di un nome dell'elenco (0024). Chi lo apre entra COME
+  // quel nome: e' la prova d'identita' che prima era un bottone visibile a
+  // chiunque avesse il link del piano.
+  async linkPersona(el, K) {
+    const p = curPlan(K);
+    const token = await data.createPersonInvite(p.id, el.dataset.id);
+    K.state.linkPersone = { ...(K.state.linkPersone || {}), [el.dataset.id]: true };
+    const link = `${SITO}?t=${token}`;
+    // Si copia subito: chi tocca "Genera" vuole mandarlo, non ammirarlo. E il
+    // token da qui in poi vive solo su questo telefono, quindi averlo gia'
+    // negli appunti evita il giro "genera, cerca, copia".
+    await copiaNegliAppunti(link);
+    return { toast: 'Link copiato: mandalo solo a {chi}', toastVal: { chi: nomeDi(K, el.dataset.id) },
+             riapriSheet: 'joinPolicy' };
+  },
+
+  async copiaLinkPersona(el, K) {
+    const p = curPlan(K);
+    const token = data.tokenPersona(p.id, el.dataset.id);
+    // Non c'e': il link e' stato generato da un altro dispositivo. Dirlo, invece
+    // di copiare una stringa vuota e far incollare il nulla su WhatsApp.
+    if (!token) return { toast: 'Quel link è stato generato da un altro telefono: rigeneralo', skipReload: true };
+    await copiaNegliAppunti(`${SITO}?t=${token}`);
+    return { toast: 'Link copiato: mandalo solo a {chi}', toastVal: { chi: nomeDi(K, el.dataset.id) },
+             skipReload: true };
   },
 
   async rmRoster(el, K) {
@@ -1191,7 +1254,9 @@ function wire(K) {
         // Il prototipo espone t() in window.__kimari; se per qualche motivo non
         // c'e', esce l'italiano invece di un errore — che e' la stessa regola
         // del dizionario (regola 3: mai una chiave a video).
-        if (res.toast && K.toast) K.toast(K.t ? K.t(res.toast) : res.toast);
+        // res.toastVal: i segnaposto si riempiono DOPO la traduzione, così ogni
+        // lingua può metterli dove le servono (regola 3).
+        if (res.toast && K.toast) K.toast(K.t ? K.t(res.toast, res.toastVal) : res.toast);
 
         if (!res.skipReload) await reload(K);
         // Alcune schermate si modificano mentre le si usa: scegliere "elenco
