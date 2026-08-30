@@ -91,6 +91,12 @@ for (const t of nomi) {
   }
 }
 
+// Zero nomi trovati non e' "tutto a posto": e' "non ho controllato niente".
+// Succede coi file che contengono solo corpi di funzione, dove le tabelle si
+// nominano senza il prefisso public. perche' ci pensa il search_path. Dirlo,
+// invece di far passare per verificato un file che nessuno ha guardato.
 console.log('\n' + (mancanti ? mancanti + ' nomi sbagliati: lo script si fermerebbe lì'
-                             : 'tutti i nomi esistono') + '\n');
+                    : nomi.length ? 'tutti i nomi esistono'
+                    : 'NESSUN nome da controllare: qui le tabelle non sono scritte\n'
+                    + 'come public.qualcosa, quindi questo controllo non dice niente.') + '\n');
 process.exit(mancanti ? 1 : 0);

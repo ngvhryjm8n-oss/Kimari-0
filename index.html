@@ -2801,6 +2801,32 @@ const DIZIONARIO = {
   'hai commentato: “{testo}”': { en: 'you commented: “{testo}”', es: 'has comentado: «{testo}»',
     de: 'hast kommentiert: „{testo}“', ja: 'がコメントしました：「{testo}」', fr: 'as commenté : « {testo} »' },
 
+  /* ------------------------------------ identità dell'ospite (0023, fix 4)
+     Il claim "Sei uno di questi?" non c'è più: chiunque avesse il link poteva
+     toccare un nome ed entrare come quella persona, per sempre. */
+  'Dimmi chi sei: scrivi il tuo nome.': {
+    en: 'Tell me who you are: type your name.',
+    es: 'Dime quién eres: escribe tu nombre.',
+    de: 'Sag mir, wer du bist: schreib deinen Namen.',
+    ja: 'お名前を教えてください。',
+    fr: 'Dis-moi qui tu es : écris ton nom.' },
+  'Entra col tuo nome: non si può più entrare con quello di un altro.': {
+    en: 'Join with your own name: you can no longer join as someone else.',
+    es: 'Entra con tu nombre: ya no se puede entrar con el de otra persona.',
+    de: 'Tritt mit deinem eigenen Namen bei: mit dem Namen anderer geht es nicht mehr.',
+    ja: 'ご自身の名前で参加してください。他の人の名前では参加できなくなりました。',
+    fr: 'Entre avec ton propre nom : on ne peut plus entrer avec celui d’un autre.' },
+  'Non sei tu? Cambia': {
+    en: 'Not you? Switch', es: '¿No eres tú? Cambiar',
+    de: 'Nicht du? Wechseln', ja: '別の人ですか？切り替える',
+    fr: 'Ce n’est pas toi ? Changer' },
+  'Oppure entra col tuo account, così ritrovi i tuoi piani da ogni telefono.': {
+    en: 'Or sign in, so you find your plans from any phone.',
+    es: 'O entra con tu cuenta, así encuentras tus planes desde cualquier teléfono.',
+    de: 'Oder melde dich an, dann findest du deine Pläne von jedem Handy aus.',
+    ja: 'またはアカウントで入ると、どの端末からでも予定を見つけられます。',
+    fr: 'Ou connecte-toi, comme ça tu retrouves tes plans depuis n’importe quel téléphone.' },
+
   /* ------------------------------ pagina gruppo e risultati, stessa notte */
   'Gestisci': { en: 'Manage', es: 'Gestionar', de: 'Verwalten', ja: '管理', fr: 'Gérer' },
   'Info': { en: 'Info', es: 'Info', de: 'Infos', ja: '情報', fr: 'Infos' },
@@ -2953,7 +2979,7 @@ let preview = null;    // dati dal token (o normalizzati da ?p)
 let FULL = null;       // dati completi via RLS (solo con sessione)
 let ME = null;         // { id } actor
 const sel = { when: new Set(), where: new Set() };
-let claim = null;
+// Il claim ("Sei uno di questi?") non esiste più: vedi 0023.
 
 const fmtWhen = c => {
   if (!c || !c.starts_at) return '';
@@ -3051,24 +3077,38 @@ async function boot(){
 // del salto dice al boot di adottare il nome vero al ritorno.
 const PENDING_LINK = 'kimari_link_google';
 
-async function googleAuth(){
+// Un solo percorso per Google e per Apple: prima era scritto solo per Google,
+// e la pagina ospite offriva solo Google mentre l'app offriva anche Apple —
+// chi era entrato con Apple, aprendo un invito, non aveva modo di farsi
+// riconoscere (work order, fix 4 punto 2).
+//
+// Il ramo linkIdentity e' anche il "merge" del punto 5: se la sessione e'
+// anonima e ha gia' votato, collegarla NON crea un utente nuovo, aggiunge
+// l'identita' a quello che c'e' — quindi voti e risposte restano dov'erano.
+async function oauth(provider){
+  const nome = provider === 'apple' ? 'Apple' : 'Google';
   try{
     if (SESSION && SESSION.user.is_anonymous){
       try{ localStorage.setItem(PENDING_LINK, '1'); }catch(_){}
-      const { error } = await sb.auth.linkIdentity({ provider:'google', options:{ redirectTo: location.origin + location.pathname } });
+      const { error } = await sb.auth.linkIdentity({ provider, options:{ redirectTo: location.origin + location.pathname } });
       if (error) throw error;
     } else {
-      const { error } = await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: location.origin + location.pathname } });
+      const { error } = await sb.auth.signInWithOAuth({ provider, options:{ redirectTo: location.origin + location.pathname } });
       if (error) throw error;
     }
   }catch(e){
     const m = String(e && e.message || '');
-    if (m.toLowerCase().includes('not enabled')) err('Google non è ancora attivo su Supabase: Authentication → Providers → Google.');
-    else if (m.toLowerCase().includes('already') && m.toLowerCase().includes('link')) err('Questo account Google è già collegato altrove: tocca Esci e poi entra con Google.');
-    else err('Google non risponde: «' + m + '»');
+    if (m.toLowerCase().includes('not enabled')) err(nome + ' non è ancora attivo su Supabase: Authentication → Providers → ' + nome + '.');
+    else if (m.toLowerCase().includes('already') && m.toLowerCase().includes('link')) err('Questo account ' + nome + ' è già collegato altrove: tocca Esci e poi entra con ' + nome + '.');
+    else err(nome + ' non risponde: «' + m + '»');
   }
 }
+const googleAuth = () => oauth('google');
+const appleAuth  = () => oauth('apple');
 async function doSignOut(){ try{ await sb.auth.signOut(); }catch(_){} location.href = location.pathname; }
+// Il nero pieno è quello che Apple impone nelle sue linee guida: un bottone
+// "Continua con Apple" fuori standard è motivo di rifiuto in revisione.
+const ABTN = (label) => `<button class="btn" id="abtn" style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="17" height="17" viewBox="0 0 384 512" fill="#fff" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>${label}</button>`;
 const GBTN = (label) => `<button class="btn sec" id="gbtn" style="display:flex;align-items:center;justify-content:center;gap:9px"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.7l6.2 5.2C41.4 35.4 44 30.1 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>${label}</button>`;
 
 /* ============================== HOME ============================== */
@@ -3078,12 +3118,14 @@ function renderWelcome(){
     <h1>Kimari</h1>
     <p class="sub">${t("Tutti hanno un'opinione.")}<br>${t('Kimari la trasforma in un piano.')}</p>
     <a class="btn" href="?new">${t('Crea un piano')}</a>
+    ${ABTN(t('Continua con Apple'))}
     ${GBTN(t('Continua con Google'))}
   </div>
   <div class="err" id="err"></div>
   <p class="foot">${t('Proponi date e posti, il gruppo vota dal link su WhatsApp senza installare niente, tu confermi. Kimari! ✅')}<br>${t('Con Google ritrovi i tuoi piani da qualsiasi telefono.')}</p>
   ${brand}`;
   const gb = $('#gbtn'); if (gb) gb.addEventListener('click', googleAuth);
+  const ab = $('#abtn'); if (ab) ab.addEventListener('click', appleAuth);
 }
 
 async function loadHome(){
@@ -3216,10 +3258,17 @@ async function loadByToken(){
     const { data: planRow } = await sb.from('plans').select('*').eq('id', data.plan_id).maybeSingle();
     if (planRow){ saveTok(data.plan_id, token); await loadFull(planRow); return routeFull(); }
   }
-  // ospite
+  // Da qui in giù si vota "da ospite": la RLS non fa vedere il piano, perché
+  // non se ne fa ancora parte. NON vuol dire che non si sappia chi sei.
+  //
+  // Era il primo sintomo del test con persone vere: chi era già entrato con
+  // Apple apriva l'invito e la pagina lo trattava da sconosciuto, chiedendogli
+  // il nome da capo. La sessione c'era, il profilo pure — mancava solo la
+  // riga in participants, cioè esattamente quello che stava per fare.
+  const gia = ME && ME.display_name ? ME.display_name : null;
   if (data.status === 'cancelled') return renderCancelled(data.title, data.organizer);
   if (data.status === 'confirmed') return renderConfirmedGuest();
-  renderBallot({ guest:true });
+  renderBallot({ guest:true, gia });
 }
 
 async function loadById(id){
@@ -3293,7 +3342,6 @@ function renderBallot(o){
   const cd = preview.candidates.filter(c => c.field === 'where');
   const askWhen = votable('when');
   const askWhere = votable('where');
-  const people = o.guest ? (preview.people || []) : [];
   const myBallot = o.prefill && FULL ? FULL.ballots.find(b => b.actor_id === ME.id && b.note) : null;
   $('#app').innerHTML = `${o.guest ? '' : topbar()}
   <div class="card">
@@ -3307,11 +3355,15 @@ function renderBallot(o){
   ${preview.when_mode === 'fixed' && preview.starts_at ? `<div class="stitle">${t('Quando')}</div><div class="group"><div class="row"><b>${esc(fmtWhen(preview))}</b></div></div>` : ''}
   ${askWhere ? `<div class="stitle">${t('Dove ti va bene?')}</div><div class="group" id="g-where">${cd.map(c => candRow(c, counts)).join('')}</div>` : ''}
   ${preview.where_mode === 'fixed' && preview.place_name ? `<div class="stitle">Dove</div><div class="group"><div class="row"><b>${esc(preview.place_name)}</b>${preview.place_address ? ` · <span class="s">${esc(preview.place_address)}</span>` : ''}</div></div>` : ''}
-  ${o.guest ? `<div class="stitle">${t('Chi sei?')}</div>
+  ${o.guest ? (o.gia ? `<div class="stitle">${t('Chi sei?')}</div>
   <div class="group">
-    ${people.length ? `<div class="chips" id="claims">${people.map(x => `<button class="chip" data-claim="${x.actor_id}">${esc(x.name)}</button>`).join('')}</div>` : ''}
-    <div class="row"><input type="text" id="name" placeholder="${people.length ? t('Oppure scrivi il tuo nome') : t('Il tuo nome')}" maxlength="40" autocomplete="name"></div>
-  </div>` : ''}
+    <div class="row"><div class="grow"><b>${esc(o.gia)}</b></div><button class="chip" id="cambia">${t('Non sei tu? Cambia')}</button></div>
+  </div>` : `<div class="stitle">${t('Chi sei?')}</div>
+  <div class="group">
+    <div class="row"><input type="text" id="name" placeholder="${t('Il tuo nome')}" maxlength="40" autocomplete="name"></div>
+  </div>
+  <p class="foot" style="margin:6px 0 0">${t('Oppure entra col tuo account, così ritrovi i tuoi piani da ogni telefono.')}</p>
+  <div class="pad stack" style="margin-top:8px">${ABTN(t('Continua con Apple'))}${GBTN(t('Continua con Google'))}</div>`) : ''}
   <div class="stitle">${t('Nota per il gruppo · facoltativa')}</div>
   <div class="group"><div class="row"><textarea id="note" rows="2" maxlength="200" placeholder="${t('Es. per me va bene tutto, ma non troppo tardi')}">${esc(myBallot ? myBallot.note : '')}</textarea></div></div>
   <div class="err" id="err"></div>
@@ -3324,30 +3376,29 @@ function renderBallot(o){
     sel[f].has(id) ? sel[f].delete(id) : sel[f].add(id);
     b.classList.toggle('on'); b.querySelector('.chk').textContent = sel[f].has(id) ? '✓' : '';
   }));
-  document.querySelectorAll('#claims .chip').forEach(ch => ch.addEventListener('click', () => {
-    const was = ch.classList.contains('on');
-    document.querySelectorAll('#claims .chip').forEach(x => x.classList.remove('on'));
-    claim = null;
-    if (!was){ ch.classList.add('on'); claim = ch.dataset.claim; $('#name').value = ''; }
-  }));
-  const nm = $('#name');
-  if (nm) nm.addEventListener('input', () => {
-    if (nm.value.trim()){ claim = null; document.querySelectorAll('#claims .chip').forEach(x => x.classList.remove('on')); }
-  });
+  // I bottoni "Sei uno di questi?" non ci sono più: chiunque avesse il link
+  // poteva toccare un nome ed entrare come quella persona, e il legame era
+  // definitivo (0023). Il nome crea sempre un'identità nuova; per essere una
+  // persona già nel piano si entra col suo account.
+  const gbv = $('#gbtn'); if (gbv) gbv.addEventListener('click', googleAuth);
+  const abv = $('#abtn'); if (abv) abv.addEventListener('click', appleAuth);
+  const cambia = $('#cambia'); if (cambia) cambia.addEventListener('click', doSignOut);
   $('#send').addEventListener('click', () => submitVote(o));
 }
 
 async function submitVote(o){
   const nm = $('#name');
   const name = nm ? nm.value.trim() : '';
-  if (o.guest && !name && !claim) return err(t('Dimmi chi sei: tocca il tuo nome o scrivilo.'));
+  // o.gia = si sa già chi sei su questo telefono, e il campo del nome non
+  // viene nemmeno disegnato.
+  if (o.guest && !name && !o.gia) return err(t('Dimmi chi sei: scrivi il tuo nome.'));
   const btn = $('#send'); const btnLabel = btn.textContent;
   btn.disabled = true; btn.textContent = t('Invio…');
   try{
     await ensureSession();
     let planId = preview.plan_id;
     if (o.guest){
-      const { data, error: je } = await sb.rpc('join_plan', { p_token: token, p_display_name: name || null, p_claim_actor: claim });
+      const { data, error: je } = await sb.rpc('join_plan', { p_token: token, p_display_name: name || null });
       if (je) throw je;
       planId = data; saveTok(planId, token);
     }
@@ -3365,7 +3416,7 @@ async function submitVote(o){
     renderDone(o);
   }catch(e){
     btn.disabled = false; btn.textContent = btnLabel;
-    if (String(e && e.message).includes('claim not allowed')) err(t('Quel nome è già collegato a qualcun altro: scrivi il tuo.'));
+    if (String(e && e.message).includes('claim')) err(t('Entra col tuo nome: non si può più entrare con quello di un altro.'));
     else anonErr(e, t('Non sono riuscito a registrare il voto.'));
   }
 }
@@ -3517,36 +3568,37 @@ function confirmedHead(){
   </div>`;
 }
 function renderConfirmedGuest(){
-  const people = preview.people || [];
+  // gia = il nome di chi è già entrato su questo telefono: si scrive "stai
+  // rispondendo come X" invece di richiedere il nome (fix 4, punto 1).
+  const gia = ME && ME.display_name ? ME.display_name : null;
   $('#app').innerHTML = `${confirmedHead()}
-  <div class="stitle">Ci sei?</div>
+  <div class="stitle">${t('Ci sei?')}</div>
   <div class="group">
-    ${people.length ? `<div class="chips" id="claims">${people.map(x => `<button class="chip" data-claim="${x.actor_id}">${esc(x.name)}</button>`).join('')}</div>` : ''}
-    <div class="row"><input type="text" id="name" placeholder="${people.length ? 'Oppure scrivi il tuo nome' : 'Il tuo nome'}" maxlength="40"></div>
+    ${gia ? `<div class="row"><div class="grow"><b>${esc(gia)}</b></div><button class="chip" id="cambia">${t('Non sei tu? Cambia')}</button></div>`
+          : `<div class="row"><input type="text" id="name" placeholder="${t('Il tuo nome')}" maxlength="40"></div>`}
     <div class="row"><div class="rseg">
       <button class="yes" data-r="yes">${t('Ci sono')}</button><button class="maybe" data-r="maybe">Forse</button><button class="no" data-r="no">${t('Non vengo')}</button>
     </div></div>
   </div>
   <div class="err" id="err"></div>
   ${brand}`;
-  document.querySelectorAll('#claims .chip').forEach(ch => ch.addEventListener('click', () => {
-    const was = ch.classList.contains('on');
-    document.querySelectorAll('#claims .chip').forEach(x => x.classList.remove('on'));
-    claim = null; if (!was){ ch.classList.add('on'); claim = ch.dataset.claim; $('#name').value = ''; }
-  }));
+  const cambiaC = $('#cambia'); if (cambiaC) cambiaC.addEventListener('click', doSignOut);
   document.querySelectorAll('[data-r]').forEach(b => b.addEventListener('click', async () => {
-    const name = $('#name').value.trim();
-    if (!name && !claim) return err(t('Dimmi chi sei: tocca il tuo nome o scrivilo.'));
+    const campo = $('#name');
+    const name = campo ? campo.value.trim() : '';
+    // Con un'identità già in mano il nome non si richiede: ensure_actor, dentro
+    // join_plan, riusa l'attore che c'è invece di crearne un altro.
+    if (!name && !gia) return err(t('Dimmi chi sei: scrivi il tuo nome.'));
     try{
       await ensureSession();
-      const { data: planId, error: je } = await sb.rpc('join_plan', { p_token: token, p_display_name: name || null, p_claim_actor: claim });
+      const { data: planId, error: je } = await sb.rpc('join_plan', { p_token: token, p_display_name: name || null });
       if (je) throw je;
       saveTok(planId, token);
       const { error } = await sb.rpc('set_rsvp', { p_plan: planId, p_rsvp: b.dataset.r });
       if (error) throw error;
       location.reload();
     }catch(e){
-      if (String(e && e.message).includes('claim not allowed')) err(t('Quel nome è già collegato a qualcun altro: scrivi il tuo.'));
+      if (String(e && e.message).includes('claim')) err(t('Entra col tuo nome: non si può più entrare con quello di un altro.'));
       else anonErr(e, 'Non riesco a salvare.');
     }
   }));
